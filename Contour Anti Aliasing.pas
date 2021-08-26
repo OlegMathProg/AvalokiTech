@@ -146,26 +146,28 @@ var
   line_first_pt_ptr     : PByte;
   y_,i,d0,d1,d2         : integer;
 begin
+
   {Fill Borders} {$region -fold}
   arr_dst_ptr:=@arr_dst[rct_dst.left+arr_dst_width*rct_dst.top];
-  // Top Line
+  // Top Line:
   FillByte(arr_dst_ptr^,rct_dst.width,0);
-  // Left Line
+  // Left Line:
   for i:=0 to rct_dst.height-1 do
     begin
       arr_dst_ptr^:=0;
       Inc(arr_dst_ptr,arr_dst_width);
     end;
-  // Right Line
+  // Right Line:
   arr_dst_ptr:=@arr_dst[rct_dst.left+rct_dst.width-1+arr_dst_width*rct_dst.top];
   for i:=0 to rct_dst.height-1 do
     begin
       arr_dst_ptr^:=0;
       Inc(arr_dst_ptr,arr_dst_width);
     end;
-  // Bottom Line
+  // Bottom Line:
   arr_dst_ptr:=@arr_dst[rct_dst.left+arr_dst_width*(rct_dst.top+rct_dst.height-1)];
   FillByte(arr_dst_ptr^,rct_dst.width,0); {$endregion}
+  
   arr_dst_ptr     :=Unaligned(@arr_dst  [rct_dst.left+arr_dst_width*(rct_dst.top+1)]);
   arr_alpha_ptr   :=Unaligned(@arr_alpha[000000000000000000000000000000000000000000]);
   arr_dst_left_ptr:=Unaligned(@arr_dst  [arr_dst_width*rct_dst.top                 ]);
@@ -451,6 +453,7 @@ begin
         begin
           pixel_ptr:=Unaligned(bmp_ptr+arr_src_ptr^.first_pt_x+rct_dst_left+bmp_width*(arr_src_ptr^.first_pt_y+rct_dst_top));
           case arr_src_ptr^.line_kind of
+          
             00{00 - horizontal line: 2 points from left to right---}: {$region -fold}
               begin
                 alpha_shift2:=arr_src_ptr^.line_shift;
@@ -467,6 +470,7 @@ begin
                     Inc  (alpha2,alpha_shift3);
                   end;
               end; {$endregion}
+              
             01{01 - horizontal line: 2 points from right to left---}: {$region -fold}
               begin
                 alpha_shift2:=arr_src_ptr^.line_shift;
@@ -483,6 +487,7 @@ begin
                     Dec  (alpha2,alpha_shift3);
                   end;
               end; {$endregion}
+              
             02{02 - horizontal line: outer line from ends to middle}: {$region -fold}
               begin
                 alpha_shift2:=Trunc((arr_src_ptr^.line_shift)/2);
@@ -523,6 +528,7 @@ begin
                   //SetColorInv({clGreen}clPurple);
                   Func2(pixel_ptr^,r,g,b,d_alpha2,alpha2,alpha2,pow,d);
               end; {$endregion}
+              
             03{03 - horizontal line: inner line from middle to ends}: {$region -fold}
               begin
                 alpha_shift2:=Trunc((arr_src_ptr^.line_shift)/2);
@@ -563,10 +569,12 @@ begin
                   //SetColorInv({clGreen}clWhite);
                   Func2(pixel_ptr^,r,g,b,d_alpha2,alpha2,alpha2,pow,d);
               end; {$endregion}
+              
             04{04 - horizontal line: const fill--------------------}: {$region -fold}
               begin
 
               end; {$endregion}
+              
             05{05 - vertical   line: 2 points from top to bottom---}: {$region -fold}
               begin
                 alpha_shift2:=arr_src_ptr^.line_shift;
@@ -583,6 +591,7 @@ begin
                     Inc  (alpha2,alpha_shift3);
                   end;
               end; {$endregion}
+              
             06{06 - vertical   line: 2 points from bottom to top---}: {$region -fold}
               begin
                 alpha_shift2:=arr_src_ptr^.line_shift;
@@ -599,6 +608,7 @@ begin
                     Dec  (alpha2,alpha_shift3);
                   end;
               end; {$endregion}
+              
             07{07 - vertical   line: inner line from ends to middle}: {$region -fold}
               begin
                 alpha_shift2:=Trunc((arr_src_ptr^.line_shift)/2);
@@ -639,6 +649,7 @@ begin
                   //SetColorInv({clGreen}clPurple);
                   Func2(pixel_ptr^,r,g,b,d_alpha2,alpha2,alpha2,pow,d);
               end; {$endregion}
+              
             08{08 - vertical   line: outer line from middle to ends}: {$region -fold}
               begin
                 alpha_shift2:=Trunc((arr_src_ptr^.line_shift)/2);
@@ -679,16 +690,19 @@ begin
                   //SetColorInv({clGreen}clWhite);
                   Func2(pixel_ptr^,r,g,b,d_alpha2,alpha2,alpha2,pow,d);
               end; {$endregion}
+              
             09{09 - vertical   line: const fill--------------------}: {$region -fold}
               begin
 
               end; {$endregion}
+              
             10{10 - 1 point----------------------------------------}: {$region -fold}
               begin
                 pixel_ptr^:=
                 //SetColorInv(clRed);
                 Func2(pixel_ptr^,r,g,b,d_alpha1,alpha1,alpha1,pow,d);
               end; {$endregion}
+              
           end;
           Inc(arr_src_ptr);
         end;
