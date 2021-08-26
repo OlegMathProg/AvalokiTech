@@ -1,6 +1,7 @@
 (****************************** Edge Antialiasing *****************************)
+// This file contains some routines for simple contour anti-aliasing.
 
-//Conditional Designations:
+// Conditional Designations:
 TPtRect           =packed record {$region -fold}
     left  : integer;
     top   : integer;
@@ -62,7 +63,7 @@ PFastAALine       =^TFastAALine;
 T1AALnArr         =array of TFastAALine;
 P1AALnArr         =^T1AALnArr;
 
-
+// Calculation of all border pixels:
 procedure BorderCalc1(constref arr_src_ptr:PInteger ; var arr_dst:T1ByteArr;                          constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:integer                                   ); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   arr_src_ptr2         : PInteger;
@@ -110,6 +111,8 @@ begin
       Inc(arr_dst_ptr ,d_width2);
     end;
 end; {$endregion}
+
+// Calculation of border line gradients directions: 
 procedure BorderCalc2(constref arr_src_ptr:PInteger ; var arr_dst:T1ByteArr; var arr_alpha:T1AALnArr; constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; out line_count      :integer                                   ); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   line_kind_arr         : array[0..7] of boolean;
@@ -123,7 +126,7 @@ var
 begin
   {Fill Borders} {$region -fold}
   arr_dst_ptr:=@arr_dst[rct_dst.left+arr_dst_width*rct_dst.top];
-  //Top Line
+  // Top Line
   FillByte(arr_dst_ptr^,rct_dst.width,0);
   // Left Line
   for i:=0 to rct_dst.height-1 do
@@ -138,7 +141,7 @@ begin
       arr_dst_ptr^:=0;
       Inc(arr_dst_ptr,arr_dst_width);
     end;
-  //Bottom Line
+  // Bottom Line
   arr_dst_ptr:=@arr_dst[rct_dst.left+arr_dst_width*(rct_dst.top+rct_dst.height-1)];
   FillByte(arr_dst_ptr^,rct_dst.width,0); {$endregion}
   arr_dst_ptr     :=Unaligned(@arr_dst  [rct_dst.left+arr_dst_width*(rct_dst.top+1)]);
@@ -395,6 +398,8 @@ begin
     end;
   line_count:=PFastAALine(arr_alpha_ptr)-PFastAALine(@arr_alpha[0]);
 end; {$endregion}
+
+// Fill borders with gradient color:
 procedure BorderFill (constref arr_src    :T1AALnArr;                                                                                               constref rct_dst_left,rct_dst_top:integer; constref bmp_ptr:PInteger; constref bmp_width:integer; constref line_count:integer; constref col:TColor; args:TFunc0Args; Func2:TFunc2); {$region -fold}
 var
   arr_src_ptr : PFastAALine;
@@ -431,7 +436,7 @@ begin
                 alpha2      :=alpha1;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=alpha1+j*alpha_shift3;
+                    //alpha2  :=alpha1+j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clFuchsia);
@@ -447,7 +452,7 @@ begin
                 alpha2      :=255-alpha_shift3;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=255-alpha_shift3-j*alpha_shift3;
+                    //alpha2  :=255-alpha_shift3-j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clBlue);
@@ -463,7 +468,7 @@ begin
                 alpha2      :=alpha1;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=alpha1+j*alpha_shift3;
+                    //alpha2  :=alpha1+j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clPurple);
@@ -483,7 +488,7 @@ begin
                 alpha2:=255-alpha_shift3;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=255-j*alpha_shift3;
+                    //alpha2  :=255-j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clPurple);
@@ -503,7 +508,7 @@ begin
                 alpha2      :=255-alpha_shift3;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=255-j*alpha_shift3;
+                    //alpha2  :=255-j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clWhite);
@@ -523,7 +528,7 @@ begin
                 alpha2      :=alpha1;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=alpha1+j*alpha_shift3;
+                    //alpha2  :=alpha1+j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clWhite);
@@ -547,7 +552,7 @@ begin
                 alpha2      :=alpha1;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=alpha1+j*alpha_shift3;
+                    //alpha2  :=alpha1+j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clFuchsia);
@@ -563,7 +568,7 @@ begin
                 alpha2      :=255-alpha_shift3;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                  //alpha2    :=255-alpha_shift3-j*alpha_shift3;
+                    //alpha2  :=255-alpha_shift3-j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clBlue);
@@ -579,7 +584,7 @@ begin
                 alpha2      :=alpha1;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                    //alpha2    :=alpha1+j*alpha_shift3;
+                    //alpha2  :=alpha1+j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clPurple);
@@ -599,7 +604,7 @@ begin
                 alpha2:=255-alpha_shift3;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                    //alpha2    :=255-j*alpha_shift3;
+                    //alpha2  :=255-j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clPurple);
@@ -619,7 +624,7 @@ begin
                 alpha2      :=255-alpha_shift3;
                 for j:=0 to alpha_shift2-1 do
                   begin
-                    //alpha2    :=255-j*alpha_shift3;
+                    //alpha2  :=255-j*alpha_shift3;
                     d_alpha2  :=255-alpha2;
                     pixel_ptr^:=
                     //SetColorInv({clGreen}clWhite);
@@ -669,7 +674,7 @@ begin
 end; {$endregion}
 
 
-//Usage Example:
+// Usage Example:
 
 BorderCalc1(ln_arr0,
             aa_arr1,
