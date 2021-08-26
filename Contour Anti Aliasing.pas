@@ -1,7 +1,7 @@
 (****************************** Edge Antialiasing *****************************)
 // This file contains some routines for simple contour anti-aliasing.
 
-// Conditional Designations:
+// Forward Definitions:
 TPtRect           =packed record {$region -fold}
     left  : integer;
     top   : integer;
@@ -62,6 +62,21 @@ PFastAALine       =^TFastAALine;
 
 T1AALnArr         =array of TFastAALine;
 P1AALnArr         =^T1AALnArr;
+
+// Initialization gradient effects:
+procedure PPDec2ProcInit;  {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  PPDec2Proc[000]:=Unaligned(@AlphablendDec2);
+  PPDec2Proc[001]:=Unaligned(@AdditiveDec2  );
+  PPDec2Proc[002]:=Unaligned(@AlphablendDec2);
+  PPDec2Proc[003]:=Unaligned(@InverseDec2   );
+  PPDec2Proc[004]:=Unaligned(@HighlightDec2 );
+  PPDec2Proc[005]:=Unaligned(@DarkenDec2    );
+  PPDec2Proc[006]:=Unaligned(@GrayscaleRDec2);
+  PPDec2Proc[007]:=Unaligned(@GrayscaleGDec2);
+  PPDec2Proc[008]:=Unaligned(@GrayscaleBDec2);
+  PPDec2Proc[009]:=Unaligned(@AlphablendDec2);
+end; {$endregion}
 
 // Calculation of all border pixels:
 procedure BorderCalc1(constref arr_src_ptr:PInteger ; var arr_dst:T1ByteArr;                          constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:integer                                   ); {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -674,8 +689,8 @@ begin
 end; {$endregion}
 
 
-// Usage Example:
 
+// Usage Example:
 BorderCalc1(ln_arr0,
             aa_arr1,
             ln_arr_width,
@@ -698,6 +713,196 @@ BorderFill (aa_arr2,
             eds_col,
             args,
             PPDec2Proc[pp_dec_2_proc_ind]);
+            
+            
+            
+// Gradient effects:
+function AlphaBlendDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  alpha  :=Max(alpha-Byte(d){alpha_fade},0);
+  d_alpha:=255-alpha;
+  Result:=(((Blue (pixel)-r)*d_alpha)>>8+r)<<16+
+          (((Green(pixel)-g)*d_alpha)>>8+g)<<08+
+          (((Red  (pixel)-b)*d_alpha)>>8+b)<<00;
+       {RGB((b*alpha+d_alpha*Red  (pixel))>>8,
+            (g*alpha+d_alpha*Green(pixel))>>8,
+            (r*alpha+d_alpha*Blue (pixel))>>8);}
+end; {$endregion}
+function AdditiveDec2  (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+  if   (Min(Red  (pixel)+b,255)>Red(pixel)) then
+    r_:=Min(Red  (pixel)+b,255)-((alpha_fade*(Abs(Min(Red  (pixel)+b,255)-Red  (pixel))))>>8)
+  else
+    r_:=Min(Red  (pixel)+b,255)+((alpha_fade*(Abs(Min(Red  (pixel)+b,255)-Red  (pixel))))>>8);
+
+  if   (Min(Green(pixel)+g,255)>Green(pixel)) then
+    g_:=Min(Green(pixel)+g,255)-((alpha_fade*(Abs(Min(Green(pixel)+g,255)-Green(pixel))))>>8)
+  else
+    g_:=Min(Green(pixel)+g,255)+((alpha_fade*(Abs(Min(Green(pixel)+g,255)-Green(pixel))))>>8);
+
+  if   (Min(Blue (pixel)+r,255)>Blue (pixel)) then
+    b_:=Min(Blue (pixel)+r,255)-((alpha_fade*(Abs(Min(Blue (pixel)+r,255)-Blue (pixel))))>>8)
+  else
+    b_:=Min(Blue (pixel)+r,255)+((alpha_fade*(Abs(Min(Blue (pixel)+r,255)-Blue (pixel))))>>8);
+
+  Result:=RGBToColor(r_,g_,b_);
+
+end; {$endregion}
+function InverseDec2   (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+  if   (255>Red  (pixel)<<1) then
+    r_:=255-Red  (pixel)-((alpha_fade*(Abs(255-Red  (pixel)<<1)))>>8)
+  else
+    r_:=255-Red  (pixel)+((alpha_fade*(Abs(255-Red  (pixel)<<1)))>>8);
+
+  if   (255>Green(pixel)<<1) then
+    g_:=255-Green(pixel)-((alpha_fade*(Abs(255-Green(pixel)<<1)))>>8)
+  else
+    g_:=255-Green(pixel)+((alpha_fade*(Abs(255-Green(pixel)<<1)))>>8);
+
+  if   (255>Blue (pixel)<<1) then
+    b_:=255-Blue (pixel)-((alpha_fade*(Abs(255-Blue (pixel)<<1)))>>8)
+  else
+    b_:=255-Blue (pixel)+((alpha_fade*(Abs(255-Blue (pixel)<<1)))>>8);
+
+  Result:=RGB(r_,g_,b_);
+
+end; {$endregion}
+function HighlightDec2 (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+  if   (Min(Red  (pixel)+pow,255)>Red(pixel)) then
+    r_:=Min(Red  (pixel)+pow,255)-((alpha_fade*(Abs(Min(Red  (pixel)+pow,255)-Red  (pixel))))>>8)
+  else
+    r_:=Min(Red  (pixel)+pow,255)+((alpha_fade*(Abs(Min(Red  (pixel)+pow,255)-Red  (pixel))))>>8);
+
+  if   (Min(Green(pixel)+pow,255)>Green(pixel)) then
+    g_:=Min(Green(pixel)+pow,255)-((alpha_fade*(Abs(Min(Green(pixel)+pow,255)-Green(pixel))))>>8)
+  else
+    g_:=Min(Green(pixel)+pow,255)+((alpha_fade*(Abs(Min(Green(pixel)+pow,255)-Green(pixel))))>>8);
+
+  if   (Min(Blue (pixel)+pow,255)>Blue (pixel)) then
+    b_:=Min(Blue (pixel)+pow,255)-((alpha_fade*(Abs(Min(Blue (pixel)+pow,255)-Blue (pixel))))>>8)
+  else
+    b_:=Min(Blue (pixel)+pow,255)+((alpha_fade*(Abs(Min(Blue (pixel)+pow,255)-Blue (pixel))))>>8);
+
+  Result:=RGB(r_,g_,b_);
+
+end; {$endregion}
+function HighlightDec2 (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+  if   (Min(Red  (pixel)+pow,255)>Red(pixel)) then
+    r_:=Min(Red  (pixel)+pow,255)-((alpha_fade*(Abs(Min(Red  (pixel)+pow,255)-Red  (pixel))))>>8)
+  else
+    r_:=Min(Red  (pixel)+pow,255)+((alpha_fade*(Abs(Min(Red  (pixel)+pow,255)-Red  (pixel))))>>8);
+
+  if   (Min(Green(pixel)+pow,255)>Green(pixel)) then
+    g_:=Min(Green(pixel)+pow,255)-((alpha_fade*(Abs(Min(Green(pixel)+pow,255)-Green(pixel))))>>8)
+  else
+    g_:=Min(Green(pixel)+pow,255)+((alpha_fade*(Abs(Min(Green(pixel)+pow,255)-Green(pixel))))>>8);
+
+  if   (Min(Blue (pixel)+pow,255)>Blue (pixel)) then
+    b_:=Min(Blue (pixel)+pow,255)-((alpha_fade*(Abs(Min(Blue (pixel)+pow,255)-Blue (pixel))))>>8)
+  else
+    b_:=Min(Blue (pixel)+pow,255)+((alpha_fade*(Abs(Min(Blue (pixel)+pow,255)-Blue (pixel))))>>8);
+
+  Result:=RGB(r_,g_,b_);
+
+end; {$endregion}
+function DarkenDec2    (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+  if   (Max(Red  (pixel)-pow,0)>Red(pixel)) then
+    r_:=Max(Red  (pixel)-pow,0)-((alpha_fade*(Abs(Max(Red  (pixel)-pow,0)-Red  (pixel))))>>8)
+  else
+    r_:=Max(Red  (pixel)-pow,0)+((alpha_fade*(Abs(Max(Red  (pixel)-pow,0)-Red  (pixel))))>>8);
+
+  if   (Max(Green(pixel)-pow,0)>Green(pixel)) then
+    g_:=Max(Green(pixel)-pow,0)-((alpha_fade*(Abs(Max(Green(pixel)-pow,0)-Green(pixel))))>>8)
+  else
+    g_:=Max(Green(pixel)-pow,0)+((alpha_fade*(Abs(Max(Green(pixel)-pow,0)-Green(pixel))))>>8);
+
+  if   (Max(Blue (pixel)-pow,0)>Blue (pixel)) then
+    b_:=Max(Blue (pixel)-pow,0)-((alpha_fade*(Abs(Max(Blue (pixel)-pow,0)-Blue (pixel))))>>8)
+  else
+    b_:=Max(Blue (pixel)-pow,0)+((alpha_fade*(Abs(Max(Blue (pixel)-pow,0)-Blue (pixel))))>>8);
+
+  Result:=RGB(r_,g_,b_);
+
+end; {$endregion}
+function GrayscaleRDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+    r_:=Red  (pixel);
+
+  if   (Green(pixel)>Red(pixel)) then
+    g_:=Green(pixel)-((d*(Abs(Green(pixel)-Red(pixel))))>>8)
+  else
+    g_:=Green(pixel)+((d*(Abs(Green(pixel)-Red(pixel))))>>8);
+
+  if   (Blue (pixel)>Red(pixel)) then
+    b_:=Blue (pixel)-((d*(Abs(Blue (pixel)-Red(pixel))))>>8)
+  else
+    b_:=Blue (pixel)+((d*(Abs(Blue (pixel)-Red(pixel))))>>8);
+
+  Result:=RGB(r_,g_,b_);
+
+end; {$endregion}
+function GrayscaleGDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+  if   (Red  (pixel)>Green(pixel)) then
+    r_:=Red  (pixel)-((alpha_fade*(Abs(Red  (pixel)-Green(pixel))))>>8)
+  else
+    r_:=Red  (pixel)+((alpha_fade*(Abs(Red  (pixel)-Green(pixel))))>>8);
+
+    g_:=Green(pixel);
+
+  if   (Blue (pixel)>Green(pixel)) then
+    b_:=Blue (pixel)-((alpha_fade*(Abs(Blue (pixel)-Green(pixel))))>>8)
+  else
+    b_:=Blue (pixel)+((alpha_fade*(Abs(Blue (pixel)-Green(pixel))))>>8);
+
+  Result:=RGB(r_,g_,b_);
+
+end; {$endregion}
+function GrayscaleBDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  r_,g_,b_: byte;
+begin
+
+  if   (Red  (pixel)>Blue(pixel)) then
+    r_:=Red  (pixel)-((alpha_fade*(Abs(Red  (pixel)-Blue(pixel))))>>8)
+  else
+    r_:=Red  (pixel)+((alpha_fade*(Abs(Red  (pixel)-Blue(pixel))))>>8);
+
+  if   (Green(pixel)>Blue(pixel)) then
+    g_:=Green(pixel)-((alpha_fade*(Abs(Green(pixel)-Blue(pixel))))>>8)
+  else
+    g_:=Green(pixel)+((alpha_fade*(Abs(Green(pixel)-Blue(pixel))))>>8);
+
+    b_:=Blue (pixel);
+
+  Result:=RGB(r_,g_,b_);
+
+end; {$endregion}
 
 
 
