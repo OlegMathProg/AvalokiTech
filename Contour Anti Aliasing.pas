@@ -414,7 +414,7 @@ begin
   line_count:=PFastAALine(arr_alpha_ptr)-PFastAALine(@arr_alpha[0]);
 end; {$endregion}
 
-// Fill borders with gradient color:
+// Fill borders with gradient effect:
 procedure BorderFill (constref arr_src    :T1AALnArr;                                                                                               constref rct_dst_left,rct_dst_top:integer; constref bmp_ptr:PInteger; constref bmp_width:integer; constref line_count:integer; constref col:TColor; args:TFunc0Args; Func2:TFunc2); {$region -fold}
 var
   arr_src_ptr : PFastAALine;
