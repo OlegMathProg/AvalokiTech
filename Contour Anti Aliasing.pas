@@ -63,7 +63,7 @@ PFastAALine       =^TFastAALine;
 T1AALnArr         =array of TFastAALine;
 P1AALnArr         =^T1AALnArr;
 
-// Initialization gradient effects:
+// Initialization of gradient effects:
 procedure PPDec2ProcInit;  {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   PPDec2Proc[000]:=Unaligned(@AlphablendDec2);
