@@ -1,7 +1,10 @@
 (****************************** Edge Antialiasing *****************************)
 // This file contains some routines for simple contour anti-aliasing.
 
+
+
 // Forward Definitions:
+type
 TPtRect           =packed record {$region -fold}
     left  : integer;
     top   : integer;
@@ -63,6 +66,8 @@ PFastAALine       =^TFastAALine;
 T1AALnArr         =array of TFastAALine;
 P1AALnArr         =^T1AALnArr;
 
+
+
 // Initialization of gradient effects:
 procedure PPDec2ProcInit;  {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -78,8 +83,10 @@ begin
   PPDec2Proc[009]:=Unaligned(@AlphablendDec2);
 end; {$endregion}
 
+
+
 // Calculation of all border pixels:
-procedure BorderCalc1(constref arr_src_ptr:PInteger ; var arr_dst:T1ByteArr;                          constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:integer                                   ); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure BorderCalc1(constref arr_src_ptr:PInteger; var arr_dst:T1ByteArr; constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   arr_src_ptr2         : PInteger;
   arr_dst_ptr          : PByte;
@@ -128,7 +135,7 @@ begin
 end; {$endregion}
 
 // Calculation of border line gradients directions: 
-procedure BorderCalc2(constref arr_src_ptr:PInteger ; var arr_dst:T1ByteArr; var arr_alpha:T1AALnArr; constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; out line_count      :integer                                   ); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure BorderCalc2(constref arr_src_ptr:PInteger; var arr_dst:T1ByteArr; var arr_alpha:T1AALnArr; constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; out line_count:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   line_kind_arr         : array[0..7] of boolean;
   line_kind             : qword absolute line_kind_arr;
@@ -415,7 +422,7 @@ begin
 end; {$endregion}
 
 // Fill borders with gradient effect:
-procedure BorderFill (constref arr_src    :T1AALnArr;                                                                                               constref rct_dst_left,rct_dst_top:integer; constref bmp_ptr:PInteger; constref bmp_width:integer; constref line_count:integer; constref col:TColor; args:TFunc0Args; Func2:TFunc2); {$region -fold}
+procedure BorderFill (constref arr_src:T1AALnArr; constref rct_dst_left,rct_dst_top:integer; constref bmp_ptr:PInteger; constref bmp_width:integer; constref line_count:integer; constref col:TColor; args:TFunc0Args; Func2:TFunc2); {$region -fold}
 var
   arr_src_ptr : PFastAALine;
   pixel_ptr   : Pinteger;
