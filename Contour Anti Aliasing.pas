@@ -724,6 +724,7 @@ BorderFill (aa_arr2,
             
             
 // Gradient effects:
+// AlphaBlend:
 function AlphaBlendDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   alpha  :=Max(alpha-Byte(d){alpha_fade},0);
@@ -735,6 +736,8 @@ begin
             (g*alpha+d_alpha*Green(pixel))>>8,
             (r*alpha+d_alpha*Blue (pixel))>>8);}
 end; {$endregion}
+
+// Additive:
 function AdditiveDec2  (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
@@ -758,6 +761,8 @@ begin
   Result:=RGBToColor(r_,g_,b_);
 
 end; {$endregion}
+
+// Inverse:
 function InverseDec2   (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
@@ -781,6 +786,8 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
+
+// Highlight:
 function HighlightDec2 (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
@@ -804,6 +811,8 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
+
+// Highlight:
 function HighlightDec2 (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
@@ -827,6 +836,8 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
+
+// Darken:
 function DarkenDec2    (pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
@@ -850,6 +861,8 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
+
+// Grayscale(red channel);
 function GrayscaleRDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
@@ -870,6 +883,8 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
+
+// Grayscale(green channel);
 function GrayscaleGDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
@@ -890,6 +905,8 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
+
+// Grayscale(blue channel);
 function GrayscaleBDec2(pixel:integer; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): integer; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
