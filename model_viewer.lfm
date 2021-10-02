@@ -1,0 +1,45 @@
+object F_3D_Viewer: TF_3D_Viewer
+  Left = 217
+  Height = 387
+  Top = 138
+  Width = 500
+  AlphaBlendValue = 100
+  Anchors = []
+  Caption = '3D Viewer'
+  ClientHeight = 387
+  ClientWidth = 500
+  Color = clWhite
+  Enabled = False
+  Font.Color = 14778530
+  OnCreate = FormCreate
+  OnDblClick = FormDblClick
+  OnHide = FormHide
+  OnShow = FormShow
+  ParentBiDiMode = False
+  PopupMode = pmExplicit
+  LCLVersion = '2.0.10.0'
+  object OpenGLControl1: TOpenGLControl
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 387
+    Top = 0
+    Width = 500
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoResizeViewport = True
+    Enabled = False
+    OnDblClick = FormDblClick
+    Visible = False
+  end
+  object T_3DViewer_Timer: TTimer
+    Enabled = False
+    Interval = 28
+    OnTimer = T_3DViewer_TimerTimer
+    Left = 62
+    Top = 69
+  end
+end
