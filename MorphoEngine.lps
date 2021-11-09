@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Release"/>
+    <Units Count="19">
+      <Unit0>
+        <Filename Value="MorphoEngine.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="24"/>
+        <UsageCount Value="200"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="5419"/>
+        <CursorPos Y="13289"/>
+        <FoldState Value=" TLoxT66 p0im3E6 T3o=f0{Eg"/>
+        <UsageCount Value="200"/>
+        <Bookmarks Count="3">
+          <Item0 Y="14522" ID="1"/>
+          <Item1 Y="2989" ID="2"/>
+          <Item2 Y="15801" ID="3"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="Model_Viewer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_3D_Viewer"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="73"/>
+        <CursorPos X="4" Y="103"/>
+        <UsageCount Value="200"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Multithreading_Calculations.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="53" Y="20"/>
+        <UsageCount Value="200"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="Hot_Keys.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_Hot_Keys"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="90" Y="14"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="Trash.inc"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="529"/>
+        <CursorPos X="2" Y="548"/>
+        <UsageCount Value="200"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="Fast_Filters.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="180"/>
+        <CursorPos Y="324"/>
+        <UsageCount Value="200"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="Fast_Primitives.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="360"/>
+        <CursorPos X="35" Y="17"/>
+        <FoldState Value=" TLk_U0}zG"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="Fast_Packing.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="200"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Scene_Tree.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="205"/>
+        <CursorPos X="15" Y="257"/>
+        <UsageCount Value="104"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="Fast_AnimK.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="340"/>
+        <CursorPos X="12" Y="239"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\lazarus\lcl\graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="229"/>
+        <CursorPos X="3" Y="248"/>
+        <UsageCount Value="11"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="C:\lazarus\fpc\3.2.0\source\packages\opengl\src\gl.pp"/>
+        <UnitName Value="GL"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="459"/>
+        <CursorPos X="3" Y="618"/>
+        <UsageCount Value="7"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\objpas\objpas.pp"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="8" Y="33"/>
+        <UsageCount Value="9"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\inc\systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="614"/>
+        <CursorPos X="3" Y="642"/>
+        <UsageCount Value="9"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="179"/>
+        <CursorPos X="23" Y="206"/>
+        <UsageCount Value="11"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\lazarus\components\lazutils\graphtype.pp"/>
+        <UnitName Value="GraphType"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="7"/>
+        <CursorPos X="3" Y="35"/>
+        <UsageCount Value="9"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\win\wininc\base.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1062"/>
+        <CursorPos X="8" Y="870"/>
+        <UsageCount Value="9"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\win\wininc\defines.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="56"/>
+        <CursorPos X="6" Y="84"/>
+        <UsageCount Value="9"/>
+      </Unit18>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3238" Column="19" TopLine="3211"/>
+      </Position1>
+      <Position2>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33444" Column="318" TopLine="33105"/>
+      </Position2>
+      <Position3>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33293" Column="212" TopLine="33167"/>
+      </Position3>
+      <Position4>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33332" TopLine="33056"/>
+      </Position4>
+      <Position5>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3969" Column="15" TopLine="3949"/>
+      </Position5>
+      <Position6>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33502" Column="333" TopLine="33181"/>
+      </Position6>
+      <Position7>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3977" Column="14" TopLine="3958"/>
+      </Position7>
+      <Position8>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33487" Column="25" TopLine="33469"/>
+      </Position8>
+      <Position9>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33368" Column="242" TopLine="33311"/>
+      </Position9>
+      <Position10>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3977" Column="14" TopLine="3949"/>
+      </Position10>
+      <Position11>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33330" Column="20" TopLine="33271"/>
+      </Position11>
+      <Position12>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3961" Column="15" TopLine="3937"/>
+      </Position12>
+      <Position13>
+        <Filename Value="Main.pas"/>
+        <Caret Line="18058" Column="15" TopLine="18031"/>
+      </Position13>
+      <Position14>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="2983" Column="16" TopLine="2956"/>
+      </Position14>
+      <Position15>
+        <Filename Value="Main.pas"/>
+        <Caret Line="18058" Column="15" TopLine="18001"/>
+      </Position15>
+      <Position16>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3238" Column="19" TopLine="3211"/>
+      </Position16>
+      <Position17>
+        <Filename Value="Main.pas"/>
+        <Caret Line="18063" Column="22" TopLine="18046"/>
+      </Position17>
+      <Position18>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="4016" Column="17" TopLine="4001"/>
+      </Position18>
+      <Position19>
+        <Filename Value="Main.pas"/>
+        <Caret Line="18034" Column="11" TopLine="18004"/>
+      </Position19>
+      <Position20>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3238" Column="18" TopLine="3211"/>
+      </Position20>
+      <Position21>
+        <Filename Value="Main.pas"/>
+        <Caret Line="18034" Column="11" TopLine="18004"/>
+      </Position21>
+      <Position22>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3238" Column="17" TopLine="3211"/>
+      </Position22>
+      <Position23>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="10425" Column="130" TopLine="8659"/>
+      </Position23>
+      <Position24>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3245" Column="16" TopLine="3211"/>
+      </Position24>
+      <Position25>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="10911" Column="195" TopLine="9159"/>
+      </Position25>
+      <Position26>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3230" Column="17" TopLine="3202"/>
+      </Position26>
+      <Position27>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3233" Column="43" TopLine="3213"/>
+      </Position27>
+      <Position28>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3232" Column="68" TopLine="3205"/>
+      </Position28>
+      <Position29>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="10914" Column="194" TopLine="8667"/>
+      </Position29>
+      <Position30>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="10893" Column="11" TopLine="10721"/>
+      </Position30>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="6">
+      <Item1>
+        <Kind Value="bpkData"/>
+        <WatchData Value="        (Sender as TFloatSpinEdit).Value:=0;
+"/>
+        <WatchScope Value="wpsGlobal"/>
+        <WatchKind Value="wpkWrite"/>
+        <InitialEnabled Value="False"/>
+        <Actions LogMessage="True" EvalExpression="True" LogCallStack="True"/>
+      </Item1>
+      <Item2>
+        <Kind Value="bpkData"/>
+        <WatchData Value="  if (Sender as TFloatSpinEdit).tag in [4,9,16,25,36] then
+"/>
+        <WatchScope Value="wpsGlobal"/>
+        <WatchKind Value="wpkWrite"/>
+        <InitialEnabled Value="False"/>
+        <Actions LogMessage="True" EvalExpression="True" LogCallStack="True" TakeSnapshot="True"/>
+      </Item2>
+      <Item3>
+        <Kind Value="bpkAddress"/>
+        <Address Value="442669"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <InitialEnabled Value="False"/>
+      </Item3>
+      <Item4>
+        <Kind Value="bpkData"/>
+        <WatchData Value="procedure"/>
+        <WatchScope Value="wpsGlobal"/>
+        <WatchKind Value="wpkWrite"/>
+        <InitialEnabled Value="False"/>
+      </Item4>
+      <Item5>
+        <Kind Value="bpkData"/>
+        <WatchScope Value="wpsGlobal"/>
+        <WatchKind Value="wpkWrite"/>
+        <InitialEnabled Value="False"/>
+        <Actions LogMessage="True" EvalExpression="True" LogCallStack="True"/>
+      </Item5>
+      <Item6>
+        <Kind Value="bpkAddress"/>
+        <Address Value="15440"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+      </Item6>
+    </BreakPoints>
+    <Watches Count="4">
+      <Item1>
+        <Expression Value="      end
+      else
+        i := i + 1;
+    end;
+    label2.Visible := True;
+    Memo2.Visible := True; "/>
+      </Item1>
+      <Item2>
+        <Expression Value="  if (Sender as TFloatSpinEdit).tag in [4,9,16,25,36] then
+"/>
+      </Item2>
+      <Item3>
+        <Expression Value="        (Sender as TFloatSpinEdit).Value:=0;
+"/>
+      </Item3>
+      <Item4>
+        <Expression Value="  FShow_Points.Show;
+"/>
+      </Item4>
+    </Watches>
+  </Debugging>
+</CONFIG>
