@@ -29,7 +29,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="Knapsack2D"/>
+            <Filename Value="MorphoEngine"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -127,19 +127,22 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="4">
+    <RequiredPackages Count="5">
       <Item1>
-        <PackageName Value="MultiThreadProcsLaz"/>
+        <PackageName Value="lazvlc"/>
       </Item1>
       <Item2>
-        <PackageName Value="LazOpenGLContext"/>
+        <PackageName Value="MultiThreadProcsLaz"/>
       </Item2>
       <Item3>
-        <PackageName Value="LazUtils"/>
+        <PackageName Value="LazOpenGLContext"/>
       </Item3>
       <Item4>
-        <PackageName Value="LCL"/>
+        <PackageName Value="LazUtils"/>
       </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
     </RequiredPackages>
     <Units Count="9">
       <Unit0>
@@ -193,7 +196,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="Knapsack2D"/>
+      <Filename Value="MorphoEngine"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
