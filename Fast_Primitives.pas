@@ -8183,7 +8183,7 @@ begin
   for i:=0 to Length(arr_dst)-1 do
     begin
       arr_dst_ptr^:=p1^.x_ptr^;
-      p1:=p1^.next_item;
+      p1          :=p1^.next_item;
       Inc(arr_dst_ptr);
     end;
   p2^.next_item:=Nil;
@@ -8199,7 +8199,7 @@ begin
     begin
       arr_dst_ptr^.x:=p1^.x;
       arr_dst_ptr^.y:=p1^.y;
-      p1:=p1^.next_item;
+      p1            :=p1^.next_item;
       Inc(arr_dst_ptr);
     end;
   p2^.next_item:=Nil;
@@ -8211,7 +8211,7 @@ begin
   p1:=first_item;
   while (p1<>Nil) do
     begin
-      t:=p1;
+      t :=p1;
       p1:=p1^.next_item;
       Dispose(t);
     end;
@@ -8226,7 +8226,7 @@ begin
   p1:=first_item;
   while (p1<>Nil) do
     begin
-      t:=p1;
+      t :=p1;
       p1:=p1^.next_item;
       Dispose(t);
     end;
@@ -27827,7 +27827,7 @@ begin
           p0_shift:=p0*ln_arr_width;
           while (p0<=long_len) do
             begin
-              ln_arr0[(i>>16)+p0_shift{p0*ln_arr_width}]:=1;
+              ln_arr0[(i>>16)+p0_shift]:=1;
 	      i+=dec_inc;
               Inc(p0);
               Inc(p0_shift,ln_arr_width);
@@ -27839,7 +27839,7 @@ begin
       p0_shift:=p0*ln_arr_width;
       while (p0>=long_len) do
         begin
-          ln_arr0[(i>>16)+p0_shift{p0*ln_arr_width}]:=1;
+          ln_arr0[(i>>16)+p0_shift]:=1;
           i-=dec_inc;
           Dec(p0);
           Dec(p0_shift,ln_arr_width);
@@ -27909,7 +27909,7 @@ begin
           while (p0<=long_len) or (clip_shift=pix_cnt) do
             begin
               Inc(clip_shift);
-              ln_arr0[(i>>16)+p0_shift{p0*ln_arr_width}]:=1;
+              ln_arr0[(i>>16)+p0_shift]:=1;
 	      i+=dec_inc;
               Inc(p0);
               Inc(p0_shift,ln_arr_width);
@@ -27922,7 +27922,7 @@ begin
       while (p0>=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
-          ln_arr0[(i>>16)+p0_shift{p0*ln_arr_width}]:=1;
+          ln_arr0[(i>>16)+p0_shift]:=1;
           i-=dec_inc;
           Dec(p0);
           Dec(p0_shift,ln_arr_width);
@@ -27988,7 +27988,7 @@ begin
           p0_shift:=p0*ln_arr_width;
           while (p0<=long_len) do
             begin
-              ln_arr0[(i>>16)+p0_shift{p0*ln_arr_width}]+=1;
+              ln_arr0[(i>>16)+p0_shift]+=1;
 	      i+=dec_inc;
               Inc(p0);
               Inc(p0_shift,ln_arr_width);
@@ -28000,7 +28000,7 @@ begin
       p0_shift:=p0*ln_arr_width;
       while (p0>=long_len) do
         begin
-          ln_arr0[(i>>16)+p0_shift{p0*ln_arr_width}]+=1;
+          ln_arr0[(i>>16)+p0_shift]+=1;
           i-=dec_inc;
           Dec(p0);
           Dec(p0_shift,ln_arr_width);
@@ -28066,7 +28066,7 @@ begin
           Prefetch(ln_arr1_ptr2);
           while (p0<=long_len) do
             begin
-              ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^-=1;
+              ((i>>16)+ln_arr1_ptr2)^-=1;
 	      i+=dec_inc;
               Inc(p0);
               Inc(ln_arr1_ptr2,ln_arr_width);
@@ -28079,7 +28079,7 @@ begin
       Prefetch(ln_arr1_ptr2);
       while (p0>=long_len) do
         begin
-          ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^-=1;
+          ((i>>16)+ln_arr1_ptr2)^-=1;
           i-=dec_inc;
           Dec(p0);
           Dec(ln_arr1_ptr2,ln_arr_width);
@@ -28152,7 +28152,7 @@ begin
           while (p0<=long_len) or (clip_shift=pix_cnt) do
             begin
               Inc(clip_shift);
-              ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^-=1;
+              ((i>>16)+ln_arr1_ptr2)^-=1;
 	      i+=dec_inc;
               Inc(p0);
               Inc(ln_arr1_ptr2,ln_arr_width);
@@ -28166,7 +28166,7 @@ begin
       while (p0>=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
-          ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^-=1;
+          ((i>>16)+ln_arr1_ptr2)^-=1;
           i-=dec_inc;
           Dec(p0);
           Dec(ln_arr1_ptr2,ln_arr_width);
@@ -28233,10 +28233,10 @@ begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
           ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-          Prefetch(ln_arr1_ptr2);
+          //Prefetch(ln_arr1_ptr2);
           while (p0<=long_len) do
             begin
-              ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^+=1;
+              ((i>>16)+ln_arr1_ptr2)^+=1;
 	      i+=dec_inc;
               Inc(p0);
               Inc(ln_arr1_ptr2,ln_arr_width);
@@ -28246,10 +28246,10 @@ begin
       long_len+=p0;
       i:=$8000+(r0<<16);
       ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-      Prefetch(ln_arr1_ptr2);
+      //Prefetch(ln_arr1_ptr2);
       while (p0>=long_len) do
         begin
-          ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^+=1;
+          ((i>>16)+ln_arr1_ptr2)^+=1;
           i-=dec_inc;
           Dec(p0);
           Dec(ln_arr1_ptr2,ln_arr_width);
@@ -28261,7 +28261,7 @@ begin
     begin
       long_len+=r0;
       i:=$8000+(p0<<16);
-      Prefetch(ln_arr1_ptr);
+      //Prefetch(ln_arr1_ptr);
       while (r0<=long_len) do
         begin
           (ln_arr1_ptr+r0+(i>>16)*ln_arr_width)^+=1;
@@ -28273,7 +28273,7 @@ begin
 
   long_len+=r0;
   i:=$8000+(p0<<16);
-  Prefetch(ln_arr1_ptr);
+  //Prefetch(ln_arr1_ptr);
   while (r0>=long_len) do
     begin
       (ln_arr1_ptr+r0+(i>>16)*ln_arr_width)^+=1;
@@ -28318,11 +28318,11 @@ begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
           ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-          Prefetch(ln_arr1_ptr2);
+          //Prefetch(ln_arr1_ptr2);
           while (p0<=long_len) or (clip_shift=pix_cnt) do
             begin
               Inc(clip_shift);
-              ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^+=1;
+              ((i>>16)+ln_arr1_ptr2)^+=1;
 	      i+=dec_inc;
               Inc(p0);
               Inc(ln_arr1_ptr2,ln_arr_width);
@@ -28332,11 +28332,11 @@ begin
       long_len+=p0;
       i:=$8000+(r0<<16);
       ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-      Prefetch(ln_arr1_ptr2);
+      //Prefetch(ln_arr1_ptr2);
       while (p0>=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
-          ({ln_arr1_ptr+}(i>>16)+ln_arr1_ptr2{p0*ln_arr_width})^+=1;
+          ((i>>16)+ln_arr1_ptr2)^+=1;
           i-=dec_inc;
           Dec(p0);
           Dec(ln_arr1_ptr2,ln_arr_width);
@@ -28348,7 +28348,7 @@ begin
     begin
       long_len+=r0;
       i:=$8000+(p0<<16);
-      Prefetch(ln_arr1_ptr);
+      //Prefetch(ln_arr1_ptr);
       while (r0<=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
@@ -28361,7 +28361,7 @@ begin
 
   long_len+=r0;
   i:=$8000+(p0<<16);
-  Prefetch(ln_arr1_ptr);
+  //Prefetch(ln_arr1_ptr);
   while (r0>=long_len) or (clip_shift=pix_cnt) do
     begin
       Inc(clip_shift);
@@ -28403,10 +28403,10 @@ begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
           bmp_dst_ptr2:=bmp_dst_ptr+p0*bmp_dst_width;
-          Prefetch(bmp_dst_ptr2);
+          //Prefetch(bmp_dst_ptr2);
           while (p0<=long_len) do
             begin
-              ({bmp_dst_ptr+}(i>>16)+bmp_dst_ptr2{p0*bmp_dst_width})^:=local_prop.eds_col_inv;
+              ((i>>16)+bmp_dst_ptr2)^:=local_prop.eds_col_inv;
 	      i+=dec_inc;
               Inc(p0);
               Inc(bmp_dst_ptr2,bmp_dst_width);
@@ -28416,10 +28416,10 @@ begin
       long_len+=p0;
       i:=$8000+(r0<<16);
       bmp_dst_ptr2:=bmp_dst_ptr+p0*bmp_dst_width;
-      Prefetch(bmp_dst_ptr2);
+      //Prefetch(bmp_dst_ptr2);
       while (p0>=long_len) do
         begin
-          ({bmp_dst_ptr+}(i>>16)+bmp_dst_ptr2{p0*bmp_dst_width})^:=local_prop.eds_col_inv;
+          ((i>>16)+bmp_dst_ptr2)^:=local_prop.eds_col_inv;
           i-=dec_inc;
           Dec(p0);
           Dec(bmp_dst_ptr2,bmp_dst_width);
@@ -28431,7 +28431,7 @@ begin
     begin
       long_len+=r0;
       i:=$8000+(p0<<16);
-      Prefetch(bmp_dst_ptr);
+      //Prefetch(bmp_dst_ptr);
       while (r0<=long_len) do
         begin
           (bmp_dst_ptr+r0+(i>>16)*bmp_dst_width)^:=local_prop.eds_col_inv;
@@ -28443,7 +28443,7 @@ begin
 
   long_len+=r0;
   i:=$8000+(p0<<16);
-  Prefetch(bmp_dst_ptr);
+  //Prefetch(bmp_dst_ptr);
   while (r0>=long_len) do
     begin
       (bmp_dst_ptr+r0+(i>>16)*bmp_dst_width)^:=local_prop.eds_col_inv;
@@ -28488,11 +28488,11 @@ begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
           bmp_dst_ptr2:=bmp_dst_ptr+p0*bmp_dst_width;
-          Prefetch(bmp_dst_ptr2);
+          //Prefetch(bmp_dst_ptr2);
           while (p0<=long_len) or (clip_shift=pix_cnt) do
             begin
               Inc(clip_shift);
-              ({bmp_dst_ptr+}(i>>16)+bmp_dst_ptr2{p0*bmp_dst_width})^:=local_prop.eds_col_inv;
+              ((i>>16)+bmp_dst_ptr2)^:=local_prop.eds_col_inv;
 	      i+=dec_inc;
               Inc(p0);
               Inc(bmp_dst_ptr2,bmp_dst_width);
@@ -28502,11 +28502,11 @@ begin
       long_len+=p0;
       i:=$8000+(r0<<16);
       bmp_dst_ptr2:=bmp_dst_ptr+p0*bmp_dst_width;
-      Prefetch(bmp_dst_ptr2);
+      //Prefetch(bmp_dst_ptr2);
       while (p0>=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
-          ({bmp_dst_ptr+}(i>>16)+bmp_dst_ptr2{p0*bmp_dst_width})^:=local_prop.eds_col_inv;
+          ((i>>16)+bmp_dst_ptr2)^:=local_prop.eds_col_inv;
           i-=dec_inc;
           Dec(p0);
           Dec(bmp_dst_ptr2,bmp_dst_width);
@@ -28518,7 +28518,7 @@ begin
     begin
       long_len+=r0;
       i:=$8000+(p0<<16);
-      Prefetch(bmp_dst_ptr);
+      //Prefetch(bmp_dst_ptr);
       while (r0<=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
@@ -28531,7 +28531,7 @@ begin
 
   long_len+=r0;
   i:=$8000+(p0<<16);
-  Prefetch(bmp_dst_ptr);
+  //Prefetch(bmp_dst_ptr);
   while (r0>=long_len) or (clip_shift=pix_cnt) do
     begin
       Inc(clip_shift);
@@ -31440,10 +31440,199 @@ begin
     end;
 end; {$endregion}
 
+// Monochrome Horizontal Line(Width - 1 pixel):
+function  LineHC  (var x0,y0,x1:integer; constref rct_clp:TPtRect): boolean;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  arr_clp: array[0..7] of boolean;
+  clp    : qword absolute arr_clp;
+  x2     : integer;
+begin
+  Result:=True;
+  if (y0<rct_clp.top) or (y0>=rct_clp.bottom) then
+    begin
+      Result:=False;
+      Exit;
+    end;
+  if (x0>x1) then
+    begin
+      x2:=x1;
+      x1:=x0;
+      x0:=x2;
+    end;
+  arr_clp[00]:=(x0< rct_clp.left  );
+  arr_clp[01]:=(x0>=rct_clp.left  ) and (x0<rct_clp.right);
+  arr_clp[02]:=(x0>=rct_clp.right );
+  arr_clp[03]:=(x1< rct_clp.left  );
+  arr_clp[04]:=(x1>=rct_clp.left  ) and (x1<rct_clp.right);
+  arr_clp[05]:=(x1>=rct_clp.right );
+  arr_clp[06]:=False;
+  arr_clp[07]:=False;
+  case clp of
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000000000000000000001000000000000000000000001:
+      begin
+        Result:=False;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000000000000100000000000000000000000000000001:
+      begin
+        x0    :=rct_clp.left;
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000010000000000000000000000000000000000000001:
+      begin
+        x0    :=rct_clp.left;
+        x1    :=rct_clp.right-1;
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000000000000100000000000000000000000100000000:
+      begin
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000010000000000000000000000000000000100000000:
+      begin
+        x1    :=rct_clp.right-1;
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000010000000000000000000000010000000000000000:
+      begin
+        Result:=False;
+        Exit;
+      end;
+  end;
+end; {$endregion}
+procedure LineH   (    x0,y0,x1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref color_info:TColorInfo); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  FillDWord((bmp_dst_ptr+x0+y0*bmp_dst_width)^,x1-x0+1,color_info.pix_col);
+end; {$endregion}
+procedure LineH   (    x0,y0,x1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref val       :TColor    ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  FillDWord((bmp_dst_ptr+x0+y0*bmp_dst_width)^,x1-x0+1,val);
+end; {$endregion}
+procedure LineH   (    x0,y0,x1:integer; constref bmp_dst_ptr:PByte   ; constref bmp_dst_width:TColor; constref val       :byte      ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  FillByte((bmp_dst_ptr+x0+y0*bmp_dst_width)^,x1-x0+1,val);
+end; {$endregion}
+
+// Monochrome Vertical Line(Width - 1 pixel):
+function  LineVC  (var x0,y0,y1:integer; constref rct_clp:TPtRect): boolean;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  arr_clp: array[0..7] of boolean;
+  clp    : qword absolute arr_clp;
+  y2     : integer;
+begin
+  Result:=True;
+  if (x0<rct_clp.left) or (x0>=rct_clp.right) then
+    begin
+      Result:=False;
+      Exit;
+    end;
+  if (y0>y1) then
+    begin
+      y2:=y1;
+      y1:=y0;
+      y0:=y2;
+    end;
+  arr_clp[00]:=(y0< rct_clp.top   );
+  arr_clp[01]:=(y0>=rct_clp.top   ) and (y0<rct_clp.bottom);
+  arr_clp[02]:=(y0>=rct_clp.bottom);
+  arr_clp[03]:=(y1< rct_clp.top   );
+  arr_clp[04]:=(y1>=rct_clp.top   ) and (y1<rct_clp.bottom);
+  arr_clp[05]:=(y1>=rct_clp.bottom);
+  arr_clp[06]:=False;
+  arr_clp[07]:=False;
+  case clp of
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000000000000000000001000000000000000000000001:
+      begin
+        Result:=False;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000000000000100000000000000000000000000000001:
+      begin
+        y0    :=rct_clp.top;
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000010000000000000000000000000000000000000001:
+      begin
+        y0    :=rct_clp.top;
+        y1    :=rct_clp.bottom-1;
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000000000000100000000000000000000000100000000:
+      begin
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000010000000000000000000000000000000100000000:
+      begin
+        y1    :=rct_clp.bottom-1;
+        Result:=True;
+        Exit;
+      end;
+    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
+    %0000000000000000000000010000000000000000000000010000000000000000:
+      begin
+        Result:=False;
+        Exit;
+      end;
+  end;
+end; {$endregion}
+procedure LineV   (    x0,y0,y1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref color_info:TColorInfo); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  ln_ptr: PInteger;
+  i     : integer;
+begin
+  ln_ptr:=bmp_dst_ptr+x0+y0*bmp_dst_width;
+  for i:=0 to y1-y0 do
+    begin
+      ln_ptr^:=color_info.pix_col;
+      Inc(ln_ptr,bmp_dst_width);
+    end;
+end; {$endregion}
+procedure LineV   (    x0,y0,y1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref val       :TColor    ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  ln_ptr: PInteger;
+  i     : integer;
+begin
+  ln_ptr:=bmp_dst_ptr+x0+y0*bmp_dst_width;
+  for i:=0 to y1-y0 do
+    begin
+      ln_ptr^:=val;
+      Inc(ln_ptr,bmp_dst_width);
+    end;
+end; {$endregion}
+procedure LineV   (    x0,y0,y1:integer; constref bmp_dst_ptr:PByte   ; constref bmp_dst_width:TColor; constref val       :byte      ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  ln_ptr: PByte;
+  i     : integer;
+begin
+  ln_ptr:=bmp_dst_ptr+x0+y0*bmp_dst_width;
+  for i:=0 to y1-y0 do
+    begin
+      ln_ptr^:=val;
+      Inc(ln_ptr,bmp_dst_width);
+    end;
+end; {$endregion}
+
 // Monochrome Antialiased Line(Width - 1 pixel):
 procedure LineA   (    x0,y0,x1,y1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref color_info:TColorInfo; alpha_max:byte=255      ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  bmp_dst_ptr2                                       : PInteger;
   dx,dy,dydx                                         : double;
   df,deltax,deltay,loop,start,finish,dx_,dy_,loop_cnt: integer;
 begin
@@ -31476,13 +31665,8 @@ begin
             begin
               dy_:=Trunc(dy);
               df :=Trunc(alpha_max*(dy-dy_));       //255*dy_0+255*loop*([deltay/deltax]+{deltay/deltax})=255*(dy_0+loop)+255*loop*{deltay/deltax}
-
-              {bmp_dst_ptr2:=bmp_dst_ptr +loop+Trunc(dy)*bmp_dst_width;
-              AlphaBlend   (bmp_dst_ptr2+0000000000000,r,g,b,          df);
-              AlphaBlend   (bmp_dst_ptr2+bmp_dst_width,r,g,b,alpha_max-df);}
               AlphaBlend(bmp_dst_ptr+loop+(dy_+0)*bmp_dst_width,r,g,b,          df);
               AlphaBlend(bmp_dst_ptr+loop+(dy_+1)*bmp_dst_width,r,g,b,alpha_max-df);
-
               dy+=dydx;
             end;
         end
@@ -31510,13 +31694,8 @@ begin
             begin
               dx_:=Trunc(dx);
               df :=Trunc(alpha_max*(dx-dx_));
-
-              {bmp_dst_ptr2:=bmp_dst_ptr +Trunc(dx)+loop_cnt;
-              AlphaBlend   (bmp_dst_ptr2+0,r,g,b,          df);
-              AlphaBlend   (bmp_dst_ptr2+1,r,g,b,alpha_max-df);}
               AlphaBlend(bmp_dst_ptr+dx_+loop_cnt+0,r,g,b,          df);
               AlphaBlend(bmp_dst_ptr+dx_+loop_cnt+1,r,g,b,alpha_max-df);
-
               Inc(loop_cnt,bmp_dst_width);
               dx+=dydx;
             end;
@@ -33719,196 +33898,6 @@ begin
     end;
 end; {$endregion}
 
-// Monochrome Horizontal Line(Width - 1 pixel):
-function  LineHC  (var x0,y0,x1:integer; constref rct_clp:TPtRect): boolean;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  arr_clp: array[0..7] of boolean;
-  clp    : qword absolute arr_clp;
-  x2     : integer;
-begin
-  Result:=True;
-  if (y0<rct_clp.top) or (y0>=rct_clp.bottom) then
-    begin
-      Result:=False;
-      Exit;
-    end;
-  if (x0>x1) then
-    begin
-      x2:=x1;
-      x1:=x0;
-      x0:=x2;
-    end;
-  arr_clp[00]:=(x0< rct_clp.left  );
-  arr_clp[01]:=(x0>=rct_clp.left  ) and (x0<rct_clp.right);
-  arr_clp[02]:=(x0>=rct_clp.right );
-  arr_clp[03]:=(x1< rct_clp.left  );
-  arr_clp[04]:=(x1>=rct_clp.left  ) and (x1<rct_clp.right);
-  arr_clp[05]:=(x1>=rct_clp.right );
-  arr_clp[06]:=False;
-  arr_clp[07]:=False;
-  case clp of
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000000000000000000001000000000000000000000001:
-      begin
-        Result:=False;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000000000000100000000000000000000000000000001:
-      begin
-        x0    :=rct_clp.left;
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000010000000000000000000000000000000000000001:
-      begin
-        x0    :=rct_clp.left;
-        x1    :=rct_clp.right-1;
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000000000000100000000000000000000000100000000:
-      begin
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000010000000000000000000000000000000100000000:
-      begin
-        x1    :=rct_clp.right-1;
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000010000000000000000000000010000000000000000:
-      begin
-        Result:=False;
-        Exit;
-      end;
-  end;
-end; {$endregion}
-procedure LineH   (    x0,y0,x1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref color_info:TColorInfo); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  FillDWord((bmp_dst_ptr+x0+y0*bmp_dst_width)^,x1-x0+1,color_info.pix_col);
-end; {$endregion}
-procedure LineH   (    x0,y0,x1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref val       :TColor    ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  FillDWord((bmp_dst_ptr+x0+y0*bmp_dst_width)^,x1-x0+1,val);
-end; {$endregion}
-procedure LineH   (    x0,y0,x1:integer; constref bmp_dst_ptr:PByte   ; constref bmp_dst_width:TColor; constref val       :byte      ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  FillByte((bmp_dst_ptr+x0+y0*bmp_dst_width)^,x1-x0+1,val);
-end; {$endregion}
-
-// Monochrome Vertical Line(Width - 1 pixel):
-function  LineVC  (var x0,y0,y1:integer; constref rct_clp:TPtRect): boolean;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  arr_clp: array[0..7] of boolean;
-  clp    : qword absolute arr_clp;
-  y2     : integer;
-begin
-  Result:=True;
-  if (x0<rct_clp.left) or (x0>=rct_clp.right) then
-    begin
-      Result:=False;
-      Exit;
-    end;
-  if (y0>y1) then
-    begin
-      y2:=y1;
-      y1:=y0;
-      y0:=y2;
-    end;
-  arr_clp[00]:=(y0< rct_clp.top   );
-  arr_clp[01]:=(y0>=rct_clp.top   ) and (y0<rct_clp.bottom);
-  arr_clp[02]:=(y0>=rct_clp.bottom);
-  arr_clp[03]:=(y1< rct_clp.top   );
-  arr_clp[04]:=(y1>=rct_clp.top   ) and (y1<rct_clp.bottom);
-  arr_clp[05]:=(y1>=rct_clp.bottom);
-  arr_clp[06]:=False;
-  arr_clp[07]:=False;
-  case clp of
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000000000000000000001000000000000000000000001:
-      begin
-        Result:=False;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000000000000100000000000000000000000000000001:
-      begin
-        y0    :=rct_clp.top;
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000010000000000000000000000000000000000000001:
-      begin
-        y0    :=rct_clp.top;
-        y1    :=rct_clp.bottom-1;
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000000000000100000000000000000000000100000000:
-      begin
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000010000000000000000000000000000000100000000:
-      begin
-        y1    :=rct_clp.bottom-1;
-        Result:=True;
-        Exit;
-      end;
-    {|e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   |e.b.   }
-    %0000000000000000000000010000000000000000000000010000000000000000:
-      begin
-        Result:=False;
-        Exit;
-      end;
-  end;
-end; {$endregion}
-procedure LineV   (    x0,y0,y1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref color_info:TColorInfo); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  ln_ptr: PInteger;
-  i     : integer;
-begin
-  ln_ptr:=bmp_dst_ptr+x0+y0*bmp_dst_width;
-  for i:=0 to y1-y0 do
-    begin
-      ln_ptr^:=color_info.pix_col;
-      Inc(ln_ptr,bmp_dst_width);
-    end;
-end; {$endregion}
-procedure LineV   (    x0,y0,y1:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref val       :TColor    ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  ln_ptr: PInteger;
-  i     : integer;
-begin
-  ln_ptr:=bmp_dst_ptr+x0+y0*bmp_dst_width;
-  for i:=0 to y1-y0 do
-    begin
-      ln_ptr^:=val;
-      Inc(ln_ptr,bmp_dst_width);
-    end;
-end; {$endregion}
-procedure LineV   (    x0,y0,y1:integer; constref bmp_dst_ptr:PByte   ; constref bmp_dst_width:TColor; constref val       :byte      ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  ln_ptr: PByte;
-  i     : integer;
-begin
-  ln_ptr:=bmp_dst_ptr+x0+y0*bmp_dst_width;
-  for i:=0 to y1-y0 do
-    begin
-      ln_ptr^:=val;
-      Inc(ln_ptr,bmp_dst_width);
-    end;
-end; {$endregion}
-
 // Point:
 procedure Point        (constref x,y:integer; constref bmp_dst_ptr  :PInteger; constref bmp_dst_width:TColor    ; constref color_info:TColorInfo);                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -34367,43 +34356,52 @@ begin
 end; {$endregion}
 procedure CircleC(constref x0,y0,rad:integer; constref bmp_dst_ptr:PInteger; constref rct_clp:TPtRect; constref bmp_dst_width:TColor; constref color_info:TColorInfo); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  p   : PInteger;
-  x,x1: integer;
-  y,y1: integer;
-  err : integer;
+  p          : PInteger;
+  x,x1       : integer;
+  y,y1       : integer;
+  err        : integer;
+  c0,c1,c2,c3: integer;
 begin
-  p   :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
-  x   :=rad;
-  y   :=0;
-  err :=0;
+  p  :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
+  x  :=rad;
+  y  :=0;
+  err:=0;
+  c0 := rct_clp.left  -x0;
+  c1 := rct_clp.right -x0;
+  c2 :=-rct_clp.top   +y0;
+  c3 :=-rct_clp.bottom+y0;
   while (x>=y) do
     begin
       x1:=x*bmp_dst_width;
       y1:=y*bmp_dst_width;
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p+y-x1)^:=color_info.pix_col; //( x0+y)+(y0-x)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p+x-y1)^:=color_info.pix_col; //( x0+x)+(y0-y)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p+x+y1)^:=color_info.pix_col; //( x0+x)+(y0+y)*arr_dst_width
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p+y+x1)^:=color_info.pix_col; //( x0+y)+(y0+x)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p-y+x1)^:=color_info.pix_col; //( x0-y)+(y0+x)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p-x+y1)^:=color_info.pix_col; //( x0-x)+(y0+y)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p-x-y1)^:=color_info.pix_col; //( x0-x)+(y0-y)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p-y-x1)^:=color_info.pix_col; //( x0-y)+(y0-x)*arr_dst_width
+      if (y>=+c0) and (y<+c1) then
+        begin
+          if (x<=+c2) and (x>+c3) then
+             (p+y-x1)^:=color_info.pix_col; //(x0+y)+(y0-x)*arr_dst_width
+          if (x>=-c2) and (x<-c3) then
+             (p+y+x1)^:=color_info.pix_col; //(x0+y)+(y0+x)*arr_dst_width
+        end;
+      if (x>=+c0) and (x<+c1) then
+        begin
+          if (y<=+c2) and (y>+c3) then
+             (p+x-y1)^:=color_info.pix_col; //(x0+x)+(y0-y)*arr_dst_width
+          if (y>=-c2) and (y<-c3) then
+             (p+x+y1)^:=color_info.pix_col; //(x0+x)+(y0+y)*arr_dst_width
+        end;
+      if (y<=-c0) and (y>-c1) then
+        begin
+          if (x>=-c2) and (x<-c3) then
+             (p-y+x1)^:=color_info.pix_col; //(x0-y)+(y0+x)*arr_dst_width
+          if (x<=+c2) and (x>+c3) then
+             (p-y-x1)^:=color_info.pix_col; //(x0-y)+(y0-x)*arr_dst_width
+        end;
+      if (x<=-c0) and (x>-c1) then
+        begin
+          if (y>=-c2) and (y<-c3) then
+             (p-x+y1)^:=color_info.pix_col; //(x0-x)+(y0+y)*arr_dst_width
+          if (y<=+c2) and (y>+c3) then
+             (p-x-y1)^:=color_info.pix_col; //(x0-x)+(y0-y)*arr_dst_width
+        end;
       if (err<=0) then
         begin
           y  +=1;
@@ -34417,44 +34415,100 @@ begin
     end;
 end; {$endregion}
 procedure CircleC(constref x0,y0,rad:integer; constref bmp_dst_ptr:PInteger; constref rct_clp:TPtRect; constref bmp_dst_width:TColor; constref val       :TColor    ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  p   : PInteger;
-  x,x1: integer;
-  y,y1: integer;
-  err : integer;
+{var
+  p          : PInteger;
+  rad2       : integer;
+  f          : integer;
+  d_x        : integer;
+  d_y        : integer;
+  x,x1       : integer;
+  y,y1       : integer;
+  c0,c1,c2,c3: integer;
 begin
   p   :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
-  x   :=rad;
-  y   :=0;
-  err :=0;
+  rad2:=rad-1;
+  f   := 1-rad2;
+  d_x := 0;
+  d_y :=-(rad2<<1);
+  x   :=0;
+  y   :=rad2;
+  c0  := rct_clp.left  -x0;
+  c1  := rct_clp.right -x0;
+  c2  :=-rct_clp.top   +y0;
+  c3  :=-rct_clp.bottom+y0;
+  (p+rad2*bmp_dst_width)^:=val;
+  (p-rad2*bmp_dst_width)^:=val;
+  (p+rad2              )^:=val;
+  (p-rad2              )^:=val;
+  while (x<y) do
+    begin
+      if (f>=0) then
+        begin
+          Dec(y);
+          d_y+=2;
+          f  +=d_y;
+        end;
+      Inc(x);
+      d_x+=2;
+      f  +=d_x+1;
+      x1 :=x*bmp_dst_width;
+      y1 :=y*bmp_dst_width;
+      (p+x+y1)^:=val;
+      (p-x+y1)^:=val;
+      (p+x-y1)^:=val;
+      (p-x-y1)^:=val;
+      (p+y+x1)^:=val;
+      (p-y+x1)^:=val;
+      (p+y-x1)^:=val;
+      (p-y-x1)^:=val;
+    end;}
+var
+  p          : PInteger;
+  x,x1       : integer;
+  y,y1       : integer;
+  err        : integer;
+  c0,c1,c2,c3: integer;
+begin
+  p  :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
+  x  :=rad;
+  y  :=0;
+  err:=0;
+  c0 := rct_clp.left  -x0;
+  c1 := rct_clp.right -x0;
+  c2 :=-rct_clp.top   +y0;
+  c3 :=-rct_clp.bottom+y0;
   while (x>=y) do
     begin
       x1:=x*bmp_dst_width;
       y1:=y*bmp_dst_width;
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p+y-x1)^:=val; //( x0+y)+(y0-x)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p+x-y1)^:=val; //( x0+x)+(y0-y)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p+x+y1)^:=val; //( x0+x)+(y0+y)*arr_dst_width
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p+y+x1)^:=val; //( x0+y)+(y0+x)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p-y+x1)^:=val; //( x0-y)+(y0+x)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p-x+y1)^:=val; //( x0-x)+(y0+y)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p-x-y1)^:=val; //( x0-x)+(y0-y)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p-y-x1)^:=val; //( x0-y)+(y0-x)*arr_dst_width
+      if (y>=+c0) and (y<+c1) then
+        begin
+          if (x<=+c2) and (x>+c3) then
+             (p+y-x1)^:=val; //(x0+y)+(y0-x)*arr_dst_width
+          if (x>=-c2) and (x<-c3) then
+             (p+y+x1)^:=val; //(x0+y)+(y0+x)*arr_dst_width
+        end;
+      if (x>=+c0) and (x<+c1) then
+        begin
+          if (y<=+c2) and (y>+c3) then
+             (p+x-y1)^:=val; //(x0+x)+(y0-y)*arr_dst_width
+          if (y>=-c2) and (y<-c3) then
+             (p+x+y1)^:=val; //(x0+x)+(y0+y)*arr_dst_width
+        end;
+      if (y<=-c0) and (y>-c1) then
+        begin
+          if (x>=-c2) and (x<-c3) then
+             (p-y+x1)^:=val; //(x0-y)+(y0+x)*arr_dst_width
+          if (x<=+c2) and (x>+c3) then
+             (p-y-x1)^:=val; //(x0-y)+(y0-x)*arr_dst_width
+        end;
+      if (x<=-c0) and (x>-c1) then
+        begin
+          if (y>=-c2) and (y<-c3) then
+             (p-x+y1)^:=val; //(x0-x)+(y0+y)*arr_dst_width
+          if (y<=+c2) and (y>+c3) then
+             (p-x-y1)^:=val; //(x0-x)+(y0-y)*arr_dst_width
+        end;
       if (err<=0) then
         begin
           y  +=1;
@@ -34469,43 +34523,52 @@ begin
 end; {$endregion}
 procedure CircleC(constref x0,y0,rad:integer; constref bmp_dst_ptr:PInteger; constref rct_clp:TPtRect; constref bmp_dst_width:TColor                                ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  p   : PInteger;
-  x,x1: integer;
-  y,y1: integer;
-  err : integer;
+  p          : PInteger;
+  x,x1       : integer;
+  y,y1       : integer;
+  err        : integer;
+  c0,c1,c2,c3: integer;
 begin
-  p   :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
-  x   :=rad;
-  y   :=0;
-  err :=0;
+  p  :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
+  x  :=rad;
+  y  :=0;
+  err:=0;
+  c0 := rct_clp.left  -x0;
+  c1 := rct_clp.right -x0;
+  c2 :=-rct_clp.top   +y0;
+  c3 :=-rct_clp.bottom+y0;
   while (x>=y) do
     begin
       x1:=x*bmp_dst_width;
       y1:=y*bmp_dst_width;
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p+y-x1)^+=1; //( x0+y)+(y0-x)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p+x-y1)^+=1; //( x0+x)+(y0-y)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p+x+y1)^+=1; //( x0+x)+(y0+y)*arr_dst_width
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p+y+x1)^+=1; //( x0+y)+(y0+x)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p-y+x1)^+=1; //( x0-y)+(y0+x)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p-x+y1)^+=1; //( x0-x)+(y0+y)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p-x-y1)^+=1; //( x0-x)+(y0-y)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p-y-x1)^+=1; //( x0-y)+(y0-x)*arr_dst_width
+      if (y>=+c0) and (y<+c1) then
+        begin
+          if (x<=+c2) and (x>+c3) then
+             (p+y-x1)^+=1; //(x0+y)+(y0-x)*arr_dst_width
+          if (x>=-c2) and (x<-c3) then
+             (p+y+x1)^+=1; //(x0+y)+(y0+x)*arr_dst_width
+        end;
+      if (x>=+c0) and (x<+c1) then
+        begin
+          if (y<=+c2) and (y>+c3) then
+             (p+x-y1)^+=1; //(x0+x)+(y0-y)*arr_dst_width
+          if (y>=-c2) and (y<-c3) then
+             (p+x+y1)^+=1; //(x0+x)+(y0+y)*arr_dst_width
+        end;
+      if (y<=-c0) and (y>-c1) then
+        begin
+          if (x>=-c2) and (x<-c3) then
+             (p-y+x1)^+=1; //(x0-y)+(y0+x)*arr_dst_width
+          if (x<=+c2) and (x>+c3) then
+             (p-y-x1)^+=1; //(x0-y)+(y0-x)*arr_dst_width
+        end;
+      if (x<=-c0) and (x>-c1) then
+        begin
+          if (y>=-c2) and (y<-c3) then
+             (p-x+y1)^+=1; //(x0-x)+(y0+y)*arr_dst_width
+          if (y<=+c2) and (y>+c3) then
+             (p-x-y1)^+=1; //(x0-x)+(y0-y)*arr_dst_width
+        end;
       if (err<=0) then
         begin
           y  +=1;
@@ -34520,43 +34583,52 @@ begin
 end; {$endregion}
 procedure CircleC(constref x0,y0,rad:integer; constref bmp_dst_ptr:PByte   ; constref rct_clp:TPtRect; constref bmp_dst_width:TColor; constref val       :byte      ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  p   : PByte;
-  x,x1: integer;
-  y,y1: integer;
-  err : integer;
+  p          : PByte;
+  x,x1       : integer;
+  y,y1       : integer;
+  err        : integer;
+  c0,c1,c2,c3: integer;
 begin
-  p   :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
-  x   :=rad;
-  y   :=0;
-  err :=0;
+  p  :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
+  x  :=rad;
+  y  :=0;
+  err:=0;
+  c0 := rct_clp.left  -x0;
+  c1 := rct_clp.right -x0;
+  c2 :=-rct_clp.top   +y0;
+  c3 :=-rct_clp.bottom+y0;
   while (x>=y) do
     begin
       x1:=x*bmp_dst_width;
       y1:=y*bmp_dst_width;
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p+y-x1)^:=val; //( x0+y)+(y0-x)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p+x-y1)^:=val; //( x0+x)+(y0-y)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p+x+y1)^:=val; //( x0+x)+(y0+y)*arr_dst_width
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p+y+x1)^:=val; //( x0+y)+(y0+x)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p-y+x1)^:=val; //( x0-y)+(y0+x)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p-x+y1)^:=val; //( x0-x)+(y0+y)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p-x-y1)^:=val; //( x0-x)+(y0-y)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p-y-x1)^:=val; //( x0-y)+(y0-x)*arr_dst_width
+      if (y>=+c0) and (y<+c1) then
+        begin
+          if (x<=+c2) and (x>+c3) then
+             (p+y-x1)^:=val; //(x0+y)+(y0-x)*arr_dst_width
+          if (x>=-c2) and (x<-c3) then
+             (p+y+x1)^:=val; //(x0+y)+(y0+x)*arr_dst_width
+        end;
+      if (x>=+c0) and (x<+c1) then
+        begin
+          if (y<=+c2) and (y>+c3) then
+             (p+x-y1)^:=val; //(x0+x)+(y0-y)*arr_dst_width
+          if (y>=-c2) and (y<-c3) then
+             (p+x+y1)^:=val; //(x0+x)+(y0+y)*arr_dst_width
+        end;
+      if (y<=-c0) and (y>-c1) then
+        begin
+          if (x>=-c2) and (x<-c3) then
+             (p-y+x1)^:=val; //(x0-y)+(y0+x)*arr_dst_width
+          if (x<=+c2) and (x>+c3) then
+             (p-y-x1)^:=val; //(x0-y)+(y0-x)*arr_dst_width
+        end;
+      if (x<=-c0) and (x>-c1) then
+        begin
+          if (y>=-c2) and (y<-c3) then
+             (p-x+y1)^:=val; //(x0-x)+(y0+y)*arr_dst_width
+          if (y<=+c2) and (y>+c3) then
+             (p-x-y1)^:=val; //(x0-x)+(y0-y)*arr_dst_width
+        end;
       if (err<=0) then
         begin
           y  +=1;
@@ -34571,43 +34643,52 @@ begin
 end; {$endregion}
 procedure CircleC(constref x0,y0,rad:integer; constref bmp_dst_ptr:PByte   ; constref rct_clp:TPtRect; constref bmp_dst_width:TColor                                ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  p   : PByte;
-  x,x1: integer;
-  y,y1: integer;
-  err : integer;
+  p          : PByte;
+  x,x1       : integer;
+  y,y1       : integer;
+  err        : integer;
+  c0,c1,c2,c3: integer;
 begin
-  p   :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
-  x   :=rad;
-  y   :=0;
-  err :=0;
+  p  :=@bmp_dst_ptr[x0+y0*bmp_dst_width];
+  x  :=rad;
+  y  :=0;
+  err:=0;
+  c0 := rct_clp.left  -x0;
+  c1 := rct_clp.right -x0;
+  c2 :=-rct_clp.top   +y0;
+  c3 :=-rct_clp.bottom+y0;
   while (x>=y) do
     begin
       x1:=x*bmp_dst_width;
       y1:=y*bmp_dst_width;
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p+y-x1)^+=1; //( x0+y)+(y0-x)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p+x-y1)^+=1; //( x0+x)+(y0-y)*arr_dst_width
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p+x+y1)^+=1; //( x0+x)+(y0+y)*arr_dst_width
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p+y+x1)^+=1; //( x0+y)+(y0+x)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) then
-        (p-y+x1)^+=1; //( x0-y)+(y0+x)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) then
-        (p-x+y1)^+=1; //( x0-x)+(y0+y)*arr_dst_width
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) then
-        (p-x-y1)^+=1; //( x0-x)+(y0-y)*arr_dst_width
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) then
-        (p-y-x1)^+=1; //( x0-y)+(y0-x)*arr_dst_width
+      if (y>=+c0) and (y<+c1) then
+        begin
+          if (x<=+c2) and (x>+c3) then
+             (p+y-x1)^+=1; //(x0+y)+(y0-x)*arr_dst_width
+          if (x>=-c2) and (x<-c3) then
+             (p+y+x1)^+=1; //(x0+y)+(y0+x)*arr_dst_width
+        end;
+      if (x>=+c0) and (x<+c1) then
+        begin
+          if (y<=+c2) and (y>+c3) then
+             (p+x-y1)^+=1; //(x0+x)+(y0-y)*arr_dst_width
+          if (y>=-c2) and (y<-c3) then
+             (p+x+y1)^+=1; //(x0+x)+(y0+y)*arr_dst_width
+        end;
+      if (y<=-c0) and (y>-c1) then
+        begin
+          if (x>=-c2) and (x<-c3) then
+             (p-y+x1)^+=1; //(x0-y)+(y0+x)*arr_dst_width
+          if (x<=+c2) and (x>+c3) then
+             (p-y-x1)^+=1; //(x0-y)+(y0-x)*arr_dst_width
+        end;
+      if (x<=-c0) and (x>-c1) then
+        begin
+          if (y>=-c2) and (y<-c3) then
+             (p-x+y1)^+=1; //(x0-x)+(y0+y)*arr_dst_width
+          if (y<=+c2) and (y>+c3) then
+             (p-x-y1)^+=1; //(x0-x)+(y0-y)*arr_dst_width
+        end;
       if (err<=0) then
         begin
           y  +=1;
@@ -34700,83 +34781,85 @@ begin
 end; {$endregion}
 function CircleWC(constref x0,y0,rad:integer; constref arr_dst:TPtPos2Arr;  constref rct_clp:TPtRect; constref arr_dst_width:TColor; var pt:TPtPosF): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  p     : PPtPos2;
-  x,x1  : integer;
-  y,y1  : integer;
-  err   : integer;
+  p          : PPtPos2;
+  x,x1       : integer;
+  y,y1       : integer;
+  err        : integer;
+  c0,c1,c2,c3: integer;
 begin
   Result:=False;
   p     :=Unaligned(@arr_dst[x0+y0*arr_dst_width]);
   x     :=rad;
   y     :=0;
   err   :=0;
+  c0    := rct_clp.left  -x0;
+  c1    := rct_clp.right -x0;
+  c2    :=-rct_clp.top   +y0;
+  c3    :=-rct_clp.bottom+y0;
   while (x>=y) do
     begin
       x1:=x*arr_dst_width;
       y1:=y*arr_dst_width;
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) and
-         ((p+y-x1)^.obj_ind<>-1) then //(x0+y)+(y0-x)*arr_dst_width
+
+      if (y>=+c0) and (y<+c1) then
         begin
-          pt    :=PtPosF(x0+y,y0-x);
-          Result:=True;
-          Exit;
+          if (x<=+c2) and (x>+c3) and ((p+y-x1)^.obj_ind<>-1) then //(x0+y)+(y0-x)*arr_dst_width
+            begin
+              pt    :=PtPosF(x0+y,y0-x);
+              Result:=True;
+              Exit;
+            end;
+          if (x>=-c2) and (x<-c3) and ((p+y+x1)^.obj_ind<>-1) then //(x0+y)+(y0+x)*arr_dst_width
+            begin
+              pt    :=PtPosF(x0+y,y0+x);
+              Result:=True;
+              Exit;
+            end;
         end;
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) and
-         ((p+x-y1)^.obj_ind<>-1) then //(x0+x)+(y0-y)*arr_dst_width
+      if (x>=+c0) and (x<+c1) then
         begin
-          pt    :=PtPosF(x0+x,y0-y);
-          Result:=True;
-          Exit;
+          if (y<=+c2) and (y>+c3) and ((p+x-y1)^.obj_ind<>-1) then //(x0+x)+(y0-y)*arr_dst_width
+            begin
+              pt    :=PtPosF(x0+x,y0-y);
+              Result:=True;
+              Exit;
+            end;
+          if (y>=-c2) and (y<-c3) and ((p+x+y1)^.obj_ind<>-1) then //(x0+x)+(y0+y)*arr_dst_width
+            begin
+              pt    :=PtPosF(x0+x,y0+y);
+              Result:=True;
+              Exit;
+            end;
         end;
-      if (x0+x>=rct_clp.left) and (x0+x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) and
-         ((p+x+y1)^.obj_ind<>-1) then //(x0+x)+(y0+y)*arr_dst_width
+      if (y<=-c0) and (y>-c1) then
         begin
-          pt    :=PtPosF(x0+x,y0+y);
-          Result:=True;
-          Exit;
+          if (x>=-c2) and (x<-c3) and ((p-y+x1)^.obj_ind<>-1) then //(x0-y)+(y0+x)*arr_dst_width
+            begin
+              pt    :=PtPosF(x0-y,y0+x);
+              Result:=True;
+              Exit;
+            end;
+          if (x<=+c2) and (x>+c3) and ((p-y-x1)^.obj_ind<>-1) then //(x0-y)+(y0-x)*arr_dst_width
+          begin
+            pt    :=PtPosF(x0-y,y0-x);
+            Result:=True;
+            Exit;
+          end;
         end;
-      if (x0+y>=rct_clp.left) and (x0+y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) and
-         ((p+y+x1)^.obj_ind<>-1) then //(x0+y)+(y0+x)*arr_dst_width
+      if (x<=-c0) and (x>-c1) then
         begin
-          pt    :=PtPosF(x0+y,y0+x);
-          Result:=True;
-          Exit;
-        end;
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0+x>=rct_clp.top ) and (y0+x<rct_clp.bottom) and
-         ((p-y+x1)^.obj_ind<>-1) then //(x0-y)+(y0+x)*arr_dst_width
-        begin
-          pt    :=PtPosF(x0-y,y0+x);
-          Result:=True;
-          Exit;
-        end;
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0+y>=rct_clp.top ) and (y0+y<rct_clp.bottom) and
-         ((p-x+y1)^.obj_ind<>-1) then //(x0-x)+(y0+y)*arr_dst_width
-        begin
-          pt    :=PtPosF(x0-x,y0+y);
-          Result:=True;
-          Exit;
-        end;
-      if (x0-x>=rct_clp.left) and (x0-x<rct_clp.right ) and
-         (y0-y>=rct_clp.top ) and (y0-y<rct_clp.bottom) and
-         ((p-x-y1)^.obj_ind<>-1) then //(x0-x)+(y0-y)*arr_dst_width
-        begin
-          pt    :=PtPosF(x0-x,y0-y);
-          Result:=True;
-          Exit;
-        end;
-      if (x0-y>=rct_clp.left) and (x0-y<rct_clp.right ) and
-         (y0-x>=rct_clp.top ) and (y0-x<rct_clp.bottom) and
-         ((p-y-x1)^.obj_ind<>-1) then //(x0-y)+(y0-x)*arr_dst_width
-        begin
-          pt    :=PtPosF(x0-y,y0-x);
-          Result:=True;
-          Exit;
+          if (y>=-c2) and (y<-c3) and ((p-x+y1)^.obj_ind<>-1) then //(x0-x)+(y0+y)*arr_dst_width
+            begin
+              pt    :=PtPosF(x0-x,y0+y);
+              Result:=True;
+              Exit;
+            end;
+          if (y<=+c2) and (y>+c3) and ((p-x-y1)^.obj_ind<>-1) then //(x0-x)+(y0-y)*arr_dst_width
+            begin
+              pt    :=PtPosF(x0-x,y0-y);
+              Result:=True;
+              Exit;
+            end;
         end;
       if (err<=0) then
         begin

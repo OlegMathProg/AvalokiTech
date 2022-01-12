@@ -26,7 +26,7 @@ const
   NAV_SEL_COL_1=$00C8CFA9;
 
   {Resources Paths}
-  SELECTION_TOOLS_MARKER           ='Pics\Selection_Tools\Selection_Tools_Marker.png';
+  SELECTION_TOOLS_MARKER_ICON      ='Pics\Selection_Tools\Selection_Tools_Marker.png';
   DEFAULT_CURSOR_ICON              ='Pics\Cursors\Cursor_0.png';
   DEFAULT_TILE_MAP_ICON            ='Pics\Map_Editor\Default_Tile_Map_Icon.png';
   DEFAULT_TILE_MAP_SPRITE_ICON     ='Pics\Map_Editor\Default_Tile_Map_Sprite_Icon0.png';
@@ -969,7 +969,6 @@ type
       world_axis_bmp         : TFastImage;
       world_axis             : TPtPos;
       world_axis_shift       : TPtPos;
-      world_axis_draw        : boolean;
       {Speed Multiplier}
       parallax_shift         : TPtPos;
       mov_dir                : TMovingDirection;
@@ -1269,6 +1268,8 @@ type
       sln_changed            : boolean;
       {detect, if there is at least one spline with property local_prop.hid_ln_elim in True}
       has_hid_ln_elim_sln    : boolean;
+      {detect, if there is at least one spline with property local_prop.byte_mode in True}
+      has_byte_mode_sln      : boolean;
       {repaint first time on hidden-line elimination}
       rep_hid_ln_elim_first  : boolean;
       {linked list for "Add Point"}
@@ -1882,31 +1883,29 @@ var
   full_screen                : boolean=True;
   splitters_arr              : array[0..7] of PInteger;
 
-  {Scene Tree----------------------------------} {$region -fold}
-  tex_list_item_pos_x        : integer;
-  tex_list_item_pos_y        : integer; {$endregion}
-
   {Show Object---------------------------------} {$region -fold}
   // show objects array
-  show_obj_arr               : array[0..10] of boolean;
+  show_obj_arr               : array[0..11] of boolean;
   // show all objects(visibility list)
-  show_all                   : boolean absolute show_obj_arr[0];
+  show_all                   : boolean absolute show_obj_arr[00];
   // show texture(visibility list)
-  show_tex                   : boolean absolute show_obj_arr[1];
+  show_tex                   : boolean absolute show_obj_arr[01];
   // show grid(visibility list)
-  show_grid                  : boolean absolute show_obj_arr[2];
+  show_grid                  : boolean absolute show_obj_arr[02];
   // show snap grid(visibility list)
-  show_snap_grid             : boolean absolute show_obj_arr[3];
+  show_snap_grid             : boolean absolute show_obj_arr[03];
   // show splines(visibility list)
-  show_spline                : boolean absolute show_obj_arr[4];
+  show_spline                : boolean absolute show_obj_arr[04];
   // show textures on splines
-  show_tex_on_spline         : boolean absolute show_obj_arr[7];
+  show_tex_on_spline         : boolean absolute show_obj_arr[07];
   // show tile maps(visibility list)
-  show_tile_map              : boolean absolute show_obj_arr[8];
+  show_tile_map              : boolean absolute show_obj_arr[08];
   // show actors(visibility list)
-  show_actor                 : boolean absolute show_obj_arr[9];
+  show_actor                 : boolean absolute show_obj_arr[09];
   // show colliders(visibility list)
-  show_collider              : boolean absolute show_obj_arr[10]; {$endregion}
+  show_collider              : boolean absolute show_obj_arr[10];
+  // show world axis
+  show_world_axis            : boolean absolute show_obj_arr[11]; {$endregion}
 
   {Show Bounding Rectangles--------------------} {$region -fold}
   // show bounding rectangles array
@@ -2338,23 +2337,23 @@ begin
   upp_lr_obj_cnt:=obj_var.obj_cnt-obj_var.LowLrObjCntCalc;
 
   if (obj_var<>Nil) then
-    info_arr[00]:='Objects: '                                                          +InttoStr(obj_var.obj_cnt                  )+';';
-  info_arr[01]:=#13+'Objects of lower layer: '                                         +IntToStr(low_lr_obj_cnt                   )+';';
-  info_arr[02]:=#13+'Objects of upper layer: '                                         +IntToStr(upp_lr_obj_cnt                   )+';';
-  info_arr[03]:=#13+'Groups: '                                                         +IntToStr(obj_var.group_cnt                )+';';
-  info_arr[04]:=#13+'Actors: '                                                         +IntToStr(obj_var.actor_cnt                )+';';
-  info_arr[05]:=#13+'  • Static: '                                                                                                 +';';
-  info_arr[06]:=#13+'  • Dynamic: '                                                                                                +';';
-  info_arr[07]:=#13+'  • Physical: '                                                                                               +';';
-  info_arr[08]:=#13+'Particles: '                                                      +IntToStr(obj_var.prtcl_cnt                )+';';
-  info_arr[09]:=#13+'Curves: '                                                         +IntToStr(obj_var.curve_cnt                )+';';
+    info_arr[00]:='Objects: '                                                          +InttoStr(obj_var.obj_cnt             )+';';
+  info_arr[01]:=#13+'Objects of lower layer: '                                         +IntToStr(low_lr_obj_cnt              )+';';
+  info_arr[02]:=#13+'Objects of upper layer: '                                         +IntToStr(upp_lr_obj_cnt              )+';';
+  info_arr[03]:=#13+'Groups: '                                                         +IntToStr(obj_var.group_cnt           )+';';
+  info_arr[04]:=#13+'Actors: '                                                         +IntToStr(obj_var.actor_cnt           )+';';
+  info_arr[05]:=#13+'  • Static: '                                                                                            +';';
+  info_arr[06]:=#13+'  • Dynamic: '                                                                                           +';';
+  info_arr[07]:=#13+'  • Physical: '                                                                                          +';';
+  info_arr[08]:=#13+'Particles: '                                                      +IntToStr(obj_var.prtcl_cnt           )+';';
+  info_arr[09]:=#13+'Curves: '                                                         +IntToStr(obj_var.curve_cnt           )+';';
   if (sln_var<>Nil) then
-    info_arr[10]:=#13+'  • Points: '                                                   +InttoStr(sln_var.sln_pts_cnt              )+';';
+    info_arr[10]:=#13+'  • Points: '                                                   +InttoStr(sln_var.sln_pts_cnt         )+';';
   if (sel_var<>Nil) then
     begin
-      info_arr[11]:=#13+'    • Count of curve                  with selected points: ' +InttoStr(sel_var.sln_with_sel_pts_cnt     )+';';
-      info_arr[12]:=#13+'    • Minimal index of curve          with selected points: ' +InttoStr(sel_var.sel_obj_min_ind          )+';';
-      info_arr[13]:=#13+'    • Selected: '                                             +InttoStr(sel_var.sel_pts_cnt              )+';';
+      info_arr[11]:=#13+'    • Count of curve                  with selected points: ' +InttoStr(sel_var.sln_with_sel_pts_cnt)+';';
+      info_arr[12]:=#13+'    • Minimal index of curve          with selected points: ' +InttoStr(sel_var.sel_obj_min_ind     )+';';
+      info_arr[13]:=#13+'    • Selected: '                                             +InttoStr(sel_var.sel_pts_cnt         )+';';
       if (sel_var.sel_pts_cnt=0) then
         info_arr[14]:=#13+'      • Is not abstract object          kind after: ;'
       else
@@ -2364,11 +2363,11 @@ begin
           else
             info_arr[14]:=#13+'      • Is not abstract object          kind after: '    +'No;'
         end;
-      info_arr[15]:=#13+'    • Duplicated: '                                           +InttoStr(sel_var.dup_pts_cnt              )+';';
+      info_arr[15]:=#13+'    • Duplicated: '                                           +InttoStr(sel_var.dup_pts_cnt         )+';';
     end;
   if (sln_var<>Nil) then
-    info_arr[16]:=#13+'  • Lines: '                                                    +InttoStr(sln_var.sln_eds_cnt              )+';';
-  info_arr[17]:=#13+'Tile maps: '                                                      +IntToStr(obj_var.tlmap_cnt                )+';';
+    info_arr[16]:=#13+'  • Lines: '                                                    +InttoStr(sln_var.sln_eds_cnt         )+';';
+  info_arr[17]:=#13+'Tile maps: '                                                      +IntToStr(obj_var.tlmap_cnt           )+';';
 
   for i:=0 to 17 do
     Result+=info_arr[i];
@@ -3581,8 +3580,15 @@ end; {$endregion}
 procedure DrawingPanelsSetVisibility2;                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if down_select_points_ptr^ then
-    crc_sel_var.only_fill:=False;
-  if sln_var.has_hid_ln_elim_sln then
+    begin
+      crc_sel_var.only_fill:=False;
+      obj_var.FilScene;
+      if show_world_axis then
+        with srf_var do
+          WorldAxisBmp(world_axis.x-world_axis_bmp.bmp_ftimg_width_origin >>1,
+                       world_axis.y-world_axis_bmp.bmp_ftimg_height_origin>>1);
+    end;
+  if sln_var.has_hid_ln_elim_sln or sln_var.has_byte_mode_sln then
     begin
       if (not down_select_points_ptr^) then
         begin
@@ -3906,12 +3912,12 @@ begin
   with obj_var,rgr_var,sgr_var,sln_var,tex_var do
     begin
       srf_bmp_ptr :=GetBmpHandle(srf_bmp );
-      test_bmp_ptr:=GetBmpHandle(test_bmp );
+      test_bmp_ptr:=GetBmpHandle(test_bmp);
       low_bmp_ptr :=GetBmpHandle(low_bmp );
       low_bmp2_ptr:=GetBmpHandle(low_bmp2);
       if show_tex then
         begin
-          tex_bmp_ptr:=GetBmpHandle(tex_bmp );
+          tex_bmp_ptr:=GetBmpHandle(tex_bmp);
           tex_bmp.Canvas.Draw(0,0,loaded_picture.Bitmap);
         end;
       SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
@@ -4703,7 +4709,7 @@ var
   i:integer;
 begin
   if (bkg_style=bsGrayscale) or (bkg_style=bsBoth) then
-    PPGrayscaleR(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width);
+    PPGrayscaleG(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width);
   if (bkg_style=bsBlur) or (bkg_style=bsBoth) then
     for i:=0 to pp_iters_cnt-1 do
       PPBlur(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width);
@@ -4869,7 +4875,7 @@ begin
   MainBmpToLowerBmp; {$endregion}
 
   {World Axis---------------------------------------} {$region -fold}
-  if world_axis_draw and (not exp0) then
+  if show_world_axis and (not exp0) then
     WorldAxisDraw; {$endregion}
 
   {Selected Subgrtaph-------------------------------} {$region -fold}
@@ -5089,7 +5095,7 @@ procedure TF_MainForm.TextureListItemMouseDown(sender:TObject; button:TMouseButt
 var
   item_index,i,j: integer;
 begin
-  item_index:=Trunc(tex_list_item_pos_x/tex_var.tex_list_item_size);
+  {item_index:=Trunc(tex_list_item_pos_x/tex_var.tex_list_item_size);
   if (item_index<=FP_Image_List.ControlCount-1) then
     begin
       (FP_Image_List.Controls[item_index] as TSpeedButton).Color:=$00884E2B;
@@ -5097,7 +5103,7 @@ begin
         (FP_Image_List.Controls[i] as TSpeedButton).Color:=$00A6A6A6;
       for j:=item_index+1 to FP_Image_List.ControlCount-1 do
         (FP_Image_List.Controls[j] as TSpeedButton).Color:=$00A6A6A6;
-    end;
+    end;}
 end; {$endregion}
 procedure TF_MainForm.SB_Load_ImageClick      (sender:TObject);                                                      {$region -fold}
 begin
@@ -5989,6 +5995,8 @@ begin
           SetLength(useless_arr,sln_obj_pts_cnt[m]-1);
           has_hid_ln_elim_sln:=True;
         end;
+      if byte_mode then
+        has_byte_mode_sln:=True;
     end;
 
   // spline points:
@@ -6008,6 +6016,8 @@ begin
                    (pts_width <>0) and
                    (pts_height<>0);
       pts_col_inv:=SetColorInv(pts_col);
+      if byte_mode then
+        has_byte_mode_sln:=True;
       SetRctDupId(local_prop);
     end; {$endregion}
 
@@ -6111,7 +6121,7 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               begin
                 with eds_big_img do
-                  if (has_edge_ptr^=0{1}) then
+                  if (has_edge_ptr^=0) then
                     ClippedLine1
                     (
                       Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
@@ -6180,7 +6190,7 @@ begin
             {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
-                if (has_edge_ptr^=0{1}) then
+                if (has_edge_ptr^=0) then
                   begin
                     x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                     y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -6303,7 +6313,7 @@ begin
             {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
-                if (has_edge_ptr^=0{1}) then
+                if (has_edge_ptr^=0) then
                   begin
                     x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                     y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -6427,7 +6437,7 @@ begin
                 if (not (sel_var.is_point_selected[b+i] or
                          sel_var.is_point_selected[b+i+1])) then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       ClippedLine1
                       (
                         Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
@@ -6501,7 +6511,7 @@ begin
                 if (not (sel_var.is_point_selected[b+i] or
                          sel_var.is_point_selected[b+i+1])) then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -6630,7 +6640,7 @@ begin
                 if (not (sel_var.is_point_selected[b+i] or
                          sel_var.is_point_selected[b+i+1])) then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -6755,7 +6765,7 @@ begin
                 if sel_var.is_point_selected[b+i+0] or
                    sel_var.is_point_selected[b+i+1] then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       ClippedLine1
                       (
                         Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
@@ -6829,7 +6839,7 @@ begin
                 if sel_var.is_point_selected[b+i+0] or
                    sel_var.is_point_selected[b+i+1] then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -6958,7 +6968,7 @@ begin
                 if sel_var.is_point_selected[b+i+0] or
                    sel_var.is_point_selected[b+i+1] then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -7083,7 +7093,7 @@ begin
                 if sel_var.is_point_selected[b+i+0] or
                    sel_var.is_point_selected[b+i+1] then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       ClippedLine1
                       (
                         Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
@@ -7157,7 +7167,7 @@ begin
                 if sel_var.is_point_selected[b+i+0] or
                    sel_var.is_point_selected[b+i+1] then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -7286,7 +7296,7 @@ begin
                 if sel_var.is_point_selected[b+i+0] or
                    sel_var.is_point_selected[b+i+1] then
                   with eds_big_img do
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -7411,7 +7421,7 @@ begin
               with eds_big_img do
                 begin
                   if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr ^=0) then
                       begin
                         ClippedLine1
                         (
@@ -7486,7 +7496,7 @@ begin
               with eds_big_img do
                 begin
                   if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr ^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -7614,7 +7624,7 @@ begin
               with eds_big_img do
                 begin
                   if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr ^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -7772,7 +7782,7 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (has_edge_ptr^=0{1}) then
+                  if (has_edge_ptr^=0) then
                     ClippedLine1
                     (
                       Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
@@ -7798,7 +7808,7 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (has_edge_ptr^=0{1}) then
+                  if (has_edge_ptr^=0) then
                     begin
                       x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                       y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -7853,7 +7863,7 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (has_edge_ptr^=0{1}) then
+                  if (has_edge_ptr^=0) then
                     begin
                       x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                       y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -7998,7 +8008,7 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               begin
                 with eds_big_img do
-                  if (has_edge_ptr^=0{1}) then
+                  if (has_edge_ptr^=0) then
                     ClippedLine1
                     (
                       Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
@@ -8068,7 +8078,7 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (has_edge_ptr^=0{1}) then
+                  if (has_edge_ptr^=0) then
                     begin
                       x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                       y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -8193,7 +8203,7 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (has_edge_ptr^=0{1}) then
+                  if (has_edge_ptr^=0) then
                     begin
                       x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                       y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -8318,7 +8328,7 @@ begin
               with eds_big_img do
                 begin
                   if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr ^=0) then
                       begin
                         ClippedLine1
                         (
@@ -8392,7 +8402,7 @@ begin
               with eds_big_img do
                 begin
                   if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr ^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -8519,7 +8529,7 @@ begin
               with eds_big_img do
                 begin
                   if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr^=0{1}) then
+                    if (has_edge_ptr ^=0) then
                       begin
                         x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
@@ -9668,7 +9678,7 @@ begin
             cnc_ends and (fml_pts_cnt>2)
           );
         end;
-      if world_axis_draw then
+      if show_world_axis then
         WorldAxisDraw;
       CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
     end;
@@ -11296,64 +11306,44 @@ begin
   SetRctDupId (sln_var.global_prop);
 end; {$endregion}
 {Drawing-----}
-function CycloidRangeCheck   : boolean;                                                        {$region -fold}
+procedure DrawCanvas;                                                                  inline; {$region -fold}
 begin
-  with sln_var,global_prop do
+  with srf_var do
     begin
-      if (cycloid_pts_cnt =0) or
-         (cycloid_loop_cnt=0) or
-         (cycloid_loop_rad=0) then
-        with srf_var do
-          begin
-            LowerBmpToMainBmp;
-            if world_axis_draw then
-              WorldAxisDraw;
-            CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
-            Result:=True;
-          end
-      else
-        Result:=False;
+      LowerBmpToMainBmp;
+      if show_world_axis then
+        WorldAxisDraw;
+      CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
     end;
 end; {$endregion}
-function EpicycloidRangeCheck: boolean;                                                        {$region -fold}
+function CycloidRangeCheck   : boolean;                                                inline; {$region -fold}
 begin
   with sln_var,global_prop do
-    begin
-      if ((fml_type=(sfEpicycloid )) and (epicycloid_petals_cnt=0)) or
-         ((fml_type=(sfHypocycloid)) and (epicycloid_petals_cnt<3)) or
-         (epicycloid_pts_cnt=0)                                     or
-         (epicycloid_rad    =0)                                     or
-         (epicycloid_angle  =0)                                     then
-        with srf_var do
-          begin
-            LowerBmpToMainBmp;
-            if world_axis_draw then
-              WorldAxisDraw;
-            CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
-            Result:=True;
-          end
-      else
-        Result:=False;
-    end;
+    Result:=(cycloid_pts_cnt <2) or
+            (cycloid_loop_cnt=0) or
+            (cycloid_loop_rad=0);
+  if Result then
+    DrawCanvas;
 end; {$endregion}
-function RoseRangeCheck      : boolean;                                                        {$region -fold}
+function EpicycloidRangeCheck: boolean;                                                inline; {$region -fold}
 begin
   with sln_var,global_prop do
-    begin
-      if (rose_pts_cnt   <3) or
-         (rose_petals_cnt=0) or
-         (rose_rad       =0) then
-        with srf_var do
-          begin
-            LowerBmpToMainBmp;
-            if world_axis_draw then
-              WorldAxisDraw;
-            CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
-            Result:=True;
-          end
-      else
-        Result:=False;
-    end;
+    Result:=((fml_type=(sfEpicycloid )) and (epicycloid_petals_cnt=0)) or
+            ((fml_type=(sfHypocycloid)) and (epicycloid_petals_cnt<3)) or
+            (epicycloid_pts_cnt<2)                                     or
+            (epicycloid_rad    =0)                                     or
+            (epicycloid_angle  =0);
+  if Result then
+    DrawCanvas;
+end; {$endregion}
+function RoseRangeCheck      : boolean;                                                inline; {$region -fold}
+begin
+  with sln_var,global_prop do
+    Result:=(rose_pts_cnt   <3) or
+            (rose_petals_cnt=0) or
+            (rose_rad       =0);
+  if Result then
+    DrawCanvas;
 end; {$endregion}
 procedure TF_MainForm.P_Drawing_PropMouseEnter                               (sender:TObject); {$region -fold}
 begin
@@ -14255,7 +14245,7 @@ begin
       SetGradVec(0,0,0,100);
 
       col_trans_arr[01]:=132;
-      col_trans_arr[02]:=132;
+      col_trans_arr[02]:=032;
       col_trans_arr[03]:=132;
       col_trans_arr[04]:=132;
       col_trans_arr[05]:=132;
@@ -14272,7 +14262,8 @@ begin
       col_trans_arr[16]:=0;
 
       pix_drw_type             :=00{01}; //must be in range of [0..002]
-
+      nt_pix_cfx_type          :=02{00};
+      pt_pix_cfx_type          :=02{00};
       fx_cnt                   :=00{01}; //must be in range of [0..255]
 
       fx_arr[0].rep_cnt        :=01; //must be in range of [0..255]
@@ -14382,7 +14373,7 @@ begin
                                  srf_var.srf_bmp.height,
                                  srf_var.inn_wnd_rct,
                                  max_sprite_w_h_rct,
-                                 Application.Location+SELECTION_TOOLS_MARKER,
+                                 Application.Location+SELECTION_TOOLS_MARKER_ICON,
                                  @F_MainForm.IL_Select_Points.GetBitmap,
                                  0);
   // Drawing Settings:
@@ -15456,6 +15447,8 @@ begin
 
   if down_play_anim_ptr^ then
     begin
+      F_Hot_Keys.Visible:=False;
+      F_Hot_Keys.Enabled:=False;
       //srf_var.bg_color:=clBlack;
     end
   else
@@ -16241,7 +16234,7 @@ begin
               LowerBmp2ToMainBmp
             else
               LowerBmpToMainBmp;
-            if world_axis_draw and (not exp0) then
+            if show_world_axis and (not exp0) then
               WorldAxisDraw;
             VisibilityChange(False);
             ResizeCircleSelectionModeDraw;
@@ -16659,6 +16652,12 @@ procedure TF_MainForm.FormMouseWheelDown(sender:TObject; shift:TShiftState; mous
 begin
   if drawing_area_enter_calc then
     begin
+      {Check Exit-----} {$region -fold}
+      if (srf_var.inn_wnd_rct.width <=0) or
+         (srf_var.inn_wnd_rct.height<=0) or
+        ((sel_var.sel_pts_cnt       <>0) and
+         (Shift<>[ssCtrl]))              then
+        Exit; {$endregion}
       {if down_play_anim_ptr^ then
         begin
           ////
@@ -16731,6 +16730,12 @@ var
 begin
   if drawing_area_enter_calc then
     begin
+      {Check Exit-----} {$region -fold}
+      if (srf_var.inn_wnd_rct.width <=0) or
+         (srf_var.inn_wnd_rct.height<=0) or
+        ((sel_var.sel_pts_cnt       <>0) and
+         (Shift<>[ssCtrl]))              then
+        Exit; {$endregion}
       {if down_play_anim_ptr^ then
         begin
           ////
@@ -16831,58 +16836,66 @@ procedure TF_MainForm.FormKeyPress      (sender:TObject; var key:char);         
 
 begin
 
-   if down_play_anim_ptr^ then
+  {Change Pivot Mode} {$region -fold}
+  if (key=#32{'space'}) then
+    if down_select_points_ptr^ then
+      begin
+        if (sel_var.sel_pts_cnt>0) then
+          with pvt_var do
+            case pvt_mode of
+              (pmPivotMove  ): pvt_mode:=(pmPivotScale );
+              (pmPivotScale ): pvt_mode:=(pmPivotRotate);
+              (pmPivotRotate): pvt_mode:=(pmPivotMove  );
+            end
+        else
+          begin
+            if (CB_Select_Points_Selection_Mode.ItemIndex=CB_Select_Points_Selection_Mode.Items.Count-1) then
+              CB_Select_Points_Selection_Mode.ItemIndex:=0
+            else
+              CB_Select_Points_Selection_Mode.ItemIndex:=CB_Select_Points_Selection_Mode.ItemIndex+1;
+            sel_var.ChangeSelectionMode(CB_Select_Points_Selection_Mode.ItemIndex);
+          end;
+        InvalidateInnerWindow;
+      end; {$endregion}
+
+  {Check Exit-------} {$region -fold}
+  if (srf_var.inn_wnd_rct.width <=0) or
+     (srf_var.inn_wnd_rct.height<=0) or
+     (sel_var.sel_pts_cnt       <>0) then
+    Exit;
+  if down_play_anim_ptr^ then
      begin
        if (key=#32{'space'}) then
          time_interval:=-1;
        Exit;
-     end;
+     end; {$endregion}
 
-     // button 'Text':
-     if (key=Char(key_arr[04]{#49})) or (key=Char(key_alt_arr[04]{' '})) then
-       ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
-     // button 'Brush':
-     if (key=Char(key_arr[05]{#50})) or (key=Char(key_alt_arr[05]{' '})) then
-       ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
-     // button 'Spray':
-     if (key=Char(key_arr[06]{#51})) or (key=Char(key_alt_arr[06]{' '})) then
-       ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
-     // button 'Spline':
-     if (key=Char(key_arr[07]{#52})) or (key=Char(key_alt_arr[07]{'q'})) then
-       ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
-     // button 'Select Points':
-     if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
-       ButtonKeyPress(SB_Select_Points        ,P_Select_Points        ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
-     // button 'Select Texture Region':
-     if (key=Char(key_arr[09]{#54})) or (key=Char(key_alt_arr[09]{' '})) then
-       ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
-     // button 'Regular Grid':
-     if (key=Char(key_arr[10]{#54})) or (key=Char(key_alt_arr[10]{' '})) then
-       ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
-     // button 'Snap Grid':
-     if (key=Char(key_arr[11]{#54})) or (key=Char(key_alt_arr[11]{' '})) then
-       ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008);
-     // change pivot mode:
-     if (key=#32{'space'}) then
-       if down_select_points_ptr^ then
-         begin
-           if (sel_var.sel_pts_cnt>0) then
-             with pvt_var do
-               case pvt_mode of
-                 (pmPivotMove  ): pvt_mode:=(pmPivotScale );
-                 (pmPivotScale ): pvt_mode:=(pmPivotRotate);
-                 (pmPivotRotate): pvt_mode:=(pmPivotMove  );
-               end
-           else
-             begin
-               if (CB_Select_Points_Selection_Mode.ItemIndex=CB_Select_Points_Selection_Mode.Items.Count-1) then
-                 CB_Select_Points_Selection_Mode.ItemIndex:=0
-               else
-                 CB_Select_Points_Selection_Mode.ItemIndex:=CB_Select_Points_Selection_Mode.ItemIndex+1;
-               sel_var.ChangeSelectionMode(CB_Select_Points_Selection_Mode.ItemIndex);
-             end;
-           InvalidateInnerWindow;
-         end;
+  {Switch Buttons---} {$region -fold}
+
+   // button 'Text':
+   if (key=Char(key_arr[04]{#49})) or (key=Char(key_alt_arr[04]{' '})) then
+     ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
+   // button 'Brush':
+   if (key=Char(key_arr[05]{#50})) or (key=Char(key_alt_arr[05]{' '})) then
+     ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
+   // button 'Spray':
+   if (key=Char(key_arr[06]{#51})) or (key=Char(key_alt_arr[06]{' '})) then
+     ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
+   // button 'Spline':
+   if (key=Char(key_arr[07]{#52})) or (key=Char(key_alt_arr[07]{'q'})) then
+     ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
+   // button 'Select Points':
+   if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
+     ButtonKeyPress(SB_Select_Points        ,P_Select_Points        ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
+   // button 'Select Texture Region':
+   if (key=Char(key_arr[09]{#54})) or (key=Char(key_alt_arr[09]{' '})) then
+     ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
+   // button 'Regular Grid':
+   if (key=Char(key_arr[10]{#54})) or (key=Char(key_alt_arr[10]{' '})) then
+     ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
+   // button 'Snap Grid':
+   if (key=Char(key_arr[11]{#54})) or (key=Char(key_alt_arr[11]{' '})) then
+     ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008); {$endregion}
 
 end; {$endregion}
 procedure TF_MainForm.FormKeyDown       (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
@@ -16904,7 +16917,8 @@ begin
 
       {Check Exit-----} {$region -fold}
       if (inn_wnd_rct.width <=0) or
-         (inn_wnd_rct.height<=0) then
+         (inn_wnd_rct.height<=0) or
+         (sel_pts_cnt       <>0) then
         Exit; {$endregion}
 
       if T_Menu.Enabled then
@@ -17085,7 +17099,7 @@ begin
                   IsPivotOutOfInnerWindow(pvt_axis_rect,pvt);
                 end; {$endregion}
               {World Axis Drawing-} {$region -fold}
-              if world_axis_draw then
+              if show_world_axis then
                 WorldAxisDraw; {$endregion}
               {Reset Some Var.----} {$region -fold}
               srf_bmp.Canvas.CopyMode:=cmSrcCopy;
@@ -17111,6 +17125,12 @@ begin
 end; {$endregion}
 procedure TF_MainForm.FormKeyUp         (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
 begin
+
+  {Check Exit-----} {$region -fold}
+  if (srf_var.inn_wnd_rct.width <=0) or
+     (srf_var.inn_wnd_rct.height<=0) or
+     (sel_var.sel_pts_cnt       <>0) then
+    Exit; {$endregion}
 
   is_active       :=False;
   downtime_counter:=0;
@@ -17665,8 +17685,8 @@ begin
   {OnActivate:=@FormActivate;} // Возобновляет повторный вызов события
   {F_3D_Viewer.Show;}
   {MI_Full_ScreenClick(F_MainForm);}
-  fill_scene_calc        :=True;
-  srf_var.world_axis_draw:=True;
+  fill_scene_calc:=True;
+  show_world_axis:=True;
   with srf_var,inn_wnd_rct do
     world_axis:=PtPos((left+right )>>1,
                       (top +bottom)>>1);

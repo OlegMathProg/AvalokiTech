@@ -1,7 +1,7 @@
 object F_MainForm: TF_MainForm
-  Left = 450
-  Height = 768
-  Top = 93
+  Left = 506
+  Height = 714
+  Top = 163
   Width = 1024
   HorzScrollBar.Page = 1
   HorzScrollBar.Visible = False
@@ -11,8 +11,8 @@ object F_MainForm: TF_MainForm
   AllowDropFiles = True
   AlphaBlendValue = 0
   BorderIcons = [biSystemMenu, biMinimize, biMaximize, biHelp]
-  Caption = 'After Dark'
-  ClientHeight = 748
+  Caption = 'Morpho Engine'
+  ClientHeight = 694
   ClientWidth = 1024
   Color = 11645361
   DoubleBuffered = True
@@ -2328,7 +2328,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Cursor = crNone
     Left = 0
-    Height = 748
+    Height = 694
     Top = 0
     Width = 1024
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -2339,7 +2339,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter1
     AnchorSideBottom.Control = S_Splitter0
     Left = 0
-    Height = 447
+    Height = 414
     Top = 0
     Width = 0
     HorzScrollBar.Increment = 1
@@ -2351,7 +2351,7 @@ object F_MainForm: TF_MainForm
     VertScrollBar.Smooth = True
     VertScrollBar.Tracking = True
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 447
+    ClientHeight = 414
     ClientWidth = 0
     Color = 13290949
     Font.CharSet = RUSSIAN_CHARSET
@@ -2952,7 +2952,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_2D_Operations
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 193
+      Height = 160
       Top = 254
       Width = 265
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -2960,7 +2960,7 @@ object F_MainForm: TF_MainForm
       BevelColor = 7958609
       BevelInner = bvLowered
       BorderWidth = 2
-      ClientHeight = 193
+      ClientHeight = 160
       ClientWidth = 265
       Color = 11251619
       FullRepaint = False
@@ -2973,7 +2973,7 @@ object F_MainForm: TF_MainForm
         AnchorSideTop.Control = P_2D_Operations_Automatic
         AnchorSideBottom.Side = asrBottom
         Left = 4
-        Height = 185
+        Height = 152
         Top = 4
         Width = 20
         Anchors = [akTop, akLeft, akBottom]
@@ -3812,10 +3812,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter6
-    Left = 964
-    Height = 436
+    Left = 852
+    Height = 404
     Top = 4
-    Width = 60
+    Width = 172
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoExpand = True
     BackgroundColor = 11251619
@@ -3825,14 +3825,16 @@ object F_MainForm: TF_MainForm
     ExpandSignColor = 5723991
     ExpandSignSize = 9
     ExpandSignType = tvestPlusMinus
-    Font.CharSet = RUSSIAN_CHARSET
+    Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -13
-    Font.Name = 'Century Gothic'
+    Font.Name = 'Ebrima'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
+    Font.Style = [fsBold]
     HotTrack = True
-    Images = IL_Scene_Tree_Image_List
+    Images = IL_Drawing_Buttons
+    ImagesWidth = 24
     Indent = 19
     MultiSelect = True
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly, msSiblingOnly]
@@ -3847,6 +3849,7 @@ object F_MainForm: TF_MainForm
     ShowHint = True
     ShowRoot = False
     StateImages = IL_Scene_Tree_Image_List
+    StateImagesWidth = 24
     TabOrder = 9
     OnDblClick = TV_Scene_TreeDblClick
     OnDragDrop = TV_Scene_TreeDragDrop
@@ -3865,13 +3868,13 @@ object F_MainForm: TF_MainForm
     Left = 4
     Height = 4
     Top = 0
-    Width = 956
+    Width = 844
     Anchors = [akTop, akLeft, akRight]
     BevelColor = 8026460
     BevelOuter = bvNone
     BorderWidth = 1
     ClientHeight = 4
-    ClientWidth = 956
+    ClientWidth = 844
     Color = 5731167
     Font.Height = -9
     FullRepaint = False
@@ -3899,10 +3902,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 964
+    Left = 852
     Height = 4
     Top = 0
-    Width = 60
+    Width = 172
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -3914,8 +3917,8 @@ object F_MainForm: TF_MainForm
   object S_Splitter3: TSplitter
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = SB_StatusBar1
-    Left = 960
-    Height = 725
+    Left = 848
+    Height = 671
     Top = 0
     Width = 4
     Align = alCustom
@@ -3936,8 +3939,8 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 4
     Height = 4
-    Top = 456
-    Width = 956
+    Top = 352
+    Width = 844
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -3952,7 +3955,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 0
-    Height = 725
+    Height = 671
     Top = 0
     Width = 4
     Align = alNone
@@ -3971,7 +3974,7 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 0
     Height = 4
-    Top = 447
+    Top = 414
     Width = 0
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -4091,9 +4094,9 @@ object F_MainForm: TF_MainForm
   object L_Object_Info: TLabel
     AnchorSideLeft.Control = S_Splitter1
     Left = 20
-    Height = 239
+    Height = 376
     Top = 40
-    Width = 215
+    Width = 224
     AutoSize = False
     BorderSpacing.Left = 20
     Enabled = False
@@ -4111,12 +4114,12 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter1
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 274
-    Top = 451
+    Height = 253
+    Top = 418
     Width = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 274
+    ClientHeight = 253
     ClientWidth = 0
     Color = 13290949
     ParentColor = False
@@ -4126,7 +4129,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_UV_Packing
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 274
+      Height = 253
       Hint = 'Greedy1'
       Top = 0
       Width = 0
@@ -4148,7 +4151,7 @@ object F_MainForm: TF_MainForm
       object TS_1_order_Isomorphic: TTabSheet
         Hint = '1-order Isomorphic'
         Caption = '1-order Isomorphic'
-        ClientHeight = 146
+        ClientHeight = 125
         ClientWidth = 0
         Font.CharSet = RUSSIAN_CHARSET
         Font.Height = -13
@@ -4167,7 +4170,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_1_order_Isomorphic
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 146
+          Height = 125
           Top = 0
           Width = 0
           Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4335,14 +4338,14 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 4
-    Height = 265
-    Top = 460
-    Width = 956
+    Height = 315
+    Top = 356
+    Width = 844
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
-    ClientHeight = 265
-    ClientWidth = 956
+    ClientHeight = 315
+    ClientWidth = 844
     Color = 13290949
     ParentColor = False
     TabOrder = 3
@@ -4354,9 +4357,9 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Image_Editor
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 265
+      Height = 315
       Top = 0
-      Width = 956
+      Width = 844
       ActivePage = TS_Draw
       Anchors = [akTop, akLeft, akRight, akBottom]
       MultiLine = True
@@ -4889,8 +4892,8 @@ object F_MainForm: TF_MainForm
       end
       object TS_Draw: TTabSheet
         Caption = 'Draw'
-        ClientHeight = 237
-        ClientWidth = 948
+        ClientHeight = 287
+        ClientWidth = 836
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
         ParentBiDiMode = False
@@ -4904,9 +4907,9 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_Draw
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 202
+          Height = 252
           Top = 35
-          Width = 946
+          Width = 834
           HorzScrollBar.Increment = 1
           HorzScrollBar.Page = 1
           HorzScrollBar.Smooth = True
@@ -4918,8 +4921,8 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 198
-          ClientWidth = 942
+          ClientHeight = 248
+          ClientWidth = 830
           Color = 15921635
           ParentBiDiMode = False
           ParentColor = False
@@ -4934,9 +4937,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -162
+            Left = -16
             Height = 448
-            Top = 20
+            Top = -18
             Width = 1040
             Anchors = []
             BevelColor = 7958609
@@ -6495,7 +6498,7 @@ object F_MainForm: TF_MainForm
                 Width = 150
                 HelpType = htKeyword
                 AutoSize = False
-                Caption = 'Use LOD'
+                Caption = 'Use LOD:'
                 Checked = True
                 Color = 12236195
                 Enabled = False
@@ -6661,7 +6664,7 @@ object F_MainForm: TF_MainForm
                 State = cbChecked
                 TabOrder = 2
               end
-              object CB_Spline_Hidden_Grid_Clipping: TCheckBox
+              object CB_Spline_Grid_Clipping: TCheckBox
                 Left = 10
                 Height = 19
                 Hint = 'Create Regular Grid With Detection Which Edges And Points Must Be Clipped'
@@ -6687,7 +6690,7 @@ object F_MainForm: TF_MainForm
                 State = cbChecked
                 TabOrder = 3
               end
-              object CB_Spline_Hidden_Lazy_Repaint: TCheckBox
+              object CB_Spline_Lazy_Repaint: TCheckBox
                 Left = 10
                 Height = 19
                 Hint = 'Should Spline Be Partially Repainted Unless Clipped'
@@ -6702,7 +6705,7 @@ object F_MainForm: TF_MainForm
                 Font.Color = clCaptionText
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
-                OnChange = CB_Spline_Hidden_Lazy_RepaintChange
+                OnChange = CB_Spline_Lazy_RepaintChange
                 OnMouseEnter = P_Optimization_PropMouseEnter
                 OnMouseLeave = P_Optimization_PropMouseLeave
                 ParentColor = False
@@ -6712,6 +6715,180 @@ object F_MainForm: TF_MainForm
                 ShowHint = True
                 State = cbChecked
                 TabOrder = 4
+              end
+              object CB_Spline_Byte_Mode: TCheckBox
+                Left = 10
+                Height = 19
+                Hint = 'Except for "Select Points" mode, splines will be drawn about 1.7 times faster'
+                Top = 151
+                Width = 152
+                HelpType = htKeyword
+                AutoSize = False
+                Caption = 'Byte Mode'
+                Checked = True
+                Color = 12236195
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clCaptionText
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                OnChange = CB_Spline_Byte_ModeChange
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ParentBidiMode = False
+                ShowHint = True
+                State = cbChecked
+                TabOrder = 5
+              end
+              object CB_Spline_On_Out_Of_Window: TCheckBox
+                Left = 10
+                Height = 19
+                Hint = 'Free memory when object "Spline" is out of window'
+                Top = 201
+                Width = 152
+                HelpType = htKeyword
+                AutoSize = False
+                Caption = 'On Out of Window'
+                Checked = True
+                Color = 12236195
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clCaptionText
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                OnChange = CB_Spline_On_Out_Of_WindowChange
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ParentBidiMode = False
+                ShowHint = True
+                State = cbChecked
+                TabOrder = 6
+              end
+              object CB_Spline_On_Scale_Down: TCheckBox
+                Left = 10
+                Height = 19
+                Hint = 'Free memory when object "Spline" is scaled down'
+                Top = 226
+                Width = 152
+                HelpType = htKeyword
+                AutoSize = False
+                Caption = 'On Scale Down'
+                Color = 12236195
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clCaptionText
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                OnChange = CB_Spline_On_Scale_DownChange
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ParentBidiMode = False
+                ShowHint = True
+                TabOrder = 7
+              end
+              object L_Spline_Free_Memory: TLabel
+                Left = 8
+                Height = 16
+                Top = 176
+                Width = 82
+                Alignment = taRightJustify
+                AutoSize = False
+                BorderSpacing.Left = 8
+                Caption = 'Free Memory:'
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                Layout = tlBottom
+                ParentBidiMode = False
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+              end
+              object L_Spline_Remove_Brunching: TLabel
+                Left = 8
+                Height = 16
+                Top = 251
+                Width = 112
+                Alignment = taRightJustify
+                AutoSize = False
+                BorderSpacing.Left = 8
+                Caption = 'Remove Brunching:'
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                Layout = tlBottom
+                ParentBidiMode = False
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+              end
+              object RB_Spline_Adaptive: TRadioButton
+                Left = 10
+                Height = 19
+                Top = 276
+                Width = 70
+                Caption = 'Adaptive'
+                Enabled = False
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                OnChange = RB_Spline_AdaptiveChange
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+                ParentFont = False
+                TabOrder = 10
+              end
+              object RB_Spline_Constant: TRadioButton
+                Left = 10
+                Height = 19
+                Top = 301
+                Width = 69
+                Caption = 'Constant'
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                OnChange = RB_Spline_AdaptiveChange
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+                ParentFont = False
+                TabOrder = 9
+              end
+              object RB_Spline_None: TRadioButton
+                Left = 10
+                Height = 19
+                Top = 326
+                Width = 47
+                Caption = 'None'
+                Checked = True
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                OnChange = RB_Spline_AdaptiveChange
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+                ParentFont = False
+                TabOrder = 8
+                TabStop = True
               end
             end
             object P_Drawing_Prop: TPanel
@@ -6824,6 +7001,268 @@ object F_MainForm: TF_MainForm
                 Visible = False
                 OnMouseEnter = P_Spline_TemplatesMouseEnter
                 OnMouseLeave = P_Spline_TemplatesMouseLeave
+                object P_Rose: TPanel
+                  AnchorSideLeft.Control = P_Spline_Templates
+                  AnchorSideTop.Control = P_Spline_Templates_Properties
+                  AnchorSideTop.Side = asrBottom
+                  AnchorSideRight.Control = P_Spline_Templates
+                  AnchorSideRight.Side = asrBottom
+                  AnchorSideBottom.Control = P_Spline_Templates
+                  AnchorSideBottom.Side = asrBottom
+                  Left = 1
+                  Height = 300
+                  Top = 89
+                  Width = 179
+                  Anchors = [akTop, akLeft, akRight, akBottom]
+                  BorderSpacing.Top = 66
+                  BevelColor = clGray
+                  BevelOuter = bvNone
+                  ClientHeight = 300
+                  ClientWidth = 179
+                  TabOrder = 7
+                  Visible = False
+                  OnMouseEnter = P_Spline_TemplatesMouseEnter
+                  OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  object L_Rose_Points_Count: TLabel
+                    Left = 24
+                    Height = 16
+                    Top = 9
+                    Width = 76
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Points Count:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object SE_Rose_Points_Count: TSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 8
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 20000000
+                    OnChange = SE_Rose_Points_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 0
+                    Value = 256
+                  end
+                  object L_Rose_Radius: TLabel
+                    Left = 63
+                    Height = 16
+                    Top = 59
+                    Width = 37
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Radius:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object SE_Rose_Radius: TSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 58
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 4095
+                    OnChange = SE_Rose_RadiusChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 1
+                    Value = 256
+                  end
+                  object L_Rose_Rotation: TLabel
+                    Left = 48
+                    Height = 16
+                    Top = 84
+                    Width = 52
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Rotation:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object SE_Rose_Rotation: TSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 83
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 360
+                    OnChange = SE_Rose_RotationChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 2
+                  end
+                  object L_Rose_Angle: TLabel
+                    Left = 63
+                    Height = 16
+                    Top = 109
+                    Width = 37
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Angle:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object SE_Rose_Angle: TSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 108
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 360000
+                    OnChange = SE_Rose_AngleChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 3
+                    Value = 180
+                  end
+                  object FSE_Rose_Petals_Count: TFloatSpinEdit
+                    AnchorSideTop.Control = L_Spline_Simplification_Angle
+                    AnchorSideTop.Side = asrCenter
+                    AnchorSideBottom.Side = asrBottom
+                    Left = 108
+                    Height = 20
+                    Top = 33
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    BorderSpacing.Left = 91
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    DecimalPlaces = 1
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -10
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 360
+                    OnChange = FSE_Rose_Petals_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 4
+                    Value = 3
+                  end
+                  object L_Rose_Petals_Count: TLabel
+                    Left = 24
+                    Height = 16
+                    Top = 34
+                    Width = 76
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Petals Count:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                end
                 object P_Spline_Template_List: TPanel
                   AnchorSideLeft.Control = BB_Spline_Templates_Left
                   AnchorSideTop.Control = BB_Spline_Templates_Left
@@ -7192,6 +7631,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 20000000
                     OnChange = SE_Epicycloid_Points_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7238,6 +7678,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 20000000
                     OnChange = SE_Epicycloid_Petals_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7284,6 +7725,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 4095
                     OnChange = SE_Epicycloid_RadiusChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7330,6 +7772,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 360
                     OnChange = SE_Epicycloid_RotationChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7375,6 +7818,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 360
                     OnChange = SE_Epicycloid_AngleChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7911,6 +8355,7 @@ object F_MainForm: TF_MainForm
                     Items.Strings = (
                       'Continuous'
                       'Discrete'
+                      'Spray'
                     )
                     OnMouseEnter = P_Spline_FreehandMouseEnter
                     OnMouseLeave = P_Spline_FreehandMouseLeave
@@ -7951,7 +8396,7 @@ object F_MainForm: TF_MainForm
                     Left = 103
                     Height = 20
                     Top = 33
-                    Width = 47
+                    Width = 44
                     AutoSelect = False
                     AutoSize = False
                     BorderSpacing.Left = 6
@@ -7972,7 +8417,61 @@ object F_MainForm: TF_MainForm
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 1
-                    Value = 12
+                    Value = 16
+                  end
+                  object L_Spline_Spray_Radius: TLabel
+                    Left = 0
+                    Height = 16
+                    Top = 59
+                    Width = 97
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Radius:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    Visible = False
+                    OnMouseEnter = P_Spline_FreehandMouseEnter
+                    OnMouseLeave = P_Spline_FreehandMouseLeave
+                  end
+                  object SE_Spline_Spray_Radius: TSpinEdit
+                    AnchorSideLeft.Control = L_Spline_Spray_Radius
+                    AnchorSideLeft.Side = asrBottom
+                    AnchorSideTop.Side = asrBottom
+                    Left = 103
+                    Height = 20
+                    Top = 58
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    BorderSpacing.Left = 6
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 1000
+                    OnChange = SE_Spline_Spray_RadiusChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_FreehandMouseEnter
+                    OnMouseLeave = P_Spline_FreehandMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 2
+                    Value = 32
+                    Visible = False
                   end
                 end
               end
@@ -8094,17 +8593,20 @@ object F_MainForm: TF_MainForm
                 ItemHeight = 14
                 ItemIndex = 0
                 Items.Strings = (
-                  'Rigid'
+                  'None'
+                  'Soft'
                   'Spring'
+                  'Rigid'
                 )
                 OnMouseEnter = P_Dynamics_PropMouseEnter
                 OnMouseLeave = P_Dynamics_PropMouseLeave
+                OnSelect = CB_Dynamics_StyleSelect
                 ParentBidiMode = False
                 ParentFont = False
                 ParentShowHint = False
                 Style = csDropDownList
                 TabOrder = 0
-                Text = 'Rigid'
+                Text = 'None'
               end
               object L_Dynamics: TLabel
                 Left = 8
@@ -8126,18 +8628,6 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Dynamics_PropMouseEnter
                 OnMouseLeave = P_Dynamics_PropMouseLeave
-              end
-              object Label2: TLabel
-                AnchorSideRight.Side = asrBottom
-                AnchorSideBottom.Side = asrBottom
-                Left = 0
-                Height = 27
-                Top = 288
-                Width = 56
-                Caption = '        '
-                ParentColor = False
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
               end
               object CB_Dynamics_Collider: TCheckBox
                 Left = 10
@@ -8266,18 +8756,6 @@ object F_MainForm: TF_MainForm
                 OnMouseEnter = P_Save_Load_PropMouseEnter
                 OnMouseLeave = P_Save_Load_PropMouseLeave
               end
-              object Label3: TLabel
-                AnchorSideRight.Side = asrBottom
-                AnchorSideBottom.Side = asrBottom
-                Left = 0
-                Height = 27
-                Top = 288
-                Width = 56
-                Caption = '        '
-                ParentColor = False
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
-              end
             end
           end
           object P_Select_Points: TPanel
@@ -8287,9 +8765,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 656
+            Left = 714
             Height = 160
-            Top = -21
+            Top = 37
             Width = 760
             Anchors = []
             BevelColor = 9665894
@@ -8786,8 +9264,8 @@ object F_MainForm: TF_MainForm
               object TS_Inner_Subgraph: TTabSheet
                 Hint = 'Inner subgraph(selected edges) drawing settings'
                 Caption = 'IS'
-                ClientHeight = 244
-                ClientWidth = 384
+                ClientHeight = 124
+                ClientWidth = 744
                 ParentShowHint = False
                 ShowHint = True
                 object P_Inner_Subgraph: TPanel
@@ -8798,14 +9276,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = TS_Inner_Subgraph
                   AnchorSideBottom.Side = asrBottom
                   Left = 0
-                  Height = 244
+                  Height = 124
                   Top = 0
-                  Width = 384
+                  Width = 744
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BevelColor = clWhite
                   BevelOuter = bvNone
-                  ClientHeight = 244
-                  ClientWidth = 384
+                  ClientHeight = 124
+                  ClientWidth = 744
                   Color = 12236195
                   Font.CharSet = ANSI_CHARSET
                   Font.Color = 7107914
@@ -8998,8 +9476,8 @@ object F_MainForm: TF_MainForm
               object TS_Selected_Points: TTabSheet
                 Hint = 'Selected points drawing settings'
                 Caption = 'SP'
-                ClientHeight = 244
-                ClientWidth = 384
+                ClientHeight = 124
+                ClientWidth = 744
                 ParentShowHint = False
                 ShowHint = True
                 object P_Inner_Subgraph1: TPanel
@@ -9010,14 +9488,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = TS_Selected_Points
                   AnchorSideBottom.Side = asrBottom
                   Left = 0
-                  Height = 244
+                  Height = 124
                   Top = 0
-                  Width = 384
+                  Width = 744
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BevelColor = clWhite
                   BevelOuter = bvNone
-                  ClientHeight = 244
-                  ClientWidth = 384
+                  ClientHeight = 124
+                  ClientWidth = 744
                   Color = 12236195
                   Font.CharSet = ANSI_CHARSET
                   Font.Color = 7107914
@@ -9291,9 +9769,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 1055
+            Left = 898
             Height = 110
-            Top = 28
+            Top = -55
             Width = 529
             Anchors = []
             BevelColor = 9665894
@@ -9894,9 +10372,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 461
+            Left = 102
             Height = 63
-            Top = 17
+            Top = -1
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -10083,7 +10561,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 464
+            Left = 352
             Height = 110
             Top = -7
             Width = 530
@@ -10104,9 +10582,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 1045
+            Left = -144
             Height = 63
-            Top = 36
+            Top = -14
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -10292,9 +10770,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 1045
+            Left = 890
             Height = 63
-            Top = 6
+            Top = -31
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -10480,9 +10958,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 464
+            Left = 260
             Height = 110
-            Top = -20
+            Top = -18
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -10542,9 +11020,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 464
+            Left = 402
             Height = 110
-            Top = -33
+            Top = -18
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -10564,13 +11042,13 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 32
           Top = 0
-          Width = 946
+          Width = 834
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 2
           BevelColor = 13815453
           BevelOuter = bvLowered
           ClientHeight = 32
-          ClientWidth = 946
+          ClientWidth = 834
           Color = 15921635
           FullRepaint = False
           ParentColor = False
@@ -10759,7 +11237,7 @@ object F_MainForm: TF_MainForm
             Font.Quality = fqDraft
             GroupIndex = 1
             Images = IL_Drawing_Buttons
-            ImageIndex = 7
+            ImageIndex = 6
             OnClick = SB_RGridClick
             ShowHint = True
             ParentBidiMode = False
@@ -10786,7 +11264,7 @@ object F_MainForm: TF_MainForm
             Font.Quality = fqDraft
             GroupIndex = 1
             Images = IL_Drawing_Buttons
-            ImageIndex = 8
+            ImageIndex = 7
             OnClick = SB_SGridClick
             ShowHint = True
             ParentBidiMode = False
@@ -10797,8 +11275,8 @@ object F_MainForm: TF_MainForm
       end
       object TS_AnimK: TTabSheet
         Caption = 'AnimK'
-        ClientHeight = 130
-        ClientWidth = 1017
+        ClientHeight = 287
+        ClientWidth = 836
         object P_Animation_Buttons: TPanel
           AnchorSideRight.Control = TS_AnimK
           AnchorSideRight.Side = asrBottom
@@ -10806,13 +11284,13 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 32
           Top = 0
-          Width = 1015
+          Width = 834
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 2
           BevelColor = 13815453
           BevelOuter = bvLowered
           ClientHeight = 32
-          ClientWidth = 1015
+          ClientWidth = 834
           Color = 15921635
           FullRepaint = False
           ParentColor = False
@@ -10908,16 +11386,16 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_AnimK
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 95
+          Height = 252
           Top = 35
-          Width = 1015
+          Width = 834
           HorzScrollBar.Page = 1
           VertScrollBar.Page = 1
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 91
-          ClientWidth = 1011
+          ClientHeight = 248
+          ClientWidth = 830
           TabOrder = 1
           object P_Add_Actor: TPanel
             AnchorSideLeft.Control = SB_AnimK
@@ -10926,9 +11404,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 140
+            Left = 59
             Height = 176
-            Top = -26
+            Top = -88
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -11410,9 +11888,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 318
+            Left = 205
             Height = 200
-            Top = -59
+            Top = -100
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -11499,9 +11977,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 432
+            Left = 306
             Height = 40
-            Top = 36
+            Top = -20
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -11520,9 +11998,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 330
+            Left = 215
             Height = 40
-            Top = 32
+            Top = -20
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -11647,7 +12125,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = P_Splitter5
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = S_Splitter3
-    Left = 920
+    Left = 808
     Height = 247
     Top = 4
     Width = 40
@@ -11702,7 +12180,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 924
+    Left = 812
     Height = 32
     Top = 34
     Width = 32
@@ -11800,7 +12278,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 924
+    Left = 812
     Height = 32
     Top = 70
     Width = 32
@@ -11810,82 +12288,8 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
-    Glyph.Data = {
-      36090000424D3609000000000000360000002800000018000000180000000100
-      2000000000000009000064000000640000000000000000000000696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      690069696900696969FF696969FF696969006969690069696900696969006969
-      69FF696969FF6969690069696900696969006969690069696900
-    }
+    Images = IL_Drawing_Buttons
+    ImageIndex = 6
     Transparent = False
     OnClick = SB_Visibility_GridClick
     OnMouseEnter = SB_Visibility_GridMouseEnter
@@ -11899,7 +12303,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 924
+    Left = 812
     Height = 32
     Top = 142
     Width = 32
@@ -11920,11 +12324,11 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     ParentShowHint = False
   end
-  object SB_Visibility_IS_Graph: TSpeedButton
+  object SB_Visibility_Collider: TSpeedButton
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 924
+    Left = 812
     Height = 32
     Top = 214
     Width = 32
@@ -11932,46 +12336,25 @@ object F_MainForm: TF_MainForm
     Anchors = [akTop, akRight]
     BorderSpacing.Top = 210
     BorderSpacing.Right = 4
-    Caption = 'ISG'
     Color = 10344422
     Flat = True
-    Glyph.Data = {
-      76020000424D760200000000000036000000280000000C0000000C0000000100
-      2000000000004002000064000000640000000000000000000000050505020303
-      03000D1B0D242053206F43BB43FF42B942FC42B942FC43BB43FF2053206F0D1B
-      0D24030303000505050202010200112611353FAE3FED43BB43FF45BA45FD44BB
-      44FF44BB44FF45BA45FD43BB43FF3FAE3FED11261135020102000E1E0E2A3FAE
-      3FED43BA43FE44B744FA45BC45FF48BD48FF48BD48FF45BC45FF44B744FA43BA
-      43FE3FAE3FED0E1E0E2A1F501F6C43BB43FF44B744FA43BB43FF4DBF4DFFE3F4
-      E3FFE3F4E3FF4DBF4DFF43BB43FF44B744FA43BB43FF1F501F6C43BA43FE44B9
-      44FD43BB43FF50BF50FFD5F0D5FFFFFFFFFFFFFFFFFFD5F0D5FF50BF50FF43BB
-      43FF44B944FD43BA43FE44B844FC43BB43FF51C051FFD8F0D8FFFEFEFEFFFBFD
-      FBFFFBFDFBFFFEFEFEFFD8F0D8FF51C051FF43BB43FF44B844FC46B846FC43BB
-      43FFADE1ADFFFFFFFFFF77CE77FFD5F0D5FFD5F0D5FF77CE77FFFFFFFFFFADE1
-      ADFF43BB43FF46B846FC43BA43FE43B943FD4BBE4BFF8AD48AFF43BB43FFDEF3
-      DEFFDEF3DEFF43BB43FF8AD48AFF4BBE4BFF43B943FD43BA43FE1F501F6C43BB
-      43FF46B646FA47BD47FF43BB43FFDDF2DDFFDDF2DDFF43BB43FF47BD47FF46B6
-      46FA43BB43FF1F501F6C0E1E0E2A3FAE3FED43BA43FE4BB74BFA43BB43FFDDF3
-      DDFFDDF3DDFF43BB43FF4BB74BFA43BA43FE3FAE3FED0E1E0E2A020102001126
-      11353FAE3FED46BC46FF43BA43FDDDF2DDFFDDF2DDFF43BA43FD46BC46FF3FAE
-      3FED112611350201020005050502030303000D1B0D242751276F43BB43FFDEEF
-      DEFCDEEFDEFC43BB43FF2751276F0D1B0D240303030005050502
-    }
-    Layout = blGlyphTop
+    Images = IL_Drawing_Buttons
+    ImageIndex = 9
+    ImageWidth = 32
     Transparent = False
-    OnClick = SB_Visibility_IS_GraphClick
-    OnMouseEnter = SB_Visibility_IS_GraphMouseEnter
+    OnClick = SB_Visibility_ColliderClick
+    OnMouseEnter = SB_Visibility_ColliderMouseEnter
     OnMouseLeave = I_Visibility_PanelMouseLeave
     ShowHint = True
     ParentBidiMode = False
     ParentFont = False
     ParentShowHint = False
   end
-  object SB_Visibility_UV_Mesh: TSpeedButton
+  object SB_Visibility_Actor: TSpeedButton
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 924
+    Left = 812
     Height = 32
     Top = 178
     Width = 32
@@ -11984,111 +12367,11 @@ object F_MainForm: TF_MainForm
     Font.CharSet = ANSI_CHARSET
     Font.Name = 'Sylfaen'
     Font.Quality = fqAntialiased
-    Glyph.Data = {
-      760C0000424D760C00000000000036000000280000001C0000001C0000000100
-      200000000000400C000064000000640000000000000000000000FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FEFEFE01FFFFFF00E8E8E8177E7E7E82545454AC555555AB7272
-      728EB2B2B24DF6F6F609FFFFFF00FCFCFC03FEFEFE01FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFEFE01FFFFFF00ECECEC135050
-      50B1242424DD313131D02F2F2FD22C2C2CD52B2B2BD64D4D4DB3BABABA45FFFF
-      FF00FDFDFD02FEFEFE01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FDFDFD02FFFFFF007272728E232323DE373737CA262626DB2A2A2AD82626
-      26DB2A2A2AD82D2D2DD4242424DD8383837CFDFDFD02FEFEFE01FEFEFE01FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00D6D6D6292F2F2FD23232
-      32CF363636CA9595956AC7C7C738B4B4B44B6C6C6C94303030D1343434CD2222
-      22DF7272728EFDFDFD02FEFEFE01FEFEFE01FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FCFC
-      FC03FFFFFF0098989867252525DC303030D1BCBCBC44FFFFFF00FDFDFD02F6F6
-      F609E6E6E6199A9A9A65383838C9373737CA222222DF7E7E7E82FFFFFF00FDFD
-      FD02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF007272728E1D1D1DE46363
-      639EFFFFFF00C5C5C53A545454AD343434CD313131D0424242BE3A3A3AC73535
-      35CC3B3B3BC6242424DDA3A3A35DFFFFFF00FCFCFC03FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFE
-      FE01FFFFFF006363639E191919E99D9D9D62D2D2D22D292929D7292929D83333
-      33CE323232CF313131D02E2E2ED3252525DD232323DE2D2D2DD4333333CED6D6
-      D629FFFFFF00FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FEFEFE01FFFFFF00606060A0202020E19898
-      98674D4D4DB42A2A2AD7373737C9333333CD353535CC2B2B2BD63E3E3EC38F8F
-      8F70B4B4B44C5D5D5DA4212121E0616161A0FFFFFF00FEFEFE01FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFEFE01FCFCFC03FCFC
-      FC03FFFFFF0069696997292929D8404040C0313131D0373737CA333333CE3434
-      34CE2E2E2ED34D4D4DB4E9E9E917FFFFFF00E4E4E41B444444BD333333CE2525
-      25DCB0B0B050FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FDFDFD02FEFEFE01FFFFFF00FBFBFB04FFFFFF008383837D252525DC3535
-      35CC333333CF262626DB303030D1363636CB292929D87A7A7A86D6D6D629A0A0
-      A05F3F3F3FC22B2B2BD6363636CA2C2C2CD54E4E4EB3F6F6F609FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00F7F7F7089F9F9F616464
-      649DFFFFFF00ACACAC53252525DC343434CD313131D09D9D9D63EDEDED12BDBD
-      BD42303030D12E2E2ED3272727DA252525DC2F2F2FD2353535CC333333CE3535
-      35CC2A2A2AD79A9A9A65FFFFFF00FFFFFF00FFFFFF00FFFFFF00FCFCFC03FFFF
-      FF00D3D3D32C494949B7202020E2282828D9DDDDDD22E0E0E01F2F2F2FD22D2D
-      2DD4BBBBBB45FFFFFF00F5F5F509686868982A2A2AD7363636CB353535CC3636
-      36CB343434CD333333CE333333CE373737CA262626DB484848B8FFFFFF00FFFF
-      FF00FFFFFF00FCFCFC03FFFFFF00C4C4C43C282828D95A5A5AA7535353AE1919
-      19E8A5A5A55BFFFFFF004E4E4EB22F2F2FD27F7F7F817E7E7E82434343BE2828
-      28D9353535CC333333CE333333CE333333CE333333CE343434CD363636CB2323
-      23DE545454ACD8D8D827FFFFFF00FFFFFF00FDFDFD02FFFFFF00CFCFCF303232
-      32CF272727DB606060A1DDDDDD223D3D3DC44D4D4DB3FFFFFF009292926E2323
-      23DE292929D9252525DC2F2F2FD2353535CC333333CE333333CE333333CE3333
-      33CE373737CA2F2F2FD2252525DC80808080F7F7F709FFFFFF00FFFFFF00FEFE
-      FE01FFFFFF00EFEFEF10474747BA2C2C2CD5383838C9272727DAC1C1C13EFCFC
-      FC038E8E8E72EDEDED12DFDFDF20313131D0363636CB373737CA343434CD3333
-      33CE333333CE343434CD363636CB333333CE242424DD404040C1B9B9B947FFFF
-      FF00FDFDFD02FDFDFD02FFFFFF00FDFDFD02FFFFFF007E7E7E82252525DC3A3A
-      3AC7363636CA2F2F2FD2424242BFDCDCDC24FFFFFF00FCFCFC03FFFFFF006D6D
-      6D93272727DA363636CB353535CC363636CB353535CC2E2E2ED4242424DD3232
-      32CF8484847CEDEDED12FFFFFF00FCFCFC03FEFEFE01FFFFFF00FDFDFD02FFFF
-      FF00CCCCCC332D2D2DD42E2E2ED3242424DD272727DA363636CB2D2D2DD43434
-      34CC6C6C6C957C7C7C84F7F7F708CACACA35292929D8343434CD2A2A2AD72424
-      24DD2A2A2AD74A4A4AB68D8D8D73E0E0E01FFFFFFF00FEFEFE01FDFDFD02FFFF
-      FF00FFFFFF00FFFFFF00FDFDFD02FFFFFF006A6A6A971D1D1DE480808080BEBE
-      BE417171718F2C2C2CD5353535CC323232CF2A2A2AD8191919E8A3A3A35DFFFF
-      FF005A5A5AA6292929D85B5B5BA590909070CACACA35F8F8F807FFFFFF00FFFF
-      FF00FDFDFD02FEFEFE01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00CFCF
-      CF302E2E2ED3292929D86D6D6D93FFFFFF00FFFFFF008B8B8B75262626DB3636
-      36CB3A3A3AC7303030D14A4A4AB7F9F9F906F1F1F10EEAEAEA15FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FCFCFC03FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF007D7D7D83252525DC383838C9292929D98D8D
-      8D73FCFCFC03E6E6E6193A3A3AC7323232CF262626DB303030D1313131CF5B5B
-      5BA6D3D3D32CCCCCCC34D7D7D728FFFFFF00FBFBFB04FEFEFE01FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00E9E9E9164040
-      40C1303030D1343434CD343434CD282828D9424242BF565656AA393939C82C2C
-      2CD57B7B7B85DEDEDE21EEEEEE11B3B3B34D444444BD191919E7B8B8B847FFFF
-      FF00FCFCFC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00A6A6A6592B2B2BD6353535CC333333CE333333CE3535
-      35CC2F2F2FD22B2B2BD6343434CD2C2C2CD58D8D8D73FBFBFB04FFFFFF00EDED
-      ED125E5E5EA22A2A2AD7DBDBDB24FFFFFF00FDFDFD02FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00535353AD2424
-      24DE383838C9343434CD333333CE333333CE343434CD353535CC333333CE3434
-      34CD252525DC3C3C3CC4525252AE313131D0272727DB454545BCF3F3F30CFFFF
-      FF00FEFEFE01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00C6C6C639525252AE232323DE323232CF363636CA3333
-      33CE333333CE333333CE333333CE333333CE363636CC303030D12B2B2BD63535
-      35CC2A2A2AD76666669AFFFFFF00FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00F9F9
-      F9069B9B9B65363636CB252525DC333333CE363636CB353535CC343434CD3333
-      33CE333333CE343434CD353535CC373737CA242424DD9B9B9B65FFFFFF00FCFC
-      FC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FDFDFD02FDFDFD02FFFFFF00E4E4E41B7D7D7D823333
-      33CE232323DE292929D8303030D1343434CD353535CC353535CC353535CC3535
-      35CC2F2F2FD2D4D4D42BFFFFFF00FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFE
-      FE01FCFCFC03FEFEFE01FFFFFF00E3E3E31C9A9A9A665F5F5FA13E3E3EC32E2E
-      2ED3282828D9282828D92C2C2CD5262626DB515151B0FEFEFE01FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FCFCFC03FFFF
-      FF00FFFFFF00FFFFFF00E9E9E916C6C6C639A4A4A45B8585857B6B6B6B954343
-      43BE9C9C9C63FFFFFF00FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
-    }
+    Images = IL_Drawing_Buttons
+    ImageIndex = 8
     Transparent = False
-    OnClick = SB_Visibility_UV_MeshClick
-    OnMouseEnter = SB_Visibility_UV_MeshMouseEnter
+    OnClick = SB_Visibility_ActorClick
+    OnMouseEnter = SB_Visibility_ActorMouseEnter
     OnMouseLeave = I_Visibility_PanelMouseLeave
     ShowHint = True
     ParentBidiMode = False
@@ -12099,7 +12382,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 924
+    Left = 812
     Height = 32
     Top = 106
     Width = 32
@@ -12109,138 +12392,8 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
-    Glyph.Data = {
-      36100000424D3610000000000000360000002800000020000000200000000100
-      2000000000000010000064000000640000000000000000000000696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF696969FF6969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF696969FF6969
-      6900696969006969690069696900696969FF696969FF69696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF696969FF6969
-      6900696969006A6A6A006B6B6B006B6B6BFF6A6A6AFF69696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF696969FF6969
-      69006A6A6A006D6D6D007171711E707070FF6E6E6EFF6C6C6C006A6A6A006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF696969FF6B6B
-      6B006F6F6F007676761E3E7182FF3E7183FF3A6C7DFF727272006D6D6D006A6A
-      6A00696969006969690069696900696969006969690069696900696969006969
-      69006969690069696900696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF6A6A6AFF6F6F
-      6FFF777777FF467A8BFF76BED7FF497F92FF6895A2FF3B6F81FF747474FF6E6E
-      6EFF6A6A6AFF696969FF69696900696969006969690069696900696969006969
-      69006969690069696900696969FF696969FF696969FF696969FF696969FF6969
-      69FF696969FF696969FF696969FF696969FF696969FF696969FF6C6C6CFF7575
-      75FF467A8CFF7DC6DDFF85CFE7FF80CAE1FF4A8093FF6A98A5FF3C6F81FF7373
-      73FF6D6D6DFF6A6A6AFF69696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF6D6D6DFF3D6D
-      7EFF8FC8DCFF85CEE6FF8BD5EEFF8BCEECFF655CCAFF38307DFF4B4685FF2125
-      64FF7272721E6C6C6C006A6A6A00696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF6C6C6CFF7575
-      751E467A8CFF99D3E7FF8CCAEBFF8063DAFF7E60D9FF7557D1FF452F86FF5746
-      8DFF2D226EFF7373731E6D6D6D006A6A6A006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006969690069696900696969FF6A6A6AFF6F6F
-      6F007878781E477B8DFF7F76D8FF7E60D8FF8163DAFF7E60D9FF7557D1FF452F
-      86FF56458CFF2C2170FF7373731E6D6D6D006A6A6A0069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF696969006A6A6A006A6A6A0069696900696969FF696969FF6A6A
-      6A006F6F6F007878781E352E75FF8D75D9FF7D60D8FF8163DAFF7D5ED8FF7354
-      CFFF473189FF4E407BFF1D246068727272006C6C6C0069696900696969006969
-      69006969690069696900696969FF696969FF696969FF696969FF696969FF6969
-      69FF6A6A6AFF6B6B6BFF6E6E6EFF6E6E6EFF6C6C6CFF6A6A6AFF696969FF6969
-      69FF6A6A6AFF6E6E6EFF787878FF402D7EFF8E75D9FF7E60D8FF8062D9FF795A
-      D5FF5C41A8FF58468EFF362B7EFF1A235C6A6E6E6E006A6A6A00696969006969
-      69006969690069696900696969FF696969FF696969FF696969FF696969FF6A6A
-      6AFF6E6E6EFF757575FF3D6F80FF3D6E7FFF396879FF6E6E6EFF6B6B6BFF6969
-      69FF696969FF6A6A6AFF6E6E6EFF7C7C7CFF574698FF7B62C7FF7E60D9FF7D5E
-      D8FF7354CFFF46308AFF4E407CFF1A245EA4717171006B6B6B00696969006969
-      69006969690069696900696969006969690069696900696969006A6A6A006E6E
-      6EFF767676FF46798BFF76BDD5FF487E90FF66919FFF3A6B7CFF6F6F6FFF6B6B
-      6B006A6A6A00696969006B6B6B00727272FF6348ABAA7357C0FF7A5CD5FF8062
-      D9FF7758D3FF513A98FF57458DFF27226DFF757575006D6D6D00696969006969
-      69006969690069696900696969006969690069696900696969006B6B6B007474
-      74FF46798BFF7DC6DDFF85CFE7FF81C7E1FF4A7E93FF6894A2FF3A6C7DFF7171
-      711E6C6C6C006A6A6A006B6B6B00707070FF6248ABAA654BB2FF7859D4FF8062
-      D9FF7A5CD5FF553E9AFF58468FFF2D2273FF53418E3C6E6E6E00696969006969
-      690069696900696969006969690069696900696969006A6A6A006E6E6E003D6D
-      7EFF8FC7DBFF84CDE5FF8BD5EDFF8CCBECFF7557D1FF412F82FF4F4586FF2A22
-      6DFF7373731E6E6E6E006C6C6C00717171FF6348AB75463487FF7859D4FF8062
-      D9FF7E60D9FF5D46A1FF5C4A91FF2F2373FF54418F3C6F6F6F00696969006969
-      69006969690069696900696969006969690069696900696969006C6C6C007474
-      74FF457789FF97CFE3FF87D1E8FF7367D5FF7E60D9FF7557D1FF452F86FF5746
-      8DFF312272FF777777CD72727200767676FF6449AE75534299FF7A5CD5FF8163
-      DAFF8062D9FF594599FF5E4C94FF2E2372FF53408D3C6E6E6E00696969006969
-      69006969690069696900696969FF696969FF696969FF696969FF6A6A6AFF6D6D
-      6DFF747474FF46748AFF8B73D5FF7D5FD7FF8163DAFF7E60D9FF7557D1FF452F
-      87FF58468EFF38227BFF554488CD56458A7858468E787358D0FF7E60D9FF8567
-      DAFF7158BCFF735CB8FF654BBBFF2E2270AC737373006C6C6C00696969006969
-      69006969690069696900696969FF696969FF696969FF696969FF696969FF6A6A
-      6AFF6C6C6CFF757575FF3F2C7BFF8C74D6FF7D5FD8FF8163DAFF7E60D9FF7557
-      D1FF58419EFF49348BFF453488FF4B4296FF7058CEFF8061D9FF8165DAFF8668
-      DCFF7059B3FF806BBDFF5336A5FF2A256C7B707070006B6B6B00696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF6C6C6C007979791E3F2D7DFF8D74D8FF7D5FD8FF8163DAFF7E60
-      D9FF7A5CD5FF7554D0FF7554D0FF7A5CD5FF8061D9FF8366DAFF876BDCFF7860
-      C2FF8E73D4FF6F57B9FF412B84FF7A7A7A006D6D6D006A6A6A00696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF6A6A6A006D6D6D007777771E412D7EFF8C74D6FF7C5DD6FF8062
-      D8FF8163DAFF8163DAFF8163DAFF8265DAFF8668DAFF876BDCFF7961C3FFA288
-      E8FF785EBFFF4B3690FF3A287D68737373006B6B6B0069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF696969006A6A6A006D6D6D007979791E3F347DFF6F4CC2FF7759
-      D2FF7D5FD8FF8163DAFF8367DAFF8567DAFF8A67DCFF745DB7FFA18AE7FF7961
-      C1FF4F3895FF432D86A77B7B7B006E6E6E006A6A6A0069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF69696900696969006A6A6A006D6D6D00737373FF283069A44A3F
-      97FF6D4FB9FF8661CCFF8561C5FF6450A2FF8167C5FF6A50BBFF674CBBFF4F38
-      94DB432D86617C7C7C006F6F6F006B6B6B006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69FF696969FF696969006969690069696900696969006B6B6BFF6E6E6EFF7575
-      751E2D346E5A49448DFF574898FF5E499EFF5C459EFF49358BA73A317F682A2D
-      714179797900707070006B6B6B00696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69006969690069696900696969006969690069696900696969006A6A6A006C6C
-      6C007070700075757500787878007A7A7A007A7A7A0078787800767676007272
-      72006F6F6F006B6B6B0069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      69006A6A6A006B6B6B006B6B6B006C6C6C006C6C6C006D6D6D006C6C6C006B6B
-      6B006B6B6B006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900696969006969
-      6900696969006969690069696900696969006969690069696900
-    }
+    Images = IL_Drawing_Buttons
+    ImageIndex = 7
     Transparent = False
     OnClick = SB_Visibility_Snap_GridClick
     OnMouseEnter = SB_Visibility_Snap_GridMouseEnter
@@ -12254,7 +12407,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 924
+    Left = 812
     Height = 21
     Top = 9
     Width = 32
@@ -12275,7 +12428,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter4
-    Left = 964
+    Left = 852
     Height = 0
     Top = 0
     Width = 83
@@ -12307,7 +12460,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter1
     AnchorSideBottom.Side = asrBottom
     Left = 2
-    Height = 725
+    Height = 671
     Top = 0
     Width = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -12324,9 +12477,9 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = S_Splitter2
     AnchorSideTop.Side = asrCenter
     AnchorSideBottom.Side = asrBottom
-    Left = 955
+    Left = 843
     Height = 17
-    Top = 450
+    Top = 346
     Width = 15
     Caption = '>'
     Enabled = False
@@ -12348,7 +12501,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = -6
     Height = 17
-    Top = 450
+    Top = 346
     Width = 15
     Anchors = [akTop, akRight]
     Caption = '<'
@@ -12367,7 +12520,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = SB_TreeView_Object_Tags
     AnchorSideBottom.Side = asrBottom
     Left = 976
-    Height = 436
+    Height = 404
     Top = 4
     Width = 4
     Align = alCustom
@@ -12382,10 +12535,10 @@ object F_MainForm: TF_MainForm
     AnchorSideLeft.Control = TV_Scene_Tree
     AnchorSideTop.Control = TV_Scene_Tree
     AnchorSideRight.Control = S_TreeView_Splitter
-    Left = 968
+    Left = 856
     Height = 24
     Top = 8
-    Width = 8
+    Width = 120
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 4
     BorderSpacing.Top = 4
@@ -12411,7 +12564,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = TV_Scene_Tree
     AnchorSideBottom.Side = asrBottom
     Left = 980
-    Height = 436
+    Height = 404
     Top = 4
     Width = 44
     HorzScrollBar.Page = 1
@@ -12425,10 +12578,10 @@ object F_MainForm: TF_MainForm
   object PB_ProgressBar1: TProgressBar
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 0
+    Left = 48
     Height = 21
     Hint = 'Progress'
-    Top = 810
+    Top = 840
     Width = 49
     BorderSpacing.Top = 2
     ParentShowHint = False
@@ -12439,7 +12592,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Side = asrBottom
     Left = 0
     Height = 23
-    Top = 725
+    Top = 671
     Width = 1024
     Anchors = []
     Color = 11661793
@@ -12496,16 +12649,16 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter7
-    Left = 964
-    Height = 80
-    Top = 444
-    Width = 60
-    HorzScrollBar.Page = 56
+    Left = 852
+    Height = 180
+    Top = 412
+    Width = 172
+    HorzScrollBar.Page = 168
     VertScrollBar.Increment = 26
-    VertScrollBar.Page = 18
+    VertScrollBar.Page = 28
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 59
-    ClientWidth = 56
+    ClientHeight = 159
+    ClientWidth = 168
     Color = 11117709
     ParentColor = False
     TabOrder = 20
@@ -12540,17 +12693,70 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_Object_Properties
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 37
+      Height = 137
       Top = 22
-      Width = 144
+      Width = 206
       Anchors = [akTop, akLeft, akRight, akBottom]
       BevelColor = 7895160
       BevelOuter = bvNone
+      ClientHeight = 137
+      ClientWidth = 206
       Color = 10063735
       ParentColor = False
       TabOrder = 0
       OnMouseEnter = SB_Object_PropertiesMouseEnter
       OnMouseLeave = SB_Object_PropertiesMouseLeave
+      object L_Object_Properties_Parallax_Shift: TLabel
+        Left = 64
+        Height = 16
+        Top = 9
+        Width = 89
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'Parallax Shift:'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -12
+        Font.Name = 'AR JULIAN'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Layout = tlBottom
+        ParentBidiMode = False
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        OnMouseEnter = SB_Object_PropertiesMouseEnter
+        OnMouseLeave = SB_Object_PropertiesMouseLeave
+      end
+      object SE_Object_Properties_Parallax_Shift: TSpinEdit
+        AnchorSideLeft.Control = L_Object_Properties_Parallax_Shift
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Side = asrBottom
+        Left = 159
+        Height = 20
+        Top = 8
+        Width = 47
+        AutoSelect = False
+        AutoSize = False
+        BorderSpacing.Left = 6
+        Color = 15791340
+        Constraints.MaxHeight = 20
+        Constraints.MinHeight = 20
+        Font.CharSet = RUSSIAN_CHARSET
+        Font.Color = 5512455
+        Font.Height = -11
+        Font.Name = 'Euphemia'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        MaxValue = 1000
+        OnChange = SE_Object_Properties_Parallax_ShiftChange
+        OnMouseEnter = SB_Object_PropertiesMouseEnter
+        OnMouseLeave = SB_Object_PropertiesMouseLeave
+        ParentFont = False
+        ParentShowHint = False
+        TabOrder = 0
+        Value = 16
+      end
     end
   end
   object S_Splitter6: TSplitter
@@ -12560,10 +12766,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 964
+    Left = 852
     Height = 4
-    Top = 440
-    Width = 60
+    Top = 408
+    Width = 172
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -12616,13 +12822,16 @@ object F_MainForm: TF_MainForm
   end
   object L_Exec_Time_Info: TLabel
     AnchorSideLeft.Control = S_Splitter1
+    AnchorSideBottom.Control = S_Splitter2
     Left = 20
     Height = 23
-    Top = 384
+    Top = 309
     Width = 224
+    Anchors = [akLeft, akBottom]
     AutoSize = False
     BorderSpacing.Left = 20
     BorderSpacing.Right = 16
+    BorderSpacing.Bottom = 20
     Enabled = False
     Font.CharSet = ANSI_CHARSET
     Font.Height = 18
@@ -12638,7 +12847,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = 10
     Height = 180
-    Top = 270
+    Top = 166
     Width = 342
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 6
@@ -12646,11 +12855,13 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 10
     Color = 4410686
+    Enabled = False
     Font.Color = 11645361
     Font.Height = -16
     ParentFont = False
     ScrollBars = ssVertical
     TabOrder = 23
+    Visible = False
     WordWrap = False
   end
   object SB_Tag_Properties: TScrollBox
@@ -12662,16 +12873,16 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter3
     AnchorSideBottom.Side = asrBottom
-    Left = 964
-    Height = 197
-    Top = 528
-    Width = 60
-    HorzScrollBar.Page = 56
+    Left = 852
+    Height = 75
+    Top = 596
+    Width = 172
+    HorzScrollBar.Page = 144
     VertScrollBar.Increment = 26
     VertScrollBar.Page = 18
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 176
-    ClientWidth = 56
+    ClientHeight = 71
+    ClientWidth = 168
     Color = 11117709
     ParentColor = False
     TabOrder = 25
@@ -12706,9 +12917,9 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_Tag_Properties
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 154
+      Height = 49
       Top = 22
-      Width = 144
+      Width = 168
       Anchors = [akTop, akLeft, akRight, akBottom]
       BevelColor = 7895160
       BevelOuter = bvNone
@@ -12726,10 +12937,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 964
+    Left = 852
     Height = 4
-    Top = 524
-    Width = 60
+    Top = 592
+    Width = 172
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -12744,16 +12955,18 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = Memo1
     Left = 10
     Height = 31
-    Top = 235
+    Top = 131
     Width = 118
     Anchors = [akLeft, akBottom]
     Caption = 'Test your might'
     Color = 5937963
+    Enabled = False
     Font.Color = 2984584
     Font.Style = [fsBold]
     OnClick = Button1Click
     ParentFont = False
     TabOrder = 27
+    Visible = False
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.obj'
@@ -12965,9 +13178,9 @@ object F_MainForm: TF_MainForm
   end
   object T_Game_Loop: TTimer
     Enabled = False
-    Interval = 15
+    Interval = 1
     OnTimer = T_Game_LoopTimer
-    Left = 600
+    Left = 800
     Top = 40
   end
   object TrayIcon1: TTrayIcon
@@ -15361,84 +15574,10 @@ object F_MainForm: TF_MainForm
   object IL_Scene_Tree_Image_List: TImageList
     BkColor = clMedGray
     Height = 24
+    Scaled = True
     Width = 24
     Left = 936
     Top = 256
-    Bitmap = {
-      4C69010000001800000018000000734931007349310073493100734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      3100734931007349310073493100734931027349310273493101734931017349
-      3101734931017349310273493102734931007349310073493100734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      310073493101744A3304744B3303744A31007349310072493100724931007248
-      310072493100734A3100744A3201734931027349310073493100734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      31007349320070452C016F452C006D472E186A44294E6942297D654229976743
-      299D64412981674228496E462E14734A31007349310173493100734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      310073482E0684573B7381573B956A452BD4664328FF6B4528F56B4528E06B44
-      28DB694428F366412CFF603F2CD768422A46754A320073493204734931007349
-      3100734931007349310073493100734931007349310073493100734931037348
-      300072483066CFC8C1FFD9D5CFFF755642E96B42264C7249311F71482F177147
-      2F1472482F1D6D462C516E472EDA643F2AF2653E283474493100734931027349
-      3100734931007349310073493100734931007349310073493100734931037349
-      310072472E69A59D94FBB4B2AFFF78543D9B72462D00734A320073493100734A
-      310073493102734931007146301D6A4631E26F4E38CC74492A23734830007349
-      3101734931007349310073493100734931007349310073493100734931017349
-      32006F452C136B462CFB6E4834CB73462C1C7349310073493103734931027349
-      310273493104754B33006D3F23178A796BCDE3E9E8FFA78E7ED86D3F2319744B
-      3400734931027349310073493100734931007349310073493100734931007349
-      31007147320868452BFB633C249073483100744A320572493105734A3203734A
-      330273493104744A32006F432527887164EBD3D6D9FFA89C92EA6D3E2233744B
-      3400734931037349310073493100734931007349310073493100734931007349
-      3100734830006C472FA965422FF267402C4072482F00754A310173482F007347
-      2D00734A32027349310373482F0074492C6A7C5942D8734C306F73482D007349
-      3202734931007349310073493100734931007349310073493100734931007349
-      3102734931006E4630296B4529DE64412BFF603F28A56A42285572492F88734B
-      348E73472F19744A3200744A320173482F007244290073483000734932007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      310073493104744930006E462E1A6D482E8B69432DF264422CFFD0C8C3FCBDB5
-      B2FF6D4832BB6540263E6D462D1173493100734A330273493103734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      3101744A3301744B3400734A32017349310072472F026D462C95B7B0A8FFCDC7
-      C3FC6A452CF2654228FE633F2DF66140297C70472D0974493200734931017349
-      3100734931007349310073493100734931007349310073493100734931017349
-      32006F4026236C3D202972452C00734A3203734A320073472E0F6F482C806E46
-      2E8171462A336F4831576C452DB069442DFF623F2AAA70482E01734931007349
-      3100734931007349310073493100734931007349310073493103744A32006F45
-      2B3D998574DCAA9E93ED7A5C475572442A00734A3304734A320174482F007448
-      2F00734A32007449310271472E0072482F7C67442BFF68412B58744A32007349
-      31027349310073493100734931007349310073493100734A320473472E00744A
-      308AB8B3AFFFF2FBFCFF8E7463A26E3D2400744C350173493102734A3204734A
-      32047349310373493106754B34006C412B0D6B442ADF663C28AC744932007349
-      3104734931007349310073493100734931007349310073493103734931007446
-      2A39816453E2908076FF714E3A6A74482E007349320673493100734931007349
-      310073493100744A330171452C047C594366A49387FF755948B672442B00734A
-      3203734931007349310073493100734931007349310073493100734931017348
-      31006D43282D643C20FF613B27A074493000764A320073493104734931057349
-      310573493108754C33006F3E22269C8A7FEBF6FFFFFFADA39BE16C3D2027744B
-      340073493102734931007349310073493100734931007349310073493100734A
-      3202724A320071492E8068442EFF614028876E452E0E72482F0074492F01754A
-      3200744A3102714830006D4225447F6350F5B2ABA9FF846855D071432918734A
-      3300734931027349310073493100734931007349310073493100734931007349
-      3101734931007348300970482C9569442DFF623F2CD66641288A694228706B43
-      2D6368442A6E694228A367432CF5654128EA6D442D8571452D2D734932007349
-      3101734931007349310073493100734931007349310073493100734931007349
-      31007349310174493201724830056D462C4D6C462DC768442FFF67442FFF6741
-      28FE674428FF6A432AF367432B9A6B452C2C73482F00734A3101734931017349
-      3100734931007349310073493100734931007349310073493100734931007349
-      31007349310073493101744932027349310073483000714631106E462D276E47
-      2B326E462B297248300672483100744A3200734A320473493103734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      3100734931007349310073493101734931027349310074493100744931007449
-      3200744932007349310073493101734931027349310073493100734931007349
-      3100734931007349310073493100734931007349310073493100734931007349
-      3100734931007349310073493100734931007349310073493101734931017349
-      3101734931017349310073493100734931007349310073493100734931007349
-      3100734931007349310073493100
-    }
   end
   object PM_Drawing_Buttons: TPopupMenu
     Left = 744
@@ -19503,11 +19642,12 @@ object F_MainForm: TF_MainForm
   end
   object IL_Drawing_Buttons: TImageList
     Height = 32
+    Masked = True
     Width = 32
     Left = 504
     Top = 96
     Bitmap = {
-      4C690D00000020000000200000007B4D31007B4D31007B4D31007B4D31007B4D
+      4C690A00000020000000200000007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
@@ -20275,135 +20415,7 @@ object F_MainForm: TF_MainForm
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
-      31007B4D31007B4D31007B4D3100FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFFFF01FBFDFF04FEFFFF01FFFF
-      FF00FCFEFF04FDFEFF02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FEFEFF01FDFEFF02FFFFFF00FEFFFF00FEFF
-      FF00FFFFFF00FEFFFF01FDFEFF02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FDFEFF02FFFFFF01F7FBFF0484C5F7702F9DF1CA2699
-      F1D452ADF3A3D2EBFD25FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FDFEFF02FFFFFF01F7FBFE0446A8F3AE007BECFF0283EDFD0183
-      EDFE007FEFFF0F83E1E8C6E0F22FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FDFEFF02FFFFFF01F7FCFF0446A7F2AF007EEDFF068AEEF90388EEFC0289
-      F1FD0583E1F6006DC8FF378ED6BEFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFE
-      FF02FFFFFF01F7FCFF0446A6F2AF007EEDFF0589EEFA0087EDFF0088F0FF0080
-      E1FB0073CAFE0175CCFF0474CCF7FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFEFF02FFFF
-      FF01F7FCFF0446A6F2AF007EEDFF0589EEFA0087EDFF0088F0FF0080E1FC0073
-      CAFE0074CCFF0175CCFF0775CDF4FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFEFF02FFFFFF01F7FC
-      FF0446A6F2AF007EEDFF0589EEFA0087EDFF0088F0FF0080E1FC0073CAFE0074
-      CCFF0477CDFB006CC9FF4898D9ADFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFEFF02FFFFFF01F7FCFF0446A6
-      F2AF007EEDFF0589EEFA0087EDFF0088F0FF0080E1FC0073CAFE0074CCFF0376
-      CDFC006DCAFF2183D1D8DCECF81BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FEFFFF02FFFFFF01F7FCFF0446A7F2AF007E
-      EDFF0589EEFA0087EDFF0088F0FF0080E1FC0073CAFE0074CCFF0376CDFC006E
-      CAFF1C80D0DEDAEBF820FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FEFEFF02FFFFFF01F3F9FE0343A5F2B0007FEDFF0489
-      EEFA0087EDFF0088F0FF0080E1FC0073CAFE0074CCFF0376CDFC006ECAFF1D80
-      D0DDD9EBF820FFFFFF00FBFDFE03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FEFFFF02FEFEFF01FFFFFF049BE1FCAE0287EEFF0185EEFB0188
-      EEFF0088F0FF0080E1FC0073CAFE0074CCFF0376CDFC006ECAFF1D80D0DDD9EB
-      F820FFFFFF00FBFDFE03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FEFFFF02FFFFFF01FCFFFF04B2EFFFAF9AEFFFFF81DBFCF80B8BEEFD0085
-      F0FF0281E1FC0073CAFE0074CCFF0376CDFC006ECAFF1D80D0DDD9EBF820FFFF
-      FF00FBFDFE03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFDFE03FEFC
-      FD05FFFDFE01FCFDFE03B4F0FFAF92EAFFFF99EAFFFAA2F1FFFF7EDBFDFD0B84
-      E1FB006FC9FE0175CDFF0376CDFC006ECAFF1D80D0DDD9EBF820FFFFFF00FBFD
-      FE03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFDFE02FFFEFE02FFFFFF00FFFF
-      FF00FAFFFF04B2F8FFB092EAFEFF9BE9FEFA99EBFFFF96E9FFFFA2F2FFFF7ED5
-      F4FC0B79CEFE0172CBFC006FCAFF1D80D0DDD9EBF820FFFFFF00FBFDFE03FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FEFDFE03FFFFFF00FEFBFD03F1D4E73BEDB7
-      D660C8B2D8B59CC1E5FF9AEBFBFA98F4FFFF99E9FEFF99EBFFFF96E9FFFFA2F2
-      FFFF80D8F6F90676CDFF1B7FD0DDDAECF820FFFFFF00FBFDFE03FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FEFCFE03FFFDFE02FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFDFE03FEFCFD05FFFFFF00F4DAEA31D574B1CCCB509EFFC84C
-      9BFECF509EFFC34290F9A74F92FC9EC2E1FC98F5FFFF99E9FEFF99EBFFFF98E9
-      FEFB9EF2FFFF84D5F4DBD3E5F520FFFFFF00FCFDFE03FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFEFE03FFFE
-      FE03FFFFFF01FFFEFE02FFFFFF00EEC6E04CCC56A1F4CB509EFFCE5AA3FDCE5A
-      A3FBCF5DA6FDC14D97FCAC2978FFAE307EFD9EBDDDFC98F4FFFF9BE9FEFC95EA
-      FFFFA1ECFFDDF1FCFF21FFFFFF00FCFEFF03FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00EBBDDA59F7E3F024FEFDFE01FFFFFF00FFFF
-      FF00FEFDFE01F5DFED28DF93C39BCB519EFECD57A1FDCE5AA3FCCD58A2FFCC57
-      A1FFCF5BA5FFBD4590FCAA3580FFAE2E7CFFAA498EFD9BE7FAFA94ECFFFFA2EC
-      FFDDF1FCFF20FFFFFE00FCFEFF03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00D36BADCDCB529FFFD471B0D2DA83BAB5DA83
-      BAB4D470AFD4CC54A0FBCA4E9CFFCD59A3FDCD59A2FECD58A2FFCD58A2FFCD58
-      A2FFCD59A2FDB23A85FCAC337FFFAD3883FFAF2878FD9BACD3FFA1F9FFDDF1FA
-      FD20FFFFFF00FEFFFF03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00E4A5CD7DCA4F9DFFCC55A0FCCA4F9DFFCA4F
-      9DFFCB539FFFCD59A2FECE5AA3FBCD58A2FFCD58A2FFCD58A2FFCD57A1FFD05B
-      A5FFBD4691FCAB327EFFAD3480FFAD3782FDAC2777FFAF8ABADDEEFFFF21FFFC
-      FD00FEFFFF03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00F3D8E931CD58A2F8CD5AA3FECD59A3FBCD5A
-      A3FCCD59A3FDCD58A2FFCD58A2FFCD57A1FFCC57A1FFCE59A3FFCF5BA4FEBF48
-      93FCAC337FFEAD3480FFAD3480FFAE3782FBA72677FFD08BB788FFFFFF00FDFC
-      FD06FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00D781B8ACCA4F9DFFD05EA6FBCE59
-      A3FFCE59A3FFCE59A3FFCE59A3FFCF5AA4FFCF5AA4FFC9549EFDB7408BFCAB32
-      7EFEAD3480FFAD3480FFAD3480FFAF3882FBA72677FFDCAACA61FFFFFF00FEFC
-      FD03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00EED6E52BB43986F6C04994FDC752
-      9CFBCA549EFECA549EFDC7529CFDC24C96FCB8418CFCAE3581FEAB327EFFAD34
-      80FFAD3480FFAD3480FFAE3681FDAC327FFFAF3983EAF6E9F116FFFFFF00FEFE
-      FE01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FEFCFD03FFFFFF00DBA9C85FA52274FFAC33
-      7FFCAF3883FAAE3581FEAD3480FEAB327EFFAB327EFFAD3480FFAD3581FFAD34
-      80FFAD3480FFAE3782FCAD3581FCA62375FFDCA8C962FFFFFF00FEFDFE03FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFDFE03FFFFFF00DDABCA5FAA2E
-      7CFAA92979FFAE3681FDAE3782FBAE3782FCAE3682FDAE3681FDAE3681FCAE37
-      82FBAE3782FDA92B7AFFA92B7AFDDAA3C569FFFFFF00FEFDFE02FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFCFD03FFFFFF00EDD3
-      E32EBF5F9BBFA92B7BFFA72677FEA92A7AFFAA2D7CFFAA2D7CFFA92A7AFFA726
-      77FEA92A7AFFBD5C99C5EBCEE035FFFFFF00FEFCFD03FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFDFE03FFFF
-      FF00FEFEFE00EACDDF37D08BB788C0639EBCBA5394D2BA5394D2BF619DBDCF88
-      B58CE9C8DC3BFEFDFE01FFFFFF00FEFDFD03FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFD
-      FE02FFFEFE02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFEFE02FEFDFD03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FEFDFE03FEFCFD04FEFEFE02FFFFFF00FFFFFF00FFFEFE02FEFC
-      FD04FEFDFE03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00545454005454540054545400545454005454
+      31007B4D31007B4D31007B4D3100545454005454540054545400545454005454
       5400545454005454540054545400545454005454540054545400545454005454
       5400545454005454540054545400545454005454540054545400545454005454
       5400545454005454540054545400545454005454540054545400545454005454
@@ -20659,519 +20671,263 @@ object F_MainForm: TF_MainForm
       6900696969006969690069696900696969006969690069696900696969006969
       6900696969006969690069696900696969006969690069696900696969006969
       6900696969006969690069696900696969006969690069696900696969006969
-      69006969690069696900696969002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
-      4F034F4F4F464F4F4F0B2C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F
-      4F664F4F4FD04F4F4F092C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F474F4F
-      4FFF4F4F4FCE4F4F4F072C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F334F4F4FE84F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F214F4F4FD94F4F4FFF4F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F024F4F4F004F4F4F104F4F4FC44F4F4FFF4F4F4FEE4F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F014F4F4F014F4F4F044F4F4FAC4F4F4FFF4F4F4FFF4F4F4F3F4F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F014F4F4F024F4F4F004F4F4F954F4F4FFF4F4F4FFF4F4F4F574F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F034F4F4F004F4F4F7C4F4F4FFF4F4F4FFF4F4F4F894F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F034F4F
-      4F004F4F4F624F4F4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F024F4F4F004F4F
-      4F474F4F4FF64F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F024F4F4F004F4F4F254F4F
-      4FE94F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F024F4F4F004F4F4F254F4F
-      4FE94F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F024F4F4F004F4F
-      4F474F4F4FF64F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F034F4F
-      4F004F4F4F624F4F4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F034F4F4F004F4F4F7C4F4F4FFF4F4F4FFF4F4F4F894F4F4F004F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F014F4F4F024F4F4F004F4F4F954F4F4FFF4F4F4FFF4F4F4F574F4F4F004F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F014F4F4F014F4F4F044F4F4FAC4F4F4FFF4F4F4FFF4F4F4F3F4F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F024F4F4F004F4F4F104F4F4FC44F4F4FFF4F4F4FEE4F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F214F4F4FD94F4F4FFF4F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F334F4F4FE84F4F
-      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F474F4F
-      4FFF4F4F4FCE4F4F4F072C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F
-      4F664F4F4FD04F4F4F092C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
-      4F034F4F4F464F4F4F0B2C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F0B4F4F4F464F4F4F034F4F
-      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F094F4F4FD04F4F4F664F4F
-      4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F074F4F4FCE4F4F4FFF4F4F
-      4F474F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4FE84F4F4F334F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4FFF4F4F4FD94F4F4F214F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4FEE4F4F4FFF4F4F4FC44F4F4F104F4F4F004F4F4F024F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F3F4F4F4FFF4F4F4FFF4F4F4FAC4F4F4F044F4F4F014F4F4F014F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F574F4F4FFF4F4F4FFF4F4F4F954F4F4F004F4F4F024F4F4F014F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F894F4F4FFF4F4F4FFF4F4F4F7C4F4F4F004F4F4F034F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F4F624F4F4F004F4F
-      4F034F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FF64F4F4F474F4F
-      4F004F4F4F024F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FE94F4F
-      4F254F4F4F004F4F4F022C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FE94F4F
-      4F254F4F4F004F4F4F022C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FF64F4F4F474F4F
-      4F004F4F4F024F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F4F624F4F4F004F4F
-      4F034F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F004F4F4F894F4F4FFF4F4F4FFF4F4F4F7C4F4F4F004F4F4F034F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F004F4F4F574F4F4FFF4F4F4FFF4F4F4F954F4F4F004F4F4F024F4F4F014F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4F3F4F4F4FFF4F4F4FFF4F4F4FAC4F4F4F044F4F4F014F4F4F014F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4FEE4F4F4FFF4F4F4FC44F4F4F104F4F4F004F4F4F024F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4FFF4F4F4FD94F4F4F214F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
-      4FE84F4F4F334F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F074F4F4FCE4F4F4FFF4F4F
-      4F474F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F094F4F4FD04F4F4F664F4F
-      4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F0B4F4F4F464F4F4F034F4F
-      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F024F4F4F024F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F034F4F4F004F4F4F254F4F4F254F4F4F004F4F4F034F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
-      4F034F4F4F004F4F4F474F4F4FE94F4F4FE94F4F4F474F4F4F004F4F4F034F4F
-      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F4F024F4F
-      4F004F4F4F624F4F4FF64F4F4FFF4F4F4FFF4F4F4FF64F4F4F624F4F4F004F4F
-      4F024F4F4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F014F4F4F004F4F
-      4F7C4F4F4FFF4F4F4FFF4F4F4FAA4F4F4FAA4F4F4FFF4F4F4FFF4F4F4F7C4F4F
-      4F004F4F4F014F4F4F024F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F044F4F4F954F4F
-      4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F
-      4F954F4F4F044F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F104F4F4FAC4F4F4FFF4F4F
-      4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F
-      4FFF4F4F4FAC4F4F4F104F4F4F004F4F4F034F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F034F4F4F004F4F4F214F4F4FC44F4F4FFF4F4F4FFF4F4F
-      4F894F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F894F4F
-      4FFF4F4F4FFF4F4F4FC44F4F4F214F4F4F004F4F4F034F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F034F4F4F004F4F4F334F4F4FD94F4F4FFF4F4F4FFF4F4F4F574F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F574F4F4FFF4F4F4FFF4F4F4FD94F4F4F334F4F4F004F4F4F034F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F014F4F4F004F4F4F474F4F4FE84F4F4FFF4F4F4FEE4F4F4F3F4F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F3F4F4F4FEE4F4F4FFF4F4F4FE84F4F4F474F4F4F004F4F4F012C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F034F4F4F664F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
-      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
-      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4F664F4F4F032C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F464F4F4FD04F4F4FCE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
-      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
-      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FCE4F4F4FD04F4F4F462C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F0B4F4F4F094F4F4F074F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
-      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
-      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F074F4F4F094F4F4F0B2C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F0B4F4F4F094F4F4F074F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
-      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
-      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F074F4F4F094F4F4F0B2C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F464F4F4FD04F4F4FCE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
-      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
-      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FCE4F4F4FD04F4F4F462C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F034F4F4F664F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
-      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
-      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4F664F4F4F032C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F014F4F4F004F4F4F474F4F4FE84F4F4FFF4F4F4FEE4F4F4F3F4F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F3F4F4F4FEE4F4F4FFF4F4F4FE84F4F4F474F4F4F004F4F4F012C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F034F4F4F004F4F4F334F4F4FD94F4F4FFF4F4F4FFF4F4F4F574F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F574F4F4FFF4F4F4FFF4F4F4FD94F4F4F334F4F4F004F4F4F034F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F034F4F4F004F4F4F214F4F4FC44F4F4FFF4F4F4FFF4F4F
-      4F894F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F894F4F
-      4FFF4F4F4FFF4F4F4FC44F4F4F214F4F4F004F4F4F034F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F104F4F4FAC4F4F4FFF4F4F
-      4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F
-      4FFF4F4F4FAC4F4F4F104F4F4F004F4F4F034F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F044F4F4F954F4F
-      4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F
-      4F954F4F4F044F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F014F4F4F004F4F
-      4F7C4F4F4FFF4F4F4FFF4F4F4FAA4F4F4FAA4F4F4FFF4F4F4FFF4F4F4F7C4F4F
-      4F004F4F4F014F4F4F024F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F4F024F4F
-      4F004F4F4F624F4F4FF64F4F4FFF4F4F4FFF4F4F4FF64F4F4F624F4F4F004F4F
-      4F024F4F4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
-      4F034F4F4F004F4F4F474F4F4FE94F4F4FE94F4F4F474F4F4F004F4F4F034F4F
-      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F034F4F4F004F4F4F254F4F4F254F4F4F004F4F4F034F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F024F4F4F024F4F4F004F4F4F004F4F4F004F4F
-      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
-      2C002C2C2C002C2C2C002C2C2C00
+      6900696969006969690069696900FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFE
+      FE01FCFCFC03FFFFFF00FFFFFF00FFFFFF00FDFDFD02E5E5E519C6C6C639A6A6
+      A659898989776D6D6D92464646BA97979768FFFFFF00FDFDFD02FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FCFCFC03FEFE
+      FE01FFFFFF00F7F7F708C0C0C0408282827E565656AA3B3B3BC52E2E2ED32828
+      28D8282828D92B2B2BD6272727DA474747B9F8F8F806FFFFFF00FEFEFE01FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FDFDFD02FFFFFF00F4F4
+      F40B9E9E9E61484848B8262626DB242424DD2B2B2BD6313131D0343434CD3535
+      35CC353535CC353535CC363636CB2C2C2CD5CACACA35FFFFFF00FDFDFD02FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00FFFFFF00B2B2B24E4646
+      46BA242424DE2E2E2ED4363636CB363636CB353535CC343434CD333333CE3333
+      33CE333333CE333333CE363636CB242424DD8D8D8D72FFFFFF00FCFCFC03FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00D9D9D9266262629D242424DD2E2E
+      2ED3373737CA343434CD333333CE333333CE333333CE333333CE333333CE3333
+      33CE353535CC363636CB363636CB2B2B2BD7595959A8FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00999999672F2F2FD2282828D9363636CB3434
+      34CD333333CE333333CE333333CE333333CE333333CE333333CE343434CD3333
+      33CE292929D8272727DA313131D0343434CD363636CAE4E4E41BFFFFFF00FEFE
+      FE01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF006262629E292929D8383838C9333333CE3333
+      33CE333333CE333333CE333333CE343434CD333333CE353535CC2B2B2BD62E2E
+      2ED36363639D6B6B6B95393939C82B2B2BD6292929D7C0C0C03FFFFFFF00FCFC
+      FC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00BEBEBE412D2D2DD4343434CD333333CE3333
+      33CE333333CE363636CB323232CF2E2E2ED3333333CE2E2E2ED3505050B1E1E1
+      E11EFFFFFF00FFFFFF00F8F8F8077171718F1F1F1FE29F9F9F60FFFFFF00FCFC
+      FC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00F7F7F7074E4E4EB22C2C2CD5343434CD3333
+      33CE343434CD272727DA353535CC454545BC393939C72E2E2ED3494949B7C1C1
+      C13EF5F5F50AF8F8F806BFBFBF41444444BC131313EF7474748CFFFFFF00FCFC
+      FC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF009292926D232323DE373737CA3434
+      34CD2B2B2BD68A8A8A76E5E5E51AF5F5F509515151AF2D2D2DD42E2E2ED22525
+      25DC484848B9404040C0424242BEA6A6A65AAAAAAA55A0A0A060FFFFFF00FEFE
+      FE01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00DFDFDF20333333CE353535CC2727
+      27DA7D7D7D83FFFFFF00FFFFFF00C5C5C53A2D2D2DD4343434CD343434CD3737
+      37CA2A2A2AD7414141BFECECEC13FFFFFF00FEFEFE01FFFFFF00FFFFFF00FFFF
+      FF00FCFCFC03FCFCFC02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FDFDFD03FFFFFF0077777789262626DB3333
+      33CED4D4D42BFFFFFF00C9C9C935444444BD2E2E2ED4353535CC363636CB3939
+      39C8262626DBA1A1A15FFFFFFF009F9F9F615C5C5CA49F9F9F61D6D6D629FAFA
+      FA05FFFFFF00FFFFFF00FEFEFE01FCFCFC03FEFEFE01FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00D6D6D6292F2F2FD23636
+      36CB5A5A5AA7525252AE2D2D2DD42E2E2ED4363636CB313131D0262626DB2222
+      22DF3C3C3CC4F3F3F30CF2F2F20D3B3B3BC6232323DE252525DC2E2E2ED34D4D
+      4DB38383837DC7C7C737FAFAFA05FFFFFF00FEFEFE01FCFCFC03FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00808080802424
+      24DD2E2E2ED32C2C2CD6343434CD363636CB2E2E2ED3383838C99191916FBBBB
+      BB45CBCBCB35FFFFFF009F9F9F61262626DB393939C8363636CB343434CD2D2D
+      2DD4252525DC292929D84F4F4FB1A2A2A25EF3F3F30BFFFFFF00FDFDFD02FDFD
+      FD02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFEFE01FFFFFF00EBEBEB143F3F
+      3FC1313131D0363636CB343434CD313131D0383838C9D2D2D22DFFFFFF00FDFD
+      FD02FFFFFF00F7F7F7084C4C4CB42D2D2DD4343434CC333333CE333333CE3434
+      34CD363636CB353535CC2D2D2DD5232323DE464646BBB4B4B44CFFFFFF00FEFE
+      FE01FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FCFCFC03FFFFFF00B7B7
+      B748262626DB363636CB373737CA242424DDA1A1A15FFFFFFF00A4A4A45C9191
+      916EFFFFFF00B7B7B749272727DA373737C9353535CC333333CE333333CE3333
+      33CE333333CE333333CE353535CC373737CA2E2E2ED3242424DD6C6C6C95E8E8
+      E818FFFFFF00FCFCFC03FEFEFE01FFFFFF00FFFFFF00FFFFFF00FCFCFC03FFFF
+      FF008D8D8D73222222DF333333CE424242BFE9E9E9167E7E7E82151515EDAEAE
+      AE51FFFFFF006A6A6A97272727DA2E2E2ED32B2B2BD6323232CF353535CC3333
+      33CE333333CE333333CE333333CE333333CE343434CD363636CA262626DB3C3C
+      3CC5BDBDBD42FFFFFF00FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFD
+      FD02FFFFFF008080807F161616EB68686898797979871C1C1CE6414141BFF3F3
+      F30BEBEBEB15373737CA343434CD545454AC575757AA383838C9292929D83535
+      35CC333333CE333333CE333333CE333333CE333333CE333333CE363636CB3030
+      30D2262626DB8D8D8D73FAFAFA05FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFE
+      FE01FDFDFD02FFFFFF008F8F8F702A2A2AD7282828DA2D2D2DD469696998FFFF
+      FF00B0B0B04F262626DB343434CDCECECE31FFFFFF00E5E5E5196B6B6B952626
+      26DB363636CB343434CD353535CC343434CD333333CE333333CE333333CE3434
+      34CD353535CC222222DF6767679AFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FEFEFE01FCFCFC03FFFFFF00C3C3C33C595959A7191919E89595956AFFFF
+      FF0077777789282828DA2F2F2FD2505050B0E7E7E719FFFFFF00FDFDFD026161
+      619F2B2B2BD7303030D12C2C2CD5313131D0363636CB333333CE333333CE3333
+      33CE363636CB2C2C2CD56D6D6D93FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FEFEFE01FDFDFD02FFFFFF00FDFDFD02BEBEBE41DCDCDC23FFFF
+      FF00535353AD2B2B2BD6383838C92B2B2BD63C3C3CC57A7A7A869292926D5B5B
+      5BA62C2C2CD54A4A4AB7515151AF3B3B3BC6272727DA343434CD333333CE3434
+      34CD313131D0393939C7DEDEDE21FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FEFEFE01FEFEFE01FFFFFF00ECEC
+      EC133C3C3CC4303030D1303030D2363636CB303030D1262626DB232323DF2E2E
+      2ED3292929D8ADADAD52FFFFFF00EAEAEA158282827E262626DB343434CD3737
+      37CA232323DE89898977FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FBFBFB04FFFFFF00DBDB
+      DB24313131D0353535CB4C4C4CB42F2F2FD2363636CB363636CB363636CB3636
+      36CB2F2F2FD2414141C0D9D9D926FFFFFF00FFFFFF008585857C292929D93232
+      32CF3C3C3CC4EAEAEA15FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00D2D2
+      D22D2E2E2ED22B2B2BD6ACACAC54515151AF292929D8363636CA333333CE3333
+      33CE353535CC2D2D2DD4373737CA7E7E7E82A3A3A35D7A7A7A86313131D02525
+      25DCA4A4A45BFFFFFF00FCFCFC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00D3D3
+      D32C313131D0232323DEACACAC54DADADA252C2C2CD52B2B2BD6373737CB3636
+      36CB363636CB363636CB313131D0262626DC222222DF2B2B2BD6292929D96060
+      60A0FFFFFF00FEFEFE01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFFFF00E0E0
+      E01F373737CA262626DB7474748CFFFFFF00C4C4C43B474747B9272727DA2424
+      24DD212121E02C2C2CD5353535CB353535CC383838C9333333CF383838C9DFDF
+      DF20FFFFFF00FDFDFD02FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFEFE01FFFFFF00F7F7
+      F708484848B82D2D2DD4393939C8DEDEDE21FFFFFF00F1F1F10EC2C2C23EACAC
+      AC54B6B6B6498F8F8F70373737CA333333CE353535CC272727DABABABA46FFFF
+      FF00FCFCFC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FCFCFC03FFFF
+      FF007676768A282828D92E2E2ED3585858A9E2E2E21CFFFFFF00FFFFFF00F9F9
+      F906ABABAB55444444BC323232CF363636CB242424DEA1A1A15EFFFFFF00FCFC
+      FC03FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFD02FFFF
+      FF00C5C5C53A282828D9383838C92B2B2BD6363636CA6363639D606060A03939
+      39C8212121E0323232CF313131D0252525DBA0A0A05FFFFFFF00FCFCFC03FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFE
+      FE01FFFFFF006F6F6F91212121E03B3B3BC6333333CE2A2A2AD72B2B2BD73333
+      33CE353535CB252525DD383838C9B9B9B946FFFFFF00FCFCFC03FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFE
+      FE01FFFFFF00F0F0F00F5A5A5AA6232323DE2D2D2DD42F2F2FD22D2D2DD52929
+      29D8363636CB7B7B7B85E6E6E619FFFFFF00FCFCFC03FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FEFEFE01FFFFFF00F0F0F00F909090705E5E5EA2575757A96A6A6A969999
+      9967DEDEDE21FFFFFF00FEFEFE01FCFCFC03FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE28101CCE73101CCE93101CCE8B101CCE59101CCE01101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE59101CCECD7328A5F78C349CFF84309CFF7328A5ED101CCEA4101C
+      CE20101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE59101CCE4B101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE30101CCECE9C388CFFB54152FFBD4529FFBD4529FFB54152FF9C388CF7101C
+      CE93101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE59101CCECD101CCE6B101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE847B2CA5FDAD3C63FFBD4529FFBD4529FFBD4529FFBD4529FFAD3C63FF7B2C
+      A5DE101CCE30101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE51101CCED6101CCEE7101CCE41101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CEAD9C388CFFBD4531FFBD4529FFBD4529FFBD4529FFBD4529FFBD4531FF9C38
+      8CEF101CCE62101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE49101CCED5101CCEFF101CCED5101CCE01101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CEAC9C388CFFBD4139FFBD4529FFBD4529FFBD4529FFBD4529FFBD4139FF9C38
+      8CEF101CCE62101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE38101CCECD101CCEFF101CCEFF101CCEB5101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE7B732CA5F7AD3C6BFFBD4529FFBD4529FFBD4529FFBD4529FFAD3C6BFF732C
+      A5D6101CCE28101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE38101CCEBD101CCEFF101CCEFF101CCE94101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE28101CCEC68C3494FFB54152FFBD4529FFBD4529FFB54152FF8C3494F5101C
+      CE84101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE18101CCEC6101CCEE5101CCEB4101CCE63101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE43101CCEBC7328A5EF8C349CFD84309CF77328A5FD101CCEBD101C
+      CE10101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE73101CCEEF101CCE9C101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE11101CCE5B101CCE7B101CCE77101CCEC6101CCEE5101C
+      CE4B101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE18101C
+      CEC6101CCEDE101CCE41101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE6B101CCEEF101C
+      CEA5101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE7A101C
+      CEF1101CCE9B101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE09101CCEBC101C
+      CEE5101CCE4D101CCE00101CCE00101CCE00101CCE00101CCE19101CCECD101C
+      CEDE101CCE41101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE6A101C
+      CEEF101CCEBD101CCE9C101CCE04101CCE00101CCE00101CCE7A101CCEEF101C
+      CE94101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE66101C
+      CEE7101CCEFF101CCEE7101CCE43101CCE00101CCE22101CCECD101CCEDD101C
+      CE38101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE7B101C
+      CEEF101CCEFF101CCEF5101CCE6B101CCE00101CCE80101CCEF5101CCE94101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE02101C
+      CE93101CCEF5101CCEFF101CCE8C101CCE22101CCECE101CCEDD101CCE38101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE09101CCE9B101CCEF7101CCEAE101CCE83101CCEF0101CCE92101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE11101CCEA4101CCEC6101CCED3101CCED6101CCE32101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE53101CCEAD101CCEB4101CCEB4101CCEB4101CCEB4101CCEB4101CCEB4101C
+      CEB4101CCEB4101CCEB4101CCEDD101CCEFB101CCED5101CCEB4101CCEB4101C
+      CEB4101CCEB4101CCEB4101CCEB4101CCEB4101CCEB4101CCEB4101CCE9C101C
+      CE20101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE7B6B28C6F99C389CFF9C389CFF9C389CFF9C389CFF9C389CFF9C389CFF9C38
+      9CFF9C389CFF9C389CFF9C389CFF9C389CFF9C389CFF9C389CFF9C389CFF9C38
+      9CFF9C389CFF9C389CFF9C389CFF9C389CFF9C389CFF9434A5FF421CC6E5101C
+      CE32101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE7B8430ADF9BD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD45
+      29FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD45
+      29FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFB5415AFF5220BDE5101C
+      CE30101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE7A8430ADF8BD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD45
+      29FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFBD45
+      29FFBD4529FFBD4529FFBD4529FFBD4529FFBD4529FFB5415AFF5220BDE5101C
+      CE30101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE7B5224CEF97B30BDFF7B2CBDFF7B30BDFF7B30BDFF7B2CBDFF7B2CBDFF7B30
+      BDFF7B2CBDFF7B30BDFF7B2CBDFF7B30BDFF7B30BDFF7B2CBDFF7B2CBDFF7B30
+      BDFF7B2CBDFF7B30BDFF7B2CBDFF7B30BDFF7B30BDFF732CC6FF3918C6E5101C
+      CE32101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE41101CCE8B101CCE8C101CCE8C101CCE8C101CCE8C101CCE8C101CCE8C101C
+      CE8C101CCE8C101CCE8C101CCE8C101CCE8C101CCE8C101CCE8C101CCE8C101C
+      CE8C101CCE8C101CCE8C101CCE8C101CCE8C101CCE8C101CCE8C101CCE7B101C
+      CE16101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
+      CE00101CCE00101CCE00101CCE00
     }
   end
   object FontDialog1: TFontDialog
@@ -23788,5 +23544,53 @@ object F_MainForm: TF_MainForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
     }
+  end
+  object LCLVLCPlayer_Intro: TLCLVLCPlayer
+    AudioDelay = -1
+    AudioVolume = -1
+    AudioMuted = False
+    Channel = -1
+    Chapter = -1
+    FitWindow = False
+    FullScreenMode = False
+    UseEvents = False
+    ParentWindow = OpenGLControl2
+    Left = 664
+    Top = 96
+  end
+  object T_Logo1: TTimer
+    Enabled = False
+    Interval = 15
+    OnTimer = T_Logo1Timer
+    Left = 600
+    Top = 40
+  end
+  object T_Logo2: TTimer
+    Enabled = False
+    Interval = 15
+    OnTimer = T_Logo2Timer
+    Left = 632
+    Top = 40
+  end
+  object T_Menu: TTimer
+    Enabled = False
+    Interval = 15
+    OnTimer = T_MenuTimer
+    Left = 704
+    Top = 40
+  end
+  object T_Game: TTimer
+    Enabled = False
+    Interval = 15
+    OnTimer = T_GameTimer
+    Left = 736
+    Top = 40
+  end
+  object T_Logo3: TTimer
+    Enabled = False
+    Interval = 15
+    OnTimer = T_Logo3Timer
+    Left = 664
+    Top = 40
   end
 end
