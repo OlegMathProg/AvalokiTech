@@ -3939,7 +3939,7 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 4
     Height = 4
-    Top = 352
+    Top = 128
     Width = 844
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -4094,7 +4094,7 @@ object F_MainForm: TF_MainForm
   object L_Object_Info: TLabel
     AnchorSideLeft.Control = S_Splitter1
     Left = 20
-    Height = 376
+    Height = 424
     Top = 40
     Width = 224
     AutoSize = False
@@ -4338,13 +4338,13 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 4
-    Height = 315
-    Top = 356
+    Height = 539
+    Top = 132
     Width = 844
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
-    ClientHeight = 315
+    ClientHeight = 539
     ClientWidth = 844
     Color = 13290949
     ParentColor = False
@@ -4357,7 +4357,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Image_Editor
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 315
+      Height = 539
       Top = 0
       Width = 844
       ActivePage = TS_Draw
@@ -4372,15 +4372,15 @@ object F_MainForm: TF_MainForm
       Options = [nboShowCloseButtons, nboMultiLine, nboHidePageListPopup, nboKeyboardTabSwitch, nboShowAddTabButton, nboDoChangeOnSetIndex]
       object TS_File: TTabSheet
         Caption = 'File'
-        ClientHeight = 54
-        ClientWidth = 948
+        ClientHeight = 535
+        ClientWidth = 836
         object SB_Image_List: TScrollBox
           AnchorSideRight.Control = TS_Draw
           AnchorSideRight.Side = asrBottom
           Left = 32
-          Height = 50
+          Height = 531
           Top = 0
-          Width = 914
+          Width = 802
           HorzScrollBar.Increment = 1
           HorzScrollBar.Page = 1
           HorzScrollBar.Smooth = True
@@ -4390,8 +4390,8 @@ object F_MainForm: TF_MainForm
           VertScrollBar.Smooth = True
           VertScrollBar.Tracking = True
           Anchors = [akTop, akLeft, akRight, akBottom]
-          ClientHeight = 46
-          ClientWidth = 910
+          ClientHeight = 527
+          ClientWidth = 798
           Color = 13881769
           ParentBiDiMode = False
           ParentColor = False
@@ -4406,9 +4406,9 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
             Left = 0
-            Height = 46
+            Height = 527
             Top = 0
-            Width = 910
+            Width = 798
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
             Caption = 'Texture List is Empty'
@@ -4433,9 +4433,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
-            Left = 437
+            Left = 341
             Height = 180
-            Top = -73
+            Top = 105
             Width = 680
             Anchors = []
             BevelColor = 7958609
@@ -4674,13 +4674,13 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_File
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 50
+          Height = 531
           Top = 0
           Width = 29
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Bottom = 4
           BevelOuter = bvLowered
-          ClientHeight = 50
+          ClientHeight = 531
           ClientWidth = 29
           Color = 13359793
           ParentColor = False
@@ -4892,7 +4892,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_Draw: TTabSheet
         Caption = 'Draw'
-        ClientHeight = 287
+        ClientHeight = 511
         ClientWidth = 836
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
@@ -4907,7 +4907,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_Draw
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 252
+          Height = 476
           Top = 35
           Width = 834
           HorzScrollBar.Increment = 1
@@ -4921,7 +4921,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 248
+          ClientHeight = 472
           ClientWidth = 830
           Color = 15921635
           ParentBiDiMode = False
@@ -4937,15 +4937,15 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -16
-            Height = 448
-            Top = -18
+            Left = -184
+            Height = 488
+            Top = 16
             Width = 1040
             Anchors = []
             BevelColor = 7958609
             BevelInner = bvLowered
             BorderWidth = 2
-            ClientHeight = 448
+            ClientHeight = 488
             ClientWidth = 1040
             Color = 11251619
             FullRepaint = False
@@ -4959,14 +4959,14 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 4
-              Height = 440
+              Height = 480
               Top = 4
               Width = 162
               Anchors = [akTop, akLeft, akBottom]
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 440
+              ClientHeight = 480
               ClientWidth = 162
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -5301,7 +5301,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Edges_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 315
+                Height = 355
                 Top = 123
                 Width = 158
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -5309,7 +5309,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 6052956
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 315
+                ClientHeight = 355
                 ClientWidth = 158
                 Color = 11117709
                 ParentColor = False
@@ -5351,13 +5351,13 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Edges
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 292
+                  Height = 332
                   Top = 22
                   Width = 156
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BevelColor = 7895160
                   BevelOuter = bvNone
-                  ClientHeight = 292
+                  ClientHeight = 332
                   ClientWidth = 156
                   Color = 10063735
                   ParentColor = False
@@ -5650,7 +5650,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 168
-              Height = 440
+              Height = 480
               Top = 4
               Width = 162
               Anchors = [akTop, akLeft, akBottom]
@@ -5658,7 +5658,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 440
+              ClientHeight = 480
               ClientWidth = 162
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -6031,7 +6031,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Points_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 315
+                Height = 355
                 Top = 123
                 Width = 158
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -6039,7 +6039,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 6052956
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 315
+                ClientHeight = 355
                 ClientWidth = 158
                 Color = 11117709
                 ParentColor = False
@@ -6320,14 +6320,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Points
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 160
+                  Height = 200
                   Top = 154
                   Width = 156
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 21
                   BevelColor = 7895160
                   BevelOuter = bvNone
-                  ClientHeight = 160
+                  ClientHeight = 200
                   ClientWidth = 156
                   Color = 10063735
                   ParentColor = False
@@ -6466,7 +6466,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 519
-              Height = 440
+              Height = 480
               Top = 4
               Width = 169
               Anchors = [akTop, akLeft, akBottom]
@@ -6474,7 +6474,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 440
+              ClientHeight = 480
               ClientWidth = 169
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -6493,7 +6493,7 @@ object F_MainForm: TF_MainForm
               object CB_Spline_Edges_LOD: TCheckBox
                 Left = 10
                 Height = 19
-                Hint = 'Use Level Of Detail'
+                Hint = 'Use level of detail'
                 Top = 26
                 Width = 150
                 HelpType = htKeyword
@@ -6641,7 +6641,7 @@ object F_MainForm: TF_MainForm
               object CB_Spline_Hidden_Line_Elimination: TCheckBox
                 Left = 10
                 Height = 19
-                Hint = 'Hide Invisible Line'
+                Hint = 'Hide invisible line'
                 Top = 76
                 Width = 152
                 HelpType = htKeyword
@@ -6667,8 +6667,8 @@ object F_MainForm: TF_MainForm
               object CB_Spline_Grid_Clipping: TCheckBox
                 Left = 10
                 Height = 19
-                Hint = 'Create Regular Grid With Detection Which Edges And Points Must Be Clipped'
-                Top = 101
+                Hint = 'Create regular grid with detection which edges and points must be clipped'
+                Top = 126
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6693,8 +6693,8 @@ object F_MainForm: TF_MainForm
               object CB_Spline_Lazy_Repaint: TCheckBox
                 Left = 10
                 Height = 19
-                Hint = 'Should Spline Be Partially Repainted Unless Clipped'
-                Top = 126
+                Hint = 'Should spline be partially repainted unless clipped'
+                Top = 151
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6720,7 +6720,7 @@ object F_MainForm: TF_MainForm
                 Left = 10
                 Height = 19
                 Hint = 'Except for "Select Points" mode, splines will be drawn about 1.7 times faster'
-                Top = 151
+                Top = 176
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6746,7 +6746,7 @@ object F_MainForm: TF_MainForm
                 Left = 10
                 Height = 19
                 Hint = 'Free memory when object "Spline" is out of window'
-                Top = 201
+                Top = 226
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6772,7 +6772,7 @@ object F_MainForm: TF_MainForm
                 Left = 10
                 Height = 19
                 Hint = 'Free memory when object "Spline" is scaled down'
-                Top = 226
+                Top = 251
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6795,7 +6795,7 @@ object F_MainForm: TF_MainForm
               object L_Spline_Free_Memory: TLabel
                 Left = 8
                 Height = 16
-                Top = 176
+                Top = 201
                 Width = 82
                 Alignment = taRightJustify
                 AutoSize = False
@@ -6817,7 +6817,7 @@ object F_MainForm: TF_MainForm
               object L_Spline_Remove_Brunching: TLabel
                 Left = 8
                 Height = 16
-                Top = 251
+                Top = 276
                 Width = 112
                 Alignment = taRightJustify
                 AutoSize = False
@@ -6839,7 +6839,7 @@ object F_MainForm: TF_MainForm
               object RB_Spline_Adaptive: TRadioButton
                 Left = 10
                 Height = 19
-                Top = 276
+                Top = 301
                 Width = 70
                 Caption = 'Adaptive'
                 Enabled = False
@@ -6857,7 +6857,7 @@ object F_MainForm: TF_MainForm
               object RB_Spline_Constant: TRadioButton
                 Left = 10
                 Height = 19
-                Top = 301
+                Top = 326
                 Width = 69
                 Caption = 'Constant'
                 Font.CharSet = ANSI_CHARSET
@@ -6874,7 +6874,7 @@ object F_MainForm: TF_MainForm
               object RB_Spline_None: TRadioButton
                 Left = 10
                 Height = 19
-                Top = 326
+                Top = 351
                 Width = 47
                 Caption = 'None'
                 Checked = True
@@ -6890,6 +6890,30 @@ object F_MainForm: TF_MainForm
                 TabOrder = 8
                 TabStop = True
               end
+              object CB_Spline_Best_Precision: TCheckBox
+                Left = 10
+                Height = 19
+                Hint = 'Best precision for hidden-line elimination(uses additional memory)'
+                Top = 101
+                Width = 152
+                HelpType = htKeyword
+                AutoSize = False
+                Caption = 'Best Precision'
+                Color = 12236195
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clCaptionText
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                OnChange = CB_Spline_Best_PrecisionChange
+                OnMouseEnter = P_Optimization_PropMouseEnter
+                OnMouseLeave = P_Optimization_PropMouseLeave
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ParentBidiMode = False
+                ShowHint = True
+                TabOrder = 11
+              end
             end
             object P_Drawing_Prop: TPanel
               AnchorSideLeft.Control = P_Points_Prop
@@ -6900,7 +6924,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 332
-              Height = 440
+              Height = 480
               Top = 4
               Width = 185
               Anchors = [akTop, akLeft, akBottom]
@@ -6908,7 +6932,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 440
+              ClientHeight = 480
               ClientWidth = 185
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -6966,6 +6990,7 @@ object F_MainForm: TF_MainForm
                   'Freehand'
                   'Formula'
                   'Random'
+                  'Load'
                 )
                 OnMouseEnter = P_Drawing_PropMouseEnter
                 OnMouseLeave = P_Drawing_PropMouseLeave
@@ -6985,7 +7010,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Drawing_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 390
+                Height = 430
                 Top = 48
                 Width = 181
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -6993,7 +7018,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 7895160
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 390
+                ClientHeight = 430
                 ClientWidth = 181
                 Color = 10063735
                 ParentColor = False
@@ -7001,6 +7026,269 @@ object F_MainForm: TF_MainForm
                 Visible = False
                 OnMouseEnter = P_Spline_TemplatesMouseEnter
                 OnMouseLeave = P_Spline_TemplatesMouseLeave
+                object P_Spiral: TPanel
+                  AnchorSideLeft.Control = P_Spline_Templates
+                  AnchorSideTop.Control = P_Spline_Templates_Properties
+                  AnchorSideTop.Side = asrBottom
+                  AnchorSideRight.Control = P_Spline_Templates
+                  AnchorSideRight.Side = asrBottom
+                  AnchorSideBottom.Control = P_Spline_Templates
+                  AnchorSideBottom.Side = asrBottom
+                  Left = 1
+                  Height = 340
+                  Top = 89
+                  Width = 179
+                  Anchors = [akTop, akLeft, akRight, akBottom]
+                  BorderSpacing.Top = 66
+                  BevelColor = clGray
+                  BevelOuter = bvNone
+                  ClientHeight = 340
+                  ClientWidth = 179
+                  TabOrder = 8
+                  Visible = False
+                  OnMouseEnter = P_Spline_TemplatesMouseEnter
+                  OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  object L_Spiral_Points_Count: TLabel
+                    Left = 24
+                    Height = 16
+                    Top = 9
+                    Width = 76
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Points Count:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object SE_Spiral_Points_Count: TSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 8
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 20000000
+                    OnChange = SE_Spiral_Points_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 0
+                    Value = 256
+                  end
+                  object L_Spiral_Radius: TLabel
+                    Left = 63
+                    Height = 16
+                    Top = 59
+                    Width = 37
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Radius:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object L_Spiral_Rotation: TLabel
+                    Left = 48
+                    Height = 16
+                    Top = 84
+                    Width = 52
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Rotation:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object L_Spiral_Angle: TLabel
+                    Left = 63
+                    Height = 16
+                    Top = 109
+                    Width = 37
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Angle:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object FSE_Spiral_Coil_Step: TFloatSpinEdit
+                    AnchorSideTop.Control = L_Spline_Simplification_Angle
+                    AnchorSideTop.Side = asrCenter
+                    AnchorSideBottom.Side = asrBottom
+                    Left = 108
+                    Height = 20
+                    Top = 33
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    BorderSpacing.Left = 91
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    DecimalPlaces = 1
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -10
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 20000000
+                    MinValue = -20000000
+                    OnChange = FSE_Spiral_Coil_StepChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 1
+                    Value = 1
+                  end
+                  object L_Spiral_Coil_Step: TLabel
+                    Left = 24
+                    Height = 16
+                    Top = 34
+                    Width = 76
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Coil Step:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object SE_Spiral_Angle: TFloatSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 108
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 360000
+                    OnChange = SE_Spiral_AngleChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 2
+                    Value = 720
+                  end
+                  object SE_Spiral_Rotation: TFloatSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 83
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 360
+                    OnChange = SE_Spiral_RotationChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 3
+                  end
+                  object SE_Spiral_Radius: TFloatSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 58
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 4095
+                    OnChange = SE_Spiral_RadiusChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 4
+                    Value = 256
+                  end
+                end
                 object P_Rose: TPanel
                   AnchorSideLeft.Control = P_Spline_Templates
                   AnchorSideTop.Control = P_Spline_Templates_Properties
@@ -7010,14 +7298,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 300
+                  Height = 340
                   Top = 89
                   Width = 179
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 300
+                  ClientHeight = 340
                   ClientWidth = 179
                   TabOrder = 7
                   Visible = False
@@ -7091,32 +7379,6 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Rose_Radius: TSpinEdit
-                    Left = 108
-                    Height = 20
-                    Top = 58
-                    Width = 44
-                    AutoSelect = False
-                    AutoSize = False
-                    Color = 15791340
-                    Constraints.MaxHeight = 20
-                    Constraints.MinHeight = 20
-                    Font.CharSet = RUSSIAN_CHARSET
-                    Font.Color = 5512455
-                    Font.Height = -11
-                    Font.Name = 'Euphemia'
-                    Font.Pitch = fpVariable
-                    Font.Quality = fqDraft
-                    MaxValue = 4095
-                    OnChange = SE_Rose_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    ParentFont = False
-                    ParentShowHint = False
-                    TabOrder = 1
-                    Value = 256
-                  end
                   object L_Rose_Rotation: TLabel
                     Left = 48
                     Height = 16
@@ -7137,31 +7399,6 @@ object F_MainForm: TF_MainForm
                     ParentShowHint = False
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  end
-                  object SE_Rose_Rotation: TSpinEdit
-                    Left = 108
-                    Height = 20
-                    Top = 83
-                    Width = 44
-                    AutoSelect = False
-                    AutoSize = False
-                    Color = 15791340
-                    Constraints.MaxHeight = 20
-                    Constraints.MinHeight = 20
-                    Font.CharSet = RUSSIAN_CHARSET
-                    Font.Color = 5512455
-                    Font.Height = -11
-                    Font.Name = 'Euphemia'
-                    Font.Pitch = fpVariable
-                    Font.Quality = fqDraft
-                    MaxValue = 360
-                    OnChange = SE_Rose_RotationChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    ParentFont = False
-                    ParentShowHint = False
-                    TabOrder = 2
                   end
                   object L_Rose_Angle: TLabel
                     Left = 63
@@ -7184,7 +7421,59 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Rose_Angle: TSpinEdit
+                  object FSE_Rose_Petals_Count: TFloatSpinEdit
+                    AnchorSideTop.Control = L_Spline_Simplification_Angle
+                    AnchorSideTop.Side = asrCenter
+                    AnchorSideBottom.Side = asrBottom
+                    Left = 108
+                    Height = 20
+                    Top = 33
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    BorderSpacing.Left = 91
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    DecimalPlaces = 1
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -10
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 20000000
+                    OnChange = FSE_Rose_Petals_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 1
+                    Value = 7
+                  end
+                  object L_Rose_Petals_Count: TLabel
+                    Left = 24
+                    Height = 16
+                    Top = 34
+                    Width = 76
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Petals Count:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object SE_Rose_Angle: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 108
@@ -7207,60 +7496,59 @@ object F_MainForm: TF_MainForm
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
                     ParentShowHint = False
-                    TabOrder = 3
+                    TabOrder = 2
                     Value = 180
                   end
-                  object FSE_Rose_Petals_Count: TFloatSpinEdit
-                    AnchorSideTop.Control = L_Spline_Simplification_Angle
-                    AnchorSideTop.Side = asrCenter
-                    AnchorSideBottom.Side = asrBottom
+                  object SE_Rose_Rotation: TFloatSpinEdit
                     Left = 108
                     Height = 20
-                    Top = 33
+                    Top = 83
                     Width = 44
                     AutoSelect = False
                     AutoSize = False
-                    BorderSpacing.Left = 91
                     Color = 15791340
                     Constraints.MaxHeight = 20
                     Constraints.MinHeight = 20
-                    DecimalPlaces = 1
                     Font.CharSet = RUSSIAN_CHARSET
                     Font.Color = 5512455
-                    Font.Height = -10
+                    Font.Height = -11
                     Font.Name = 'Euphemia'
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360
-                    OnChange = FSE_Rose_Petals_CountChange
+                    OnChange = SE_Rose_RotationChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 3
+                  end
+                  object SE_Rose_Radius: TFloatSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 58
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 4095
+                    OnChange = SE_Rose_RadiusChange
                     OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 4
-                    Value = 3
-                  end
-                  object L_Rose_Petals_Count: TLabel
-                    Left = 24
-                    Height = 16
-                    Top = 34
-                    Width = 76
-                    Alignment = taRightJustify
-                    AutoSize = False
-                    Caption = 'Petals Count:'
-                    Font.CharSet = ANSI_CHARSET
-                    Font.Color = clBlack
-                    Font.Height = -12
-                    Font.Name = 'AR JULIAN'
-                    Font.Quality = fqDraft
-                    Layout = tlBottom
-                    ParentBidiMode = False
-                    ParentColor = False
-                    ParentFont = False
-                    ParentShowHint = False
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    Value = 256
                   end
                 end
                 object P_Spline_Template_List: TPanel
@@ -7498,10 +7786,11 @@ object F_MainForm: TF_MainForm
                     AnchorSideTop.Control = P_Spline_Templates_Properties
                     AnchorSideRight.Side = asrBottom
                     Cursor = crHandPoint
-                    Left = 0
+                    Left = 4
                     Height = 20
                     Top = 1
                     Width = 56
+                    BorderSpacing.Left = 4
                     BorderSpacing.Top = 1
                     Caption = 'Generate'
                     Color = 14139865
@@ -7579,14 +7868,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 300
+                  Height = 340
                   Top = 89
                   Width = 179
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 300
+                  ClientHeight = 340
                   ClientWidth = 179
                   TabOrder = 5
                   Visible = False
@@ -7660,32 +7949,6 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Epicycloid_Petals_Count: TSpinEdit
-                    Left = 108
-                    Height = 20
-                    Top = 33
-                    Width = 44
-                    AutoSelect = False
-                    AutoSize = False
-                    Color = 15791340
-                    Constraints.MaxHeight = 20
-                    Constraints.MinHeight = 20
-                    Font.CharSet = RUSSIAN_CHARSET
-                    Font.Color = 5512455
-                    Font.Height = -11
-                    Font.Name = 'Euphemia'
-                    Font.Pitch = fpVariable
-                    Font.Quality = fqDraft
-                    MaxValue = 20000000
-                    OnChange = SE_Epicycloid_Petals_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    ParentFont = False
-                    ParentShowHint = False
-                    TabOrder = 1
-                    Value = 8
-                  end
                   object L_Epicycloid_Radius: TLabel
                     Left = 63
                     Height = 16
@@ -7706,32 +7969,6 @@ object F_MainForm: TF_MainForm
                     ParentShowHint = False
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  end
-                  object SE_Epicycloid_Radius: TSpinEdit
-                    Left = 108
-                    Height = 20
-                    Top = 58
-                    Width = 44
-                    AutoSelect = False
-                    AutoSize = False
-                    Color = 15791340
-                    Constraints.MaxHeight = 20
-                    Constraints.MinHeight = 20
-                    Font.CharSet = RUSSIAN_CHARSET
-                    Font.Color = 5512455
-                    Font.Height = -11
-                    Font.Name = 'Euphemia'
-                    Font.Pitch = fpVariable
-                    Font.Quality = fqDraft
-                    MaxValue = 4095
-                    OnChange = SE_Epicycloid_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    ParentFont = False
-                    ParentShowHint = False
-                    TabOrder = 2
-                    Value = 256
                   end
                   object L_Epicycloid_Rotation: TLabel
                     Left = 48
@@ -7754,7 +7991,78 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Epicycloid_Rotation: TSpinEdit
+                  object L_Epicycloid_Angle: TLabel
+                    Left = 63
+                    Height = 16
+                    Top = 109
+                    Width = 37
+                    Alignment = taRightJustify
+                    AutoSize = False
+                    Caption = 'Angle:'
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clBlack
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    Font.Quality = fqDraft
+                    Layout = tlBottom
+                    ParentBidiMode = False
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  end
+                  object CB_Epicycloid_Hypocycloid: TCheckBox
+                    Left = 48
+                    Height = 19
+                    Hint = 'Should Spline Be Partially Repainted Unless Clipped'
+                    Top = 134
+                    Width = 96
+                    HelpType = htKeyword
+                    AutoSize = False
+                    Caption = 'Hypocycloid'
+                    Color = 12236195
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clCaptionText
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    OnChange = CB_Epicycloid_HypocycloidChange
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    ParentBidiMode = False
+                    ShowHint = True
+                    TabOrder = 1
+                  end
+                  object SE_Epicycloid_Angle: TFloatSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 108
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 360
+                    OnChange = SE_Epicycloid_AngleChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 2
+                    Value = 360
+                  end
+                  object SE_Epicycloid_Rotation: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 83
@@ -7779,31 +8087,10 @@ object F_MainForm: TF_MainForm
                     ParentShowHint = False
                     TabOrder = 3
                   end
-                  object L_Epicycloid_Angle: TLabel
-                    Left = 63
-                    Height = 16
-                    Top = 109
-                    Width = 37
-                    Alignment = taRightJustify
-                    AutoSize = False
-                    Caption = 'Angle:'
-                    Font.CharSet = ANSI_CHARSET
-                    Font.Color = clBlack
-                    Font.Height = -12
-                    Font.Name = 'AR JULIAN'
-                    Font.Quality = fqDraft
-                    Layout = tlBottom
-                    ParentBidiMode = False
-                    ParentColor = False
-                    ParentFont = False
-                    ParentShowHint = False
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  end
-                  object SE_Epicycloid_Angle: TSpinEdit
+                  object SE_Epicycloid_Radius: TFloatSpinEdit
                     Left = 108
                     Height = 20
-                    Top = 108
+                    Top = 58
                     Width = 44
                     AutoSelect = False
                     AutoSize = False
@@ -7816,39 +8103,41 @@ object F_MainForm: TF_MainForm
                     Font.Name = 'Euphemia'
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
-                    MaxValue = 360
-                    OnChange = SE_Epicycloid_AngleChange
+                    MaxValue = 4095
+                    OnChange = SE_Epicycloid_RadiusChange
                     OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 4
-                    Value = 360
+                    Value = 256
                   end
-                  object CB_Epicycloid_Hypocycloid: TCheckBox
-                    Left = 48
-                    Height = 19
-                    Hint = 'Should Spline Be Partially Repainted Unless Clipped'
-                    Top = 134
-                    Width = 96
-                    HelpType = htKeyword
+                  object SE_Epicycloid_Petals_Count: TFloatSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 33
+                    Width = 44
+                    AutoSelect = False
                     AutoSize = False
-                    Caption = 'Hypocycloid'
-                    Color = 12236195
-                    Font.CharSet = ANSI_CHARSET
-                    Font.Color = clCaptionText
-                    Font.Height = -12
-                    Font.Name = 'AR JULIAN'
-                    OnChange = CB_Epicycloid_HypocycloidChange
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 20000000
+                    OnChange = SE_Epicycloid_Petals_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    ParentColor = False
                     ParentFont = False
                     ParentShowHint = False
-                    ParentBidiMode = False
-                    ShowHint = True
                     TabOrder = 5
+                    Value = 8
                   end
                 end
                 object P_Cycloid: TPanel
@@ -7860,14 +8149,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 300
+                  Height = 340
                   Top = 89
                   Width = 179
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 300
+                  ClientHeight = 340
                   ClientWidth = 179
                   TabOrder = 6
                   Visible = False
@@ -7941,32 +8230,6 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Cycloid_Loops_Count: TSpinEdit
-                    Left = 108
-                    Height = 20
-                    Top = 33
-                    Width = 44
-                    AutoSelect = False
-                    AutoSize = False
-                    Color = 15791340
-                    Constraints.MaxHeight = 20
-                    Constraints.MinHeight = 20
-                    Font.CharSet = RUSSIAN_CHARSET
-                    Font.Color = 5512455
-                    Font.Height = -11
-                    Font.Name = 'Euphemia'
-                    Font.Pitch = fpVariable
-                    Font.Quality = fqDraft
-                    MaxValue = 20000000
-                    OnChange = SE_Cycloid_Loops_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    ParentFont = False
-                    ParentShowHint = False
-                    TabOrder = 1
-                    Value = 3
-                  end
                   object L_Cycloid_Radius: TLabel
                     Left = 6
                     Height = 16
@@ -7987,32 +8250,6 @@ object F_MainForm: TF_MainForm
                     ParentShowHint = False
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  end
-                  object SE_Cycloid_Radius: TSpinEdit
-                    Left = 108
-                    Height = 20
-                    Top = 58
-                    Width = 44
-                    AutoSelect = False
-                    AutoSize = False
-                    Color = 15791340
-                    Constraints.MaxHeight = 20
-                    Constraints.MinHeight = 20
-                    Font.CharSet = RUSSIAN_CHARSET
-                    Font.Color = 5512455
-                    Font.Height = -11
-                    Font.Name = 'Euphemia'
-                    Font.Pitch = fpVariable
-                    Font.Quality = fqDraft
-                    MaxValue = 4095
-                    OnChange = SE_Cycloid_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
-                    OnMouseEnter = P_Spline_TemplatesMouseEnter
-                    OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    ParentFont = False
-                    ParentShowHint = False
-                    TabOrder = 2
-                    Value = 64
                   end
                   object L_Cycloid_Direction_X: TLabel
                     Left = 25
@@ -8064,7 +8301,7 @@ object F_MainForm: TF_MainForm
                     ParentFont = False
                     ParentShowHint = False
                     Style = csDropDownList
-                    TabOrder = 3
+                    TabOrder = 1
                     Text = 'Right'
                   end
                   object L_Cycloid_Direction_Y: TLabel
@@ -8117,7 +8354,7 @@ object F_MainForm: TF_MainForm
                     ParentFont = False
                     ParentShowHint = False
                     Style = csDropDownList
-                    TabOrder = 4
+                    TabOrder = 2
                     Text = 'Up'
                   end
                   object L_Cycloid_Curvature: TLabel
@@ -8169,9 +8406,128 @@ object F_MainForm: TF_MainForm
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
                     ParentShowHint = False
-                    TabOrder = 5
+                    TabOrder = 3
                     Value = 1
                   end
+                  object SE_Cycloid_Radius: TFloatSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 58
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 4095
+                    OnChange = SE_Cycloid_RadiusChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 4
+                    Value = 64
+                  end
+                  object SE_Cycloid_Loops_Count: TSpinEdit
+                    Left = 108
+                    Height = 20
+                    Top = 33
+                    Width = 44
+                    AutoSelect = False
+                    AutoSize = False
+                    Color = 15791340
+                    Constraints.MaxHeight = 20
+                    Constraints.MinHeight = 20
+                    Font.CharSet = RUSSIAN_CHARSET
+                    Font.Color = 5512455
+                    Font.Height = -11
+                    Font.Name = 'Euphemia'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    MaxValue = 20000000
+                    OnChange = SE_Cycloid_Loops_CountChange
+                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentFont = False
+                    ParentShowHint = False
+                    TabOrder = 5
+                    Value = 3
+                  end
+                end
+                object SB_Spline_Load: TSpeedButton
+                  Cursor = crHandPoint
+                  Left = 8
+                  Height = 22
+                  Hint = 'Load spline from .svg or .sff file'
+                  Top = 29
+                  Width = 72
+                  AllowAllUp = True
+                  BorderSpacing.Left = 64
+                  BorderSpacing.Top = 1
+                  BorderSpacing.Right = 1
+                  BorderSpacing.Bottom = 1
+                  BorderSpacing.Around = 1
+                  BorderSpacing.InnerBorder = 1
+                  Caption = 'Import'
+                  Color = 15002839
+                  Font.CharSet = ANSI_CHARSET
+                  Font.Color = clNavy
+                  Font.Height = -13
+                  Font.Name = 'Candara'
+                  Font.Pitch = fpFixed
+                  Font.Quality = fqDraft
+                  Glyph.Data = {
+                    36040000424D3604000000000000360000002800000010000000100000000100
+                    2000000000000004000064000000640000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000200000002900000006000000000000
+                    0000000000000000000500000002000000000000000000000000000000000000
+                    000000000000000000000D212E502F4558C81210117A00000010000000000000
+                    0000031D282400090E5800000050000000320000001F0000000F000000050000
+                    0001000000000E1B24441C69A4EA52B0ECFF2D38375E00000004000000000000
+                    00001D93C3972B93B7E6075C79D7083B4FBC051D289B000306770000005B0000
+                    004A041017581C69A2E344AEF5FF3C6D78840509070800000000000000000000
+                    00002595C3B36DDDFBFF14DAFFFF12CBF9FF08BAE8FF3691AEF68C8A8CEA8D75
+                    6CDF706869E161A5D3FF3B6C78A10000000C0000000000000000000000000000
+                    00002A9DC9B681D5EDFF4EE8FFFF2EE2FFFF3ACCE8FFDADDDAFFFFFFFFFFFBF0
+                    D3FFE2C6A9FF61A3B7F9000004870000001D0000000000000000000000000000
+                    00002A9DC9B674D4EDFF89F3FEFF58EFFFFF95C9C8FFFCE0C3FFF4EBD7FFE5D1
+                    A6FFE2C083FFABC7C6FF0F495ECB0000004A0000000200000000000000000000
+                    00002A9DC9B64CCEF0FF9FEFF7FF89FEFFFFAED1C9FFE5C18AFFDEC690FFE3CF
+                    9FFFE1C28DFFD5D6CAFF5CACC2F300050A850000001600000000000000000000
+                    00002A9DC9B628D0FAFF92DDEEFFABFFFFFFA4E8E5FFDABE95FFE1BF7FFFFEEF
+                    DAFFDBCEC0FFA9DDDFFFB8F2FEFF0D3646C00000004000000002000000000000
+                    00002A9DC9B611D3FFFF3EC2E9FF92DFEFFF8DE6F3FFA2C9CCFFD0CCB8FFC9D1
+                    C1FF99D8D5FF9FF7FFFFF5FFFFFF5095ACEF0000007800000013000000000000
+                    00002A9DC9B62BDDFFFF15D2FCFF1FC8F3FF25C6F0FF22C0ECFF77CDE5FFA6F1
+                    F2FF95FFFFFFB2FBFFFFFFFFFFFFC5E9F4FF062937B00000002F000000000000
+                    00002A9DC9B651E9FFFF42E4FFFF42E4FFFF41E4FFFF3FE5FFFF3CCCEFFF5DCA
+                    E8FF68D0EBFF74CBE5FDB0DEF1FDC8EEFBFF296C86BA0000001A000000000000
+                    00002A9DC9B676F7FFFF65EFFFFF67EFFFFF6DF2FFFF72F7FFFF6EF7FFFF65EF
+                    FEFF67F2FCFF1F87A6E300263764158EBC521162813200000000000000000000
+                    000041ACD4ADA7FBFDFF9EFFFFFF9EFFFFFF7EEDF7FF5FD5E9E265D8EADD69DC
+                    ECE571E4F0ED2989A59D0000000D000000000000000000000000000000000000
+                    00000C90C4234AAFD3BB61BEDCD765C7E5E15FD5E9E2001D2A232496BD1F2A9E
+                    C62532A8CF2C1671931100000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000
+                  }
+                  GroupIndex = 1
+                  OnClick = SB_Spline_LoadClick
+                  OnMouseEnter = P_Spline_TemplatesMouseEnter
+                  OnMouseLeave = P_Spline_TemplatesMouseLeave
+                  ShowHint = True
+                  ParentBidiMode = False
+                  ParentFont = False
+                  ParentShowHint = False
                 end
               end
               object L_Spline_Drawing: TLabel
@@ -8248,7 +8604,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Drawing_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 390
+                Height = 430
                 Top = 48
                 Width = 181
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -8256,7 +8612,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 6052956
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 390
+                ClientHeight = 430
                 ClientWidth = 181
                 Color = 11117709
                 ParentColor = False
@@ -8298,13 +8654,13 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Freehand
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 367
+                  Height = 407
                   Top = 22
                   Width = 179
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BevelColor = 7895160
                   BevelOuter = bvNone
-                  ClientHeight = 367
+                  ClientHeight = 407
                   ClientWidth = 179
                   Color = 10063735
                   ParentColor = False
@@ -8485,7 +8841,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 690
-              Height = 440
+              Height = 480
               Top = 4
               Width = 162
               Anchors = [akTop, akLeft, akBottom]
@@ -8493,7 +8849,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 440
+              ClientHeight = 480
               ClientWidth = 162
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -8632,7 +8988,7 @@ object F_MainForm: TF_MainForm
               object CB_Dynamics_Collider: TCheckBox
                 Left = 10
                 Height = 19
-                Hint = 'Use This Spline As Collider'
+                Hint = 'Use this spline as collider'
                 Top = 51
                 Width = 150
                 HelpType = htKeyword
@@ -8663,7 +9019,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 854
-              Height = 440
+              Height = 480
               Top = 4
               Width = 182
               Anchors = [akTop, akLeft, akRight, akBottom]
@@ -8671,7 +9027,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 440
+              ClientHeight = 480
               ClientWidth = 182
               Color = 12236195
               Constraints.MinWidth = 182
@@ -8693,10 +9049,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Save_Load_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 64
+                Left = 39
                 Height = 2
                 Top = 14
-                Width = 107
+                Width = 132
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 9
@@ -8712,11 +9068,11 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object Image23: TImage
-                AnchorSideLeft.Control = L_Save_Load
+                AnchorSideLeft.Control = L_Spline_Save
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 58
+                Left = 33
                 Height = 8
                 Top = 11
                 Width = 8
@@ -8735,14 +9091,14 @@ object F_MainForm: TF_MainForm
                 Stretch = True
                 Transparent = True
               end
-              object L_Save_Load: TLabel
+              object L_Spline_Save: TLabel
                 Left = 8
                 Height = 16
                 Top = 5
-                Width = 47
+                Width = 22
                 Alignment = taRightJustify
                 AutoSize = False
-                Caption = 'Save/Load'
+                Caption = 'Save'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
                 Font.Height = 13
@@ -8765,9 +9121,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 714
+            Left = 488
             Height = 160
-            Top = 37
+            Top = -10
             Width = 760
             Anchors = []
             BevelColor = 9665894
@@ -10372,9 +10728,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 102
+            Left = 584
             Height = 63
-            Top = -1
+            Top = 80
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -10561,9 +10917,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 352
+            Left = 696
             Height = 110
-            Top = -7
+            Top = 27
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -10582,9 +10938,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -144
+            Left = 584
             Height = 63
-            Top = -14
+            Top = 16
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -10958,9 +11314,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 260
+            Left = 768
             Height = 110
-            Top = -18
+            Top = 67
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -11020,9 +11376,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 402
+            Left = 768
             Height = 110
-            Top = -18
+            Top = 15
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -11223,7 +11579,7 @@ object F_MainForm: TF_MainForm
             Cursor = crHandPoint
             Left = 192
             Height = 32
-            Hint = 'Select Texture Region'
+            Hint = 'Regular Grid'
             Top = 0
             Width = 32
             AllowAllUp = True
@@ -11250,7 +11606,7 @@ object F_MainForm: TF_MainForm
             Cursor = crHandPoint
             Left = 224
             Height = 32
-            Hint = 'Select Texture Region'
+            Hint = 'Snap Grid'
             Top = 0
             Width = 32
             AllowAllUp = True
@@ -12479,7 +12835,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = 843
     Height = 17
-    Top = 346
+    Top = 122
     Width = 15
     Caption = '>'
     Enabled = False
@@ -12501,7 +12857,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = -6
     Height = 17
-    Top = 346
+    Top = 122
     Width = 15
     Anchors = [akTop, akRight]
     Caption = '<'
@@ -12825,7 +13181,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 20
     Height = 23
-    Top = 309
+    Top = 85
     Width = 224
     Anchors = [akLeft, akBottom]
     AutoSize = False
@@ -12847,7 +13203,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = 10
     Height = 180
-    Top = 166
+    Top = -58
     Width = 342
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 6
@@ -12955,7 +13311,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = Memo1
     Left = 10
     Height = 31
-    Top = 131
+    Top = -93
     Width = 118
     Anchors = [akLeft, akBottom]
     Caption = 'Test your might'
@@ -19647,7 +20003,7 @@ object F_MainForm: TF_MainForm
     Left = 504
     Top = 96
     Bitmap = {
-      4C690A00000020000000200000007B4D31007B4D31007B4D31007B4D31007B4D
+      4C690E00000020000000200000007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
       31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D31007B4D
@@ -20927,7 +21283,519 @@ object F_MainForm: TF_MainForm
       CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
       CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
       CE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101CCE00101C
-      CE00101CCE00101CCE00101CCE00
+      CE00101CCE00101CCE00101CCE002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
+      4F034F4F4F464F4F4F0B2C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F
+      4F664F4F4FD04F4F4F092C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F474F4F
+      4FFF4F4F4FCE4F4F4F072C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F334F4F4FE84F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F214F4F4FD94F4F4FFF4F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F024F4F4F004F4F4F104F4F4FC44F4F4FFF4F4F4FEE4F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F014F4F4F014F4F4F044F4F4FAC4F4F4FFF4F4F4FFF4F4F4F3F4F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F014F4F4F024F4F4F004F4F4F954F4F4FFF4F4F4FFF4F4F4F574F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F034F4F4F004F4F4F7C4F4F4FFF4F4F4FFF4F4F4F894F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F034F4F
+      4F004F4F4F624F4F4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F024F4F4F004F4F
+      4F474F4F4FF64F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F024F4F4F004F4F4F254F4F
+      4FE94F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F024F4F4F004F4F4F254F4F
+      4FE94F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F024F4F4F004F4F
+      4F474F4F4FF64F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F034F4F
+      4F004F4F4F624F4F4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F034F4F4F004F4F4F7C4F4F4FFF4F4F4FFF4F4F4F894F4F4F004F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F014F4F4F024F4F4F004F4F4F954F4F4FFF4F4F4FFF4F4F4F574F4F4F004F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F014F4F4F014F4F4F044F4F4FAC4F4F4FFF4F4F4FFF4F4F4F3F4F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F024F4F4F004F4F4F104F4F4FC44F4F4FFF4F4F4FEE4F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F214F4F4FD94F4F4FFF4F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F334F4F4FE84F4F
+      4FFF4F4F4FEE4F4F4F082C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F474F4F
+      4FFF4F4F4FCE4F4F4F072C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F
+      4F664F4F4FD04F4F4F092C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
+      4F034F4F4F464F4F4F0B2C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F0B4F4F4F464F4F4F034F4F
+      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F094F4F4FD04F4F4F664F4F
+      4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F074F4F4FCE4F4F4FFF4F4F
+      4F474F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4FE84F4F4F334F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4FFF4F4F4FD94F4F4F214F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4FEE4F4F4FFF4F4F4FC44F4F4F104F4F4F004F4F4F024F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F3F4F4F4FFF4F4F4FFF4F4F4FAC4F4F4F044F4F4F014F4F4F014F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F574F4F4FFF4F4F4FFF4F4F4F954F4F4F004F4F4F024F4F4F014F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F894F4F4FFF4F4F4FFF4F4F4F7C4F4F4F004F4F4F034F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F4F624F4F4F004F4F
+      4F034F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FF64F4F4F474F4F
+      4F004F4F4F024F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FE94F4F
+      4F254F4F4F004F4F4F022C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FE94F4F
+      4F254F4F4F004F4F4F022C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FF64F4F4F474F4F
+      4F004F4F4F024F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F4F624F4F4F004F4F
+      4F034F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F004F4F4F894F4F4FFF4F4F4FFF4F4F4F7C4F4F4F004F4F4F034F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F004F4F4F574F4F4FFF4F4F4FFF4F4F4F954F4F4F004F4F4F024F4F4F014F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4F3F4F4F4FFF4F4F4FFF4F4F4FAC4F4F4F044F4F4F014F4F4F014F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4FEE4F4F4FFF4F4F4FC44F4F4F104F4F4F004F4F4F024F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4FFF4F4F4FD94F4F4F214F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F084F4F4FEE4F4F4FFF4F4F
+      4FE84F4F4F334F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F074F4F4FCE4F4F4FFF4F4F
+      4F474F4F4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F094F4F4FD04F4F4F664F4F
+      4F004F4F4F034F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F4F0B4F4F4F464F4F4F034F4F
+      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F024F4F4F024F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F034F4F4F004F4F4F254F4F4F254F4F4F004F4F4F034F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
+      4F034F4F4F004F4F4F474F4F4FE94F4F4FE94F4F4F474F4F4F004F4F4F034F4F
+      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F4F024F4F
+      4F004F4F4F624F4F4FF64F4F4FFF4F4F4FFF4F4F4FF64F4F4F624F4F4F004F4F
+      4F024F4F4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F014F4F4F004F4F
+      4F7C4F4F4FFF4F4F4FFF4F4F4FAA4F4F4FAA4F4F4FFF4F4F4FFF4F4F4F7C4F4F
+      4F004F4F4F014F4F4F024F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F044F4F4F954F4F
+      4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F
+      4F954F4F4F044F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F104F4F4FAC4F4F4FFF4F4F
+      4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F
+      4FFF4F4F4FAC4F4F4F104F4F4F004F4F4F034F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F034F4F4F004F4F4F214F4F4FC44F4F4FFF4F4F4FFF4F4F
+      4F894F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F894F4F
+      4FFF4F4F4FFF4F4F4FC44F4F4F214F4F4F004F4F4F034F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F034F4F4F004F4F4F334F4F4FD94F4F4FFF4F4F4FFF4F4F4F574F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F574F4F4FFF4F4F4FFF4F4F4FD94F4F4F334F4F4F004F4F4F034F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F014F4F4F004F4F4F474F4F4FE84F4F4FFF4F4F4FEE4F4F4F3F4F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F3F4F4F4FEE4F4F4FFF4F4F4FE84F4F4F474F4F4F004F4F4F012C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F034F4F4F664F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
+      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
+      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4F664F4F4F032C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F464F4F4FD04F4F4FCE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
+      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
+      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FCE4F4F4FD04F4F4F462C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F0B4F4F4F094F4F4F074F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
+      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
+      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F074F4F4F094F4F4F0B2C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F0B4F4F4F094F4F4F074F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
+      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F
+      4F084F4F4F084F4F4F084F4F4F084F4F4F084F4F4F074F4F4F094F4F4F0B2C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F464F4F4FD04F4F4FCE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
+      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F
+      4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FEE4F4F4FCE4F4F4FD04F4F4F462C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F034F4F4F664F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
+      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F
+      4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4FFF4F4F4F664F4F4F032C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F014F4F4F004F4F4F474F4F4FE84F4F4FFF4F4F4FEE4F4F4F3F4F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F3F4F4F4FEE4F4F4FFF4F4F4FE84F4F4F474F4F4F004F4F4F012C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F034F4F4F004F4F4F334F4F4FD94F4F4FFF4F4F4FFF4F4F4F574F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F574F4F4FFF4F4F4FFF4F4F4FD94F4F4F334F4F4F004F4F4F034F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F034F4F4F004F4F4F214F4F4FC44F4F4FFF4F4F4FFF4F4F
+      4F894F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F894F4F
+      4FFF4F4F4FFF4F4F4FC44F4F4F214F4F4F004F4F4F034F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F034F4F4F004F4F4F104F4F4FAC4F4F4FFF4F4F
+      4FFF4F4F4FAA4F4F4F004F4F4F004F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F
+      4FFF4F4F4FAC4F4F4F104F4F4F004F4F4F034F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F004F4F4F044F4F4F954F4F
+      4FFF4F4F4FFF4F4F4FAA4F4F4F004F4F4F004F4F4FAA4F4F4FFF4F4F4FFF4F4F
+      4F954F4F4F044F4F4F004F4F4F024F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F024F4F4F014F4F4F004F4F
+      4F7C4F4F4FFF4F4F4FFF4F4F4FAA4F4F4FAA4F4F4FFF4F4F4FFF4F4F4F7C4F4F
+      4F004F4F4F014F4F4F024F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F4F024F4F
+      4F004F4F4F624F4F4FF64F4F4FFF4F4F4FFF4F4F4FF64F4F4F624F4F4F004F4F
+      4F024F4F4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F014F4F
+      4F034F4F4F004F4F4F474F4F4FE94F4F4FE94F4F4F474F4F4F004F4F4F034F4F
+      4F014F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F034F4F4F004F4F4F254F4F4F254F4F4F004F4F4F034F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F4F024F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F024F4F4F024F4F4F004F4F4F004F4F4F004F4F
+      4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F004F4F4F002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C2C002C2C
+      2C002C2C2C002C2C2C002C2C2C00
     }
   end
   object FontDialog1: TFontDialog
@@ -23592,5 +24460,11 @@ object F_MainForm: TF_MainForm
     OnTimer = T_Logo3Timer
     Left = 664
     Top = 40
+  end
+  object OD_Spline_Load: TOpenDialog
+    DefaultExt = '.svg'
+    Filter = 'Scalable Vector Graphics|*.svg|Spline Factory Format|*.sff'
+    Left = 224
+    Top = 480
   end
 end

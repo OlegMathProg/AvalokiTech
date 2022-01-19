@@ -142,6 +142,7 @@ type
     CB_Spline_Edges_LOD                              : TCheckBox;
     CB_Dynamics_Style                                : TComboBox;
     CB_Dynamics_Collider                             : TCheckBox;
+    CB_Spline_Best_Precision                         : TCheckBox;
     CB_Spline_Lazy_Repaint                           : TCheckBox;
     CB_Epicycloid_Hypocycloid                        : TCheckBox;
     CB_Spline_Byte_Mode                              : TCheckBox;
@@ -170,6 +171,7 @@ type
     FSE_Brush_Fall_Off1                              : TFloatSpinEdit;
     FSE_Brush_Fall_Off2                              : TFloatSpinEdit;
     FSE_Rose_Petals_Count                            : TFloatSpinEdit;
+    FSE_Spiral_Coil_Step                             : TFloatSpinEdit;
     FSE_Spline_Simplification_Angle                  : TFloatSpinEdit;
     FSE_Cycloid_Curvature                            : TFloatSpinEdit;
     IL_Default_Tile_Map_Icon                         : TImageList;
@@ -210,11 +212,16 @@ type
     L_Cycloid_Radius                                 : TLabel;
     L_Cycloid_Curvature                              : TLabel;
     L_Rose_Angle                                     : TLabel;
+    L_Spiral_Angle                                   : TLabel;
     L_Rose_Petals_Count                              : TLabel;
+    L_Spiral_Coil_Step                               : TLabel;
     L_Rose_Points_Count                              : TLabel;
+    L_Spiral_Points_Count                            : TLabel;
     L_Rose_Radius                                    : TLabel;
+    L_Spiral_Radius                                  : TLabel;
     L_Rose_Rotation                                  : TLabel;
-    L_Save_Load                                      : TLabel;
+    L_Spiral_Rotation                                : TLabel;
+    L_Spline_Save                                    : TLabel;
     L_Exec_Time_Info                                 : TLabel;
     L_Speed                                          : TLabel;
     L_Brush_Fall_Off1                                : TLabel;
@@ -306,10 +313,12 @@ type
     MI_Goto_Last_Object                              : TMenuItem;
     MI_Delete_Without_Children                       : TMenuItem;
     OPD_Add_Mask_Template                            : TOpenPictureDialog;
+    OD_Spline_Load                                   : TOpenDialog;
     OpenGLControl2                                   : TOpenGLControl;
     PageControl1                                     : TPageControl;
     Panel1                                           : TPanel;
     P_AnimK_Custom_Panel                             : TPanel;
+    P_Spiral                                         : TPanel;
     P_SGrid                                          : TPanel;
     P_RGrid                                          : TPanel;
     P_Dynamics_Prop                                  : TPanel;
@@ -371,6 +380,7 @@ type
     RB_Spline_Adaptive                               : TRadioButton;
     RB_Spline_Constant                               : TRadioButton;
     RB_Spline_None                                   : TRadioButton;
+    SB_Spline_Load                                   : TSpeedButton;
     SB_Map_Editor                                    : TSpeedButton;
     SB_RGrid                                         : TSpeedButton;
     SB_SGrid                                         : TSpeedButton;
@@ -463,18 +473,22 @@ type
     SE_Count_Y                                       : TSpinEdit;
     SE_Cycloid_Loops_Count                           : TSpinEdit;
     SE_Cycloid_Points_Count                          : TSpinEdit;
-    SE_Cycloid_Radius                                : TSpinEdit;
-    SE_Rose_Angle                                    : TSpinEdit;
+    SE_Cycloid_Radius                                : TFloatSpinEdit;
+    SE_Epicycloid_Angle                              : TFloatSpinEdit;
+    SE_Epicycloid_Petals_Count                       : TFloatSpinEdit;
+    SE_Epicycloid_Radius                             : TFloatSpinEdit;
+    SE_Epicycloid_Rotation                           : TFloatSpinEdit;
+    SE_Rose_Angle                                    : TFloatSpinEdit;
+    SE_Rose_Radius                                   : TFloatSpinEdit;
+    SE_Rose_Rotation                                 : TFloatSpinEdit;
     SE_Rose_Points_Count                             : TSpinEdit;
-    SE_Rose_Radius                                   : TSpinEdit;
-    SE_Epicycloid_Rotation                           : TSpinEdit;
-    SE_Epicycloid_Angle                              : TSpinEdit;
-    SE_Rose_Rotation                                 : TSpinEdit;
+    SE_Spiral_Angle                                  : TFloatSpinEdit;
+    SE_Spiral_Points_Count                           : TSpinEdit;
+    SE_Spiral_Radius                                 : TFloatSpinEdit;
+    SE_Spiral_Rotation                               : TFloatSpinEdit;
     SE_Spline_Edges_Points_Radius                    : TSpinEdit;
     SE_Spline_Edges_Width                            : TSpinEdit;
     SE_Epicycloid_Points_Count                       : TSpinEdit;
-    SE_Epicycloid_Petals_Count                       : TSpinEdit;
-    SE_Epicycloid_Radius                             : TSpinEdit;
     SE_Spline_Edges_Dash_Length                      : TSpinEdit;
     SE_Spline_Points_Rectangle_Thikness_Left         : TSpinEdit;
     SE_Spline_Points_Rectangle_Inner_Rectangle_Width : TSpinEdit;
@@ -563,6 +577,7 @@ type
     procedure CB_Dynamics_StyleSelect                                (      sender           :TObject);
     procedure CB_Epicycloid_HypocycloidChange                        (      sender           :TObject);
     procedure CB_Select_Points_Background_StyleSelect                (      sender           :TObject);
+    procedure CB_Spline_Best_PrecisionChange                         (      sender           :TObject);
     procedure CB_Spline_Byte_ModeChange                              (      sender           :TObject);
     procedure CB_Spline_Edges_ShapeSelect                            (      sender           :TObject);
     procedure CB_Spline_Edges_Show_BoundsChange                      (      sender           :TObject);
@@ -615,6 +630,7 @@ type
     procedure FormResize                                             (      sender           :TObject);
     procedure FSE_Rose_Petals_CountChange                            (      sender           :TObject);
     procedure FSE_Cycloid_CurvatureChange                            (      sender           :TObject);
+    procedure FSE_Spiral_Coil_StepChange                             (      sender           :TObject);
     procedure I_Frame_ListMouseDown                                  (      sender           :TObject;
                                                                             button           :TMouseButton;
                                                                             shift            :TShiftState;
@@ -682,6 +698,7 @@ type
     procedure SB_RGrid_ColorClick                                    (      sender           :TObject);
     procedure SB_SGridClick                                          (      sender           :TObject);
     procedure SB_SplineClick                                         (      sender           :TObject);
+    procedure SB_Spline_LoadClick                                    (      sender           :TObject);
     procedure SB_Spline_TemplateClick                                (      sender           :TObject);
     procedure SB_Play_AnimClick                                      (      sender           :TObject);
     procedure SB_Select_Texture_RegionClick                          (      sender           :TObject);
@@ -719,6 +736,10 @@ type
     procedure SE_Rose_Points_CountChange                             (      sender           :TObject);
     procedure SE_Rose_RadiusChange                                   (      sender           :TObject);
     procedure SE_Rose_RotationChange                                 (      sender           :TObject);
+    procedure SE_Spiral_AngleChange                                  (      sender           :TObject);
+    procedure SE_Spiral_Points_CountChange                           (      sender           :TObject);
+    procedure SE_Spiral_RadiusChange                                 (      sender           :TObject);
+    procedure SE_Spiral_RotationChange                               (      sender           :TObject);
     procedure SE_Spline_Edges_WidthChange                            (      sender           :TObject);
     procedure SE_Spline_Points_CountChange                           (      sender           :TObject);
     procedure SE_Spline_Points_Rectangle_Inner_Rectangle_HeightChange(      sender           :TObject);
@@ -1071,9 +1092,9 @@ type
       {Grid Post-Processing------------------------}
       procedure GrdPP;                                                            inline; {$ifdef Linux}[local];{$endif}
       {Main Render Procedure}
-      procedure MainDraw;                                                                 {$ifdef Linux}[local];{$endif}
+      procedure MainDraw;                                                         inline; {$ifdef Linux}[local];{$endif}
       procedure EventGroupsCalc    (var      arr           :TBool2Arr;
-                                             event_group   :TEventGroupEnum);             {$ifdef Linux}[local];{$endif}
+                                             event_group   :TEventGroupEnum);     inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PSurf              =^TSurf;
 
@@ -1233,6 +1254,7 @@ type
       4 - there is a single selected point}
       has_sel_pts            : T1Byte1Arr;
       {spline_points}
+      sln_pts_reserved       : T2PtPosFArr;
       sln_pts                : TPtPosFArr;
       {formula spline points (dummy preview in editor)}
       fml_pts                : TPtPosFArr;
@@ -1296,27 +1318,27 @@ type
       {calculation of spline rectangle}
       procedure RctSplineRct0              (constref spline_ind      :TColor;
                                             var      rct_out_,
-                                                     rct_ent_        :TRect);                 {$ifdef Linux}[local];{$endif}
+                                                     rct_ent_        :TRect);         inline; {$ifdef Linux}[local];{$endif}
       procedure RctSplineRct1              (constref spline_ind      :TColor;
                                             var      rct_out_,
-                                                     rct_ent_        :TRect);                 {$ifdef Linux}[local];{$endif}
+                                                     rct_ent_        :TRect);         inline; {$ifdef Linux}[local];{$endif}
       procedure RctSplineRct2              (constref spline_ind      :TColor;
                                             var      rct_out_,
-                                                     rct_ent_        :TRect);                 {$ifdef Linux}[local];{$endif}
+                                                     rct_ent_        :TRect);         inline; {$ifdef Linux}[local];{$endif}
       procedure RctSplineRctEds            (constref spline_ind      :TColor;
                                             constref rct_out_,
-                                                     rct_ent_        :TRect);                 {$ifdef Linux}[local];{$endif}
+                                                     rct_ent_        :TRect);         inline; {$ifdef Linux}[local];{$endif}
       procedure RctSplineRctPts            (constref spline_ind      :TColor;
                                             constref rct_out_,
-                                                     rct_ent_        :TRect);                 {$ifdef Linux}[local];{$endif}
+                                                     rct_ent_        :TRect);         inline; {$ifdef Linux}[local];{$endif}
       procedure RctSplineEds               (constref spline_ind      :TColor;
                                             constref rct_out_,
-                                                     rct_ent_        :TRect);                 {$ifdef Linux}[local];{$endif}
+                                                     rct_ent_        :TRect);         inline; {$ifdef Linux}[local];{$endif}
       procedure RctSplinePts               (constref spline_ind      :TColor;
                                             constref rct_out_,
-                                                     rct_ent_        :TRect);                 {$ifdef Linux}[local];{$endif}
-      procedure RctSplineObj0              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure RctSplineObj1              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+                                                     rct_ent_        :TRect);         inline; {$ifdef Linux}[local];{$endif}
+      procedure RctSplineObj0              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure RctSplineObj1              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {calculation of all splines rectangles}
       procedure RctSplineAll0              (constref start_ind,
                                                      end_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
@@ -1327,29 +1349,33 @@ type
       procedure RctSplineAll3              (constref start_ind,
                                                      end_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {calculation of spline on addition}
-      procedure AddSplineObj               (constref rct_out         :TPtRect);               {$ifdef Linux}[local];{$endif}
+      procedure AddSplineObj               (constref rct_out         :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
       {add spline bounding rectangle to spline edges buffer into clipped region}
-      procedure AddSplineRctEds            (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure AddSplineRctEds            (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {add spline bounding rectangle to spline points buffer into clipped region}
-      procedure AddSplineRctPts            (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure AddSplineRctPts            (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {add spline edges to spline edges buffer into clipped region}
-      procedure AddSplineEds0              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplineEds1              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplineEds2              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplineEds3              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplineEds4              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplineEds5              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplineEds6              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplineEds7              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds0              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds0_             (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds1              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds2              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds3              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds4              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds4_             (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds5              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds6              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds6_             (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds7              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplineEds7_             (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {add spline points to spline points buffer into clipped region}
-      procedure AddSplinePts0              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplinePts1              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplinePts2              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplinePts3              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplinePts4              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplinePts5              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplinePts6              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
-      procedure AddSplinePts7              (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts0              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts1              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts2              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts3              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts4              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts5              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts6              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
+      procedure AddSplinePts7              (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {add spline duplicated points on specified buffer(dup_pts_arr)}
       procedure AddSplineDupPts0           (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       procedure AddSplineDupPts1           (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
@@ -1374,13 +1400,13 @@ type
       procedure ClrSplineAll               (constref start_ind,
                                                      end_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {create sprite of all spline edges and points bounding rectangles on spline edges  bounding rectangles buffer into clipped region}
-      procedure CrtSplineRctEds            (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure CrtSplineRctEds            (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {create sprite of all spline edges and points bounding rectangles on spline points bounding rectangles buffer into clipped region}
-      procedure CrtSplineRctPts            (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure CrtSplineRctPts            (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {create sprite of all spline edges on spline edges buffer into clipped region}
-      procedure CrtSplineEds               (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure CrtSplineEds               (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {create sprite of all spline points on spline points buffer into clipped region}
-      procedure CrtSplinePts               (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure CrtSplinePts               (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {create sprite of all spline edges and points from start_ind to end_ind}
       procedure CrtSplineAll0              (constref start_ind,
                                                      end_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
@@ -1433,25 +1459,25 @@ type
                                                      end_ind         :TColor;
                                             constref rct_dst         :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
       {repaint spline edges  bounding rectangles on spline edges and points bounding rectangles buffer into clipped region}
-      procedure RepSplineRctEds            (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure RepSplineRctEds            (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {repaint spline points bounding rectangles on spline edges and points bounding rectangles buffer into clipped region}
-      procedure RepSplineRctPts            (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure RepSplineRctPts            (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {repaint spline edges}
-      procedure RepSplineEds               (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure RepSplineEds               (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {repaint spline points}
-      procedure RepSplinePts               (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure RepSplinePts               (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {set random color info.}
       procedure RndSplineCol               (var      local_prop      :TCurveProp;
                                             var      col,col_inv     :TColor;
                                             var      col_ptr         :PInteger;
-                                            constref btn             :TSpeedButton);          {$ifdef Linux}[local];{$endif}
+                                            constref btn             :TSpeedButton);  inline; {$ifdef Linux}[local];{$endif}
       {generate random spline into specified area}
       procedure RndSplineObj               (constref pt              :TPtPos;
-                                            constref w,h             :TColor);                {$ifdef Linux}[local];{$endif}
+                                            constref w,h             :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {drawing simplified spline edges on spline edges buffer into clipped region}
-      procedure SmpSplineEds               (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure SmpSplineEds               (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {drawing simplified spline points on spline points buffer into clipped region}
-      procedure SmpSplinePts               (constref spline_ind      :TColor);                {$ifdef Linux}[local];{$endif}
+      procedure SmpSplinePts               (constref spline_ind      :TColor);        inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PCurve             =^TCurve;
 
@@ -1587,7 +1613,7 @@ type
       procedure PrimitiveComp                   (constref pmt_img_ptr        :PFastLine;
                                                           pmt_bld_stl        :TDrawingStyle); inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure CrtCircleSelection;                                                                   {$ifdef Linux}[local];{$endif}
+      procedure CrtCircleSelection;                                                           inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure FilSelPtsObj                    (constref x,y                :integer);       inline; {$ifdef Linux}[local];{$endif}
       {TODO}
@@ -1611,11 +1637,11 @@ type
       procedure UnselectedPtsCalc0              (constref fst_lst_sln_obj_pts:TEnum0Arr;
                                                  var      pts                :TPtPosFArr;
                                                  constref pvt_pos_curr,
-                                                          pvt_pos_prev       :TPtPosF);               {$ifdef Linux}[local];{$endif}
+                                                          pvt_pos_prev       :TPtPosF);       inline; {$ifdef Linux}[local];{$endif}
       procedure UnselectedPtsCalc1              (constref fst_lst_sln_obj_pts:TEnum0Arr;
                                                  var      pts                :TPtPosFArr;
                                                  constref pvt_pos_curr,
-                                                          pvt_pos_prev       :TPtPosF);               {$ifdef Linux}[local];{$endif}
+                                                          pvt_pos_prev       :TPtPosF);       inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure SelPtsIndsToFalse;                                                            inline; {$ifdef Linux}[local];{$endif}
       {TODO}
@@ -1623,7 +1649,7 @@ type
       {TODO}
       procedure AdvancedClipCalc                (         pts                :TPtPosFArr;
                                                           pts_cnt            :TColor;
-                                                          is_pt_marked       :TBool1Arr);             {$ifdef Linux}[local];{$endif}
+                                                          is_pt_marked       :TBool1Arr);     inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure DuplicatedPtsToBmp;                                                           inline; {$ifdef Linux}[local];{$endif}
       {TODO}
@@ -1637,7 +1663,7 @@ type
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}                                                                                            inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure SelectdPointsToBmp              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
@@ -1647,7 +1673,7 @@ type
       {TODO}
       procedure SelPvtAndSplineEdsToBmp;                                                      inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure SelPtsIndsToBmp                 (var      pts                :TPtPosFArr);            {$ifdef Linux}[local];{$endif}
+      procedure SelPtsIndsToBmp                 (var      pts                :TPtPosFArr);    inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PSelPts            =^TSelPts;
 
@@ -2037,7 +2063,6 @@ var
   visibility_panel_picture   : Graphics.TBitmap;
   show_visibility_panel      : boolean=True;
   show_obj_info              : boolean=True;
-  show_tex_info              : boolean=True;
 
   {Buttons:Draw-} {$region -fold}
   prev_panel_draw            : TPanel;
@@ -2325,35 +2350,40 @@ end; {$endregion}
 {LI} {$region -fold}
 function ObjectInfo0: string;                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  info_arr: array[0..17] of string;
+  info_arr: array[0..19] of string;
   i       : integer;
   low_lr_obj_cnt: integer;
   upp_lr_obj_cnt: integer;
+  hid_ln_cnt    : integer;
 begin
 
   Result:='';
 
   low_lr_obj_cnt:=obj_var.LowLrObjCntCalc;
   upp_lr_obj_cnt:=obj_var.obj_cnt-obj_var.LowLrObjCntCalc;
+  hid_ln_cnt:=0;
+  if (sln_var<>Nil) then
+    for i:=0 to sln_var.sln_obj_cnt-1 do
+      Inc(hid_ln_cnt,sln_var.eds_img_arr[i].hid_ln_cnt);
 
   if (obj_var<>Nil) then
-    info_arr[00]:='Objects: '                                                          +InttoStr(obj_var.obj_cnt             )+';';
-  info_arr[01]:=#13+'Objects of lower layer: '                                         +IntToStr(low_lr_obj_cnt              )+';';
-  info_arr[02]:=#13+'Objects of upper layer: '                                         +IntToStr(upp_lr_obj_cnt              )+';';
-  info_arr[03]:=#13+'Groups: '                                                         +IntToStr(obj_var.group_cnt           )+';';
-  info_arr[04]:=#13+'Actors: '                                                         +IntToStr(obj_var.actor_cnt           )+';';
-  info_arr[05]:=#13+'  • Static: '                                                                                            +';';
-  info_arr[06]:=#13+'  • Dynamic: '                                                                                           +';';
-  info_arr[07]:=#13+'  • Physical: '                                                                                          +';';
-  info_arr[08]:=#13+'Particles: '                                                      +IntToStr(obj_var.prtcl_cnt           )+';';
-  info_arr[09]:=#13+'Curves: '                                                         +IntToStr(obj_var.curve_cnt           )+';';
+    info_arr[00]:='Objects: '                                                          +InttoStr(obj_var.obj_cnt               )+';';
+  info_arr[01]:=#13+'Objects of lower layer: '                                         +IntToStr(low_lr_obj_cnt                )+';';
+  info_arr[02]:=#13+'Objects of upper layer: '                                         +IntToStr(upp_lr_obj_cnt                )+';';
+  info_arr[03]:=#13+'Groups: '                                                         +IntToStr(obj_var.group_cnt             )+';';
+  info_arr[04]:=#13+'Actors: '                                                         +IntToStr(obj_var.actor_cnt             )+';';
+  info_arr[05]:=#13+'  • Static: '                                                                                              +';';
+  info_arr[06]:=#13+'  • Dynamic: '                                                                                             +';';
+  info_arr[07]:=#13+'  • Physical: '                                                                                            +';';
+  info_arr[08]:=#13+'Particles: '                                                      +IntToStr(obj_var.prtcl_cnt             )+';';
+  info_arr[09]:=#13+'Curves: '                                                         +IntToStr(obj_var.curve_cnt             )+';';
   if (sln_var<>Nil) then
-    info_arr[10]:=#13+'  • Points: '                                                   +InttoStr(sln_var.sln_pts_cnt         )+';';
+    info_arr[10]:=#13+'  • Points: '                                                   +InttoStr(sln_var.sln_pts_cnt           )+';';
   if (sel_var<>Nil) then
     begin
-      info_arr[11]:=#13+'    • Count of curve                  with selected points: ' +InttoStr(sel_var.sln_with_sel_pts_cnt)+';';
-      info_arr[12]:=#13+'    • Minimal index of curve          with selected points: ' +InttoStr(sel_var.sel_obj_min_ind     )+';';
-      info_arr[13]:=#13+'    • Selected: '                                             +InttoStr(sel_var.sel_pts_cnt         )+';';
+      info_arr[11]:=#13+'    • Count of curve                  with selected points: ' +InttoStr(sel_var.sln_with_sel_pts_cnt  )+';';
+      info_arr[12]:=#13+'    • Minimal index of curve          with selected points: ' +InttoStr(sel_var.sel_obj_min_ind       )+';';
+      info_arr[13]:=#13+'    • Selected: '                                             +InttoStr(sel_var.sel_pts_cnt           )+';';
       if (sel_var.sel_pts_cnt=0) then
         info_arr[14]:=#13+'      • Is not abstract object          kind after: ;'
       else
@@ -2363,13 +2393,17 @@ begin
           else
             info_arr[14]:=#13+'      • Is not abstract object          kind after: '    +'No;'
         end;
-      info_arr[15]:=#13+'    • Duplicated: '                                           +InttoStr(sel_var.dup_pts_cnt         )+';';
+      info_arr[15]:=#13+'    • Duplicated: '                                           +InttoStr(sel_var.dup_pts_cnt           )+';';
     end;
   if (sln_var<>Nil) then
-    info_arr[16]:=#13+'  • Lines: '                                                    +InttoStr(sln_var.sln_eds_cnt         )+';';
-  info_arr[17]:=#13+'Tile maps: '                                                      +IntToStr(obj_var.tlmap_cnt           )+';';
+    begin
+      info_arr[16]:=#13+'  • Lines: '                                                  +InttoStr(sln_var.sln_eds_cnt           )+';';
+      info_arr[17]:=#13+'    • Visible: '                                              +InttoStr(sln_var.sln_pts_cnt-hid_ln_cnt)+';';
+      info_arr[18]:=#13+'    • Hidden: '                                               +InttoStr(hid_ln_cnt                    )+';';
+    end;
+  info_arr[19]:=#13+'Tile maps: '                                                      +IntToStr(obj_var.tlmap_cnt             )+';';
 
-  for i:=0 to 17 do
+  for i:=0 to 19 do
     Result+=info_arr[i];
 
 end; {$endregion}
@@ -3242,7 +3276,7 @@ begin
   SB_Visibility_Grid      .Visible:=set_visibility;
   SB_Visibility_Spline    .Visible:=set_visibility;
   SB_Visibility_Collider  .Visible:=set_visibility;
-  SB_Visibility_Actor   .Visible:=set_visibility;
+  SB_Visibility_Actor     .Visible:=set_visibility;
   SB_Visibility_Snap_Grid .Visible:=set_visibility;
   SB_Visibility_Show_All  .Visible:=set_visibility;
   L_Object_Info           .Visible:=set_visibility;
@@ -3251,7 +3285,6 @@ begin
   TB_Speed                .Visible:=set_visibility;
   MI_Object_Info          .Checked:=set_visibility;
   show_obj_info                   :=set_visibility;
-  show_tex_info                   :=set_visibility;
 end; {$endregion}
 procedure SetVisibility(btn:TSpeedButton; var &exp:boolean);    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -4229,19 +4262,39 @@ begin
           if eds_show and (not IsRct1OutOfRct2(rct_ent,rct_out_ptr^)) then
             begin
               lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_out_ptr^);
-              if byte_mode then
+              if lazy_repaint_prev then
                 begin
-                  if hid_ln_elim then
-                    AddSplineEds7(sln_obj_cnt-1)
+                  if byte_mode then
+                    begin
+                      if hid_ln_elim then
+                        AddSplineEds7_(sln_obj_cnt-1)
+                      else
+                        AddSplineEds6_(sln_obj_cnt-1);
+                    end
                   else
-                    AddSplineEds6(sln_obj_cnt-1);
+                    begin
+                      if hid_ln_elim then
+                        AddSplineEds4_(sln_obj_cnt-1)
+                      else
+                        AddSplineEds0_(sln_obj_cnt-1);
+                    end;
                 end
               else
                 begin
-                  if hid_ln_elim then
-                    AddSplineEds4(sln_obj_cnt-1)
+                  if byte_mode then
+                    begin
+                      if hid_ln_elim then
+                        AddSplineEds7(sln_obj_cnt-1)
+                      else
+                        AddSplineEds6(sln_obj_cnt-1);
+                    end
                   else
-                    AddSplineEds0(sln_obj_cnt-1);
+                    begin
+                      if hid_ln_elim then
+                        AddSplineEds4(sln_obj_cnt-1)
+                      else
+                        AddSplineEds0(sln_obj_cnt-1);
+                    end;
                 end;
               CrtSplineEds   (sln_obj_cnt-1);
             end
@@ -4300,10 +4353,11 @@ begin
       PtPosF(world_axis.x,
              world_axis.y),
       tex_var.tex_bmp_rct_pts,
-      2,
       PtPosF(DEFAULT_SCL_MUL,
              DEFAULT_SCL_MUL),
-      scl_dir
+      scl_dir,
+      0,
+      1
     );
 end; {$endregion}
 {Scale Spline: Calculation-------------------}
@@ -4315,10 +4369,11 @@ begin
       PtPosF(world_axis.x,
              world_axis.y),
       sln_pts,
-      sln_pts_cnt,
       PtPosF(DEFAULT_SCL_MUL,
              DEFAULT_SCL_MUL),
-      scl_dir
+      scl_dir,
+      0,
+      sln_pts_cnt-1
     );
 end; {$endregion}
 {Repaint Splines with Hidden Lines-----------}
@@ -4330,7 +4385,7 @@ var
 begin
   if (not show_spline) then
     Exit;
-  with obj_var,sln_var do
+  with {obj_var,}sln_var do
     begin
       eds_var_ptr            :=Unaligned(@eds_img_arr        [0]);
       eds_useless_fld_arr_ptr:=Unaligned(@eds_useless_fld_arr[0]);
@@ -4440,19 +4495,39 @@ begin
                         fst_img.ClrArr;
                       if ((has_sel_pts_ptr+i)^=0) then
                         begin
-                          if byte_mode then
+                          if b2 then
                             begin
-                              if hid_ln_elim then
-                                AddSplineEds7(i)
+                              if byte_mode then
+                                begin
+                                  if hid_ln_elim then
+                                    AddSplineEds7_(i)
+                                  else
+                                    AddSplineEds6_(i);
+                                end
                               else
-                                AddSplineEds6(i);
+                                begin
+                                  if (not hid_ln_elim) then
+                                    AddSplineEds0_(i)
+                                  else
+                                    AddSplineEds4_(i);
+                                end;
                             end
                           else
                             begin
-                              if (not hid_ln_elim) then
-                                AddSplineEds0(i)
+                              if byte_mode then
+                                begin
+                                  if hid_ln_elim then
+                                    AddSplineEds7(i)
+                                  else
+                                    AddSplineEds6(i);
+                                end
                               else
-                                AddSplineEds4(i);
+                                begin
+                                  if (not hid_ln_elim) then
+                                    AddSplineEds0(i)
+                                  else
+                                    AddSplineEds4(i);
+                                end;
                             end;
                         end
                       else
@@ -4726,7 +4801,7 @@ begin
            11);
 end; {$endregion}
 {Main Render Procedure}
-procedure TSurf.MainDraw;                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurf.MainDraw;                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i             : byte;
   execution_time: double;
@@ -4827,8 +4902,8 @@ begin
     UnselectPivotDraw; {$endregion}
 
   {Add Spline: Hidden Lines Calc.-------------------} {$region -fold}
-    if add_hid_ln_calc then
-      AddSplineHdLn; {$endregion}
+  if add_hid_ln_calc then
+    AddSplineHdLn; {$endregion}
 
   {Add Spline---------------------------------------} {$region -fold}
   if add_spline_calc then
@@ -4924,7 +4999,7 @@ begin
   );
 
 end; {$endregion}
-procedure TSurf.EventGroupsCalc(var arr:TBool2Arr; event_group:TEventGroupEnum);                                                            {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurf.EventGroupsCalc(var arr:TBool2Arr; event_group:TEventGroupEnum);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   b: byte;
 begin
@@ -5524,7 +5599,7 @@ end; {$endregion}
 
 // (Spline) Сплайн:
 {LI} {$region -fold}
-constructor TCurve.Create          (constref w,h              :TColor;  constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor);             {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TCurve.Create          (constref w,h              :TColor;  constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor);              {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
   //spline_saved_up_pts_var:=TSavedUpPts.Create;
@@ -5572,11 +5647,11 @@ begin
   SetLength(fml_pts,global_prop.cycloid_pts_cnt);
 
 end; {$endregion}
-destructor  TCurve.Destroy;                                                                                                                                 {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TCurve.Destroy;                                                                                                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-procedure TCurve.PrimitiveComp     (constref spline_ind       :TColor;  constref pmt_var_ptr,pmt_big_var_ptr:PFastLine; pmt_bld_stl:TDrawingStyle); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.PrimitiveComp     (constref spline_ind       :TColor;  constref pmt_var_ptr,pmt_big_var_ptr:PFastLine; pmt_bld_stl:TDrawingStyle);  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with pmt_var_ptr^,fst_img do
     begin
@@ -5664,7 +5739,7 @@ begin
     USleep(global_prop.sln_pts_frq*1000000);
     {$endif}
 end; {$endregion}
-procedure TCurve.RctSplineRct0     (constref spline_ind       :TColor;  var      rct_out_,rct_ent_:TRect);                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineRct0     (constref spline_ind       :TColor;  var      rct_out_,rct_ent_:TRect);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_eds_img_arr[spline_ind] do
     rct_out_:=Rect
@@ -5675,7 +5750,7 @@ begin
       rct_out_ptr^.bottom
     );
 end; {$endregion}
-procedure TCurve.RctSplineRct1     (constref spline_ind       :TColor;  var      rct_out_,rct_ent_:TRect);                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineRct1     (constref spline_ind       :TColor;  var      rct_out_,rct_ent_:TRect);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   rct_ent_:=PtsRngRctCalc
   (
@@ -5685,11 +5760,11 @@ begin
     partial_pts_sum[spline_ind]+sln_obj_pts_cnt[spline_ind]-1
   );
 end; {$endregion}
-procedure TCurve.RctSplineRct2     (constref spline_ind       :TColor;  var      rct_out_,rct_ent_:TRect);                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineRct2     (constref spline_ind       :TColor;  var      rct_out_,rct_ent_:TRect);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   PtRct(sln_pts,rct_bnd_ind_arr[spline_ind],rct_ent_);
 end; {$endregion}
-procedure TCurve.RctSplineRctEds   (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineRctEds   (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_eds_img_arr[spline_ind],local_prop do
     begin
@@ -5705,7 +5780,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.RctSplineRctPts   (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineRctPts   (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_pts_img_arr[spline_ind],local_prop do
     begin
@@ -5721,7 +5796,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.RctSplineEds      (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineEds      (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
 begin
@@ -5748,7 +5823,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.RctSplinePts      (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplinePts      (constref spline_ind       :TColor;  constref rct_out_,rct_ent_:TRect);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
 begin
@@ -5775,7 +5850,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.RctSplineObj0     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineObj0     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_ent_: TRect;
   rct_out_: TRect;
@@ -5787,7 +5862,7 @@ begin
   RctSplineRctEds(spline_ind,rct_out_,rct_ent_);
   RctSplineRctPts(spline_ind,rct_out_,rct_ent_);
 end; {$endregion}
-procedure TCurve.RctSplineObj1     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineObj1     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_ent_: TRect;
   rct_out_: TRect;
@@ -5799,7 +5874,7 @@ begin
   RctSplineRctEds(spline_ind,rct_out_,rct_ent_);
   RctSplineRctPts(spline_ind,rct_out_,rct_ent_);
 end; {$endregion}
-procedure TCurve.RctSplineAll0     (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineAll0     (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -5810,7 +5885,7 @@ begin
         RctSplineObj0(i);
     end;
 end; {$endregion}
-procedure TCurve.RctSplineAll1     (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineAll1     (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -5825,7 +5900,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.RctSplineAll2     (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineAll2     (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -5836,7 +5911,7 @@ begin
         RctSplineObj1(i);
     end;
 end; {$endregion}
-procedure TCurve.RctSplineAll3     (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RctSplineAll3     (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -5851,11 +5926,12 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplineObj      (constref rct_out          :TPtRect);                                                                                    {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineObj      (constref rct_out          :TPtRect);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  sln_pts_ptr    : PPtPosF;
-  sln_pts_add_ptr: PPtPosF;
-  m,i,d_cnt      : integer;
+  sln_pts_ptr     : PPtPosF;
+  sln_pts_add_ptr : PPtPosF;
+  m,i,d_cnt       : integer;
+  sln_pts_cnt_add2: integer;
 begin
 
   {Misc. Precalc.---------------} {$region -fold}
@@ -5878,6 +5954,7 @@ begin
   SetLength(sln_obj_pts_cnt    ,sln_obj_cnt);
   SetLength(has_sel_pts        ,sln_obj_cnt);
   SetLength(rct_bnd_ind_arr    ,sln_obj_cnt);
+  SetLength(sln_pts_reserved   ,sln_obj_cnt);
   SetLength(sln_pts            ,sln_pts_cnt);
   SetLength(sln_obj_ind        ,sln_pts_cnt);
   SetLength(fst_lst_sln_obj_pts,sln_pts_cnt);
@@ -5904,7 +5981,8 @@ begin
       for i:=0 to sln_pts_cnt_add-1 do
         (sln_pts_ptr+i)^:=(sln_pts_add_ptr+i)^;
       SetLength(sln_pts_add,0);
-      sln_pts_cnt_add:=0;
+      sln_pts_cnt_add2:=sln_pts_cnt_add;
+      sln_pts_cnt_add :=0;
     end;
 
   // spline edges bounding rectangles:
@@ -5995,6 +6073,8 @@ begin
           SetLength(useless_arr,sln_obj_pts_cnt[m]-1);
           has_hid_ln_elim_sln:=True;
         end;
+      if best_precision then
+        SetLength(sln_pts_reserved[sln_obj_cnt-1],sln_pts_cnt_add2);
       if byte_mode then
         has_byte_mode_sln:=True;
     end;
@@ -6025,7 +6105,7 @@ begin
   RctSplineObj0(m); {$endregion}
 
 end; {$endregion}
-procedure TCurve.AddSplineRctEds   (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineRctEds   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_eds_img_arr[spline_ind],local_prop do
     begin
@@ -6051,7 +6131,7 @@ begin
       );
     end;
 end; {$endregion}
-procedure TCurve.AddSplineRctPts   (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineRctPts   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_pts_img_arr[spline_ind],local_prop do
     begin
@@ -6077,7 +6157,7 @@ begin
       );
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds0     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds0     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -6389,7 +6469,278 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds1     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds0_    (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  has_edge_ptr   : PShortInt;
+  x0,y0,x1,y1,b,i: integer;
+begin
+  with eds_img_arr[spline_ind],local_prop do
+    begin
+
+      {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
+      b           :=partial_pts_sum[spline_ind];
+      obj_arr_ptr :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
+      sln_pts_ptr :=Unaligned(@sln_pts [b]);
+      has_edge_ptr:=Unaligned(@has_edge[b]); {$endregion}
+
+      case eds_width of
+        1:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                LinePHL
+                (
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Unaligned(@LinePHL20),
+                  Unaligned(@LineSHL20)
+                ); {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              begin
+                with eds_big_img do
+                  if (has_edge_ptr^=0) then
+                    LinePHL
+                    (
+                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Unaligned(@LinePHL20),
+                      Unaligned(@LineSHL20)
+                    );
+                Inc(sln_pts_ptr );
+                Inc(has_edge_ptr);
+              end; {$endregion}
+
+          end;
+
+        2:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL20),
+                    Unaligned(@LineSHL20)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    LinePHL
+                    (
+                      x0+0,
+                      y0+1,
+                      x1+0,
+                      y1+1,
+                      Unaligned(@LinePHL20),
+                      Unaligned(@LineSHL20)
+                    )
+                  else
+                    LinePHL
+                    (
+                      x0+1,
+                      y0+0,
+                      x1+1,
+                      y1+0,
+                      Unaligned(@LinePHL20),
+                      Unaligned(@LineSHL20)
+                    );
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                if (has_edge_ptr^=0) then
+                  begin
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    LinePHL
+                    (
+                      x0,
+                      y0,
+                      x1,
+                      y1,
+                      Unaligned(@LinePHL20),
+                      Unaligned(@LineSHL20)
+                    );
+                    if (Abs(y1-y0)<Abs(x1-x0)) then
+                      LinePHL
+                      (
+                        x0+0,
+                        y0+1,
+                        x1+0,
+                        y1+1,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      )
+                    else
+                      LinePHL
+                      (
+                        x0+1,
+                        y0+0,
+                        x1+1,
+                        y1+0,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                    Inc(sln_pts_ptr );
+                    Inc(has_edge_ptr);
+                  end; {$endregion}
+
+          end;
+        3:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL20),
+                    Unaligned(@LineSHL20)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    begin
+                      LinePHL
+                      (
+                        x0+0,
+                        y0+1,
+                        x1+0,
+                        y1+1,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      LinePHL
+                      (
+                        x0+0,
+                        y0-1,
+                        x1+0,
+                        y1-1,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                    end
+                  else
+                    begin
+                      LinePHL
+                      (
+                        x0+1,
+                        y0+0,
+                        x1+1,
+                        y1+0,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      LinePHL
+                      (
+                        x0-1,
+                        y0+0,
+                        x1-1,
+                        y1+0,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                    end;
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                if (has_edge_ptr^=0) then
+                  begin
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    LinePHL
+                    (
+                      x0,
+                      y0,
+                      x1,
+                      y1,
+                      Unaligned(@LinePHL20),
+                      Unaligned(@LineSHL20)
+                    );
+                    if (Abs(y1-y0)<Abs(x1-x0)) then
+                      begin
+                        LinePHL
+                        (
+                          x0+0,
+                          y0+1,
+                          x1+0,
+                          y1+1,
+                          Unaligned(@LinePHL20),
+                          Unaligned(@LineSHL20)
+                        );
+                        LinePHL
+                        (
+                          x0+0,
+                          y0-1,
+                          x1+0,
+                          y1-1,
+                          Unaligned(@LinePHL20),
+                          Unaligned(@LineSHL20)
+                        );
+                      end
+                    else
+                      begin
+                        LinePHL
+                        (
+                          x0+1,
+                          y0+0,
+                          x1+1,
+                          y1+0,
+                          Unaligned(@LinePHL20),
+                          Unaligned(@LineSHL20)
+                        );
+                        LinePHL
+                        (
+                          x0-1,
+                          y0+0,
+                          x1-1,
+                          y1+0,
+                          Unaligned(@LinePHL20),
+                          Unaligned(@LineSHL20)
+                        );
+                      end;
+                    Inc(sln_pts_ptr );
+                    Inc(has_edge_ptr);
+                  end; {$endregion}
+
+          end;
+      end;
+
+    end;
+end; {$endregion}
+procedure TCurve.AddSplineEds1     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -6717,7 +7068,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds2     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds2     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -7045,7 +7396,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds3     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds3     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -7373,7 +7724,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds4     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds4     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -7386,16 +7737,17 @@ begin
     begin
 
       {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
-      hid_ln_cnt     :=0;
-      b              :=partial_pts_sum[spline_ind];
-      obj_arr_ptr    :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
-      sln_pts_ptr    :=Unaligned(@sln_pts    [b]);
-      has_edge_ptr   :=Unaligned(@has_edge   [b]);
-      useless_arr_ptr:=Unaligned(@useless_arr[0]);
-      rct_out        :=PtRct(rct_out_ptr^.left  +0,
-                             rct_out_ptr^.top   +0,
-                             rct_out_ptr^.right -1,
-                             rct_out_ptr^.bottom-1); {$endregion}
+      eds_big_img.hid_ln_cnt:=0;
+                  hid_ln_cnt:=0;
+      b                     :=partial_pts_sum[spline_ind];
+      obj_arr_ptr           :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
+      sln_pts_ptr           :=Unaligned(@sln_pts    [b]);
+      has_edge_ptr          :=Unaligned(@has_edge   [b]);
+      useless_arr_ptr       :=Unaligned(@useless_arr[0]);
+      rct_out               :=PtRct(rct_out_ptr^.left  +0,
+                                    rct_out_ptr^.top   +0,
+                                    rct_out_ptr^.right -1,
+                                    rct_out_ptr^.bottom-1); {$endregion}
 
       case eds_width of
         1:
@@ -7420,22 +7772,22 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr ^=0) then
-                      begin
-                        ClippedLine1
-                        (
-                          Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                          Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                          Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                          Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                          rct_out,
-                          Unaligned(@LinePHL  ),
-                          Unaligned(@LinePHL20),
-                          Unaligned(@LineSHL20)
-                        );
-                        Inc(hid_ln_cnt);
-                      end;
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      ClippedLine1
+                      (
+                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        rct_out,
+                        Unaligned(@LinePHL  ),
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                    end
+                  else
+                    Inc(hid_ln_cnt);
                   Inc(sln_pts_ptr    );
                   Inc(has_edge_ptr   );
                   Inc(useless_arr_ptr);
@@ -7495,50 +7847,50 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr ^=0) then
-                      begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      ClippedLine1
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        rct_out,
+                        Unaligned(@LinePHL  ),
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
                         ClippedLine1
                         (
-                          x0,
-                          y0,
-                          x1,
-                          y1,
+                          x0+0,
+                          y0+1,
+                          x1+0,
+                          y1+1,
+                          rct_out,
+                          Unaligned(@LinePHL  ),
+                          Unaligned(@LinePHL20),
+                          Unaligned(@LineSHL20)
+                        )
+                      else
+                        ClippedLine1
+                        (
+                          x0+1,
+                          y0+0,
+                          x1+1,
+                          y1+0,
                           rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL20),
                           Unaligned(@LineSHL20)
                         );
-                        if (Abs(y1-y0)<Abs(x1-x0)) then
-                          ClippedLine1
-                          (
-                            x0+0,
-                            y0+1,
-                            x1+0,
-                            y1+1,
-                            rct_out,
-                            Unaligned(@LinePHL  ),
-                            Unaligned(@LinePHL20),
-                            Unaligned(@LineSHL20)
-                          )
-                        else
-                          ClippedLine1
-                          (
-                            x0+1,
-                            y0+0,
-                            x1+1,
-                            y1+0,
-                            rct_out,
-                            Unaligned(@LinePHL  ),
-                            Unaligned(@LinePHL20),
-                            Unaligned(@LineSHL20)
-                          );
-                        Inc(hid_ln_cnt);
-                      end;
+                    end
+                  else
+                    Inc(hid_ln_cnt);
                   Inc(sln_pts_ptr    );
                   Inc(has_edge_ptr   );
                   Inc(useless_arr_ptr);
@@ -7623,76 +7975,76 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr ^=0) then
-                      begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        ClippedLine1
-                        (
-                          x0,
-                          y0,
-                          x1,
-                          y1,
-                          rct_out,
-                          Unaligned(@LinePHL  ),
-                          Unaligned(@LinePHL20),
-                          Unaligned(@LineSHL20)
-                        );
-                        if (Abs(y1-y0)<Abs(x1-x0)) then
-                          begin
-                            ClippedLine1
-                            (
-                              x0+0,
-                              y0+1,
-                              x1+0,
-                              y1+1,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL20),
-                              Unaligned(@LineSHL20)
-                            );
-                            ClippedLine1
-                            (
-                              x0+0,
-                              y0-1,
-                              x1+0,
-                              y1-1,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL20),
-                              Unaligned(@LineSHL20)
-                            );
-                          end
-                        else
-                          begin
-                            ClippedLine1
-                            (
-                              x0+1,
-                              y0+0,
-                              x1+1,
-                              y1+0,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL20),
-                              Unaligned(@LineSHL20)
-                            );
-                            ClippedLine1
-                            (
-                              x0-1,
-                              y0+0,
-                              x1-1,
-                              y1+0,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL20),
-                              Unaligned(@LineSHL20)
-                            );
-                          end;
-                        Inc(hid_ln_cnt);
-                      end;
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      ClippedLine1
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        rct_out,
+                        Unaligned(@LinePHL  ),
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        begin
+                          ClippedLine1
+                          (
+                            x0+0,
+                            y0+1,
+                            x1+0,
+                            y1+1,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                          ClippedLine1
+                          (
+                            x0+0,
+                            y0-1,
+                            x1+0,
+                            y1-1,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                        end
+                      else
+                        begin
+                          ClippedLine1
+                          (
+                            x0+1,
+                            y0+0,
+                            x1+1,
+                            y1+0,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                          ClippedLine1
+                          (
+                            x0-1,
+                            y0+0,
+                            x1-1,
+                            y1+0,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                        end;
+                    end
+                  else
+                    Inc(hid_ln_cnt);
                   Inc(sln_pts_ptr    );
                   Inc(has_edge_ptr   );
                   Inc(useless_arr_ptr);
@@ -7706,7 +8058,300 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds5     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds4_    (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  has_edge_ptr   : PShortInt;
+  useless_arr_ptr: PByte;
+  x0,y0,x1,y1,b,i: integer;
+begin
+  with eds_img_arr[spline_ind],local_prop do
+    begin
+
+      {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
+      eds_big_img.hid_ln_cnt:=0;
+                  hid_ln_cnt:=0;
+      b                     :=partial_pts_sum[spline_ind];
+      obj_arr_ptr           :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
+      sln_pts_ptr           :=Unaligned(@sln_pts    [b]);
+      has_edge_ptr          :=Unaligned(@has_edge   [b]);
+      useless_arr_ptr       :=Unaligned(@useless_arr[0]); {$endregion}
+
+      case eds_width of
+        1:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                LinePHL
+                (
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Unaligned(@LinePHL20),
+                  Unaligned(@LineSHL20)
+                ); {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      LinePHL
+                      (
+                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                    end
+                  else
+                    Inc(hid_ln_cnt);
+                  Inc(sln_pts_ptr    );
+                  Inc(has_edge_ptr   );
+                  Inc(useless_arr_ptr);
+                end; {$endregion}
+
+          end;
+
+        2:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL20),
+                    Unaligned(@LineSHL20)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    LinePHL
+                    (
+                      x0+0,
+                      y0+1,
+                      x1+0,
+                      y1+1,
+                      Unaligned(@LinePHL20),
+                      Unaligned(@LineSHL20)
+                    )
+                  else
+                    LinePHL
+                    (
+                      x0+1,
+                      y0+0,
+                      x1+1,
+                      y1+0,
+                      Unaligned(@LinePHL20),
+                      Unaligned(@LineSHL20)
+                    );
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      LinePHL
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        LinePHL
+                        (
+                          x0+0,
+                          y0+1,
+                          x1+0,
+                          y1+1,
+                          Unaligned(@LinePHL20),
+                          Unaligned(@LineSHL20)
+                        )
+                      else
+                        LinePHL
+                        (
+                          x0+1,
+                          y0+0,
+                          x1+1,
+                          y1+0,
+                          Unaligned(@LinePHL20),
+                          Unaligned(@LineSHL20)
+                        );
+                    end
+                  else
+                    Inc(hid_ln_cnt);
+                  Inc(sln_pts_ptr    );
+                  Inc(has_edge_ptr   );
+                  Inc(useless_arr_ptr);
+                end; {$endregion}
+
+          end;
+        3:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL20),
+                    Unaligned(@LineSHL20)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    begin
+                      LinePHL
+                      (
+                        x0+0,
+                        y0+1,
+                        x1+0,
+                        y1+1,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      LinePHL
+                      (
+                        x0+0,
+                        y0-1,
+                        x1+0,
+                        y1-1,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                    end
+                  else
+                    begin
+                      LinePHL
+                      (
+                        x0+1,
+                        y0+0,
+                        x1+1,
+                        y1+0,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      LinePHL
+                      (
+                        x0-1,
+                        y0+0,
+                        x1-1,
+                        y1+0,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                    end;
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      LinePHL
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        Unaligned(@LinePHL20),
+                        Unaligned(@LineSHL20)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        begin
+                          LinePHL
+                          (
+                            x0+0,
+                            y0+1,
+                            x1+0,
+                            y1+1,
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                          LinePHL
+                          (
+                            x0+0,
+                            y0-1,
+                            x1+0,
+                            y1-1,
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                        end
+                      else
+                        begin
+                          LinePHL
+                          (
+                            x0+1,
+                            y0+0,
+                            x1+1,
+                            y1+0,
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                          LinePHL
+                          (
+                            x0-1,
+                            y0+0,
+                            x1-1,
+                            y1+0,
+                            Unaligned(@LinePHL20),
+                            Unaligned(@LineSHL20)
+                          );
+                        end;
+                    end
+                  else
+                    Inc(hid_ln_cnt);
+                  Inc(sln_pts_ptr    );
+                  Inc(has_edge_ptr   );
+                  Inc(useless_arr_ptr);
+                end; {$endregion}
+
+          end;
+      end;
+
+      {Count Of Hidden Lines} {$region -fold}
+      hid_ln_cnt:=eds_big_img.hid_ln_cnt; {$endregion}
+
+    end;
+end; {$endregion}
+procedure TCurve.AddSplineEds5     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -7718,6 +8363,8 @@ var
   bmp_dst_ptr2   : PInteger;
   x0,y0,x1,y1,b,i: integer;
   eds_col_inv2   : integer;
+label
+  label0;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -7735,8 +8382,12 @@ begin
       {Save Points Shift--------------------------------------} {$region -fold}
       pt_shift:=PtPos(rct_ent.left-rct_out_ptr^.left,rct_ent.top-rct_out_ptr^.top); {$endregion}
 
+      {Save Points(Best Precision Mode)-----------------------} {$region -fold}
+      if best_precision then
+        ArrToArr1(@sln_pts[b],@sln_pts_reserved[spline_ind,0],sln_obj_pts_cnt[spline_ind]); {$endregion}
+
       {Move Spline to Left-Top Point of Inner Window Rectangle} {$region -fold}
-      PtsMov(pt_shift,sln_pts,sln_obj_pts_cnt[spline_ind],partial_pts_sum[spline_ind]);
+      PtsMov(pt_shift,sln_pts,b,b+sln_obj_pts_cnt[spline_ind]-1);
       PtsMov(pt_shift,rct_ent); {$endregion}
 
       {Fit Spline to Inner Window Rectangle-------------------} {$region -fold}
@@ -7749,10 +8400,10 @@ begin
         PtPosF(rct_ent.left-obj_arr_ptr^.world_axis_shift.x,
                rct_ent.top -obj_arr_ptr^.world_axis_shift.y),
         sln_pts,
-        sln_obj_pts_cnt[spline_ind],
         PtPosF(pt,pt),
         sdDown,
-        b
+        b,
+        b+sln_obj_pts_cnt[spline_ind]-1
       );
       pt2.x:=rct_ent.left-obj_arr_ptr^.world_axis_shift.x;
       pt2.y:=rct_ent.top -obj_arr_ptr^.world_axis_shift.y;
@@ -7939,21 +8590,29 @@ begin
           end;
       end;
 
+      {Reset Points(Best Precision Mode)----------------------} {$region -fold}
+      if best_precision then
+        begin
+          ArrToArr2(@sln_pts[b],@sln_pts_reserved[spline_ind,0],sln_obj_pts_cnt[spline_ind]);
+          goto label0;
+        end; {$endregion}
+
       {Reset Spline Size--------------------------------------} {$region -fold}
       PtsScl
       (
         pt2,
         sln_pts,
-        sln_obj_pts_cnt[spline_ind],
         PtPosF(pt,pt),
         sdUp,
-        b
+        b,
+        b+sln_obj_pts_cnt[spline_ind]-1
       ); {$endregion}
 
       {Reset Spline Position----------------------------------} {$region -fold}
-      PtsMov(PtPos(-pt_shift.x,-pt_shift.y),sln_pts,sln_obj_pts_cnt[spline_ind],partial_pts_sum[spline_ind]); {$endregion}
+      PtsMov(PtPos(-pt_shift.x,-pt_shift.y),sln_pts,b,b+sln_obj_pts_cnt[spline_ind]-1); {$endregion}
 
       {Recalc. Spline Bounding Rectangles(All!)---------------} {$region -fold}
+      label0:
       RctSplineObj1(spline_ind){RctSplineObj0(spline_ind)}; {$endregion}
 
       {Reset Destination Surface Handle-----------------------} {$region -fold}
@@ -7964,7 +8623,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds6     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds6     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -8280,7 +8939,282 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.AddSplineEds7     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds6_    (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  has_edge_ptr   : PShortInt;
+  x0,y0,x1,y1,b,i: integer;
+begin
+  with eds_img_arr[spline_ind],local_prop do
+    begin
+
+      {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
+      b           :=partial_pts_sum[spline_ind];
+      obj_arr_ptr :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
+      sln_pts_ptr :=Unaligned(@sln_pts [b]);
+      has_edge_ptr:=Unaligned(@has_edge[b]); {$endregion}
+
+      case eds_width of
+        1:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                LinePHL
+                (
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Unaligned(@LinePHL02),
+                  Unaligned(@LineSHL00)
+                ); {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              begin
+                with eds_big_img do
+                  if (has_edge_ptr^=0) then
+                    LinePHL
+                    (
+                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Unaligned(@LinePHL02),
+                      Unaligned(@LineSHL00)
+                    );
+                Inc(sln_pts_ptr );
+                Inc(has_edge_ptr);
+              end; {$endregion}
+
+          end;
+
+        2:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL02),
+                    Unaligned(@LineSHL00)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    LinePHL
+                    (
+                      x0+0,
+                      y0+1,
+                      x1+0,
+                      y1+1,
+                      Unaligned(@LinePHL02),
+                      Unaligned(@LineSHL00)
+                    )
+                  else
+                    LinePHL
+                    (
+                      x0+1,
+                      y0+0,
+                      x1+1,
+                      y1+0,
+                      Unaligned(@LinePHL02),
+                      Unaligned(@LineSHL00)
+                    );
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (has_edge_ptr^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      LinePHL
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        LinePHL
+                        (
+                          x0+0,
+                          y0+1,
+                          x1+0,
+                          y1+1,
+                          Unaligned(@LinePHL02),
+                          Unaligned(@LineSHL00)
+                        )
+                      else
+                        LinePHL
+                        (
+                          x0+1,
+                          y0+0,
+                          x1+1,
+                          y1+0,
+                          Unaligned(@LinePHL02),
+                          Unaligned(@LineSHL00)
+                        );
+                    end;
+                  Inc(sln_pts_ptr );
+                  Inc(has_edge_ptr);
+                end; {$endregion}
+
+          end;
+        3:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL02),
+                    Unaligned(@LineSHL00)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    begin
+                      LinePHL
+                      (
+                        x0+0,
+                        y0+1,
+                        x1+0,
+                        y1+1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      LinePHL
+                      (
+                        x0+0,
+                        y0-1,
+                        x1+0,
+                        y1-1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                    end
+                  else
+                    begin
+                      LinePHL
+                      (
+                        x0+1,
+                        y0+0,
+                        x1+1,
+                        y1+0,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      LinePHL
+                      (
+                        x0-1,
+                        y0+0,
+                        x1-1,
+                        y1+0,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                    end;
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (has_edge_ptr^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      LinePHL
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        begin
+                          LinePHL
+                          (
+                            x0+0,
+                            y0+1,
+                            x1+0,
+                            y1+1,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                          LinePHL
+                          (
+                            x0+0,
+                            y0-1,
+                            x1+0,
+                            y1-1,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                        end
+                      else
+                        begin
+                          LinePHL
+                          (
+                            x0+1,
+                            y0+0,
+                            x1+1,
+                            y1+0,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                          LinePHL
+                          (
+                            x0-1,
+                            y0+0,
+                            x1-1,
+                            y1+0,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                        end;
+                    end;
+                  Inc(sln_pts_ptr );
+                  Inc(has_edge_ptr);
+                end; {$endregion}
+
+          end;
+      end;
+
+    end;
+end; {$endregion}
+procedure TCurve.AddSplineEds7     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   rct_out        : TPtRect;
@@ -8293,16 +9227,17 @@ begin
     begin
 
       {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
-      hid_ln_cnt     :=0;
-      b              :=partial_pts_sum[spline_ind];
-      obj_arr_ptr    :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
-      sln_pts_ptr    :=Unaligned(@sln_pts    [b]);
-      has_edge_ptr   :=Unaligned(@has_edge   [b]);
-      useless_arr_ptr:=Unaligned(@useless_arr[0]);
-      rct_out        :=PtRct(rct_out_ptr^.left  +0,
-                             rct_out_ptr^.top   +0,
-                             rct_out_ptr^.right -1,
-                             rct_out_ptr^.bottom-1); {$endregion}
+      eds_big_img.hid_ln_cnt:=0;
+                  hid_ln_cnt:=0;
+      b                     :=partial_pts_sum[spline_ind];
+      obj_arr_ptr           :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
+      sln_pts_ptr           :=Unaligned(@sln_pts    [b]);
+      has_edge_ptr          :=Unaligned(@has_edge   [b]);
+      useless_arr_ptr       :=Unaligned(@useless_arr[0]);
+      rct_out               :=PtRct(rct_out_ptr^.left  +0,
+                                    rct_out_ptr^.top   +0,
+                                    rct_out_ptr^.right -1,
+                                    rct_out_ptr^.bottom-1); {$endregion}
 
       case eds_width of
         1:
@@ -8327,21 +9262,22 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr ^=0) then
-                      begin
-                        ClippedLine1
-                        (
-                          Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                          Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                          Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                          Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                          rct_out,
-                          Unaligned(@LinePHL  ),
-                          Unaligned(@LinePHL02),
-                          Unaligned(@LineSHL00)
-                        );
-                      end;
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      ClippedLine1
+                      (
+                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        rct_out,
+                        Unaligned(@LinePHL  ),
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                    end
+                  else
+                    Inc(hid_ln_cnt);
                   Inc(sln_pts_ptr    );
                   Inc(has_edge_ptr   );
                   Inc(useless_arr_ptr);
@@ -8401,49 +9337,50 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr ^=0) then
-                      begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      ClippedLine1
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        rct_out,
+                        Unaligned(@LinePHL  ),
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
                         ClippedLine1
                         (
-                          x0,
-                          y0,
-                          x1,
-                          y1,
+                          x0+0,
+                          y0+1,
+                          x1+0,
+                          y1+1,
+                          rct_out,
+                          Unaligned(@LinePHL  ),
+                          Unaligned(@LinePHL02),
+                          Unaligned(@LineSHL00)
+                        )
+                      else
+                        ClippedLine1
+                        (
+                          x0+1,
+                          y0+0,
+                          x1+1,
+                          y1+0,
                           rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL02),
                           Unaligned(@LineSHL00)
                         );
-                        if (Abs(y1-y0)<Abs(x1-x0)) then
-                          ClippedLine1
-                          (
-                            x0+0,
-                            y0+1,
-                            x1+0,
-                            y1+1,
-                            rct_out,
-                            Unaligned(@LinePHL  ),
-                            Unaligned(@LinePHL02),
-                            Unaligned(@LineSHL00)
-                          )
-                        else
-                          ClippedLine1
-                          (
-                            x0+1,
-                            y0+0,
-                            x1+1,
-                            y1+0,
-                            rct_out,
-                            Unaligned(@LinePHL  ),
-                            Unaligned(@LinePHL02),
-                            Unaligned(@LineSHL00)
-                          );
-                      end;
+                    end
+                  else
+                    Inc(hid_ln_cnt);
                   Inc(sln_pts_ptr    );
                   Inc(has_edge_ptr   );
                   Inc(useless_arr_ptr);
@@ -8528,75 +9465,76 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  if (useless_arr_ptr^=1) then
-                    if (has_edge_ptr ^=0) then
-                      begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        ClippedLine1
-                        (
-                          x0,
-                          y0,
-                          x1,
-                          y1,
-                          rct_out,
-                          Unaligned(@LinePHL  ),
-                          Unaligned(@LinePHL02),
-                          Unaligned(@LineSHL00)
-                        );
-                        if (Abs(y1-y0)<Abs(x1-x0)) then
-                          begin
-                            ClippedLine1
-                            (
-                              x0+0,
-                              y0+1,
-                              x1+0,
-                              y1+1,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL02),
-                              Unaligned(@LineSHL00)
-                            );
-                            ClippedLine1
-                            (
-                              x0+0,
-                              y0-1,
-                              x1+0,
-                              y1-1,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL02),
-                              Unaligned(@LineSHL00)
-                            );
-                          end
-                        else
-                          begin
-                            ClippedLine1
-                            (
-                              x0+1,
-                              y0+0,
-                              x1+1,
-                              y1+0,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL02),
-                              Unaligned(@LineSHL00)
-                            );
-                            ClippedLine1
-                            (
-                              x0-1,
-                              y0+0,
-                              x1-1,
-                              y1+0,
-                              rct_out,
-                              Unaligned(@LinePHL  ),
-                              Unaligned(@LinePHL02),
-                              Unaligned(@LineSHL00)
-                            );
-                          end;
-                      end;
+                  if (useless_arr_ptr^=1) and (has_edge_ptr^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      ClippedLine1
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        rct_out,
+                        Unaligned(@LinePHL  ),
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        begin
+                          ClippedLine1
+                          (
+                            x0+0,
+                            y0+1,
+                            x1+0,
+                            y1+1,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                          ClippedLine1
+                          (
+                            x0+0,
+                            y0-1,
+                            x1+0,
+                            y1-1,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                        end
+                      else
+                        begin
+                          ClippedLine1
+                          (
+                            x0+1,
+                            y0+0,
+                            x1+1,
+                            y1+0,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                          ClippedLine1
+                          (
+                            x0-1,
+                            y0+0,
+                            x1-1,
+                            y1+0,
+                            rct_out,
+                            Unaligned(@LinePHL  ),
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                        end;
+                    end
+                  else
+                    Inc(hid_ln_cnt);
                   Inc(sln_pts_ptr    );
                   Inc(has_edge_ptr   );
                   Inc(useless_arr_ptr);
@@ -8605,9 +9543,305 @@ begin
           end;
       end;
 
+      {Count Of Hidden Lines} {$region -fold}
+      hid_ln_cnt:=eds_big_img.hid_ln_cnt; {$endregion}
+
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts0     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineEds7_    (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  has_edge_ptr   : PShortInt;
+  useless_arr_ptr: PByte;
+  x0,y0,x1,y1,b,i: integer;
+begin
+  with eds_img_arr[spline_ind],local_prop do
+    begin
+
+      {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
+      eds_big_img.hid_ln_cnt:=0;
+                  hid_ln_cnt:=0;
+      b                     :=partial_pts_sum[spline_ind];
+      obj_arr_ptr           :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
+      sln_pts_ptr           :=Unaligned(@sln_pts    [b]);
+      has_edge_ptr          :=Unaligned(@has_edge   [b]);
+      useless_arr_ptr       :=Unaligned(@useless_arr[0]); {$endregion}
+
+      case eds_width of
+        1:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                LinePHL
+                (
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Unaligned(@LinePHL02),
+                  Unaligned(@LineSHL00)
+                ); {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      LinePHL
+                      (
+                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                    end
+                  else
+                    Inc(hid_ln_cnt);
+                  Inc(sln_pts_ptr    );
+                  Inc(has_edge_ptr   );
+                  Inc(useless_arr_ptr);
+                end; {$endregion}
+
+          end;
+
+        2:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL02),
+                    Unaligned(@LineSHL00)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    LinePHL
+                    (
+                      x0+0,
+                      y0+1,
+                      x1+0,
+                      y1+1,
+                      Unaligned(@LinePHL02),
+                      Unaligned(@LineSHL00)
+                    )
+                  else
+                    LinePHL
+                    (
+                      x0+1,
+                      y0+0,
+                      x1+1,
+                      y1+0,
+                      Unaligned(@LinePHL02),
+                      Unaligned(@LineSHL00)
+                    );
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      LinePHL
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        LinePHL
+                        (
+                          x0+0,
+                          y0+1,
+                          x1+0,
+                          y1+1,
+                          Unaligned(@LinePHL02),
+                          Unaligned(@LineSHL00)
+                        )
+                      else
+                        LinePHL
+                        (
+                          x0+1,
+                          y0+0,
+                          x1+1,
+                          y1+0,
+                          Unaligned(@LinePHL02),
+                          Unaligned(@LineSHL00)
+                        );
+                    end
+                  else
+                    Inc(hid_ln_cnt);
+                  Inc(sln_pts_ptr    );
+                  Inc(has_edge_ptr   );
+                  Inc(useless_arr_ptr);
+                end; {$endregion}
+
+          end;
+        3:
+          begin
+
+            {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
+            if cnc_ends then
+              with eds_big_img do
+                begin
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  LinePHL
+                  (
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    Unaligned(@LinePHL02),
+                    Unaligned(@LineSHL00)
+                  );
+                  if (Abs(y1-y0)<Abs(x1-x0)) then
+                    begin
+                      LinePHL
+                      (
+                        x0+0,
+                        y0+1,
+                        x1+0,
+                        y1+1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      LinePHL
+                      (
+                        x0+0,
+                        y0-1,
+                        x1+0,
+                        y1-1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                    end
+                  else
+                    begin
+                      LinePHL
+                      (
+                        x0+1,
+                        y0+0,
+                        x1+1,
+                        y1+0,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      LinePHL
+                      (
+                        x0-1,
+                        y0+0,
+                        x1-1,
+                        y1+0,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                    end;
+                end; {$endregion}
+
+            {Drawing Of Spline Object Edges--------------------------------------------} {$region -fold}
+            for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
+              with eds_big_img do
+                begin
+                  if (useless_arr_ptr^=1) and (has_edge_ptr ^=0) then
+                    begin
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      LinePHL
+                      (
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        Unaligned(@LinePHL02),
+                        Unaligned(@LineSHL00)
+                      );
+                      if (Abs(y1-y0)<Abs(x1-x0)) then
+                        begin
+                          LinePHL
+                          (
+                            x0+0,
+                            y0+1,
+                            x1+0,
+                            y1+1,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                          LinePHL
+                          (
+                            x0+0,
+                            y0-1,
+                            x1+0,
+                            y1-1,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                        end
+                      else
+                        begin
+                          LinePHL
+                          (
+                            x0+1,
+                            y0+0,
+                            x1+1,
+                            y1+0,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                          LinePHL
+                          (
+                            x0-1,
+                            y0+0,
+                            x1-1,
+                            y1+0,
+                            Unaligned(@LinePHL02),
+                            Unaligned(@LineSHL00)
+                          );
+                        end;
+                    end
+                  else
+                    Inc(hid_ln_cnt);
+                  Inc(sln_pts_ptr    );
+                  Inc(has_edge_ptr   );
+                  Inc(useless_arr_ptr);
+                end; {$endregion}
+
+          end;
+      end;
+
+      {Count Of Hidden Lines} {$region -fold}
+      hid_ln_cnt:=eds_big_img.hid_ln_cnt; {$endregion}
+
+    end;
+end; {$endregion}
+procedure TCurve.AddSplinePts0     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -8660,7 +9894,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts1     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplinePts1     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -8716,7 +9950,7 @@ begin
         end
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts2     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplinePts2     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -8772,7 +10006,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts3     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplinePts3     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -8828,7 +10062,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts4     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplinePts4     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -8881,7 +10115,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts5     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplinePts5     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -8937,7 +10171,7 @@ begin
         end
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts6     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplinePts6     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -8993,7 +10227,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplinePts7     (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplinePts7     (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   dup_pts_arr_ptr: PPtPos2;
@@ -9049,7 +10283,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplineDupPts0  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineDupPts0  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9071,7 +10305,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplineDupPts1  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineDupPts1  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9096,7 +10330,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplineDupPts2  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineDupPts2  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9121,7 +10355,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplineDupPts3  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineDupPts3  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9146,7 +10380,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.AddSplineDupPtsAll(constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.AddSplineDupPtsAll(constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9169,7 +10403,7 @@ begin
           end;
       end;
 end; {$endregion}
-procedure TCurve.ClrSplineDupPts0  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineDupPts0  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9191,7 +10425,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.ClrSplineDupPts1  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineDupPts1  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9216,7 +10450,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.ClrSplineDupPts2  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineDupPts2  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9240,7 +10474,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.ClrSplineDupPts3  (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineDupPts3  (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -9265,7 +10499,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.ClrSplineRctEds   (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineRctEds   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_eds_img_arr[spline_ind],local_prop,fst_img do
     if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_out_ptr^))) and (nt_pix_cnt<>0) then
@@ -9274,7 +10508,7 @@ begin
         NTColorProc[0];
       end;
 end; {$endregion}
-procedure TCurve.ClrSplineRctPts   (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineRctPts   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_pts_img_arr[spline_ind],local_prop,fst_img do
     if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_out_ptr^))) and (nt_pix_cnt<>0) then
@@ -9283,7 +10517,7 @@ begin
         NTColorProc[0];
       end;
 end; {$endregion}
-procedure TCurve.ClrSplineEds      (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineEds      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with eds_img_arr[spline_ind],local_prop,fst_img do
     if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_out_ptr^))) and (nt_pix_cnt<>0) then
@@ -9292,7 +10526,7 @@ begin
         NTColorProc[0];
       end;
 end; {$endregion}
-procedure TCurve.ClrSplinePts      (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplinePts      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with pts_img_arr[spline_ind],local_prop,fst_img do
     if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_out_ptr^))) and (nt_pix_cnt<>0) then
@@ -9301,7 +10535,7 @@ begin
         NTColorProc[0];
       end;
 end; {$endregion}
-procedure TCurve.ClrSplineAll      (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.ClrSplineAll      (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j,k: integer;
 begin
@@ -9318,7 +10552,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.CrtSplineRctEds   (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.CrtSplineRctEds   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_eds_img_arr[spline_ind],local_prop do
     begin
@@ -9349,7 +10583,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.CrtSplineRctPts   (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.CrtSplineRctPts   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_pts_img_arr[spline_ind],local_prop do
     begin
@@ -9380,7 +10614,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.CrtSplineEds      (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.CrtSplineEds      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -9457,7 +10691,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.CrtSplinePts      (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.CrtSplinePts      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -9494,7 +10728,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TCurve.CrtSplineAll0     (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.CrtSplineAll0     (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -9510,7 +10744,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.CrtSplineAll1     (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.CrtSplineAll1     (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -9528,7 +10762,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.FilSplineRctEds   (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FilSplineRctEds   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -9546,7 +10780,7 @@ begin
           NTValueProc[fx_arr[0].nt_value_proc_ind];
       end;
 end; {$endregion}
-procedure TCurve.FilSplineRctPts   (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FilSplineRctPts   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -9564,7 +10798,7 @@ begin
           NTValueProc[fx_arr[0].nt_value_proc_ind];
       end;
 end; {$endregion}
-procedure TCurve.FilSplineEds      (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FilSplineEds      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -9582,7 +10816,7 @@ begin
           NTValueProc[fx_arr[0].nt_value_proc_ind];
       end;
 end; {$endregion}
-procedure TCurve.FilSplinePts      (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FilSplinePts      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -9600,7 +10834,7 @@ begin
           NTValueProc[fx_arr[0].nt_value_proc_ind];
       end;
 end; {$endregion}
-procedure TCurve.FilSplineObj      (constref spline_ind       :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FilSplineObj      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if show_spline then
     begin
@@ -9610,7 +10844,7 @@ begin
       FilSplinePts   (spline_ind);
     end;
 end; {$endregion}
-procedure TCurve.FilSplineAll      (constref start_ind,end_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FilSplineAll      (constref start_ind,end_ind:TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -9622,7 +10856,7 @@ begin
           FilSplineObj(i);
       end;
 end; {$endregion}
-procedure TCurve.FmlSplineInit;                                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FmlSplineInit;                                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   FmlSplineObj[0]:=@Cycloid;
   FmlSplineObj[1]:=@Epicycloid;
@@ -9630,7 +10864,7 @@ begin
   FmlSplineObj[3]:=@Spiral;
   FmlSplineObj[4]:=@Superellipse;
 end; {$endregion}
-procedure TCurve.FmlSplinePrev     (constref fml_pts_cnt      :TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.FmlSplinePrev     (constref fml_pts_cnt      :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct       : TPtRect;
   color_info: TColorInfo;
@@ -9683,7 +10917,7 @@ begin
       CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
     end;
 end; {$endregion}
-procedure TCurve.Cycloid           (constref x,y              :integer);                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.Cycloid           (constref x,y              :integer);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   fml_pts_ptr: PPtPosF;
   dt         : double;
@@ -9739,11 +10973,11 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.Epicycloid        (constref x,y              :integer);                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.Epicycloid        (constref x,y              :integer);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  fml_pts_ptr   : PPtPosF;
-  t0,t1,t2,t3,dt: double;
-  j,k           : integer;
+  fml_pts_ptr     : PPtPosF;
+  t0,t1,t2,t3,dt,k: double;
+  j               : integer;
 begin
   with global_prop do
     begin
@@ -9781,22 +11015,19 @@ begin
       end;
     end;
 end; {$endregion}
-procedure TCurve.Rose              (constref x,y              :integer);                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.Rose              (constref x,y              :integer);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  fml_pts_ptr   : PPtPosF;
-  t0,t1,t2,t3,dt: double;
-  k             : double=3/1;
-  j             : integer;
+  fml_pts_ptr: PPtPosF;
+  t0,t1,dt   : double;
+  j          : integer;
 begin
   with global_prop do
     begin
       if (sln_pts_cnt_add=0) then
         Exit;
       dt         :=rose_angle*FULL_ROT/sln_pts_cnt_add;
-      t0         :=rose_rad{*0.1};
+      t0         :=rose_rad;
       t1         :=rose_rot;
-      t2         :=rose_rot;
-      t3         :=dt*rose_petals_cnt;
       fml_pts_ptr:=Unaligned(@fml_pts[0]);
       for j:=0 to sln_pts_cnt_add-1 do
         begin
@@ -9807,34 +11038,44 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.Spiral            (constref x,y              :integer);                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.Spiral            (constref x,y              :integer);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   fml_pts_ptr: PPtPosF;
-  t1,t2,t3,dt: double;
-  j,k        : integer;
-  n          : integer=2;
-  t          : double;
-  a          : double=10;
-  b          : double=80{30};
+  t0,t1,t2,dt: double;
+  j          : integer;
 begin
   with global_prop do
     begin
       if (sln_pts_cnt_add=0) then
         Exit;
-      {n             :=8{8}; // count of loops;
-      a              :={+}-8;   // direction of curve;
+      dt         :=spiral_angle*FULL_ROT/sln_pts_cnt_add;
+      t0         :=spiral_rad*0.1;
+      t1         :=spiral_rot;
       fml_pts_ptr:=Unaligned(@fml_pts[0]);
-      for i:=0 to sln_pts_cnt_add-1 do
+      if (spiral_coil_step=1) then
+        for j:=0 to sln_pts_cnt_add-1 do
+          begin
+            fml_pts_ptr^.x:=x+t0*t1*cos(t1);
+            fml_pts_ptr^.y:=y+t0*t1*sin(t1);
+            Inc(fml_pts_ptr);
+            t1+=dt;
+          end
+      else
         begin
-          //t:=(n*pi*i)/(sln_pts_cnt_add);
-
-          fml_pts_ptr^.x:=x+a*(cos(t)+t*sin(t));
-          fml_pts_ptr^.y:=y+a*(sin(t)-t*cos(t));
-          Inc(fml_pts_ptr);
-        end;}
+          if (spiral_coil_step<=0) and (spiral_rot=0) then
+            t1:=dt;
+          for j:=0 to sln_pts_cnt_add-1 do
+            begin
+              t2            :=exp(spiral_coil_step*ln(t1));
+              fml_pts_ptr^.x:=x+t0*t2*cos(t1);
+              fml_pts_ptr^.y:=y+t0*t2*sin(t1);
+              Inc(fml_pts_ptr);
+              t1+=dt;
+            end;
+        end;
     end;
 end; {$endregion}
-procedure TCurve.Superellipse      (constref x,y              :integer);                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.Superellipse      (constref x,y              :integer);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   fml_pts_ptr: PPtPosF;
   t1,t2,t3,dt: double;
@@ -9842,7 +11083,7 @@ var
 begin
 
 end; {$endregion}
-procedure TCurve.MovSplineRctEds   (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplineRctEds   (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
 begin
@@ -9876,7 +11117,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.MovSplineRctPts   (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplineRctPts   (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
 begin
@@ -9910,7 +11151,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.MovSplineEds0     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplineEds0     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
@@ -10220,7 +11461,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.MovSplineEds1     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplineEds1     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
@@ -10546,7 +11787,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.MovSplineEds2     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplineEds2     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
@@ -10870,7 +12111,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.MovSplinePts0     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplinePts0     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -10912,7 +12153,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.MovSplinePts1     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplinePts1     (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr: PObjInfo;
   sln_pts_ptr: PPtPosF;
@@ -10955,7 +12196,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.MovSplineObj      (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplineObj      (constref spline_ind       :TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   MovSplineRctEds(spline_ind,rct_dst);
   MovSplineRctPts(spline_ind,rct_dst);
@@ -10973,7 +12214,7 @@ begin
       MovSplinePts1(spline_ind,rct_dst);
     end;
 end; {$endregion}
-procedure TCurve.MovSplineAll      (constref start_ind,end_ind:TColor; constref rct_dst:TPtRect);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.MovSplineAll      (constref start_ind,end_ind:TColor; constref rct_dst:TPtRect);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -10996,31 +12237,31 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TCurve.RepSplineRctEds   (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RepSplineRctEds   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_eds_img_arr[spline_ind],local_prop do
     fst_img.ResNTValueArr(rct_eds_big_img.ln_arr1,
                           rct_eds_big_img.ln_arr_width);
 end; {$endregion}
-procedure TCurve.RepSplineRctPts   (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RepSplineRctPts   (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct_pts_img_arr[spline_ind],local_prop do
     fst_img.ResNTValueArr(rct_pts_big_img.ln_arr1,
                           rct_pts_big_img.ln_arr_width);
 end; {$endregion}
-procedure TCurve.RepSplineEds      (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RepSplineEds      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with eds_img_arr[spline_ind],local_prop do
     fst_img.ResNTValueArr(eds_big_img.ln_arr1,
                           eds_big_img.ln_arr_width);
 end; {$endregion}
-procedure TCurve.RepSplinePts      (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RepSplinePts      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with pts_img_arr[spline_ind],local_prop do
     fst_img.ResNTValueArr(pts_big_img.ln_arr1,
                           pts_big_img.ln_arr_width);
 end; {$endregion}
-procedure TCurve.RndSplineCol      (var      local_prop       :TCurveProp; var col,col_inv:TColor; var col_ptr:PInteger; constref btn:TSpeedButton);        {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RndSplineCol      (var      local_prop       :TCurveProp; var col,col_inv:TColor; var col_ptr:PInteger; constref btn:TSpeedButton); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with local_prop do
    begin
@@ -11031,7 +12272,7 @@ begin
      btn.Repaint;
    end;
 end; {$endregion}
-procedure TCurve.RndSplineObj      (constref pt               :TPtPos; constref w,h:TColor);                                                                {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.RndSplineObj      (constref pt               :TPtPos; constref w,h:TColor);                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   sln_pts_add_ptr: PPtPosF;
   i,w_,h_        : integer;
@@ -11050,11 +12291,11 @@ begin
       (sln_pts_add_ptr+i)^.y:=h_+Random(h);
     end;
 end; {$endregion}
-procedure TCurve.SmpSplineEds      (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.SmpSplineEds      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
 end; {$endregion}
-procedure TCurve.SmpSplinePts      (constref spline_ind       :TColor);                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCurve.SmpSplinePts      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   k1,k2        : double;
   i,m1,m2,m3,m4: integer;
@@ -11345,6 +12586,14 @@ begin
   if Result then
     DrawCanvas;
 end; {$endregion}
+function SpiralRangeCheck    : boolean;                                                inline; {$region -fold}
+begin
+  with sln_var,global_prop do
+    Result:=(spiral_pts_cnt<2) or
+            (spiral_rad    =0);
+  if Result then
+    DrawCanvas;
+end; {$endregion}
 procedure TF_MainForm.P_Drawing_PropMouseEnter                               (sender:TObject); {$region -fold}
 begin
   P_Drawing_Prop.Color:=NAV_SEL_COL_1;
@@ -11355,7 +12604,7 @@ begin
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_TypeSelect                                   (sender:TObject); {$region -fold}
 var
-  b0,b1,b2: boolean;
+  b0,b1,b2,b3: boolean;
 begin
   if down_play_anim_ptr^ then
     Exit;
@@ -11364,26 +12613,28 @@ begin
       b0:=(CB_Spline_Type.ItemIndex=0);
       b1:=(CB_Spline_Type.ItemIndex=1);
       b2:=(CB_Spline_Type.ItemIndex=2);
+      b3:=(CB_Spline_Type.ItemIndex=3);
       sln_type:=TSplineType(CB_Spline_Type.ItemIndex);
       if (not (b0 or b2)) and (cur_tlt_dwn_btn_ind<>-1) then
         L_Spline_Templates_Name.Caption:=sln_tlt_nam_arr1[cur_tlt_dwn_btn_ind];
       case cur_tlt_dwn_btn_ind of
-        0: P_Cycloid   .Visible:=not (b0 or b2);
-        1: P_Epicycloid.Visible:=not (b0 or b2);
-        2: P_Rose      .Visible:=not (b0 or b2);
-        3:;
+        0: P_Cycloid   .Visible:=not (b0 or b2 or b3);
+        1: P_Epicycloid.Visible:=not (b0 or b2 or b3);
+        2: P_Rose      .Visible:=not (b0 or b2 or b3);
+        3: P_Spiral    .Visible:=not (b0 or b2 or b3);
         4:;
       end;
       P_Spline_Freehand        .Visible:=b0;
-      P_Spline_Templates       .Visible:=b1 or b2;
+      P_Spline_Templates       .Visible:=b1 or b2 or b3;
       BB_Spline_Templates_Left .Visible:=b1;
       P_Spline_Template_List   .Visible:=b1;
       BB_Spline_Templates_Right.Visible:=b1;
       L_Spline_Points_Count    .Visible:=b2;
       SE_Spline_Points_Count   .Visible:=b2;
-      if b2 then
+      SB_Spline_Load           .Visible:=b3;
+      if (b2 or b3) then
         L_Spline_Templates_Name.Caption:='';
-      if (b0 or b2) then
+      if (b0 or b2 or b3) then
         srf_var.EventGroupsCalc(calc_arr,[30])
       else
         if (cur_tlt_dwn_btn_ind<>-1) then
@@ -11409,11 +12660,17 @@ begin
                 SetLength    (fml_pts,rose_pts_cnt);
                 FmlSplinePrev(        rose_pts_cnt);
               end;
-            3:;
+            3:
+              begin
+                if SpiralRangeCheck then
+                  Exit;
+                SetLength    (fml_pts,spiral_pts_cnt);
+                FmlSplinePrev(        spiral_pts_cnt);
+              end;
             4:;
           end;
     end;
-  VisibilityChange(b0);
+  VisibilityChange(b0 or b2 or b3);
 end; {$endregion}
 procedure TF_MainForm.P_Spline_FreehandMouseEnter                            (sender:TObject); {$region -fold}
 begin
@@ -11489,7 +12746,7 @@ procedure TF_MainForm.SB_Spline_TemplateClick                                (se
 type
   PPanel=^TPanel;
 var
-  panel_arr: array[0..2] of PPanel;
+  panel_arr: array[0..3] of PPanel;
   i        : integer;
 
   procedure PanelsVisible; {$region -fold}
@@ -11499,7 +12756,8 @@ var
     panel_arr[0]:=@P_Cycloid   ;
     panel_arr[1]:=@P_Epicycloid;
     panel_arr[2]:=@P_Rose;
-    for j:=0 to 2 do
+    panel_arr[3]:=@P_Spiral;
+    for j:=0 to 3 do
       panel_arr[j]^.visible:=False;
   end; {$endregion}
 
@@ -11554,6 +12812,11 @@ begin
               begin
                 PanelsVisible;
                 global_prop.fml_type:=sfSpiral;
+                panel_arr[3]^.visible:=True;
+                if SpiralRangeCheck then
+                  Exit;
+                SetLength    (fml_pts,global_prop.spiral_pts_cnt);
+                FmlSplinePrev(        global_prop.spiral_pts_cnt);
               end;
             4:
               begin
@@ -11625,7 +12888,12 @@ begin
                     Exit;
                   sln_pts_cnt_add:=rose_pts_cnt;
                 end;
-              3:;
+              3:
+                begin
+                  if SpiralRangeCheck then
+                    Exit;
+                  sln_pts_cnt_add:=spiral_pts_cnt;
+                end;
               4:;
             end;
             FmlSplineObj[cur_tlt_dwn_btn_ind](world_axis.x,world_axis.y);
@@ -11807,6 +13075,51 @@ begin
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
+procedure TF_MainForm.SE_Spiral_Points_CountChange                           (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      spiral_pts_cnt:=SE_Spiral_Points_Count.value;
+      if SpiralRangeCheck then
+        Exit;
+      SetLength    (fml_pts,spiral_pts_cnt);
+      FmlSplinePrev(        spiral_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.FSE_Spiral_Coil_StepChange                             (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      spiral_coil_step:=FSE_Spiral_Coil_Step.value;
+      FmlSplinePrev(spiral_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.SE_Spiral_RadiusChange                                 (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      spiral_rad:=SE_Spiral_Radius.value;
+      if SpiralRangeCheck then
+        Exit;
+      FmlSplinePrev(spiral_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.SE_Spiral_RotationChange                               (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      spiral_rot:=SE_Spiral_Rotation.value;
+      FmlSplinePrev(spiral_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.SE_Spiral_AngleChange                                  (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      spiral_angle:=SE_Spiral_Angle.value;
+      FmlSplinePrev(spiral_pts_cnt);
+    end;
+end; {$endregion}
 procedure TF_MainForm.SE_Spline_Points_CountChange                           (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.pts_cnt_val:=SE_Spline_Points_Count.Value;
@@ -11833,6 +13146,10 @@ end; {$endregion}
 procedure TF_MainForm.CB_Spline_Hidden_Line_EliminationChange                (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.hid_ln_elim:=not sln_var.global_prop.hid_ln_elim;
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_Best_PrecisionChange                         (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.best_precision:=not sln_var.global_prop.best_precision;
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_Lazy_RepaintChange                           (sender:TObject); {$region -fold}
 begin
@@ -11882,6 +13199,83 @@ procedure TF_MainForm.P_Save_Load_PropMouseLeave                             (se
 begin
   P_Save_Load_Prop.Color:=$00BAB5A3;
 end; {$endregion}
+procedure TF_MainForm.SB_Spline_LoadClick                                    (sender:TObject); {$region -fold}
+var
+  sln_pts_add_ptr                       : PPtPosF;
+  i,line_cnt,pts_coord_start_pos,pts_cnt: integer;
+  file_import                           : text;
+  file_path,file_line                   : string;
+  x_start,y_start                       : boolean;
+label
+  label0;
+begin
+  SB_Spline_Load.Down   :=False;
+  OD_Spline_Load.Options:=OD_Spline_Load.Options+[ofFileMustExist];
+  if (not OD_Spline_Load.Execute) then
+    Exit;
+  try
+    file_path:=OD_Spline_Load.Filename;
+    AssignFile(file_import,file_path);
+    Reset     (file_import);
+    //F_MainForm.Memo1.lines.Text:='';
+    line_cnt:=0;
+    pts_cnt :=0;
+    while (not EOF(file_import)) do
+      begin
+        ReadLn(file_import,file_line);
+        Inc(line_cnt);
+        for i:=0 to Length(file_line)-1 do
+          if (file_line[i+0]='p') and
+             (file_line[i+1]='o') and
+             (file_line[i+2]='i') and
+             (file_line[i+3]='n') and
+             (file_line[i+4]='t') and
+             (file_line[i+5]='s') and
+             (file_line[i+6]=#61) and
+             (file_line[i+7]=#34) then
+            begin
+              pts_coord_start_pos:=i+8;
+              Break;
+            end;
+        for i:=pts_coord_start_pos to Length(file_line)-1 do
+          begin
+            if (file_line[i]=#32) then
+              Continue
+            else
+            if (file_line[i]=#34) then
+              goto label0
+            else
+            if (file_line[i] in [#48..#57]) and ((file_line[i-1]=#32) or (file_line[i-1]=#34)) then
+              Inc(pts_cnt);
+          end;
+      end;
+    label0:
+    pts_cnt:=pts_cnt>>1;
+    Reset(file_import);
+    for i:=0 to line_cnt-1 do
+      ReadLn(file_import,file_line);
+    with sln_var do
+      begin
+        sln_pts_cnt_add:=global_prop.pts_cnt;
+        Inc(sln_pts_cnt,sln_pts_cnt_add);
+        SetLength(sln_pts_add,0);
+        SetLength(sln_pts_add,sln_pts_cnt_add);
+        sln_pts_add_ptr:=Unaligned(@sln_pts_add[0]);
+        for i:=pts_coord_start_pos to Length(file_line)-1 do
+          begin
+            if (file_line[i] in [#48..#57]) and ((file_line[i-1]=#32) or (file_line[i-1]=#34)) then
+              begin
+                if not y_start then
+                  sln_pts_add_ptr^.x:=Ord(file_line[i]);
+                //
+              end;
+          end;
+      end;
+  except
+    on E: Exception do
+      MessageDlg('Error','Error: '+E.Message,mtError,[mbOk],0);
+  end;
+end; {$endregion}
 {$endregion}
 
 // (Select Points) Выделение точек:
@@ -11930,6 +13324,7 @@ begin
       eds_col    :=clGreen;
       eds_col_inv:=SetColorInv(eds_col);
       eds_aa     :=True;
+      eds_bld_stl:=dsAdditive;
       pts_col    :=clLime;
       pts_col_inv:=SetColorInv(pts_col);
       SetColorInfo(eds_col,color_info);
@@ -12405,7 +13800,7 @@ begin
       SetSdrType;
     end;
 end; {$endregion}
-procedure TSelPts.CrtCircleSelection;                                                                                                                 {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.CrtCircleSelection;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sel_pts_big_img,local_prop do
     begin
@@ -12724,7 +14119,7 @@ begin
   sel_obj_min_ind:=Min5(f_arr,obj_var.obj_cnt-1,5); {$endregion}
 
 end; {$endregion}
-procedure TSelPts.UnselectedPtsCalc0(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF);         {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.UnselectedPtsCalc0(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                : PPtPosF;
   selected_pts_inds_ptr  : PInteger;
@@ -12804,7 +14199,7 @@ begin
     end; {$endregion} {$endregion}
 
 end; {$endregion}
-procedure TSelPts.UnselectedPtsCalc1(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF);         {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.UnselectedPtsCalc1(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   outer_subgraph1_ptr: PEdge;
   outer_subgraph2_ptr: PEdge;
@@ -12911,7 +14306,7 @@ begin
             end;
   }
 end; {$endregion}
-procedure TSelPts.AdvancedClipCalc(pts:TPtPosFArr; pts_cnt:TColor; is_pt_marked:TBool1Arr);                                                           {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.AdvancedClipCalc(pts:TPtPosFArr; pts_cnt:TColor; is_pt_marked:TBool1Arr);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 {var
   i,m,clip_rad: integer;}
 begin
@@ -13999,7 +15394,7 @@ begin
   sel_var.sel_bmp.Height:=sel_var.sel_pts_rct.height; {$endregion}
 
 end; {$endregion}
-procedure TSelPts.SelPtsIndsToBmp(var pts:TPtPosFArr);                                                                                                {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelPtsIndsToBmp(var pts:TPtPosFArr);                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
 {$endregion}
@@ -16915,6 +18310,17 @@ begin
   with srf_var,sln_var,tex_var,sel_var,pvt_var do
     begin
 
+      case Key of
+        {VK_LEFT,VK_RIGHT,VK_UP,VK_DOWN: Key:=0;}
+        {#9  } VK_TAB : {$region -fold}
+          if (not down_play_anim_ptr^) then
+            begin
+              VisibilityChange(True);
+              srf_var.inner_window_ui_visible:=True;
+              show_visibility_panel          :=True;
+            end; {$endregion}
+      end;
+
       {Check Exit-----} {$region -fold}
       if (inn_wnd_rct.width <=0) or
          (inn_wnd_rct.height<=0) or
@@ -16995,14 +18401,6 @@ begin
             pvt_prev.y         :=Trunc(pvt.y);
             need_align_pivot_p2:=False;
           end;
-
-        {VK_LEFT,VK_RIGHT,VK_UP,VK_DOWN: Key:=0;}
-        {#9  } VK_TAB : {$region -fold}
-          begin
-            VisibilityChange(True);
-            srf_var.inner_window_ui_visible:=True;
-            show_visibility_panel          :=True;
-          end; {$endregion}
 
         {#97 }{'a'} 65: {$region -fold}
           begin
@@ -17126,6 +18524,19 @@ end; {$endregion}
 procedure TF_MainForm.FormKeyUp         (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
 begin
 
+  case Key of
+    {VK_LEFT,VK_RIGHT,VK_UP,VK_DOWN: Key:=0;}
+    {#9} VK_TAB: {$region -fold}
+      begin
+        VisibilityChange(False);
+        srf_var.inner_window_ui_visible:=False;
+        show_visibility_panel          :=False;
+        F_Hot_Keys.Visible             :=False;
+        InvalidateInnerWindow;
+        crc_sel_var.crc_sel_rct:=Default(TRect);
+      end; {$endregion}
+  end;
+
   {Check Exit-----} {$region -fold}
   if (srf_var.inn_wnd_rct.width <=0) or
      (srf_var.inn_wnd_rct.height<=0) or
@@ -17164,17 +18575,6 @@ begin
     Exit;}
 
   case Key of
-
-    {VK_LEFT,VK_RIGHT,VK_UP,VK_DOWN: Key:=0;}
-    {#9} VK_TAB:
-      begin
-        VisibilityChange(False);
-        srf_var.inner_window_ui_visible:=False;
-        show_visibility_panel          :=False;
-        F_Hot_Keys.Visible             :=False;
-        InvalidateInnerWindow;
-        crc_sel_var.crc_sel_rct:=Default(TRect);
-      end;
 
     65,68,87,83:
       begin

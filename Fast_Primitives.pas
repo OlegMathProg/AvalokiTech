@@ -90,7 +90,7 @@ type
   PDynamicsStyle    =^TDynamicsStyle;
 
   {Spline Type}
-  TSplineType       =(stFreeHand,stFormula,stRandom);
+  TSplineType       =(stFreeHand,stFormula,stRandom,stLoad);
   PSplineType       =^TSplineType;
 
   {Spline Mode}
@@ -377,6 +377,9 @@ type
   TRectArr          =array of TRect;
   PRectArr          =^TRectArr;
 
+  T2PtPosFArr        =array of array of TPtPosF;
+  P2PtPosFArr        =^T2PtPosFArr;
+
   TPtPosFArr        =array of TPtPosF;
   PPtPosFArr        =^TPtPosFArr;
 
@@ -651,6 +654,8 @@ type
     eds_lod                  : boolean;
     // hidden-line elimination:
     hid_ln_elim              : boolean;
+    // best precision for hidden-line elimination:
+    best_precision           : boolean;
     // lazy_repaint:
     lazy_repaint             : boolean;
     lazy_repaint_prev        : boolean;
@@ -703,9 +708,9 @@ type
     // points count:
     epicycloid_pts_cnt       : TColor;
     // petals count:
-    epicycloid_petals_cnt    : TColor;
+    epicycloid_petals_cnt    : double;
     // curve radius:
-    epicycloid_rad           : TColor;
+    epicycloid_rad           : double;
     // rotation angle:
     epicycloid_rot           : double;
     // cut on angle:
@@ -717,13 +722,23 @@ type
     // petals count:
     rose_petals_cnt          : double;
     // curve radius:
-    rose_rad                 : TColor;
+    rose_rad                 : double;
     // rotation angle:
     rose_rot                 : double;
     // cut on angle:
     rose_angle               : double;
 
     {Spiral}
+    // points count:
+    spiral_pts_cnt           : TColor;
+    // spiral coil step:
+    spiral_coil_step         : double;
+    // curve radius:
+    spiral_rad               : double;
+    // rotation angle:
+    spiral_rot               : double;
+    // cut on angle:
+    spiral_angle             : double;
 
     {Superellipse}
 
@@ -3338,6 +3353,14 @@ function ArrNzItCnt             (constref arr                :TWordArr;
 function ArrNzItCnt             (constref arr                :TColorArr;
                                  constref max_arr_it_val     :TColor=MAXDWORD): TColor;        {$ifdef Linux}[local];{$endif}
 
+// Copy One Array To Another:
+procedure ArrToArr1             (         arr_src_ptr        :PPtPosF;
+                                          arr_dst_ptr        :PPtPosF;
+                                          pts_cnt            :integer);                     {$ifdef Linux}[local];{$endif}
+procedure ArrToArr2             (         arr_src_ptr        :PPtPosF;
+                                          arr_dst_ptr        :PPtPosF;
+                                          pts_cnt            :integer);                     {$ifdef Linux}[local];{$endif}
+
 {Linked Lists}
 procedure AddListItem           (constref pt_x               :integer;
                                  var      first_item,p1,p2   :PIList);
@@ -3540,11 +3563,8 @@ procedure PtsPvt                (var      pvt                :TPtPosF;
 // (Points Moving) Перемещение точек:
 procedure PtsMov                (constref pvt                :TPtPos;
                                  var      pts                :TPtPosFArr;
-                                 constref pts_cnt            :TColor;
-                                 constref fst_ind            :TColor);                 inline; {$ifdef Linux}[local];{$endif}
-procedure PtsMov                (constref pvt                :TPtPos;
-                                 var      pts                :TPtPosFArr;
-                                 constref pts_cnt            :TColor);                 inline; {$ifdef Linux}[local];{$endif}
+                                 constref fst_ind,
+                                          lst_ind            :TColor);                 inline; {$ifdef Linux}[local];{$endif}
 procedure PtsMov                (constref pvt                :TPtPos;
                                  var      rct                :TPtRect);                inline; {$ifdef Linux}[local];{$endif}
 procedure PtsMov                (constref pvt                :TPtPos;
@@ -3561,10 +3581,10 @@ procedure MDCalc                (var      rct                :TRect;
 // (Points Scaling) Масштабирование точек:
 procedure PtsScl                (constref pvt                :TPtPosF;
                                  var      pts                :TPtPosFArr;
-                                 constref pts_cnt            :TColor;
                                           scl_mul            :TPtPosF;
                                  constref scl_dir            :TSclDir;
-                                 constref fst_ind            :TColor=0);               inline; {$ifdef Linux}[local];{$endif}
+                                          fst_ind            :TColor=0;
+                                          lst_ind            :TColor=0);               inline; {$ifdef Linux}[local];{$endif}
 procedure PtsScl                (constref pvt                :TPtPosF;
                                  var      rct                :TPtRectF;
                                           scl_mul            :TPtPosF;
@@ -4614,6 +4634,7 @@ var
     clp_stl                  : csClippedEdges1;
     eds_lod                  : False;
     hid_ln_elim              : True;
+    best_precision           : False;
     lazy_repaint             : True;
     lazy_repaint_prev        : False;
     byte_mode                : True;
@@ -4637,26 +4658,31 @@ var
     {Cycloid}
     cycloid_pts_cnt          : 256;
     cycloid_loop_cnt         : 003;
-    cycloid_loop_rad         : 064;
-    cycloid_curvature        : 1.0;
+    cycloid_loop_rad         : 064.0;
+    cycloid_curvature        : 001.0;
     cycloid_dir_x            : mdRight;
     cycloid_dir_y            : mdUp;
 
     {Epicycloid}
     epicycloid_pts_cnt       : 256;
-    epicycloid_petals_cnt    : 008;
-    epicycloid_rad           : 256;
+    epicycloid_petals_cnt    : 008.0;
+    epicycloid_rad           : 256.0;
     epicycloid_rot           : 000.0;
     epicycloid_angle         : 360.0;
 
     {Rose}
     rose_pts_cnt             : 256;
-    rose_petals_cnt          : 003;
-    rose_rad                 : 256;
+    rose_petals_cnt          : 007.0;
+    rose_rad                 : 256.0;
     rose_rot                 : 000.0;
     rose_angle               : 180.0;
 
     {Spiral}
+    spiral_pts_cnt           : 256;
+    spiral_coil_step         : 001.0;
+    spiral_rad               : 256.0;
+    spiral_rot               : 000.0;
+    spiral_angle             : 720.0;
 
     {Superellipse}
 
@@ -8103,6 +8129,22 @@ begin
                                                                                                // as compared with:
                                                                                                // "if arr[i]<>0 then
                                                                                                //    Inc(Result);"
+end; {$endregion}
+
+// Copy One Array To Another:
+procedure ArrToArr1(arr_src_ptr:PPtPosF; arr_dst_ptr:PPtPosF; pts_cnt:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
+begin
+  for i:=0 to pts_cnt-1 do
+    (arr_dst_ptr+i)^:=(arr_src_ptr+i)^;
+end; {$endregion}
+procedure ArrToArr2(arr_src_ptr:PPtPosF; arr_dst_ptr:PPtPosF; pts_cnt:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
+begin
+  for i:=0 to pts_cnt-1 do
+    (arr_src_ptr+i)^:=(arr_dst_ptr+i)^;
 end; {$endregion}
 {$endregion}
 
@@ -30571,7 +30613,7 @@ begin
 end; {$endregion}
 
 // (Points Moving) Перемещение точек:
-procedure PtsMov (constref pvt:TPtPos;  var pts:TPtPosFArr; constref pts_cnt:TColor; constref fst_ind:TColor                );                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure PtsMov (constref pvt:TPtPos;  var pts:TPtPosFArr; constref fst_ind,lst_ind:TColor                                 );                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr: PPtPosF;
   i      : integer;
@@ -30579,22 +30621,7 @@ begin
   if (pts=Nil) then
     Exit;
   pts_ptr:=Unaligned(@pts[fst_ind]);
-  for i:=0 to pts_cnt-1 do
-    begin
-      pts_ptr^.x-=pvt.x;
-      pts_ptr^.y-=pvt.y;
-      Inc(pts_ptr);
-    end;
-end; {$endregion}
-procedure PtsMov (constref pvt:TPtPos;  var pts:TPtPosFArr; constref pts_cnt:TColor                                         );                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  pts_ptr: PPtPosF;
-  i      : integer;
-begin
-  if (pts=Nil) then
-    Exit;
-  pts_ptr:=Unaligned(@pts[0]);
-  for i:=0 to pts_cnt-1 do
+  for i:=0 to lst_ind-fst_ind do
     begin
       pts_ptr^.x-=pvt.x;
       pts_ptr^.y-=pvt.y;
@@ -30703,14 +30730,14 @@ begin
 end; {$endregion}
 
 // (Points Scaling) Масштабирование точек:
-procedure PtsScl (constref pvt:TPtPosF; var pts:TPtPosFArr; constref pts_cnt:TColor; scl_mul:TPtPosF; constref scl_dir:TSclDir; constref fst_ind:TColor=0);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure PtsScl (constref pvt:TPtPosF; var pts:TPtPosFArr; scl_mul:TPtPosF; constref scl_dir:TSclDir; fst_ind:TColor=0; lst_ind:TColor=0);                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr: PPtPosF;
   d1,d2  : double;
   i      : integer;
 begin
   if (pts=Nil) then
-    Exit;
+    Exit;                                                                          // 0 1 2   3 4 5 6
   if (scl_dir=sdNone) then
     Exit;
   if (scl_dir=sdDown) then
@@ -30719,7 +30746,7 @@ begin
   d1       :=pvt.x*(1-scl_mul.x);
   d2       :=pvt.y*(1-scl_mul.y);
   pts_ptr  :=Unaligned(@pts[fst_ind]);
-  for i:=0 to pts_cnt-fst_ind-1 do
+  for i:=0 to lst_ind-fst_ind do
     begin
     //pts_ptr^.x:=scl_mul.x*pts_ptr^.x+d1;
       pts_ptr^.x*=scl_mul.x;
@@ -30730,7 +30757,7 @@ begin
       Inc(pts_ptr);
     end;
 end; {$endregion}
-procedure PtsScl (constref pvt:TPtPosF; var rct:TPtRectF  ;                          scl_mul:TPtPosF; constref scl_dir:TSclDir                           );   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure PtsScl (constref pvt:TPtPosF; var rct:TPtRectF  ; scl_mul:TPtPosF; constref scl_dir:TSclDir                                    );                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   d1,d2: double;
 begin
@@ -30759,7 +30786,7 @@ begin
       height:=bottom-top;
     end;
 end; {$endregion}
-procedure PtsScl (constref pvt:TPtPosF; var rct:TRect     ;                          scl_mul:TPtPosF; constref scl_dir:TSclDir                           );   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure PtsScl (constref pvt:TPtPosF; var rct:TRect     ; scl_mul:TPtPosF; constref scl_dir:TSclDir                                    );                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   d1,d2: double;
 begin
