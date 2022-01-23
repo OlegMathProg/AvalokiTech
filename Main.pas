@@ -195,6 +195,7 @@ type
     IL_Default_Mask_Template_Sprite_Icon             : TImageList;
     Image8                                           : TImage;
     Image9                                           : TImage;
+    IL_Fold_Unfold: TImageList;
     I_Frame_List                                     : TImage;
     Image18                                          : TImage;
     Image19                                          : TImage;
@@ -1292,8 +1293,6 @@ type
       has_hid_ln_elim_sln    : boolean;
       {detect, if there is at least one spline with property local_prop.byte_mode in True}
       has_byte_mode_sln      : boolean;
-      {repaint first time on hidden-line elimination}
-      rep_hid_ln_elim_first  : boolean;
       {linked list for "Add Point"}
       first_item,p1,p2       : PFList;
       {Init. Part}
@@ -2367,41 +2366,41 @@ begin
       Inc(hid_ln_cnt,sln_var.eds_img_arr[i].hid_ln_cnt);
 
   if (obj_var<>Nil) then
-    info_arr[00]:='Objects: '                                                          +InttoStr(obj_var.obj_cnt               )+';';
-  info_arr[01]:=#13+'Objects of lower layer: '                                         +IntToStr(low_lr_obj_cnt                )+';';
-  info_arr[02]:=#13+'Objects of upper layer: '                                         +IntToStr(upp_lr_obj_cnt                )+';';
-  info_arr[03]:=#13+'Groups: '                                                         +IntToStr(obj_var.group_cnt             )+';';
-  info_arr[04]:=#13+'Actors: '                                                         +IntToStr(obj_var.actor_cnt             )+';';
-  info_arr[05]:=#13+'  • Static: '                                                                                              +';';
-  info_arr[06]:=#13+'  • Dynamic: '                                                                                             +';';
-  info_arr[07]:=#13+'  • Physical: '                                                                                            +';';
-  info_arr[08]:=#13+'Particles: '                                                      +IntToStr(obj_var.prtcl_cnt             )+';';
-  info_arr[09]:=#13+'Curves: '                                                         +IntToStr(obj_var.curve_cnt             )+';';
+    info_arr[00]:='Objects: '                                                             +InttoStr(obj_var.obj_cnt               )+';';
+  info_arr[01]:=#13+'Objects of lower layer: '                                            +IntToStr(low_lr_obj_cnt                )+';';
+  info_arr[02]:=#13+'Objects of upper layer: '                                            +IntToStr(upp_lr_obj_cnt                )+';';
+  info_arr[03]:=#13+'Groups: '                                                            +IntToStr(obj_var.group_cnt             )+';';
+  info_arr[04]:=#13+'Actors: '                                                            +IntToStr(obj_var.actor_cnt             )+';';
+  info_arr[05]:=#13+'  • Static: '                                                                                                 +';';
+  info_arr[06]:=#13+'  • Dynamic: '                                                                                                +';';
+  info_arr[07]:=#13+'  • Physical: '                                                                                               +';';
+  info_arr[08]:=#13+'Particles: '                                                         +IntToStr(obj_var.prtcl_cnt             )+';';
+  info_arr[09]:=#13+'Curves: '                                                            +IntToStr(obj_var.curve_cnt             )+';';
   if (sln_var<>Nil) then
-    info_arr[10]:=#13+'  • Points: '                                                   +InttoStr(sln_var.sln_pts_cnt           )+';';
+    info_arr[10]:=#13+'  • Points: '                                                      +InttoStr(sln_var.sln_pts_cnt           )+';';
   if (sel_var<>Nil) then
     begin
-      info_arr[11]:=#13+'    • Count of curve                  with selected points: ' +InttoStr(sel_var.sln_with_sel_pts_cnt  )+';';
-      info_arr[12]:=#13+'    • Minimal index of curve          with selected points: ' +InttoStr(sel_var.sel_obj_min_ind       )+';';
-      info_arr[13]:=#13+'    • Selected: '                                             +InttoStr(sel_var.sel_pts_cnt           )+';';
+      info_arr[11]:=#13+'    • Count of curve'+#13+'      with selected points: '         +InttoStr(sel_var.sln_with_sel_pts_cnt  )+';';
+      info_arr[12]:=#13+'    • Minimal index of curve'+#13+'      with selected points: ' +InttoStr(sel_var.sel_obj_min_ind       )+';';
+      info_arr[13]:=#13+'    • Selected: '                                                +InttoStr(sel_var.sel_pts_cnt           )+';';
       if (sel_var.sel_pts_cnt=0) then
-        info_arr[14]:=#13+'      • Is not abstract object          kind after: ;'
+        info_arr[14]:=#13+'      • Is not abstract object'+#13+'        kind after: ;'
       else
         begin
           if sel_var.is_not_abst_obj_kind_after then
-            info_arr[14]:=#13+'      • Is not abstract object          kind after: '    +'Yes;'
+            info_arr[14]:=#13+'      • Is not abstract object'+#13+'        kind after: '    +'Yes;'
           else
-            info_arr[14]:=#13+'      • Is not abstract object          kind after: '    +'No;'
+            info_arr[14]:=#13+'      • Is not abstract object'+#13+'        kind after: '    +'No;'
         end;
-      info_arr[15]:=#13+'    • Duplicated: '                                           +InttoStr(sel_var.dup_pts_cnt           )+';';
+      info_arr[15]:=#13+'    • Duplicated: '                                              +InttoStr(sel_var.dup_pts_cnt           )+';';
     end;
   if (sln_var<>Nil) then
     begin
-      info_arr[16]:=#13+'  • Lines: '                                                  +InttoStr(sln_var.sln_eds_cnt           )+';';
-      info_arr[17]:=#13+'    • Visible: '                                              +InttoStr(sln_var.sln_pts_cnt-hid_ln_cnt)+';';
-      info_arr[18]:=#13+'    • Hidden: '                                               +InttoStr(hid_ln_cnt                    )+';';
+      info_arr[16]:=#13+'  • Lines: '                                                     +InttoStr(sln_var.sln_eds_cnt           )+';';
+      info_arr[17]:=#13+'    • Visible: '                                                 +InttoStr(sln_var.sln_pts_cnt-hid_ln_cnt)+';';
+      info_arr[18]:=#13+'    • Hidden: '                                                  +InttoStr(hid_ln_cnt                    )+';';
     end;
-  info_arr[19]:=#13+'Tile maps: '                                                      +IntToStr(obj_var.tlmap_cnt             )+';';
+  info_arr[19]:=#13+'Tile maps: '                                                         +IntToStr(obj_var.tlmap_cnt             )+';';
 
   for i:=0 to 19 do
     Result+=info_arr[i];
@@ -2942,22 +2941,35 @@ procedure TF_MainForm.SB_Unfold_Image_WindowClick     (sender:TObject);         
               S_Splitter2  .top       :=F_MainForm.height-splitter_thickness;
               S_Splitter3  .left      :=F_MainForm.width;
               S_TreeView_Splitter.left:=F_MainForm.width;
-              tag:=1;
+              tag                     :=1;
             end;
           1:
             begin
-              //IsControlEnbVis(PB_ProgressBar1);
-              //IsControlEnbVis(SB_StatusBar1  );
-              //S_Splitter1.left:=269;
-              SetSplittersAnchors(0,F_MainForm{SB_StatusBar1.height,SB_StatusBar1});
-              //BB_Bottom_Splitter_To_Left .enabled:=True;
-              //BB_Bottom_Splitter_To_Right.enabled:=True;
-              //BB_Bottom_Splitter_To_Left .visible:=True;
-              //BB_Bottom_Splitter_To_Right.visible:=True;
+              BorderStyle:=TFormBorderStyle.bsNone;
+              tag        :=2;
+            end;
+          2:
+            begin
+              BorderStyle:=TFormBorderStyle.bsSizeable;
+              tag        :=3;
+            end;
+          3:
+            begin
+              SetSplittersAnchors(0,F_MainForm);
               S_Splitter2.top         :=F_MainForm.height-67;
               S_Splitter3.left        :=F_MainForm.width-200;
               S_TreeView_Splitter.left:=F_MainForm.width-50;
-              tag:=0;
+              tag                     :=4;
+            end;
+          4:
+            begin
+              BorderStyle:=TFormBorderStyle.bsNone;
+              tag        :=5;
+            end;
+          5:
+            begin
+              BorderStyle:=TFormBorderStyle.bsSizeable;
+              tag        :=0;
             end;
         end;
         SplittersPosCalc;
@@ -3034,7 +3046,7 @@ begin
 end; {$endregion}
 procedure TF_MainForm.S_Splitter2ChangeBounds         (sender:TObject); {$region -fold}
 var
-  n: integer;
+  n,k: integer;
 
   procedure CheckBounds(exp1_,exp2_:boolean; k,m:integer); {$region -fold}
   begin
@@ -3065,6 +3077,24 @@ begin
   CheckBounds((splitters_arr[1]^>=352),(splitters_arr[1]^<466),206,1);
   CheckBounds((splitters_arr[1]^>=466),(splitters_arr[1]^<663),184,2);
   CheckBounds((splitters_arr[1]^>=663),True                   ,162,3);
+  k:=2*18-Trunc(520/Trunc(S_Splitter2.Top/18));
+  if (S_Splitter2.Top<520) and (k>8) then
+    begin
+      L_Object_Info   .Font.Height:=k;
+      L_Exec_Time_Info.Font.Height:=k;
+    end;
+  if (S_Splitter2.Top<290) then
+    begin
+      L_Exec_Time_Info.AnchorParallel(akLeft  ,0,Nil);
+      L_Exec_Time_Info.AnchorParallel(akBottom,0,Nil);
+      L_Exec_Time_Info.Left:=250;
+      L_Exec_Time_Info.Top :=015;
+    end
+  else
+    begin
+      L_Exec_Time_Info.AnchorParallel(akLeft  ,20,S_Splitter1);
+      L_Exec_Time_Info.AnchorParallel(akBottom,20,S_Splitter2);
+    end;
   {$ifdef Windows}
   Application.ProcessMessages;
   {$else}
@@ -3625,9 +3655,8 @@ begin
     begin
       if (not down_select_points_ptr^) then
         begin
-          if (not repaint_spline_hid_ln_calc1) and (down_spline_ptr^) then
+          if (not repaint_spline_hid_ln_calc1) {and (down_spline_ptr^)} then
             begin
-              sln_var.rep_hid_ln_elim_first:=True;
               srf_var.EventGroupsCalc(calc_arr,[18,23,24,27,30,31,32,34]);
               repaint_spline_hid_ln_calc1:=True;
               repaint_spline_hid_ln_calc2:=False;
@@ -3637,16 +3666,15 @@ begin
         begin
           if (not repaint_spline_hid_ln_calc2) then
             begin
-              sln_var.rep_hid_ln_elim_first:=True;
-              srf_var.EventGroupsCalc(calc_arr,[18,23,24,30,31,32]);
+              srf_var.EventGroupsCalc(calc_arr,[18,23,24,30,31,32{,34}]);
               repaint_spline_hid_ln_calc1:=False;
               repaint_spline_hid_ln_calc2:=True;
             end;
         end;
     end
   else
-    if (not down_select_points_ptr^) and (sel_var.sel_pts_cnt<>0) then
-      srf_var.EventGroupsCalc(calc_arr,[18,23,24,27,30,31,32]);
+  if (not down_select_points_ptr^) {and (sel_var.sel_pts_cnt<>0)} then
+    srf_var.EventGroupsCalc(calc_arr,[18,23,24,27,30,31,32]);
 end; {$endregion}
 {$endregion}
 
@@ -4530,8 +4558,8 @@ begin
                                 end;
                             end;
                         end
-                      else
-                        AddSplineEds1(i);
+                      {else
+                        AddSplineEds1(i)};
                       CrtSplineEds(i);
                     end;
                   lazy_repaint_prev:=b2;
@@ -4611,8 +4639,7 @@ begin
           eds_var_ptr:=Unaligned(@    eds_img_arr[0]);
           pts_var_ptr:=Unaligned(@    pts_img_arr[0]);
       has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
-      b              :=spline_scale_calc or form_resize_calc or {rep_hid_ln_elim_first}(not repaint_spline_hid_ln_calc2);
-      rep_hid_ln_elim_first:=False;
+      b              :=spline_scale_calc or form_resize_calc or (not repaint_spline_hid_ln_calc2);
       for i:=0 to sln_obj_cnt-1 do
         begin
 
@@ -4916,7 +4943,7 @@ begin
   {Repaint Splines----------------------------------} {$region -fold}
   if repaint_spline_calc then
     begin
-      if down_select_points_ptr^ then
+      if down_select_points_ptr^ and (not sel_var.sel_pts) then
         RepSplineDraw1
       else
         RepSplineDraw0;
@@ -15675,9 +15702,8 @@ begin
 end; {$endregion}
 procedure WorldAxisBmp(constref x,y:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  {bmp_dst:Graphics.TBitmap
-  bmp_dst.BeginUpdate(True);
-  with bmp_dst.Canvas,pvt do
+  {srf_var.srf_bmp.BeginUpdate(True);
+  with srf_var,srf_bmp.Canvas,world_axis_shift do
     begin
       Pen.Mode:=pmNotMask{pmNotXor}{pmCopy};
 
@@ -15713,13 +15739,17 @@ begin
       LineTo(Trunc( 02+x),Trunc(y+50));
       LineTo(Trunc( 00+x),Trunc(y+60));
     end;
-  bmp_dst.EndUpdate(False);}
+  srf_var.srf_bmp.EndUpdate(False);}
 
   with srf_var,world_axis_bmp do
     begin
       SetRctPos(x+srf_var.world_axis_shift.x,
                 y+srf_var.world_axis_shift.y);
       SdrProc[3];
+      {SetTextInfo(srf_var.srf_bmp.Canvas,32);
+      srf_var.srf_bmp.Canvas.TextOut(srf_var.world_axis.x+32,
+                                     srf_var.world_axis.y,
+                                     'Hello World');}
     end;
 end; {$endregion}
 {$endregion}
@@ -16531,7 +16561,15 @@ procedure TF_MainForm.SB_Select_Texture_RegionClick(sender:TObject);
 begin
   DrawingPanelsSetVisibility1(down_select_texture_region_ptr,P_Select_Texture_Region,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
-  CnvToCnv(srf_var.srf_bmp_rct,Canvas,srf_var.test_bmp.Canvas,SRCCOPY);
+
+  //PPBlurProc10(srf_var.srf_bmp_ptr,srf_var.srf_bmp_rct,srf_var.srf_bmp.width);
+  PPContrast1(srf_var.srf_bmp_ptr,srf_var.inn_wnd_rct,srf_var.srf_bmp.width,1);
+  SetTextInfo(srf_var.srf_bmp.Canvas,32);
+  srf_var.srf_bmp.Canvas.TextOut(srf_var.world_axis.x+32,
+                                 srf_var.world_axis.y,
+                                'Hello World');
+
+  CnvToCnv(srf_var.srf_bmp_rct,Canvas,srf_var.srf_bmp.Canvas,SRCCOPY);
   //InvalidateInnerWindow;
 end;
 {$endregion}
@@ -16875,8 +16913,8 @@ begin
   else
     mciSendString(PChar('stop "C:\Popl_Uniy_Orel.wav"'),nil,0,0);}
 
-  OpenGLControl2.Visible:=down_play_anim_ptr^;
-  OpenGLControl2.Enabled:=down_play_anim_ptr^;
+  {OpenGLControl2.Visible:=down_play_anim_ptr^;
+  OpenGLControl2.Enabled:=down_play_anim_ptr^;}
   with srf_var do
     begin
       // Get Target Render For OpenGL Output:
@@ -19154,13 +19192,6 @@ begin
       //T_Logo1.Enabled:=down_play_anim_ptr^; //T_Game_Loop.Enabled:=down_play_anim_ptr^;
     end;} {$endregion}
 
-  {F_MainForm.Memo1.Lines.Text:={GetEnumName(TypeInfo(TKindOfObject),Ord(PNodeData(TV_Scene_Tree.Items[3].Data)^.obj^.koo));}
-                               IntToStr(obj_var.obj_inds_arr[0]^.g_ind)+#13+
-                               IntToStr(obj_var.obj_inds_arr[1]^.g_ind)+#13+
-                               IntToStr(obj_var.obj_inds_arr[2]^.g_ind)+#13+
-                               IntToStr(obj_var.obj_inds_arr[3]^.g_ind)+#13+
-                               IntToStr(obj_var.obj_inds_arr[4]^.g_ind)};
-
 end; {$endregion}
 procedure TF_MainForm.FormDestroy       (sender:TObject);                                                          {$region -fold}
 begin
@@ -19238,55 +19269,16 @@ begin
   New(node_data_pointer);
   node_data_pointer^.g_ind:=g_ind;
   case obj_var.obj_arr[g_ind].koo of
-    kooEmpty:
-      begin
-
-      end;
-    kooBkgnd:
-      begin
-        //node_data_pointer^.bckgd_prop.bckgd_obj_ind:=bckgd_prop.bckgd_obj_ind;
-
-      end;
-    kooBkTex:
-      begin
-        //node_data_pointer^.bktex_prop.bktex_obj_ind:=bktex_prop.bktex_obj_ind;
-
-      end;
-    kooRGrid:
-      begin
-        //node_data_pointer^.rgrid_prop.rgrid_obj_ind:=rgrid_prop.rgrid_obj_ind;
-
-      end;
-    kooSGrid:
-      begin
-        //node_data_pointer^.sgrid_prop.sgrid_obj_ind:=sgrid_prop.sgrid_obj_ind;
-
-      end;
-    kooGroup:
-      begin
-        //node_data_pointer^.group_prop.group_obj_ind:=group_prop.group_obj_ind;
-
-      end;
-    kooTlMap:
-      begin
-        //node_data_pointer^.tlmap_prop.tlmap_obj_ind:=tlmap_prop.tlmap_obj_ind;
-
-      end;
-    kooActor:
-      begin
-        //node_data_pointer^.actor_prop.actor_obj_ind:=actor_prop.actor_obj_ind;
-
-      end;
-    kooPrtcl:
-      begin
-        //node_data_pointer^.prtcl_prop.prtcl_obj_ind:=prtcl_prop.prtcl_obj_ind;
-
-      end;
-    kooCurve:
-      begin
-        //node_data_pointer^.curve_prop.curve_obj_ind:=curve_prop.curve_obj_ind;
-        node_with_data.ImageIndex                  :=3;
-      end;
+    kooEmpty: ;
+    kooBkgnd: ;
+    kooBkTex: node_with_data.ImageIndex:=15;
+    kooRGrid: node_with_data.ImageIndex:=06;
+    kooSGrid: node_with_data.ImageIndex:=07;
+    kooGroup: node_with_data.ImageIndex:=14;
+    kooTlMap: ;
+    kooActor: node_with_data.ImageIndex:=08;
+    kooPrtcl: ;
+    kooCurve: node_with_data.ImageIndex:=03;
   end;
   node_with_data.Data:=PNodeData(node_data_pointer);
 end; {$endregion}
@@ -19515,46 +19507,6 @@ procedure TF_MainForm.TV_Scene_TreeMouseDown                   (sender:TObject; 
 var
   target_node: TTreeNode;
   s          : string;
-
-  procedure InitDataObjSelInds(constref b0,b1:boolean); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-  begin
-   { with obj_var do
-      case PNodeData(target_node.Data)^.kind_of_object of
-        kooGroup:
-          begin
-            group_selected:=b0;
-            if b0 then
-              begin
-                if b1 then
-                  group_inds_cnt:=0;
-                Inc(group_inds_cnt);
-              end;
-            {if b2 then
-              FillDWord(@group_inds_arr,}
-          end;
-        kooActor:
-          begin
-            actor_selected:=b0;
-
-          end;
-        kooPrtcl:
-          begin
-            prtcl_selected:=b1;
-
-          end;
-        kooCurve:
-          begin
-            curve_selected:=b1;
-
-          end;
-        kooTiles:
-          begin
-            tiles_selected:=b1;
-
-          end;
-      end;}
-  end; {$endregion}
-
 begin
   with TV_Scene_Tree do
     if (button=mbLeft) then
@@ -19565,8 +19517,10 @@ begin
         target_node  :=GetNodeAt(x,y);
         if (target_node<>Nil) then
           begin
-            InitDataObjSelInds(True,(shift<>[ssCtrl]));
             BeginDrag(True);
+            //if target_node.Selected then
+              target_node.Selected:=False{not target_node.Selected};
+
             //s:={GetEnumName(TypeInfo(TKindOfObject),Ord(obj_var.obj_arr[PNodeData(target_node.Data)^.g_ind].koo));}{IntToStr(obj_var.obj_inds_arr[PNodeData(target_node.Data)^.g_ind]);}{GetEnumName(TypeInfo(TKindOfObject),Ord(PNodeData(target_node.Data)^.obj^.koo));}
             //Delete(s,1,3);
             //Memo1.Lines.Text:=IntToStr(PNodeData(target_node.Data)^.obj^.k_ind);
@@ -19575,11 +19529,8 @@ begin
             Memo2.Lines.Add(IntToStr(PNodeData(TargetNode.Data)^.curve_prop.pts_cnt));}
           end
         else
-        if (Selected<>Nil) then
-          begin
-            InitDataObjSelInds(False,(shift<>[ssCtrl]));
-            Items.ClearMultiSelection(True);
-          end;
+        if (SelectionCount<>0) then
+          Items.ClearMultiSelection(True);
         ReadOnly:=True;
       end;
 end; {$endregion}
@@ -20259,7 +20210,7 @@ begin
                 end;
 
 
-              with inn_wnd_rct do
+              {with inn_wnd_rct do
                 rct:=PtRct(left,top,right-1,bottom-1);
               for i:=0 to sln_obj_cnt-1 do
                 begin
@@ -20275,7 +20226,7 @@ begin
                     rct,
                     world_axis_shift
                   );
-                end;
+                end;}
 
             end;
 
@@ -20729,10 +20680,10 @@ begin
       {ITScl(srf_bmp_ptr,srf_bmp_ptr,low_bmp.width,low_bmp.height,6,6);} {$endregion}
 
       {Full Scene Drawing} {$region -fold}
-      //CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
+      CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
       //glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT);
       //glLoadIdentity;
-      with srf_var do
+      {with srf_var do
         begin
           //glDrawPixels(srf_bmp.Width,srf_bmp.Height,32993{swap channels: GL_RGBA=$1908 to GL_BGRA=32993},GL_UNSIGNED_BYTE,{srf_bmp_ptr}buffer.bmBits);
           glEnable       (GL_TEXTURE_2D);
@@ -20756,7 +20707,7 @@ begin
             glVertex3f   (-1,-1,0);
           glEnd;
         end;
-      OpenGLControl2.SwapBuffers; {$endregion}
+      OpenGLControl2.SwapBuffers;} {$endregion}
 
     end;
 
@@ -21335,7 +21286,7 @@ begin
 end; {$endregion}
 {$endregion}
 
-end.
+end.  SetTextInfo
 
 initialization
 
