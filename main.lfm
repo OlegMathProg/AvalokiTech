@@ -1,7 +1,7 @@
 object F_MainForm: TF_MainForm
-  Left = 506
+  Left = 515
   Height = 714
-  Top = 163
+  Top = 162
   Width = 1024
   HorzScrollBar.Page = 1
   HorzScrollBar.Visible = False
@@ -3812,10 +3812,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter6
-    Left = 852
+    Left = 756
     Height = 404
     Top = 4
-    Width = 172
+    Width = 268
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoExpand = True
     BackgroundColor = 11251619
@@ -3845,21 +3845,26 @@ object F_MainForm: TF_MainForm
     RowSelect = True
     ScrollBars = ssNone
     SelectionColor = 8552525
+    SelectionFontColor = 10354031
     SelectionFontColorUsed = True
     ShowHint = True
     ShowRoot = False
     StateImages = IL_Scene_Tree_Image_List
     StateImagesWidth = 24
     TabOrder = 9
+    ToolTips = False
     OnDblClick = TV_Scene_TreeDblClick
     OnDragDrop = TV_Scene_TreeDragDrop
     OnDragOver = TV_Scene_TreeDragOver
     OnEditing = TV_Scene_TreeEditing
     OnEditingEnd = TV_Scene_TreeEditingEnd
+    OnExpanded = TV_Scene_TreeExpanded
+    OnExpanding = TV_Scene_TreeExpanding
     OnKeyDown = TV_Scene_TreeKeyDown
     OnKeyPress = TV_Scene_TreeKeyPress
     OnMouseDown = TV_Scene_TreeMouseDown
-    Options = [tvoAllowMultiselect, tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoRightClickSelect, tvoRowSelect, tvoShowButtons, tvoShowLines, tvoToolTips]
+    Options = [tvoAllowMultiselect, tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoRightClickSelect, tvoRowSelect, tvoShowButtons, tvoShowLines, tvoShowSeparators]
+    TreeLinePenStyle = psSolid
   end
   object P_Splitter5: TPanel
     AnchorSideLeft.Control = S_Splitter1
@@ -3868,13 +3873,13 @@ object F_MainForm: TF_MainForm
     Left = 4
     Height = 4
     Top = 0
-    Width = 844
+    Width = 748
     Anchors = [akTop, akLeft, akRight]
     BevelColor = 8026460
     BevelOuter = bvNone
     BorderWidth = 1
     ClientHeight = 4
-    ClientWidth = 844
+    ClientWidth = 748
     Color = 5731167
     Font.Height = -9
     FullRepaint = False
@@ -3902,10 +3907,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 852
+    Left = 756
     Height = 4
     Top = 0
-    Width = 172
+    Width = 268
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -3917,7 +3922,7 @@ object F_MainForm: TF_MainForm
   object S_Splitter3: TSplitter
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = SB_StatusBar1
-    Left = 848
+    Left = 752
     Height = 671
     Top = 0
     Width = 4
@@ -3939,8 +3944,8 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 4
     Height = 4
-    Top = 220
-    Width = 844
+    Top = 168
+    Width = 748
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -4338,14 +4343,14 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 4
-    Height = 447
-    Top = 224
-    Width = 844
+    Height = 499
+    Top = 172
+    Width = 748
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
-    ClientHeight = 447
-    ClientWidth = 844
+    ClientHeight = 499
+    ClientWidth = 748
     Color = 13290949
     ParentColor = False
     TabOrder = 3
@@ -4357,9 +4362,9 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Image_Editor
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 447
+      Height = 499
       Top = 0
-      Width = 844
+      Width = 748
       ActivePage = TS_Draw
       Anchors = [akTop, akLeft, akRight, akBottom]
       MultiLine = True
@@ -4892,8 +4897,8 @@ object F_MainForm: TF_MainForm
       end
       object TS_Draw: TTabSheet
         Caption = 'Draw'
-        ClientHeight = 419
-        ClientWidth = 836
+        ClientHeight = 471
+        ClientWidth = 740
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
         ParentBiDiMode = False
@@ -4907,9 +4912,9 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_Draw
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 384
+          Height = 436
           Top = 35
-          Width = 834
+          Width = 738
           HorzScrollBar.Increment = 1
           HorzScrollBar.Page = 1
           HorzScrollBar.Smooth = True
@@ -4921,8 +4926,8 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 380
-          ClientWidth = 830
+          ClientHeight = 432
+          ClientWidth = 734
           Color = 15921635
           ParentBiDiMode = False
           ParentColor = False
@@ -4937,9 +4942,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 216
+            Left = 24
             Height = 488
-            Top = 72
+            Top = 252
             Width = 1040
             Anchors = []
             BevelColor = 7958609
@@ -4952,7 +4957,7 @@ object F_MainForm: TF_MainForm
             ParentColor = False
             TabOrder = 1
             Visible = False
-            object P_Edges_Prop: TPanel
+            object P_Spline_Edges_Prop: TPanel
               AnchorSideLeft.Control = P_Spline
               AnchorSideTop.Control = P_Spline
               AnchorSideRight.Side = asrBottom
@@ -4980,11 +4985,11 @@ object F_MainForm: TF_MainForm
               ParentShowHint = False
               ShowHint = True
               TabOrder = 0
-              OnMouseEnter = P_Edges_PropMouseEnter
-              OnMouseLeave = P_Edges_PropMouseLeave
+              OnMouseEnter = P_Spline_Edges_PropMouseEnter
+              OnMouseLeave = P_Spline_Edges_PropMouseLeave
               object Image4: TImage
                 AnchorSideLeft.Control = Image18
-                AnchorSideRight.Control = P_Edges_Prop
+                AnchorSideRight.Control = P_Spline_Edges_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
                 Left = 59
@@ -4994,8 +4999,8 @@ object F_MainForm: TF_MainForm
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B477261706869635B00000089504E47
                   0D0A1A0A0000000D49484452000000010000000108060000001F15C489000000
@@ -5012,8 +5017,8 @@ object F_MainForm: TF_MainForm
                 Height = 8
                 Top = 11
                 Width = 8
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B47726170686963A900000089504E47
                   0D0A1A0A0000000D4948445200000008000000080806000000C40FBE8B000000
@@ -5045,8 +5050,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
               end
               object L_Spline_Edges_Color: TLabel
                 Left = 10
@@ -5067,8 +5072,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
               end
               object SB_Spline_Edges_Color: TSpeedButton
                 AnchorSideLeft.Control = L_Spline_Edges_Color
@@ -5086,8 +5091,8 @@ object F_MainForm: TF_MainForm
                 Flat = True
                 Transparent = False
                 OnClick = SB_Spline_Edges_ColorClick
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 ShowHint = True
                 ParentShowHint = False
               end
@@ -5137,8 +5142,8 @@ object F_MainForm: TF_MainForm
                   'BlurGGG'
                   'BlurBBB'
                 )
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 OnSelect = CB_Spline_Edges_StyleSelect
                 ParentBidiMode = False
                 ParentDoubleBuffered = False
@@ -5171,8 +5176,8 @@ object F_MainForm: TF_MainForm
                 GroupIndex = 1
                 Transparent = False
                 OnClick = SB_Spline_Edges_Color_RandomClick
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 ShowHint = True
                 ParentFont = False
                 ParentShowHint = False
@@ -5195,8 +5200,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
               end
               object SB_Spline_Edges_Show: TSpeedButton
                 Cursor = crHandPoint
@@ -5248,8 +5253,8 @@ object F_MainForm: TF_MainForm
                 GroupIndex = 3
                 Transparent = False
                 OnClick = SB_Spline_Edges_ShowClick
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 ShowHint = True
                 ParentShowHint = False
               end
@@ -5274,8 +5279,8 @@ object F_MainForm: TF_MainForm
                 GroupIndex = 2
                 Transparent = False
                 OnClick = SB_Spline_Edges_Color_FallOffClick
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 ShowHint = True
                 ParentFont = False
                 ParentShowHint = False
@@ -5289,16 +5294,16 @@ object F_MainForm: TF_MainForm
                 Width = 56
                 Caption = '        '
                 ParentColor = False
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
               end
               object P_Spline_Edges: TPanel
-                AnchorSideLeft.Control = P_Edges_Prop
+                AnchorSideLeft.Control = P_Spline_Edges_Prop
                 AnchorSideTop.Control = L_Spline_Edges_Shape
                 AnchorSideTop.Side = asrBottom
-                AnchorSideRight.Control = P_Edges_Prop
+                AnchorSideRight.Control = P_Spline_Edges_Prop
                 AnchorSideRight.Side = asrBottom
-                AnchorSideBottom.Control = P_Edges_Prop
+                AnchorSideBottom.Control = P_Spline_Edges_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
                 Height = 355
@@ -5403,7 +5408,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 3
                     OnChange = SE_Spline_Edges_WidthChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_EdgesMouseEnter
                     OnMouseLeave = P_Spline_EdgesMouseLeave
                     ParentFont = False
@@ -5503,7 +5508,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 255
                     OnChange = SE_Spline_Edges_WidthChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_EdgesMouseEnter
                     OnMouseLeave = P_Spline_EdgesMouseLeave
                     ParentFont = False
@@ -5552,7 +5557,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 255
                     OnChange = SE_Spline_Edges_WidthChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_EdgesMouseEnter
                     OnMouseLeave = P_Spline_EdgesMouseLeave
                     ParentFont = False
@@ -5581,8 +5586,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
               end
               object CB_Spline_Edges_Shape: TComboBox
                 AnchorSideLeft.Control = L_Spline_Edges_Shape
@@ -5605,8 +5610,8 @@ object F_MainForm: TF_MainForm
                   'Dash'
                   'Resilient'
                 )
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 OnSelect = CB_Spline_Edges_ShapeSelect
                 ParentBidiMode = False
                 ParentFont = False
@@ -5616,7 +5621,7 @@ object F_MainForm: TF_MainForm
                 Text = 'Line'
               end
               object CB_Spline_Edges_Show_Bounds: TCheckBox
-                AnchorSideLeft.Control = P_Edges_Prop
+                AnchorSideLeft.Control = P_Spline_Edges_Prop
                 Left = 10
                 Height = 19
                 Hint = 'Show Spline Bounding Rectangle'
@@ -5632,8 +5637,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_Edges_Show_BoundsChange
-                OnMouseEnter = P_Edges_PropMouseEnter
-                OnMouseLeave = P_Edges_PropMouseLeave
+                OnMouseEnter = P_Spline_Edges_PropMouseEnter
+                OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -5642,8 +5647,8 @@ object F_MainForm: TF_MainForm
                 TabOrder = 3
               end
             end
-            object P_Points_Prop: TPanel
-              AnchorSideLeft.Control = P_Edges_Prop
+            object P_Spline_Points_Prop: TPanel
+              AnchorSideLeft.Control = P_Spline_Edges_Prop
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = P_Spline
               AnchorSideRight.Side = asrBottom
@@ -5672,11 +5677,11 @@ object F_MainForm: TF_MainForm
               ParentShowHint = False
               ShowHint = True
               TabOrder = 1
-              OnMouseEnter = P_Points_PropMouseEnter
-              OnMouseLeave = P_Points_PropMouseLeave
+              OnMouseEnter = P_Spline_Points_PropMouseEnter
+              OnMouseLeave = P_Spline_Points_PropMouseLeave
               object Image5: TImage
                 AnchorSideLeft.Control = Image19
-                AnchorSideRight.Control = P_Points_Prop
+                AnchorSideRight.Control = P_Spline_Points_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
                 Left = 63
@@ -5686,8 +5691,8 @@ object F_MainForm: TF_MainForm
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B477261706869635B00000089504E47
                   0D0A1A0A0000000D49484452000000010000000108060000001F15C489000000
@@ -5704,8 +5709,8 @@ object F_MainForm: TF_MainForm
                 Height = 8
                 Top = 11
                 Width = 8
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B47726170686963A900000089504E47
                   0D0A1A0A0000000D4948445200000008000000080806000000C40FBE8B000000
@@ -5736,8 +5741,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
               end
               object L_Spline_Points_Color: TLabel
                 Left = 10
@@ -5758,8 +5763,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
               end
               object SB_Spline_Points_Color: TSpeedButton
                 AnchorSideLeft.Control = L_Spline_Points_Color
@@ -5777,8 +5782,8 @@ object F_MainForm: TF_MainForm
                 Flat = True
                 Transparent = False
                 OnClick = SB_Spline_Points_ColorClick
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 ShowHint = True
                 ParentShowHint = False
               end
@@ -5826,8 +5831,8 @@ object F_MainForm: TF_MainForm
                   'BlurGGG'
                   'BlurBBB'
                 )
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 OnSelect = CB_Spline_Points_StyleSelect
                 ParentBidiMode = False
                 ParentFont = False
@@ -5858,8 +5863,8 @@ object F_MainForm: TF_MainForm
                 GroupIndex = 1
                 Transparent = False
                 OnClick = SB_Spline_Points_Color_RandomClick
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 ShowHint = True
                 ParentFont = False
                 ParentShowHint = False
@@ -5882,8 +5887,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
               end
               object SB_Spline_Points_Show: TSpeedButton
                 Cursor = crHandPoint
@@ -5935,8 +5940,8 @@ object F_MainForm: TF_MainForm
                 GroupIndex = 3
                 Transparent = False
                 OnClick = SB_Spline_Points_ShowClick
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 ShowHint = True
                 ParentShowHint = False
               end
@@ -5963,8 +5968,8 @@ object F_MainForm: TF_MainForm
                 GroupIndex = 2
                 Transparent = False
                 OnClick = SB_Spline_Points_Color_FallOffClick
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 ShowHint = True
                 ParentFont = False
                 ParentShowHint = False
@@ -5988,8 +5993,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
               end
               object CB_Spline_Points_Shape: TComboBox
                 AnchorSideLeft.Control = L_Spline_Points_Shape
@@ -6012,8 +6017,8 @@ object F_MainForm: TF_MainForm
                   'Circle'
                   'Mask'
                 )
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 OnSelect = CB_Spline_Points_ShapeSelect
                 ParentBidiMode = False
                 ParentFont = False
@@ -6023,12 +6028,12 @@ object F_MainForm: TF_MainForm
                 Text = 'Rectangle'
               end
               object P_Spline_Points: TPanel
-                AnchorSideLeft.Control = P_Points_Prop
+                AnchorSideLeft.Control = P_Spline_Points_Prop
                 AnchorSideTop.Control = L_Spline_Points_Shape
                 AnchorSideTop.Side = asrBottom
-                AnchorSideRight.Control = P_Points_Prop
+                AnchorSideRight.Control = P_Spline_Points_Prop
                 AnchorSideRight.Side = asrBottom
-                AnchorSideBottom.Control = P_Points_Prop
+                AnchorSideBottom.Control = P_Spline_Points_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
                 Height = 355
@@ -6132,7 +6137,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 4095
                     OnChange = SE_Spline_Points_Rectangle_Thikness_LeftChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_PointsMouseEnter
                     OnMouseLeave = P_Spline_PointsMouseLeave
                     ParentFont = False
@@ -6179,7 +6184,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 4095
                     OnChange = SE_Spline_Points_Rectangle_Thikness_TopChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_PointsMouseEnter
                     OnMouseLeave = P_Spline_PointsMouseLeave
                     ParentFont = False
@@ -6226,7 +6231,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 4095
                     OnChange = SE_Spline_Points_Rectangle_Thikness_RightChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_PointsMouseEnter
                     OnMouseLeave = P_Spline_PointsMouseLeave
                     ParentFont = False
@@ -6273,7 +6278,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 4095
                     OnChange = SE_Spline_Points_Rectangle_Thikness_BottomChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_PointsMouseEnter
                     OnMouseLeave = P_Spline_PointsMouseLeave
                     ParentFont = False
@@ -6394,7 +6399,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 4095
                     OnChange = SE_Spline_Points_Rectangle_Inner_Rectangle_WidthChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_PointsMouseEnter
                     OnMouseLeave = P_Spline_PointsMouseLeave
                     ParentFont = False
@@ -6420,7 +6425,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 4095
                     OnChange = SE_Spline_Points_Rectangle_Inner_Rectangle_HeightChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_PointsMouseEnter
                     OnMouseLeave = P_Spline_PointsMouseLeave
                     ParentFont = False
@@ -6431,7 +6436,7 @@ object F_MainForm: TF_MainForm
                 end
               end
               object CB_Spline_Points_Show_Bounds: TCheckBox
-                AnchorSideLeft.Control = P_Points_Prop
+                AnchorSideLeft.Control = P_Spline_Points_Prop
                 Left = 10
                 Height = 19
                 Hint = 'Show Spline Bounding Rectangle'
@@ -6447,8 +6452,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_Points_Show_BoundsChange
-                OnMouseEnter = P_Points_PropMouseEnter
-                OnMouseLeave = P_Points_PropMouseLeave
+                OnMouseEnter = P_Spline_Points_PropMouseEnter
+                OnMouseLeave = P_Spline_Points_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6457,8 +6462,8 @@ object F_MainForm: TF_MainForm
                 TabOrder = 3
               end
             end
-            object P_Optimization_Prop: TPanel
-              AnchorSideLeft.Control = P_Drawing_Prop
+            object P_Spline_Optimization_Prop: TPanel
+              AnchorSideLeft.Control = P_Spline_Drawing_Prop
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = P_Spline
               AnchorSideRight.Control = P_Spline
@@ -6488,8 +6493,8 @@ object F_MainForm: TF_MainForm
               ParentShowHint = False
               ShowHint = True
               TabOrder = 2
-              OnMouseEnter = P_Optimization_PropMouseEnter
-              OnMouseLeave = P_Optimization_PropMouseLeave
+              OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+              OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               object CB_Spline_Edges_LOD: TCheckBox
                 Left = 10
                 Height = 19
@@ -6507,8 +6512,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_Edges_LODChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6537,8 +6542,8 @@ object F_MainForm: TF_MainForm
                 ParentFont = False
                 ParentShowHint = False
                 ShowHint = True
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               end
               object FSE_Spline_Simplification_Angle: TFloatSpinEdit
                 AnchorSideLeft.Control = L_Spline_Simplification_Angle
@@ -6565,9 +6570,9 @@ object F_MainForm: TF_MainForm
                 Font.Quality = fqDraft
                 MaxValue = 360
                 OnChange = FSE_Spline_Simplification_AngleChange
-                OnKeyDown = SE_Spline_Pts_FreqKeyDown
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseDown = SE_Spline_Pts_FreqMouseDown
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentFont = False
                 ParentShowHint = False
                 TabOrder = 1
@@ -6591,8 +6596,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               end
               object Image20: TImage
                 AnchorSideRight.Side = asrBottom
@@ -6601,8 +6606,8 @@ object F_MainForm: TF_MainForm
                 Height = 8
                 Top = 11
                 Width = 8
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B47726170686963A900000089504E47
                   0D0A1A0A0000000D4948445200000008000000080806000000C40FBE8B000000
@@ -6617,7 +6622,7 @@ object F_MainForm: TF_MainForm
               end
               object Image6: TImage
                 AnchorSideLeft.Control = Image20
-                AnchorSideRight.Control = P_Optimization_Prop
+                AnchorSideRight.Control = P_Spline_Optimization_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
                 Left = 75
@@ -6627,8 +6632,8 @@ object F_MainForm: TF_MainForm
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B477261706869635B00000089504E47
                   0D0A1A0A0000000D49484452000000010000000108060000001F15C489000000
@@ -6654,8 +6659,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_Hidden_Line_EliminationChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6680,8 +6685,8 @@ object F_MainForm: TF_MainForm
                 Font.Color = clCaptionText
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6706,8 +6711,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_Lazy_RepaintChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6732,8 +6737,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_Byte_ModeChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6758,8 +6763,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_On_Out_Of_WindowChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6783,8 +6788,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_On_Scale_DownChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6811,8 +6816,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               end
               object L_Spline_Remove_Brunching: TLabel
                 Left = 8
@@ -6833,8 +6838,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               end
               object RB_Spline_Adaptive: TRadioButton
                 Left = 10
@@ -6849,8 +6854,8 @@ object F_MainForm: TF_MainForm
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 OnChange = RB_Spline_AdaptiveChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentFont = False
                 TabOrder = 10
               end
@@ -6866,8 +6871,8 @@ object F_MainForm: TF_MainForm
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 OnChange = RB_Spline_AdaptiveChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentFont = False
                 TabOrder = 9
               end
@@ -6884,8 +6889,8 @@ object F_MainForm: TF_MainForm
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 OnChange = RB_Spline_AdaptiveChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentFont = False
                 TabOrder = 8
                 TabStop = True
@@ -6905,8 +6910,8 @@ object F_MainForm: TF_MainForm
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 OnChange = CB_Spline_Best_PrecisionChange
-                OnMouseEnter = P_Optimization_PropMouseEnter
-                OnMouseLeave = P_Optimization_PropMouseLeave
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -6915,8 +6920,8 @@ object F_MainForm: TF_MainForm
                 TabOrder = 11
               end
             end
-            object P_Drawing_Prop: TPanel
-              AnchorSideLeft.Control = P_Points_Prop
+            object P_Spline_Drawing_Prop: TPanel
+              AnchorSideLeft.Control = P_Spline_Points_Prop
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = P_Spline
               AnchorSideRight.Control = P_Spline
@@ -6946,8 +6951,8 @@ object F_MainForm: TF_MainForm
               ParentShowHint = False
               ShowHint = True
               TabOrder = 3
-              OnMouseEnter = P_Drawing_PropMouseEnter
-              OnMouseLeave = P_Drawing_PropMouseLeave
+              OnMouseEnter = P_Spline_Drawing_PropMouseEnter
+              OnMouseLeave = P_Spline_Drawing_PropMouseLeave
               object L_Spline_Type: TLabel
                 Left = 12
                 Height = 16
@@ -6967,8 +6972,8 @@ object F_MainForm: TF_MainForm
                 ParentFont = False
                 ParentShowHint = False
                 ShowHint = True
-                OnMouseEnter = P_Drawing_PropMouseEnter
-                OnMouseLeave = P_Drawing_PropMouseLeave
+                OnMouseEnter = P_Spline_Drawing_PropMouseEnter
+                OnMouseLeave = P_Spline_Drawing_PropMouseLeave
               end
               object CB_Spline_Type: TComboBox
                 AnchorSideLeft.Control = L_Spline_Type
@@ -6992,8 +6997,8 @@ object F_MainForm: TF_MainForm
                   'Random'
                   'Load'
                 )
-                OnMouseEnter = P_Drawing_PropMouseEnter
-                OnMouseLeave = P_Drawing_PropMouseLeave
+                OnMouseEnter = P_Spline_Drawing_PropMouseEnter
+                OnMouseLeave = P_Spline_Drawing_PropMouseLeave
                 OnSelect = CB_Spline_TypeSelect
                 ParentColor = True
                 ParentFont = False
@@ -7002,12 +7007,12 @@ object F_MainForm: TF_MainForm
                 Text = 'Freehand'
               end
               object P_Spline_Templates: TPanel
-                AnchorSideLeft.Control = P_Drawing_Prop
+                AnchorSideLeft.Control = P_Spline_Drawing_Prop
                 AnchorSideTop.Control = L_Spline_Type
                 AnchorSideTop.Side = asrBottom
-                AnchorSideRight.Control = P_Drawing_Prop
+                AnchorSideRight.Control = P_Spline_Drawing_Prop
                 AnchorSideRight.Side = asrBottom
-                AnchorSideBottom.Control = P_Drawing_Prop
+                AnchorSideBottom.Control = P_Spline_Drawing_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
                 Height = 430
@@ -7026,7 +7031,7 @@ object F_MainForm: TF_MainForm
                 Visible = False
                 OnMouseEnter = P_Spline_TemplatesMouseEnter
                 OnMouseLeave = P_Spline_TemplatesMouseLeave
-                object P_Spiral: TPanel
+                object P_Spline_Spiral: TPanel
                   AnchorSideLeft.Control = P_Spline_Templates
                   AnchorSideTop.Control = P_Spline_Templates_Properties
                   AnchorSideTop.Side = asrBottom
@@ -7048,7 +7053,7 @@ object F_MainForm: TF_MainForm
                   Visible = False
                   OnMouseEnter = P_Spline_TemplatesMouseEnter
                   OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  object L_Spiral_Points_Count: TLabel
+                  object L_Spline_Spiral_Points_Count: TLabel
                     Left = 24
                     Height = 16
                     Top = 9
@@ -7069,7 +7074,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Spiral_Points_Count: TSpinEdit
+                  object SE_Spline_Spiral_Points_Count: TSpinEdit
                     Left = 108
                     Height = 20
                     Top = 8
@@ -7086,8 +7091,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 20000000
-                    OnChange = SE_Spiral_Points_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Spiral_Points_CountChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7095,7 +7100,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 0
                     Value = 256
                   end
-                  object L_Spiral_Radius: TLabel
+                  object L_Spline_Spiral_Radius: TLabel
                     Left = 63
                     Height = 16
                     Top = 59
@@ -7116,7 +7121,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Spiral_Rotation: TLabel
+                  object L_Spline_Spiral_Rotation: TLabel
                     Left = 48
                     Height = 16
                     Top = 84
@@ -7137,7 +7142,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Spiral_Angle: TLabel
+                  object L_Spline_Spiral_Angle: TLabel
                     Left = 63
                     Height = 16
                     Top = 109
@@ -7158,7 +7163,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object FSE_Spiral_Coil_Step: TFloatSpinEdit
+                  object FSE_Spline_Spiral_Coil_Step: TFloatSpinEdit
                     AnchorSideTop.Control = L_Spline_Simplification_Angle
                     AnchorSideTop.Side = asrCenter
                     AnchorSideBottom.Side = asrBottom
@@ -7181,8 +7186,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 20000000
                     MinValue = -20000000
-                    OnChange = FSE_Spiral_Coil_StepChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = FSE_Spline_Spiral_Coil_StepChange
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7190,7 +7194,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 1
                     Value = 1
                   end
-                  object L_Spiral_Coil_Step: TLabel
+                  object L_Spline_Spiral_Coil_Step: TLabel
                     Left = 24
                     Height = 16
                     Top = 34
@@ -7211,7 +7215,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Spiral_Angle: TFloatSpinEdit
+                  object SE_Spline_Spiral_Angle: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 108
@@ -7228,8 +7232,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360000
-                    OnChange = SE_Spiral_AngleChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Spiral_AngleChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7237,7 +7241,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 2
                     Value = 720
                   end
-                  object SE_Spiral_Rotation: TFloatSpinEdit
+                  object SE_Spline_Spiral_Rotation: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 83
@@ -7254,15 +7258,15 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360
-                    OnChange = SE_Spiral_RotationChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Spiral_RotationChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 3
                   end
-                  object SE_Spiral_Radius: TFloatSpinEdit
+                  object SE_Spline_Spiral_Radius: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 58
@@ -7279,8 +7283,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 4095
-                    OnChange = SE_Spiral_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Spiral_RadiusChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7289,7 +7293,7 @@ object F_MainForm: TF_MainForm
                     Value = 256
                   end
                 end
-                object P_Rose: TPanel
+                object P_Spline_Rose: TPanel
                   AnchorSideLeft.Control = P_Spline_Templates
                   AnchorSideTop.Control = P_Spline_Templates_Properties
                   AnchorSideTop.Side = asrBottom
@@ -7311,7 +7315,7 @@ object F_MainForm: TF_MainForm
                   Visible = False
                   OnMouseEnter = P_Spline_TemplatesMouseEnter
                   OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  object L_Rose_Points_Count: TLabel
+                  object L_Spline_Rose_Points_Count: TLabel
                     Left = 24
                     Height = 16
                     Top = 9
@@ -7332,7 +7336,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Rose_Points_Count: TSpinEdit
+                  object SE_Spline_Rose_Points_Count: TSpinEdit
                     Left = 108
                     Height = 20
                     Top = 8
@@ -7349,8 +7353,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 20000000
-                    OnChange = SE_Rose_Points_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Rose_Points_CountChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7358,7 +7362,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 0
                     Value = 256
                   end
-                  object L_Rose_Radius: TLabel
+                  object L_Spline_Rose_Radius: TLabel
                     Left = 63
                     Height = 16
                     Top = 59
@@ -7379,7 +7383,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Rose_Rotation: TLabel
+                  object L_Spline_Rose_Rotation: TLabel
                     Left = 48
                     Height = 16
                     Top = 84
@@ -7400,7 +7404,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Rose_Angle: TLabel
+                  object L_Spline_Rose_Angle: TLabel
                     Left = 63
                     Height = 16
                     Top = 109
@@ -7421,7 +7425,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object FSE_Rose_Petals_Count: TFloatSpinEdit
+                  object FSE_Spline_Rose_Petals_Count: TFloatSpinEdit
                     AnchorSideTop.Control = L_Spline_Simplification_Angle
                     AnchorSideTop.Side = asrCenter
                     AnchorSideBottom.Side = asrBottom
@@ -7443,7 +7447,7 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 20000000
-                    OnChange = FSE_Rose_Petals_CountChange
+                    OnChange = FSE_Spline_Rose_Petals_CountChange
                     OnKeyDown = SE_Spline_Pts_FreqKeyDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
@@ -7452,7 +7456,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 1
                     Value = 7
                   end
-                  object L_Rose_Petals_Count: TLabel
+                  object L_Spline_Rose_Petals_Count: TLabel
                     Left = 24
                     Height = 16
                     Top = 34
@@ -7473,7 +7477,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Rose_Angle: TFloatSpinEdit
+                  object SE_Spline_Rose_Angle: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 108
@@ -7490,8 +7494,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360000
-                    OnChange = SE_Rose_AngleChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Rose_AngleChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7499,7 +7503,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 2
                     Value = 180
                   end
-                  object SE_Rose_Rotation: TFloatSpinEdit
+                  object SE_Spline_Rose_Rotation: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 83
@@ -7516,15 +7520,15 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360
-                    OnChange = SE_Rose_RotationChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Rose_RotationChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 3
                   end
-                  object SE_Rose_Radius: TFloatSpinEdit
+                  object SE_Spline_Rose_Radius: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 58
@@ -7541,8 +7545,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 4095
-                    OnChange = SE_Rose_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Rose_RadiusChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7781,7 +7785,7 @@ object F_MainForm: TF_MainForm
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     OptimalFill = True
                   end
-                  object BB_Generate: TBitBtn
+                  object BB_Spline_Generate: TBitBtn
                     AnchorSideLeft.Control = P_Spline_Templates_Properties
                     AnchorSideTop.Control = P_Spline_Templates_Properties
                     AnchorSideRight.Side = asrBottom
@@ -7801,7 +7805,7 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     Margin = 0
-                    OnClick = BB_GenerateClick
+                    OnClick = BB_Spline_GenerateClick
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentBidiMode = False
@@ -7851,7 +7855,7 @@ object F_MainForm: TF_MainForm
                   Font.Quality = fqDraft
                   MaxValue = 20000000
                   OnChange = SE_Spline_Points_CountChange
-                  OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                  OnMouseDown = SE_Spline_Pts_FreqMouseDown
                   OnMouseEnter = P_Spline_TemplatesMouseEnter
                   OnMouseLeave = P_Spline_TemplatesMouseLeave
                   ParentFont = False
@@ -7859,7 +7863,7 @@ object F_MainForm: TF_MainForm
                   TabOrder = 4
                   Value = 1
                 end
-                object P_Epicycloid: TPanel
+                object P_Spline_Epicycloid: TPanel
                   AnchorSideLeft.Control = P_Spline_Templates
                   AnchorSideTop.Control = P_Spline_Templates_Properties
                   AnchorSideTop.Side = asrBottom
@@ -7881,7 +7885,7 @@ object F_MainForm: TF_MainForm
                   Visible = False
                   OnMouseEnter = P_Spline_TemplatesMouseEnter
                   OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  object L_Epicycloid_Points_Count: TLabel
+                  object L_Spline_Epicycloid_Points_Count: TLabel
                     Left = 24
                     Height = 16
                     Top = 9
@@ -7902,7 +7906,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Epicycloid_Points_Count: TSpinEdit
+                  object SE_Spline_Epicycloid_Points_Count: TSpinEdit
                     Left = 108
                     Height = 20
                     Top = 8
@@ -7919,8 +7923,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 20000000
-                    OnChange = SE_Epicycloid_Points_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Epicycloid_Points_CountChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -7928,7 +7932,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 0
                     Value = 256
                   end
-                  object L_Epicycloid_Petals_Count: TLabel
+                  object L_Spline_Epicycloid_Petals_Count: TLabel
                     Left = 24
                     Height = 16
                     Top = 34
@@ -7949,7 +7953,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Epicycloid_Radius: TLabel
+                  object L_Spline_Epicycloid_Radius: TLabel
                     Left = 63
                     Height = 16
                     Top = 59
@@ -7970,7 +7974,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Epicycloid_Rotation: TLabel
+                  object L_Spline_Epicycloid_Rotation: TLabel
                     Left = 48
                     Height = 16
                     Top = 84
@@ -7991,7 +7995,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Epicycloid_Angle: TLabel
+                  object L_Spline_Epicycloid_Angle: TLabel
                     Left = 63
                     Height = 16
                     Top = 109
@@ -8012,7 +8016,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object CB_Epicycloid_Hypocycloid: TCheckBox
+                  object CB_Spline_Epicycloid_Hypocycloid: TCheckBox
                     Left = 48
                     Height = 19
                     Hint = 'Should Spline Be Partially Repainted Unless Clipped'
@@ -8026,7 +8030,7 @@ object F_MainForm: TF_MainForm
                     Font.Color = clCaptionText
                     Font.Height = -12
                     Font.Name = 'AR JULIAN'
-                    OnChange = CB_Epicycloid_HypocycloidChange
+                    OnChange = CB_Spline_Epicycloid_HypocycloidChange
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentColor = False
@@ -8036,7 +8040,7 @@ object F_MainForm: TF_MainForm
                     ShowHint = True
                     TabOrder = 1
                   end
-                  object SE_Epicycloid_Angle: TFloatSpinEdit
+                  object SE_Spline_Epicycloid_Angle: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 108
@@ -8053,8 +8057,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360
-                    OnChange = SE_Epicycloid_AngleChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Epicycloid_AngleChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -8062,7 +8066,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 2
                     Value = 360
                   end
-                  object SE_Epicycloid_Rotation: TFloatSpinEdit
+                  object SE_Spline_Epicycloid_Rotation: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 83
@@ -8079,15 +8083,15 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360
-                    OnChange = SE_Epicycloid_RotationChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Epicycloid_RotationChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 3
                   end
-                  object SE_Epicycloid_Radius: TFloatSpinEdit
+                  object SE_Spline_Epicycloid_Radius: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 58
@@ -8104,8 +8108,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 4095
-                    OnChange = SE_Epicycloid_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Epicycloid_RadiusChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -8113,7 +8117,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 4
                     Value = 256
                   end
-                  object SE_Epicycloid_Petals_Count: TFloatSpinEdit
+                  object SE_Spline_Epicycloid_Petals_Count: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 33
@@ -8130,8 +8134,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 20000000
-                    OnChange = SE_Epicycloid_Petals_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Epicycloid_Petals_CountChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -8140,7 +8144,7 @@ object F_MainForm: TF_MainForm
                     Value = 8
                   end
                 end
-                object P_Cycloid: TPanel
+                object P_Spline_Cycloid: TPanel
                   AnchorSideLeft.Control = P_Spline_Templates
                   AnchorSideTop.Control = P_Spline_Templates_Properties
                   AnchorSideTop.Side = asrBottom
@@ -8162,7 +8166,7 @@ object F_MainForm: TF_MainForm
                   Visible = False
                   OnMouseEnter = P_Spline_TemplatesMouseEnter
                   OnMouseLeave = P_Spline_TemplatesMouseLeave
-                  object L_Cycloid_Points_Count: TLabel
+                  object L_Spline_Cycloid_Points_Count: TLabel
                     Left = 4
                     Height = 16
                     Top = 9
@@ -8183,7 +8187,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object SE_Cycloid_Points_Count: TSpinEdit
+                  object SE_Spline_Cycloid_Points_Count: TSpinEdit
                     Left = 108
                     Height = 20
                     Top = 8
@@ -8200,8 +8204,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 20000000
-                    OnChange = SE_Cycloid_Points_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Cycloid_Points_CountChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -8209,7 +8213,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 0
                     Value = 256
                   end
-                  object L_Cycloid_Loops_Count: TLabel
+                  object L_Spline_Cycloid_Loops_Count: TLabel
                     Left = 5
                     Height = 16
                     Top = 34
@@ -8230,7 +8234,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Cycloid_Radius: TLabel
+                  object L_Spline_Cycloid_Radius: TLabel
                     Left = 6
                     Height = 16
                     Top = 59
@@ -8251,7 +8255,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object L_Cycloid_Direction_X: TLabel
+                  object L_Spline_Cycloid_Direction_X: TLabel
                     Left = 25
                     Height = 16
                     Top = 109
@@ -8273,10 +8277,10 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object CB_Cycloid_Direction_X: TComboBox
-                    AnchorSideLeft.Control = L_Cycloid_Direction_X
+                  object CB_Spline_Cycloid_Direction_X: TComboBox
+                    AnchorSideLeft.Control = L_Spline_Cycloid_Direction_X
                     AnchorSideLeft.Side = asrBottom
-                    AnchorSideTop.Control = L_Cycloid_Direction_X
+                    AnchorSideTop.Control = L_Spline_Cycloid_Direction_X
                     AnchorSideTop.Side = asrCenter
                     Left = 96
                     Height = 22
@@ -8296,7 +8300,7 @@ object F_MainForm: TF_MainForm
                     )
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    OnSelect = CB_Cycloid_Direction_XSelect
+                    OnSelect = CB_Spline_Cycloid_Direction_XSelect
                     ParentBidiMode = False
                     ParentFont = False
                     ParentShowHint = False
@@ -8304,7 +8308,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 1
                     Text = 'Right'
                   end
-                  object L_Cycloid_Direction_Y: TLabel
+                  object L_Spline_Cycloid_Direction_Y: TLabel
                     Left = 25
                     Height = 16
                     Top = 134
@@ -8326,10 +8330,10 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object CB_Cycloid_Direction_Y: TComboBox
-                    AnchorSideLeft.Control = L_Cycloid_Direction_Y
+                  object CB_Spline_Cycloid_Direction_Y: TComboBox
+                    AnchorSideLeft.Control = L_Spline_Cycloid_Direction_Y
                     AnchorSideLeft.Side = asrBottom
-                    AnchorSideTop.Control = L_Cycloid_Direction_Y
+                    AnchorSideTop.Control = L_Spline_Cycloid_Direction_Y
                     AnchorSideTop.Side = asrCenter
                     Left = 96
                     Height = 22
@@ -8349,7 +8353,7 @@ object F_MainForm: TF_MainForm
                     )
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
-                    OnSelect = CB_Cycloid_Direction_YSelect
+                    OnSelect = CB_Spline_Cycloid_Direction_YSelect
                     ParentBidiMode = False
                     ParentFont = False
                     ParentShowHint = False
@@ -8357,7 +8361,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 2
                     Text = 'Up'
                   end
-                  object L_Cycloid_Curvature: TLabel
+                  object L_Spline_Cycloid_Curvature: TLabel
                     Left = 6
                     Height = 16
                     Top = 84
@@ -8378,7 +8382,7 @@ object F_MainForm: TF_MainForm
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                   end
-                  object FSE_Cycloid_Curvature: TFloatSpinEdit
+                  object FSE_Spline_Cycloid_Curvature: TFloatSpinEdit
                     AnchorSideTop.Control = L_Spline_Simplification_Angle
                     AnchorSideTop.Side = asrCenter
                     AnchorSideBottom.Side = asrBottom
@@ -8400,8 +8404,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 360
-                    OnChange = FSE_Cycloid_CurvatureChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = FSE_Spline_Cycloid_CurvatureChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -8409,7 +8413,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 3
                     Value = 1
                   end
-                  object SE_Cycloid_Radius: TFloatSpinEdit
+                  object SE_Spline_Cycloid_Radius: TFloatSpinEdit
                     Left = 108
                     Height = 20
                     Top = 58
@@ -8426,8 +8430,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 4095
-                    OnChange = SE_Cycloid_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Cycloid_RadiusChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -8435,7 +8439,7 @@ object F_MainForm: TF_MainForm
                     TabOrder = 4
                     Value = 64
                   end
-                  object SE_Cycloid_Loops_Count: TSpinEdit
+                  object SE_Spline_Cycloid_Loops_Count: TSpinEdit
                     Left = 108
                     Height = 20
                     Top = 33
@@ -8452,8 +8456,8 @@ object F_MainForm: TF_MainForm
                     Font.Pitch = fpVariable
                     Font.Quality = fqDraft
                     MaxValue = 20000000
-                    OnChange = SE_Cycloid_Loops_CountChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnChange = SE_Spline_Cycloid_Loops_CountChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_TemplatesMouseEnter
                     OnMouseLeave = P_Spline_TemplatesMouseLeave
                     ParentFont = False
@@ -8466,7 +8470,7 @@ object F_MainForm: TF_MainForm
                   Cursor = crHandPoint
                   Left = 8
                   Height = 22
-                  Hint = 'Load spline from .svg or .sff file'
+                  Hint = 'Load spline from .svg or .sif file'
                   Top = 29
                   Width = 72
                   AllowAllUp = True
@@ -8478,6 +8482,7 @@ object F_MainForm: TF_MainForm
                   BorderSpacing.InnerBorder = 1
                   Caption = 'Import'
                   Color = 15002839
+                  Enabled = False
                   Font.CharSet = ANSI_CHARSET
                   Font.Color = clNavy
                   Font.Height = -13
@@ -8548,8 +8553,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Drawing_PropMouseEnter
-                OnMouseLeave = P_Drawing_PropMouseLeave
+                OnMouseEnter = P_Spline_Drawing_PropMouseEnter
+                OnMouseLeave = P_Spline_Drawing_PropMouseLeave
               end
               object Image21: TImage
                 AnchorSideRight.Side = asrBottom
@@ -8558,8 +8563,8 @@ object F_MainForm: TF_MainForm
                 Height = 8
                 Top = 11
                 Width = 8
-                OnMouseEnter = P_Drawing_PropMouseEnter
-                OnMouseLeave = P_Drawing_PropMouseLeave
+                OnMouseEnter = P_Spline_Drawing_PropMouseEnter
+                OnMouseLeave = P_Spline_Drawing_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B47726170686963A900000089504E47
                   0D0A1A0A0000000D4948445200000008000000080806000000C40FBE8B000000
@@ -8574,7 +8579,7 @@ object F_MainForm: TF_MainForm
               end
               object Image7: TImage
                 AnchorSideLeft.Control = Image21
-                AnchorSideRight.Control = P_Drawing_Prop
+                AnchorSideRight.Control = P_Spline_Drawing_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
                 Left = 57
@@ -8584,8 +8589,8 @@ object F_MainForm: TF_MainForm
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
-                OnMouseEnter = P_Drawing_PropMouseEnter
-                OnMouseLeave = P_Drawing_PropMouseLeave
+                OnMouseEnter = P_Spline_Drawing_PropMouseEnter
+                OnMouseLeave = P_Spline_Drawing_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B477261706869635B00000089504E47
                   0D0A1A0A0000000D49484452000000010000000108060000001F15C489000000
@@ -8596,12 +8601,12 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object P_Spline_Freehand: TPanel
-                AnchorSideLeft.Control = P_Drawing_Prop
+                AnchorSideLeft.Control = P_Spline_Drawing_Prop
                 AnchorSideTop.Control = L_Spline_Type
                 AnchorSideTop.Side = asrBottom
-                AnchorSideRight.Control = P_Drawing_Prop
+                AnchorSideRight.Control = P_Spline_Drawing_Prop
                 AnchorSideRight.Side = asrBottom
-                AnchorSideBottom.Control = P_Drawing_Prop
+                AnchorSideBottom.Control = P_Spline_Drawing_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
                 Height = 430
@@ -8767,7 +8772,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 1000
                     OnChange = SE_Spline_Pts_FreqChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_FreehandMouseEnter
                     OnMouseLeave = P_Spline_FreehandMouseLeave
                     ParentFont = False
@@ -8820,7 +8825,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MaxValue = 1000
                     OnChange = SE_Spline_Spray_RadiusChange
-                    OnKeyDown = SE_Spline_Pts_FreqKeyDown
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     OnMouseEnter = P_Spline_FreehandMouseEnter
                     OnMouseLeave = P_Spline_FreehandMouseLeave
                     ParentFont = False
@@ -8832,8 +8837,8 @@ object F_MainForm: TF_MainForm
                 end
               end
             end
-            object P_Dynamics_Prop: TPanel
-              AnchorSideLeft.Control = P_Optimization_Prop
+            object P_Spline_Dynamics_Prop: TPanel
+              AnchorSideLeft.Control = P_Spline_Optimization_Prop
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = P_Spline
               AnchorSideRight.Control = P_Spline
@@ -8863,11 +8868,11 @@ object F_MainForm: TF_MainForm
               ParentShowHint = False
               ShowHint = True
               TabOrder = 4
-              OnMouseEnter = P_Dynamics_PropMouseEnter
-              OnMouseLeave = P_Dynamics_PropMouseLeave
+              OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
+              OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
               object Image8: TImage
                 AnchorSideLeft.Control = Image22
-                AnchorSideRight.Control = P_Dynamics_Prop
+                AnchorSideRight.Control = P_Spline_Dynamics_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
                 Left = 58
@@ -8877,8 +8882,8 @@ object F_MainForm: TF_MainForm
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
-                OnMouseEnter = P_Dynamics_PropMouseEnter
-                OnMouseLeave = P_Dynamics_PropMouseLeave
+                OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
+                OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B477261706869635B00000089504E47
                   0D0A1A0A0000000D49484452000000010000000108060000001F15C489000000
@@ -8895,8 +8900,8 @@ object F_MainForm: TF_MainForm
                 Height = 8
                 Top = 11
                 Width = 8
-                OnMouseEnter = P_Dynamics_PropMouseEnter
-                OnMouseLeave = P_Dynamics_PropMouseLeave
+                OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
+                OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B47726170686963A900000089504E47
                   0D0A1A0A0000000D4948445200000008000000080806000000C40FBE8B000000
@@ -8909,8 +8914,8 @@ object F_MainForm: TF_MainForm
                 Stretch = True
                 Transparent = True
               end
-              object L_Dynamics_Style: TLabel
-                AnchorSideLeft.Control = P_Dynamics_Prop
+              object L_Spline_Dynamics_Style: TLabel
+                AnchorSideLeft.Control = P_Spline_Dynamics_Prop
                 Left = 10
                 Height = 16
                 Top = 26
@@ -8929,12 +8934,12 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Dynamics_PropMouseEnter
-                OnMouseLeave = P_Dynamics_PropMouseLeave
+                OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
+                OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
               end
-              object CB_Dynamics_Style: TComboBox
-                AnchorSideLeft.Control = L_Dynamics_Style
-                AnchorSideTop.Control = L_Dynamics_Style
+              object CB_Spline_Dynamics_Style: TComboBox
+                AnchorSideLeft.Control = L_Spline_Dynamics_Style
+                AnchorSideTop.Control = L_Spline_Dynamics_Style
                 AnchorSideTop.Side = asrCenter
                 Left = 54
                 Height = 22
@@ -8954,9 +8959,9 @@ object F_MainForm: TF_MainForm
                   'Spring'
                   'Rigid'
                 )
-                OnMouseEnter = P_Dynamics_PropMouseEnter
-                OnMouseLeave = P_Dynamics_PropMouseLeave
-                OnSelect = CB_Dynamics_StyleSelect
+                OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
+                OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
+                OnSelect = CB_Spline_Dynamics_StyleSelect
                 ParentBidiMode = False
                 ParentFont = False
                 ParentShowHint = False
@@ -8964,7 +8969,7 @@ object F_MainForm: TF_MainForm
                 TabOrder = 0
                 Text = 'None'
               end
-              object L_Dynamics: TLabel
+              object L_Spline_Dynamics: TLabel
                 Left = 8
                 Height = 16
                 Top = 5
@@ -8982,10 +8987,10 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Dynamics_PropMouseEnter
-                OnMouseLeave = P_Dynamics_PropMouseLeave
+                OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
+                OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
               end
-              object CB_Dynamics_Collider: TCheckBox
+              object CB_Spline_Dynamics_Collider: TCheckBox
                 Left = 10
                 Height = 19
                 Hint = 'Use this spline as collider'
@@ -9000,8 +9005,8 @@ object F_MainForm: TF_MainForm
                 Font.Color = clCaptionText
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
-                OnMouseEnter = P_Dynamics_PropMouseEnter
-                OnMouseLeave = P_Dynamics_PropMouseLeave
+                OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
+                OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
@@ -9010,8 +9015,8 @@ object F_MainForm: TF_MainForm
                 TabOrder = 1
               end
             end
-            object P_Save_Load_Prop: TPanel
-              AnchorSideLeft.Control = P_Dynamics_Prop
+            object P_Spline_Save_Prop: TPanel
+              AnchorSideLeft.Control = P_Spline_Dynamics_Prop
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = P_Spline
               AnchorSideRight.Control = P_Spline
@@ -9042,11 +9047,11 @@ object F_MainForm: TF_MainForm
               ParentShowHint = False
               ShowHint = True
               TabOrder = 5
-              OnMouseEnter = P_Save_Load_PropMouseEnter
-              OnMouseLeave = P_Save_Load_PropMouseLeave
+              OnMouseEnter = P_Spline_Save_PropMouseEnter
+              OnMouseLeave = P_Spline_Save_PropMouseLeave
               object Image9: TImage
                 AnchorSideLeft.Control = Image23
-                AnchorSideRight.Control = P_Save_Load_Prop
+                AnchorSideRight.Control = P_Spline_Save_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
                 Left = 39
@@ -9056,8 +9061,8 @@ object F_MainForm: TF_MainForm
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
-                OnMouseEnter = P_Save_Load_PropMouseEnter
-                OnMouseLeave = P_Save_Load_PropMouseLeave
+                OnMouseEnter = P_Spline_Save_PropMouseEnter
+                OnMouseLeave = P_Spline_Save_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B477261706869635B00000089504E47
                   0D0A1A0A0000000D49484452000000010000000108060000001F15C489000000
@@ -9077,8 +9082,8 @@ object F_MainForm: TF_MainForm
                 Top = 11
                 Width = 8
                 BorderSpacing.Left = 3
-                OnMouseEnter = P_Save_Load_PropMouseEnter
-                OnMouseLeave = P_Save_Load_PropMouseLeave
+                OnMouseEnter = P_Spline_Save_PropMouseEnter
+                OnMouseLeave = P_Spline_Save_PropMouseLeave
                 Picture.Data = {
                   1754506F727461626C654E6574776F726B47726170686963A900000089504E47
                   0D0A1A0A0000000D4948445200000008000000080806000000C40FBE8B000000
@@ -9109,8 +9114,8 @@ object F_MainForm: TF_MainForm
                 ParentColor = False
                 ParentFont = False
                 ParentShowHint = False
-                OnMouseEnter = P_Save_Load_PropMouseEnter
-                OnMouseLeave = P_Save_Load_PropMouseLeave
+                OnMouseEnter = P_Spline_Save_PropMouseEnter
+                OnMouseLeave = P_Spline_Save_PropMouseLeave
               end
             end
           end
@@ -9121,9 +9126,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 488
+            Left = 400
             Height = 160
-            Top = -28
+            Top = 36
             Width = 760
             Anchors = []
             BevelColor = 9665894
@@ -9524,6 +9529,7 @@ object F_MainForm: TF_MainForm
                     Font.Quality = fqDraft
                     MinValue = 1
                     OnChange = SE_Select_Points_Bucket_SizeChange
+                    OnMouseDown = SE_Spline_Pts_FreqMouseDown
                     ParentFont = False
                     ParentShowHint = False
                     TabOrder = 3
@@ -10125,15 +10131,15 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 898
-            Height = 110
-            Top = -55
+            Left = 24
+            Height = 206
+            Top = 16
             Width = 529
             Anchors = []
             BevelColor = 9665894
             BevelInner = bvLowered
             BorderWidth = 2
-            ClientHeight = 110
+            ClientHeight = 206
             ClientWidth = 529
             Color = 12236195
             FullRepaint = False
@@ -10141,13 +10147,14 @@ object F_MainForm: TF_MainForm
             TabOrder = 3
             Visible = False
             object BB_Load_Bitmap: TBitBtn
-              Left = 9
+              Left = 344
               Height = 74
               Hint = 'Load Texture Sample'
-              Top = 9
+              Top = 13
               Width = 74
               Caption = 'Load Bitmap'
               Color = 14139865
+              Enabled = False
               Font.CharSet = ANSI_CHARSET
               Font.Color = 5658398
               Font.Height = -12
@@ -10479,13 +10486,14 @@ object F_MainForm: TF_MainForm
               ShowHint = True
               Spacing = 0
               TabOrder = 0
+              Visible = False
             end
             object BB_Apply_Bitmap_To_Spline: TBitBtn
               Cursor = crHandPoint
-              Left = 64
+              Left = 400
               Height = 16
               Hint = 'Show Texture Samples on Spline'
-              Top = 10
+              Top = 13
               Width = 16
               BorderSpacing.CellAlignHorizontal = ccaCenter
               BorderSpacing.CellAlignVertical = ccaCenter
@@ -10570,11 +10578,12 @@ object F_MainForm: TF_MainForm
               ShowHint = True
               Spacing = 0
               TabOrder = 1
+              Visible = False
             end
             object L_Bitmap_Width: TLabel
-              Left = 96
+              Left = 240
               Height = 16
-              Top = 13
+              Top = 19
               Width = 69
               Alignment = taRightJustify
               AutoSize = False
@@ -10588,11 +10597,12 @@ object F_MainForm: TF_MainForm
               ParentColor = False
               ParentFont = False
               ParentShowHint = False
+              Visible = False
             end
             object L_Bitmap_Height: TLabel
-              Left = 96
+              Left = 240
               Height = 16
-              Top = 38
+              Top = 44
               Width = 69
               Alignment = taRightJustify
               AutoSize = False
@@ -10606,34 +10616,28 @@ object F_MainForm: TF_MainForm
               ParentColor = False
               ParentFont = False
               ParentShowHint = False
-            end
-            object CB_Proportional: TCheckBox
-              Left = 96
-              Height = 19
-              Hint = 'Allows to draw points with same coordinates'
-              Top = 60
-              Width = 101
-              HelpType = htKeyword
-              AutoSize = False
-              Caption = 'Proportional'
-              Checked = True
-              Color = 13885637
-              Font.CharSet = ANSI_CHARSET
-              Font.Color = clCaptionText
-              Font.Height = -12
-              Font.Name = 'AR JULIAN'
-              ParentColor = False
-              ParentFont = False
-              ParentShowHint = False
-              ParentBidiMode = False
-              ShowHint = True
-              State = cbChecked
-              TabOrder = 2
+              Visible = False
             end
             object SE_Spline_Bitmap_Width: TSpinEdit
-              Left = 171
+              Left = 315
               Height = 20
-              Top = 10
+              Top = 16
+              Width = 55
+              AutoSelect = False
+              AutoSize = False
+              Font.Color = 5512455
+              Font.Height = -11
+              Font.Name = 'Euphemia'
+              MaxValue = 1024
+              ParentFont = False
+              TabOrder = 2
+              Value = 16
+              Visible = False
+            end
+            object SE_Spline_Bitmap_Height: TSpinEdit
+              Left = 315
+              Height = 20
+              Top = 41
               Width = 55
               AutoSelect = False
               AutoSize = False
@@ -10644,81 +10648,323 @@ object F_MainForm: TF_MainForm
               ParentFont = False
               TabOrder = 3
               Value = 16
+              Visible = False
             end
-            object SE_Spline_Bitmap_Height: TSpinEdit
-              Left = 171
-              Height = 20
-              Top = 35
-              Width = 55
-              AutoSelect = False
-              AutoSize = False
-              Font.Color = 5512455
-              Font.Height = -11
-              Font.Name = 'Euphemia'
-              MaxValue = 1024
-              ParentFont = False
-              TabOrder = 4
-              Value = 16
-            end
-            object SB_Text_Select_Font: TSpeedButton
-              Cursor = crHandPoint
-              Left = 239
-              Height = 28
-              Hint = 'Load Image'
-              Top = 9
-              Width = 28
-              AllowAllUp = True
-              BorderSpacing.Left = 64
-              Color = 13359793
-              Flat = True
+            object P_Text_Drawing_Prop: TPanel
+              AnchorSideLeft.Control = P_Text
+              AnchorSideTop.Control = P_Text
+              AnchorSideRight.Control = P_Text
+              AnchorSideRight.Side = asrBottom
+              AnchorSideBottom.Control = P_Text
+              AnchorSideBottom.Side = asrBottom
+              Left = 4
+              Height = 198
+              Top = 4
+              Width = 521
+              Anchors = [akTop, akLeft, akRight, akBottom]
+              BevelColor = 9665894
+              BevelOuter = bvLowered
+              BevelWidth = 2
+              ClientHeight = 198
+              ClientWidth = 521
+              Color = 12236195
               Font.CharSet = ANSI_CHARSET
-              Font.Color = clNavy
-              Font.Height = -17
-              Font.Name = 'Candara'
-              Font.Pitch = fpFixed
+              Font.Color = 7107914
+              Font.Height = 27
+              Font.Name = 'ARCENA'
+              Font.Pitch = fpVariable
               Font.Quality = fqDraft
-              Glyph.Data = {
-                36040000424D3604000000000000360000002800000010000000100000000100
-                2000000000000004000064000000640000000000000000000000000000000000
-                0000000000000000000000000000000000000000000000000000000000000000
-                0000000000000000000000000000000000200000002900000006000000000000
-                0000000000000000000500000002000000000000000000000000000000000000
-                000000000000000000000D212E502F4558C81210117A00000010000000000000
-                0000031D282400090E5800000050000000320000001F0000000F000000050000
-                0001000000000E1B24441C69A4EA52B0ECFF2D38375E00000004000000000000
-                00001D93C3972B93B7E6075C79D7083B4FBC051D289B000306770000005B0000
-                004A041017581C69A2E344AEF5FF3C6D78840509070800000000000000000000
-                00002595C3B36DDDFBFF14DAFFFF12CBF9FF08BAE8FF3691AEF68C8A8CEA8D75
-                6CDF706869E161A5D3FF3B6C78A10000000C0000000000000000000000000000
-                00002A9DC9B681D5EDFF4EE8FFFF2EE2FFFF3ACCE8FFDADDDAFFFFFFFFFFFBF0
-                D3FFE2C6A9FF61A3B7F9000004870000001D0000000000000000000000000000
-                00002A9DC9B674D4EDFF89F3FEFF58EFFFFF95C9C8FFFCE0C3FFF4EBD7FFE5D1
-                A6FFE2C083FFABC7C6FF0F495ECB0000004A0000000200000000000000000000
-                00002A9DC9B64CCEF0FF9FEFF7FF89FEFFFFAED1C9FFE5C18AFFDEC690FFE3CF
-                9FFFE1C28DFFD5D6CAFF5CACC2F300050A850000001600000000000000000000
-                00002A9DC9B628D0FAFF92DDEEFFABFFFFFFA4E8E5FFDABE95FFE1BF7FFFFEEF
-                DAFFDBCEC0FFA9DDDFFFB8F2FEFF0D3646C00000004000000002000000000000
-                00002A9DC9B611D3FFFF3EC2E9FF92DFEFFF8DE6F3FFA2C9CCFFD0CCB8FFC9D1
-                C1FF99D8D5FF9FF7FFFFF5FFFFFF5095ACEF0000007800000013000000000000
-                00002A9DC9B62BDDFFFF15D2FCFF1FC8F3FF25C6F0FF22C0ECFF77CDE5FFA6F1
-                F2FF95FFFFFFB2FBFFFFFFFFFFFFC5E9F4FF062937B00000002F000000000000
-                00002A9DC9B651E9FFFF42E4FFFF42E4FFFF41E4FFFF3FE5FFFF3CCCEFFF5DCA
-                E8FF68D0EBFF74CBE5FDB0DEF1FDC8EEFBFF296C86BA0000001A000000000000
-                00002A9DC9B676F7FFFF65EFFFFF67EFFFFF6DF2FFFF72F7FFFF6EF7FFFF65EF
-                FEFF67F2FCFF1F87A6E300263764158EBC521162813200000000000000000000
-                000041ACD4ADA7FBFDFF9EFFFFFF9EFFFFFF7EEDF7FF5FD5E9E265D8EADD69DC
-                ECE571E4F0ED2989A59D0000000D000000000000000000000000000000000000
-                00000C90C4234AAFD3BB61BEDCD765C7E5E15FD5E9E2001D2A232496BD1F2A9E
-                C62532A8CF2C1671931100000000000000000000000000000000000000000000
-                0000000000000000000000000000000000000000000000000000000000000000
-                0000000000000000000000000000000000000000000000000000
-              }
-              GroupIndex = 1
-              OnClick = SB_Text_Select_FontClick
-              ShowHint = True
-              ParentBidiMode = False
+              ParentColor = False
               ParentFont = False
               ParentShowHint = False
+              ShowHint = True
+              TabOrder = 4
+              OnMouseEnter = P_Text_Drawing_PropMouseEnter
+              OnMouseLeave = P_Text_Drawing_PropMouseLeave
+              object P_Text_Settings: TPanel
+                AnchorSideLeft.Control = P_Text_Drawing_Prop
+                AnchorSideTop.Control = P_Text_Drawing_Prop
+                AnchorSideRight.Control = P_Text_Drawing_Prop
+                AnchorSideRight.Side = asrBottom
+                AnchorSideBottom.Control = P_Text_Drawing_Prop
+                AnchorSideBottom.Side = asrBottom
+                Left = 2
+                Height = 194
+                Top = 2
+                Width = 517
+                Anchors = [akTop, akLeft, akRight, akBottom]
+                BevelColor = 7895160
+                BevelInner = bvSpace
+                BevelOuter = bvNone
+                ClientHeight = 194
+                ClientWidth = 517
+                Color = 10063735
+                ParentColor = False
+                TabOrder = 0
+                OnMouseEnter = P_Text_SettingsMouseEnter
+                OnMouseLeave = P_Text_SettingsMouseLeave
+                object P_Text_Settings_Header: TPanel
+                  AnchorSideLeft.Control = P_Text_Settings
+                  AnchorSideTop.Control = P_Text_Settings
+                  AnchorSideRight.Control = P_Text_Settings
+                  AnchorSideRight.Side = asrBottom
+                  AnchorSideBottom.Side = asrBottom
+                  Left = 1
+                  Height = 22
+                  Top = 1
+                  Width = 515
+                  Anchors = [akTop, akLeft, akRight]
+                  BevelColor = 7895160
+                  BevelOuter = bvNone
+                  ClientHeight = 22
+                  ClientWidth = 515
+                  Color = 11117709
+                  ParentColor = False
+                  TabOrder = 0
+                  OnMouseEnter = P_Text_SettingsMouseEnter
+                  OnMouseLeave = P_Text_SettingsMouseLeave
+                  object BB_Text_Generate: TBitBtn
+                    AnchorSideLeft.Control = P_Text_Settings_Header
+                    AnchorSideTop.Control = P_Text_Settings_Header
+                    AnchorSideRight.Side = asrBottom
+                    Cursor = crHandPoint
+                    Left = 4
+                    Height = 20
+                    Top = 1
+                    Width = 56
+                    BorderSpacing.Left = 4
+                    BorderSpacing.Top = 1
+                    Caption = 'Generate'
+                    Color = 14139865
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = 3814951
+                    Font.Height = -12
+                    Font.Name = 'DejaVu Serif Condensed'
+                    Font.Pitch = fpVariable
+                    Font.Quality = fqDraft
+                    Margin = 0
+                    OnMouseEnter = P_Text_SettingsMouseEnter
+                    OnMouseLeave = P_Text_SettingsMouseLeave
+                    ParentBidiMode = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    ShowHint = True
+                    Spacing = 0
+                    TabOrder = 0
+                  end
+                end
+                object CB_Text_Background: TCheckBox
+                  Left = 10
+                  Height = 19
+                  Top = 31
+                  Width = 88
+                  HelpType = htKeyword
+                  AutoSize = False
+                  Caption = 'Background'
+                  Color = 12236195
+                  Font.CharSet = ANSI_CHARSET
+                  Font.Color = clCaptionText
+                  Font.Height = -12
+                  Font.Name = 'AR JULIAN'
+                  OnChange = CB_Text_BackgroundChange
+                  OnMouseEnter = P_Text_SettingsMouseEnter
+                  OnMouseLeave = P_Text_SettingsMouseLeave
+                  ParentColor = False
+                  ParentFont = False
+                  ParentShowHint = False
+                  ParentBidiMode = False
+                  ShowHint = True
+                  TabOrder = 1
+                end
+                object SB_Text_Background_Color: TSpeedButton
+                  AnchorSideLeft.Control = CB_Text_Background
+                  AnchorSideTop.Control = CB_Text_Background
+                  Cursor = crHandPoint
+                  Left = 100
+                  Height = 16
+                  Top = 32
+                  Width = 16
+                  AllowAllUp = True
+                  BorderSpacing.Left = 90
+                  BorderSpacing.Top = 1
+                  BorderSpacing.Right = 13
+                  Color = clWhite
+                  Flat = True
+                  Transparent = False
+                  OnMouseEnter = P_Text_SettingsMouseEnter
+                  OnMouseLeave = P_Text_SettingsMouseLeave
+                  ShowHint = True
+                  ParentShowHint = False
+                end
+                object SB_Text_Background_Color_Random: TSpeedButton
+                  AnchorSideLeft.Control = CB_Text_Background
+                  AnchorSideTop.Control = CB_Text_Background
+                  AnchorSideTop.Side = asrCenter
+                  AnchorSideBottom.Side = asrBottom
+                  Cursor = crHandPoint
+                  Left = 121
+                  Height = 20
+                  Top = 30
+                  Width = 24
+                  AllowAllUp = True
+                  BorderSpacing.Left = 111
+                  Caption = 'R'
+                  Color = 13476495
+                  Font.CharSet = ANSI_CHARSET
+                  Font.Color = 3814951
+                  Font.Height = -12
+                  Font.Name = 'DejaVu Serif Condensed'
+                  Font.Pitch = fpVariable
+                  Font.Quality = fqDraft
+                  GroupIndex = 1
+                  Transparent = False
+                  OnMouseEnter = P_Text_SettingsMouseEnter
+                  OnMouseLeave = P_Text_SettingsMouseLeave
+                  ShowHint = True
+                  ParentFont = False
+                  ParentShowHint = False
+                end
+                object L_Text_Field: TLabel
+                  Left = 8
+                  Height = 16
+                  Top = 56
+                  Width = 64
+                  Alignment = taRightJustify
+                  AutoSize = False
+                  BorderSpacing.Left = 8
+                  Caption = 'Text Field:'
+                  Font.CharSet = ANSI_CHARSET
+                  Font.Color = clBlack
+                  Font.Height = -12
+                  Font.Name = 'AR JULIAN'
+                  Font.Quality = fqDraft
+                  Layout = tlBottom
+                  ParentBidiMode = False
+                  ParentColor = False
+                  ParentFont = False
+                  ParentShowHint = False
+                  OnMouseEnter = P_Text_SettingsMouseEnter
+                  OnMouseLeave = P_Text_SettingsMouseLeave
+                end
+                object M_Text_Text_Field: TMemo
+                  AnchorSideLeft.Control = P_Text_Settings
+                  AnchorSideRight.Control = P_Text_Settings
+                  AnchorSideRight.Side = asrBottom
+                  AnchorSideBottom.Control = P_Text_Settings
+                  AnchorSideBottom.Side = asrBottom
+                  Left = 3
+                  Height = 110
+                  Top = 81
+                  Width = 511
+                  Anchors = [akTop, akLeft, akRight, akBottom]
+                  BorderSpacing.Left = 2
+                  BorderSpacing.Right = 2
+                  BorderSpacing.Bottom = 2
+                  Color = 12039069
+                  Constraints.MinHeight = 20
+                  Font.CharSet = ANSI_CHARSET
+                  Font.Color = 2581277
+                  Font.Height = -16
+                  Font.Name = 'AR JULIAN'
+                  Font.Quality = fqAntialiased
+                  OnMouseDown = SE_Spline_Pts_FreqMouseDown
+                  ParentFont = False
+                  ScrollBars = ssVertical
+                  TabOrder = 2
+                  WordWrap = False
+                end
+                object BB_Text_Set_Font: TBitBtn
+                  Cursor = crHandPoint
+                  Left = 78
+                  Height = 20
+                  Top = 55
+                  Width = 86
+                  BorderSpacing.Left = 4
+                  BorderSpacing.Top = 1
+                  Caption = '      Set Font'
+                  Color = 14139865
+                  Font.CharSet = ANSI_CHARSET
+                  Font.Color = 3814951
+                  Font.Height = -12
+                  Font.Name = 'DejaVu Serif Condensed'
+                  Font.Pitch = fpVariable
+                  Font.Quality = fqDraft
+                  Margin = 0
+                  OnMouseEnter = P_Text_SettingsMouseEnter
+                  OnMouseLeave = P_Text_SettingsMouseLeave
+                  ParentBidiMode = False
+                  ParentFont = False
+                  ParentShowHint = False
+                  ShowHint = True
+                  Spacing = 0
+                  TabOrder = 3
+                end
+              end
+              object L_Text_Drawing: TLabel
+                Left = 8
+                Height = 16
+                Top = 5
+                Width = 40
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'Drawing'
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = 5130019
+                Font.Height = 13
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                Layout = tlBottom
+                ParentBidiMode = False
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                OnMouseEnter = P_Text_Drawing_PropMouseEnter
+                OnMouseLeave = P_Text_Drawing_PropMouseLeave
+              end
+              object Image24: TImage
+                AnchorSideRight.Side = asrBottom
+                AnchorSideBottom.Side = asrBottom
+                Left = 51
+                Height = 8
+                Top = 11
+                Width = 8
+                OnMouseEnter = P_Text_Drawing_PropMouseEnter
+                OnMouseLeave = P_Text_Drawing_PropMouseLeave
+                Picture.Data = {
+                  1754506F727461626C654E6574776F726B47726170686963A900000089504E47
+                  0D0A1A0A0000000D4948445200000008000000080806000000C40FBE8B000000
+                  097048597300000B1200000B1201D2DD7EFC0000005B49444154189563B4CC6C
+                  61C0075890D87A0C0C0C5E50F6360606864BC80AF41818187A1818185CA17C27
+                  060686120606864B30055E50494628FF3F54EC12135E072059B10D6AEC7F287F
+                  37540CAEE012D44E9C8E8429BA846E0500D4C31098D32B355E0000000049454E
+                  44AE426082
+                }
+                Stretch = True
+                Transparent = True
+              end
+              object Image10: TImage
+                AnchorSideLeft.Control = Image24
+                AnchorSideRight.Control = P_Text_Drawing_Prop
+                AnchorSideRight.Side = asrBottom
+                AnchorSideBottom.Side = asrBottom
+                Left = 57
+                Height = 2
+                Top = 14
+                Width = 452
+                Anchors = [akTop, akLeft, akRight]
+                BorderSpacing.Left = 6
+                BorderSpacing.Right = 10
+                OnMouseEnter = P_Text_Drawing_PropMouseEnter
+                OnMouseLeave = P_Text_Drawing_PropMouseLeave
+                Picture.Data = {
+                  1754506F727461626C654E6574776F726B477261706869635B00000089504E47
+                  0D0A1A0A0000000D49484452000000010000000108060000001F15C489000000
+                  097048597300000B1200000B1201D2DD7EFC0000000D49444154089963B0CC6C
+                  F90F00042B02262C040F440000000049454E44AE426082
+                }
+                Stretch = True
+                Transparent = True
+              end
             end
           end
           object P_Brush: TPanel
@@ -10728,9 +10974,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 584
+            Left = 456
             Height = 63
-            Top = 56
+            Top = 47
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -10917,9 +11163,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 696
+            Left = 488
             Height = 110
-            Top = 14
+            Top = 42
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -10938,9 +11184,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 584
+            Left = 520
             Height = 63
-            Top = 3
+            Top = 47
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -11126,7 +11372,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 890
+            Left = 758
             Height = 63
             Top = -31
             Width = 506
@@ -11314,9 +11560,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 768
+            Left = 552
             Height = 110
-            Top = 48
+            Top = 42
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -11376,9 +11622,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 768
+            Left = 592
             Height = 110
-            Top = -3
+            Top = 43
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -11398,13 +11644,13 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 32
           Top = 0
-          Width = 834
+          Width = 738
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 2
           BevelColor = 13815453
           BevelOuter = bvLowered
           ClientHeight = 32
-          ClientWidth = 834
+          ClientWidth = 738
           Color = 15921635
           FullRepaint = False
           ParentColor = False
@@ -12481,7 +12727,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = P_Splitter5
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = S_Splitter3
-    Left = 808
+    Left = 712
     Height = 247
     Top = 4
     Width = 40
@@ -12536,7 +12782,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 812
+    Left = 716
     Height = 32
     Top = 34
     Width = 32
@@ -12546,13 +12792,16 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
+    Font.Color = 11645361
     Images = IL_Drawing_Buttons
     ImageIndex = 15
+    ImageWidth = 32
     Transparent = False
     OnClick = SB_Visibility_TextureClick
     OnMouseEnter = SB_Visibility_TextureMouseEnter
     OnMouseLeave = I_Visibility_PanelMouseLeave
     ShowHint = True
+    ParentBidiMode = False
     ParentFont = False
     ParentShowHint = False
   end
@@ -12560,7 +12809,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 812
+    Left = 716
     Height = 32
     Top = 70
     Width = 32
@@ -12570,8 +12819,10 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
+    Font.Color = 11645361
     Images = IL_Drawing_Buttons
     ImageIndex = 6
+    ImageWidth = 32
     Transparent = False
     OnClick = SB_Visibility_GridClick
     OnMouseEnter = SB_Visibility_GridMouseEnter
@@ -12585,7 +12836,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 812
+    Left = 716
     Height = 32
     Top = 142
     Width = 32
@@ -12595,8 +12846,10 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
+    Font.Color = 11645361
     Images = IL_Drawing_Buttons
     ImageIndex = 3
+    ImageWidth = 32
     Transparent = False
     OnClick = SB_Visibility_SplineClick
     OnMouseEnter = SB_Visibility_SplineMouseEnter
@@ -12610,7 +12863,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 812
+    Left = 716
     Height = 32
     Top = 214
     Width = 32
@@ -12620,6 +12873,7 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
+    Font.Color = 11645361
     Images = IL_Drawing_Buttons
     ImageIndex = 9
     ImageWidth = 32
@@ -12636,7 +12890,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 812
+    Left = 716
     Height = 32
     Top = 178
     Width = 32
@@ -12646,11 +12900,10 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
-    Font.CharSet = ANSI_CHARSET
-    Font.Name = 'Sylfaen'
-    Font.Quality = fqAntialiased
+    Font.Color = 11645361
     Images = IL_Drawing_Buttons
     ImageIndex = 8
+    ImageWidth = 32
     Transparent = False
     OnClick = SB_Visibility_ActorClick
     OnMouseEnter = SB_Visibility_ActorMouseEnter
@@ -12664,7 +12917,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 812
+    Left = 716
     Height = 32
     Top = 106
     Width = 32
@@ -12674,8 +12927,10 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
+    Font.Color = 11645361
     Images = IL_Drawing_Buttons
     ImageIndex = 7
+    ImageWidth = 32
     Transparent = False
     OnClick = SB_Visibility_Snap_GridClick
     OnMouseEnter = SB_Visibility_Snap_GridMouseEnter
@@ -12689,7 +12944,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 812
+    Left = 716
     Height = 21
     Top = 9
     Width = 32
@@ -12699,9 +12954,12 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Right = 4
     Color = 10344422
     Flat = True
+    Font.Color = 11645361
     Transparent = False
     OnClick = SB_Visibility_Show_AllClick
     ShowHint = True
+    ParentBidiMode = False
+    ParentFont = False
     ParentShowHint = False
   end
   object Panel8: TPanel
@@ -12710,7 +12968,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter4
-    Left = 852
+    Left = 756
     Height = 0
     Top = 0
     Width = 83
@@ -12759,9 +13017,9 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = S_Splitter2
     AnchorSideTop.Side = asrCenter
     AnchorSideBottom.Side = asrBottom
-    Left = 843
+    Left = 747
     Height = 17
-    Top = 214
+    Top = 162
     Width = 15
     Caption = '>'
     Enabled = False
@@ -12783,7 +13041,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = -6
     Height = 17
-    Top = 214
+    Top = 162
     Width = 15
     Anchors = [akTop, akRight]
     Caption = '<'
@@ -12798,11 +13056,11 @@ object F_MainForm: TF_MainForm
     Visible = False
   end
   object S_TreeView_Splitter: TSplitter
-    AnchorSideTop.Control = SB_TreeView_Object_Tags
+    AnchorSideTop.Control = TV_Scene_Tree
     AnchorSideBottom.Control = SB_TreeView_Object_Tags
     AnchorSideBottom.Side = asrBottom
-    Left = 976
-    Height = 404
+    Left = 920
+    Height = 402
     Top = 4
     Width = 4
     Align = alCustom
@@ -12817,13 +13075,15 @@ object F_MainForm: TF_MainForm
     AnchorSideLeft.Control = TV_Scene_Tree
     AnchorSideTop.Control = TV_Scene_Tree
     AnchorSideRight.Control = S_TreeView_Splitter
-    Left = 856
+    AnchorSideRight.Side = asrBottom
+    Left = 760
     Height = 24
     Top = 8
-    Width = 120
+    Width = 160
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 4
     BorderSpacing.Top = 4
+    BorderSpacing.Right = 4
     BevelColor = 12559168
     BevelInner = bvSpace
     BevelOuter = bvNone
@@ -12840,19 +13100,22 @@ object F_MainForm: TF_MainForm
   object SB_TreeView_Object_Tags: TScrollBox
     AnchorSideLeft.Control = S_TreeView_Splitter
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = TV_Scene_Tree
+    AnchorSideTop.Control = P_Objects_Tags
+    AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = TV_Scene_Tree
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = TV_Scene_Tree
     AnchorSideBottom.Side = asrBottom
-    Left = 980
-    Height = 404
-    Top = 4
-    Width = 44
+    Left = 924
+    Height = 374
+    Top = 32
+    Width = 96
     HorzScrollBar.Page = 1
     VertScrollBar.Increment = 26
     VertScrollBar.Page = 1
     Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Right = 4
+    BorderSpacing.Bottom = 2
     TabOrder = 16
     OnMouseWheelDown = SB_TreeView_Object_TagsMouseWheelDown
     OnMouseWheelUp = SB_TreeView_Object_TagsMouseWheelUp
@@ -12897,32 +13160,6 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     SimplePanel = False
   end
-  object P_Objects_Tags: TPanel
-    AnchorSideLeft.Control = SB_TreeView_Object_Tags
-    AnchorSideTop.Control = SB_TreeView_Object_Tags
-    AnchorSideRight.Control = SB_TreeView_Object_Tags
-    AnchorSideRight.Side = asrBottom
-    Left = 982
-    Height = 24
-    Top = 8
-    Width = 22
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 2
-    BorderSpacing.Top = 4
-    BorderSpacing.Right = 20
-    BevelColor = 12559168
-    BevelInner = bvSpace
-    BevelOuter = bvNone
-    Caption = 'Tags'
-    Color = 7958609
-    Font.CharSet = ANSI_CHARSET
-    Font.Color = 15855578
-    Font.Height = -15
-    Font.Name = 'Iskoola Pota'
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 19
-  end
   object SB_Object_Properties: TScrollBox
     AnchorSideLeft.Control = S_Splitter3
     AnchorSideLeft.Side = asrBottom
@@ -12931,19 +13168,19 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter7
-    Left = 852
+    Left = 756
     Height = 180
     Top = 412
-    Width = 172
-    HorzScrollBar.Page = 168
+    Width = 268
+    HorzScrollBar.Page = 148
     VertScrollBar.Increment = 26
     VertScrollBar.Page = 28
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 159
-    ClientWidth = 168
+    ClientHeight = 176
+    ClientWidth = 264
     Color = 11117709
     ParentColor = False
-    TabOrder = 20
+    TabOrder = 19
     OnMouseEnter = SB_Object_PropertiesMouseEnter
     OnMouseLeave = SB_Object_PropertiesMouseLeave
     object L_Object_Properties: TLabel
@@ -12975,24 +13212,24 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_Object_Properties
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 137
+      Height = 154
       Top = 22
-      Width = 206
+      Width = 264
       Anchors = [akTop, akLeft, akRight, akBottom]
       BevelColor = 7895160
       BevelOuter = bvNone
-      ClientHeight = 137
-      ClientWidth = 206
+      ClientHeight = 154
+      ClientWidth = 264
       Color = 10063735
       ParentColor = False
       TabOrder = 0
       OnMouseEnter = SB_Object_PropertiesMouseEnter
       OnMouseLeave = SB_Object_PropertiesMouseLeave
       object L_Object_Properties_Parallax_Shift: TLabel
-        Left = 64
+        Left = 12
         Height = 16
         Top = 9
-        Width = 89
+        Width = 83
         Alignment = taRightJustify
         AutoSize = False
         Caption = 'Parallax Shift:'
@@ -13014,7 +13251,7 @@ object F_MainForm: TF_MainForm
         AnchorSideLeft.Control = L_Object_Properties_Parallax_Shift
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Side = asrBottom
-        Left = 159
+        Left = 101
         Height = 20
         Top = 8
         Width = 47
@@ -13048,10 +13285,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 852
+    Left = 756
     Height = 4
     Top = 408
-    Width = 172
+    Width = 268
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -13100,14 +13337,14 @@ object F_MainForm: TF_MainForm
     OnClick = TB_SpeedClick
     ParentFont = False
     ParentShowHint = False
-    TabOrder = 22
+    TabOrder = 21
   end
   object L_Exec_Time_Info: TLabel
     AnchorSideLeft.Control = S_Splitter1
     AnchorSideBottom.Control = S_Splitter2
     Left = 20
     Height = 23
-    Top = 177
+    Top = 125
     Width = 224
     Anchors = [akLeft, akBottom]
     AutoSize = False
@@ -13128,8 +13365,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     AnchorSideBottom.Side = asrBottom
     Left = 10
-    Height = 116
-    Top = 98
+    Height = 102
+    Top = 60
     Width = 342
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 6
@@ -13142,7 +13379,7 @@ object F_MainForm: TF_MainForm
     Font.Height = -16
     ParentFont = False
     ScrollBars = ssVertical
-    TabOrder = 23
+    TabOrder = 22
     Visible = False
     WordWrap = False
   end
@@ -13155,19 +13392,19 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter3
     AnchorSideBottom.Side = asrBottom
-    Left = 852
+    Left = 756
     Height = 75
     Top = 596
-    Width = 172
+    Width = 268
     HorzScrollBar.Page = 144
     VertScrollBar.Increment = 26
     VertScrollBar.Page = 18
     Anchors = [akTop, akLeft, akRight, akBottom]
     ClientHeight = 71
-    ClientWidth = 168
+    ClientWidth = 264
     Color = 11117709
     ParentColor = False
-    TabOrder = 25
+    TabOrder = 24
     OnMouseEnter = SB_Tag_PropertiesMouseEnter
     OnMouseLeave = SB_Tag_PropertiesMouseLeave
     object L_Tag_Properties: TLabel
@@ -13201,7 +13438,7 @@ object F_MainForm: TF_MainForm
       Left = 0
       Height = 49
       Top = 22
-      Width = 168
+      Width = 264
       Anchors = [akTop, akLeft, akRight, akBottom]
       BevelColor = 7895160
       BevelOuter = bvNone
@@ -13219,10 +13456,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 852
+    Left = 756
     Height = 4
     Top = 592
-    Width = 172
+    Width = 268
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -13237,7 +13474,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = Memo1
     Left = 10
     Height = 31
-    Top = 63
+    Top = 25
     Width = 118
     Anchors = [akLeft, akBottom]
     Caption = 'Test your might'
@@ -13247,8 +13484,34 @@ object F_MainForm: TF_MainForm
     Font.Style = [fsBold]
     OnClick = Button1Click
     ParentFont = False
-    TabOrder = 27
+    TabOrder = 26
     Visible = False
+  end
+  object P_Objects_Tags: TPanel
+    AnchorSideLeft.Control = S_TreeView_Splitter
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = TV_Scene_Tree
+    AnchorSideRight.Control = TV_Scene_Tree
+    AnchorSideRight.Side = asrBottom
+    Left = 924
+    Height = 24
+    Top = 8
+    Width = 96
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 4
+    BevelColor = 12559168
+    BevelInner = bvSpace
+    BevelOuter = bvNone
+    Caption = 'Tags'
+    Color = 7958609
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = 15855578
+    Font.Height = -15
+    Font.Name = 'Iskoola Pota'
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 27
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.obj'
@@ -15794,8 +16057,30 @@ object F_MainForm: TF_MainForm
     Top = 256
     object MI_Add_Group: TMenuItem
       Caption = 'Add Group(Prefab)'
+      Enabled = False
       ShortCut = 45
+      Visible = False
       OnClick = MI_Add_GroupClick
+    end
+    object MI_Group_Objects: TMenuItem
+      Caption = 'Group Objects'
+      Enabled = False
+      ShortCut = 221
+      Visible = False
+      OnClick = MI_Group_ObjectsClick
+    end
+    object MI_Delete_Without_Children: TMenuItem
+      Caption = 'Delete Without Children'
+      Enabled = False
+      ShortCut = 220
+      Visible = False
+      OnClick = MI_Delete_Without_ChildrenClick
+    end
+    object MI_Delete_All_Groups: TMenuItem
+      Caption = 'Delete All Groups'
+      Enabled = False
+      Visible = False
+      OnClick = MI_Delete_All_GroupsClick
     end
     object MI_Remove_Object: TMenuItem
       Caption = 'Remove Object'
@@ -15805,26 +16090,20 @@ object F_MainForm: TF_MainForm
     object MenuItem3: TMenuItem
       Caption = '-'
     end
-    object MI_Group_Objects: TMenuItem
-      Caption = 'Group Objects'
-      ShortCut = 221
-      OnClick = MI_Group_ObjectsClick
-    end
-    object MI_Delete_Without_Children: TMenuItem
-      Caption = 'Delete Without Children'
-      ShortCut = 220
-      OnClick = MI_Delete_Without_ChildrenClick
+    object MI_Select_All: TMenuItem
+      Caption = 'Select All'
+      OnClick = MI_Select_AllClick
     end
     object MenuItem1: TMenuItem
       Caption = '-'
     end
-    object MI_Delete_All_Groups: TMenuItem
-      Caption = 'Delete All Groups'
-      OnClick = MI_Delete_All_GroupsClick
+    object MI_Fold_All: TMenuItem
+      Caption = 'Fold All'
+      OnClick = MI_Fold_AllClick
     end
-    object MI_Select_All: TMenuItem
-      Caption = 'Select All'
-      OnClick = MI_Select_AllClick
+    object MI_Unfold_All: TMenuItem
+      Caption = 'Unfold All'
+      OnClick = MI_Unfold_AllClick
     end
     object MenuItem4: TMenuItem
       Caption = '-'
@@ -24645,9 +24924,9 @@ object F_MainForm: TF_MainForm
   end
   object OD_Spline_Load: TOpenDialog
     DefaultExt = '.svg'
-    Filter = 'Scalable Vector Graphics|*.svg|Spline Factory Format|*.sff'
-    Left = 224
-    Top = 480
+    Filter = 'Scalable Vector Graphics|*.svg|Sparse Image Format|*.sif'
+    Left = 344
+    Top = 536
   end
   object IL_Fold_Unfold: TImageList
     Left = 280

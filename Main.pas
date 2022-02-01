@@ -77,6 +77,7 @@ type
   TRGrid             =class;
   TSGrid             =class;
   TCurve             =class;
+  TFText             =class;
   TUV                =class;
   TISGraph           =class;
   TSelPts            =class;
@@ -92,6 +93,7 @@ type
     BB_Copy_UV                                       : TBitBtn;
     BB_Delete_All                                    : TBitBtn;
     BB_Add_Sprite                                    : TBitBtn;
+    BB_Text_Generate                                 : TBitBtn;
     BB_Spline_Templates_Left                         : TBitBtn;
     BB_Spline_Templates_Right                        : TBitBtn;
     BB_Load_Bitmap                                   : TBitBtn;
@@ -100,11 +102,12 @@ type
     BB_Reset_Angle                                   : TBitBtn;
     BB_Move_To_and_Merge                             : TBitBtn;
     BB_Apply_Bitmap_To_Spline                        : TBitBtn;
-    BB_Generate                                      : TBitBtn;
+    BB_Spline_Generate                               : TBitBtn;
     BB_Reset_Size                                    : TBitBtn;
     BB_Reset_Position                                : TBitBtn;
     BB_Save_UV                                       : TBitBtn;
     BB_Reset_UV                                      : TBitBtn;
+    BB_Text_Set_Font                                 : TBitBtn;
     BB_Use_Magic                                     : TBitBtn;
     BB_Triangulate                                   : TBitBtn;
     BB_Mirror_V                                      : TBitBtn;
@@ -128,7 +131,7 @@ type
     Button1                                          : TButton;
     CB_Brush_Mode1                                   : TComboBox;
     CB_Brush_Mode2                                   : TComboBox;
-    CB_Cycloid_Direction_Y                           : TComboBox;
+    CB_Spline_Cycloid_Direction_Y                    : TComboBox;
     CB_Physics_Deletion                              : TCheckBox;
     CB_Select_Points_Background_Style                : TComboBox;
     CB_Select_Points_Show_Bounds                     : TCheckBox;
@@ -140,11 +143,12 @@ type
     CB_Splines_Deletion                              : TCheckBox;
     CB_Spline_Edges_Anti_Aliasing                    : TCheckBox;
     CB_Spline_Edges_LOD                              : TCheckBox;
-    CB_Dynamics_Style                                : TComboBox;
-    CB_Dynamics_Collider                             : TCheckBox;
+    CB_Spline_Dynamics_Style                         : TComboBox;
+    CB_Spline_Dynamics_Collider                      : TCheckBox;
     CB_Spline_Best_Precision                         : TCheckBox;
+    CB_Text_Background                               : TCheckBox;
     CB_Spline_Lazy_Repaint                           : TCheckBox;
-    CB_Epicycloid_Hypocycloid                        : TCheckBox;
+    CB_Spline_Epicycloid_Hypocycloid                 : TCheckBox;
     CB_Spline_Byte_Mode                              : TCheckBox;
     CB_Spline_Hidden_Line_Elimination                : TCheckBox;
     CB_Spline_Edges_Style                            : TComboBox;
@@ -156,12 +160,11 @@ type
     CB_Spline_Points_Shape                           : TComboBox;
     CB_Spline_Edges_Show_Bounds                      : TCheckBox;
     CB_Spline_Points_Show_Bounds                     : TCheckBox;
-    CB_Cycloid_Direction_X                           : TComboBox;
+    CB_Spline_Cycloid_Direction_X                    : TComboBox;
     CB_Actors_Deletion                               : TCheckBox;
     CB_Tilemaps_Deletion                             : TCheckBox;
     CB_Groups_Deletion                               : TCheckBox;
     CB_Spline_Connect_Ends                           : TCheckBox;
-    CB_Proportional                                  : TCheckBox;
     CB_Spline_Mode                                   : TComboBox;
     CB_Spline_Type                                   : TComboBox;
     CB_Particles_Deletion                            : TCheckBox;
@@ -170,10 +173,10 @@ type
     FP_Image_List                                    : TFlowPanel;
     FSE_Brush_Fall_Off1                              : TFloatSpinEdit;
     FSE_Brush_Fall_Off2                              : TFloatSpinEdit;
-    FSE_Rose_Petals_Count                            : TFloatSpinEdit;
-    FSE_Spiral_Coil_Step                             : TFloatSpinEdit;
+    FSE_Spline_Rose_Petals_Count                     : TFloatSpinEdit;
+    FSE_Spline_Spiral_Coil_Step                      : TFloatSpinEdit;
     FSE_Spline_Simplification_Angle                  : TFloatSpinEdit;
-    FSE_Cycloid_Curvature                            : TFloatSpinEdit;
+    FSE_Spline_Cycloid_Curvature                     : TFloatSpinEdit;
     IL_Default_Tile_Map_Icon                         : TImageList;
     IL_Scene_Tree_Image_List                         : TImageList;
     IL_Pivot_Bmp                                     : TImageList;
@@ -184,10 +187,12 @@ type
     IL_Spline_Templates                              : TImageList;
     IL_Arrow_Up_Down                                 : TImageList;
     IL_Drawing_Buttons                               : TImageList;
+    Image10                                          : TImage;
     Image20                                          : TImage;
     Image21                                          : TImage;
     Image22                                          : TImage;
     Image23                                          : TImage;
+    Image24                                          : TImage;
     Image6                                           : TImage;
     Image7                                           : TImage;
     IL_World_Axis                                    : TImageList;
@@ -195,7 +200,7 @@ type
     IL_Default_Mask_Template_Sprite_Icon             : TImageList;
     Image8                                           : TImage;
     Image9                                           : TImage;
-    IL_Fold_Unfold: TImageList;
+    IL_Fold_Unfold                                   : TImageList;
     I_Frame_List                                     : TImage;
     Image18                                          : TImage;
     Image19                                          : TImage;
@@ -207,21 +212,23 @@ type
     I_Visibility_Panel                               : TImage;
     Label1                                           : TLabel;
     LCLVLCPlayer_Intro                               : TLCLVLCPlayer;
-    L_Cycloid_Direction_Y                            : TLabel;
-    L_Cycloid_Loops_Count                            : TLabel;
-    L_Cycloid_Points_Count                           : TLabel;
-    L_Cycloid_Radius                                 : TLabel;
-    L_Cycloid_Curvature                              : TLabel;
-    L_Rose_Angle                                     : TLabel;
-    L_Spiral_Angle                                   : TLabel;
-    L_Rose_Petals_Count                              : TLabel;
-    L_Spiral_Coil_Step                               : TLabel;
-    L_Rose_Points_Count                              : TLabel;
-    L_Spiral_Points_Count                            : TLabel;
-    L_Rose_Radius                                    : TLabel;
-    L_Spiral_Radius                                  : TLabel;
-    L_Rose_Rotation                                  : TLabel;
-    L_Spiral_Rotation                                : TLabel;
+    L_Spline_Cycloid_Direction_Y                     : TLabel;
+    L_Spline_Cycloid_Loops_Count                     : TLabel;
+    L_Spline_Cycloid_Points_Count                    : TLabel;
+    L_Spline_Cycloid_Radius                          : TLabel;
+    L_Spline_Cycloid_Curvature                       : TLabel;
+    L_Text_Field                                     : TLabel;
+    L_Spline_Rose_Angle                              : TLabel;
+    L_Spline_Spiral_Angle                            : TLabel;
+    L_Spline_Rose_Petals_Count                       : TLabel;
+    L_Spline_Spiral_Coil_Step                        : TLabel;
+    L_Spline_Rose_Points_Count                       : TLabel;
+    L_Spline_Spiral_Points_Count                     : TLabel;
+    L_Spline_Rose_Radius                             : TLabel;
+    L_Spline_Spiral_Radius                           : TLabel;
+    L_Spline_Rose_Rotation                           : TLabel;
+    L_Spline_Spiral_Rotation                         : TLabel;
+    L_Text_Drawing                                   : TLabel;
     L_Spline_Save                                    : TLabel;
     L_Exec_Time_Info                                 : TLabel;
     L_Speed                                          : TLabel;
@@ -235,10 +242,10 @@ type
     L_Brush_Size2                                    : TLabel;
     L_Count_X                                        : TLabel;
     L_Count_Y                                        : TLabel;
-    L_Epicycloid_Rotation                            : TLabel;
-    L_Epicycloid_Angle                               : TLabel;
-    L_Dynamics                                       : TLabel;
-    L_Dynamics_Style                                 : TLabel;
+    L_Spline_Epicycloid_Rotation                     : TLabel;
+    L_Spline_Epicycloid_Angle                        : TLabel;
+    L_Spline_Dynamics                                : TLabel;
+    L_Spline_Dynamics_Style                          : TLabel;
     L_RGrid_Color                                    : TLabel;
     L_Spline_Free_Memory                             : TLabel;
     L_Spline_Edges_Dash_Length                       : TLabel;
@@ -247,9 +254,9 @@ type
     L_Spline_Remove_Brunching                        : TLabel;
     L_Spline_Optimization                            : TLabel;
     L_Spline_Drawing                                 : TLabel;
-    L_Epicycloid_Points_Count                        : TLabel;
-    L_Epicycloid_Petals_Count                        : TLabel;
-    L_Epicycloid_Radius                              : TLabel;
+    L_Spline_Epicycloid_Points_Count                 : TLabel;
+    L_Spline_Epicycloid_Petals_Count                 : TLabel;
+    L_Spline_Epicycloid_Radius                       : TLabel;
     L_Spline_Freehand_Settings                       : TLabel;
     L_Object_Properties_Parallax_Shift               : TLabel;
     L_Spline_Templates_Name                          : TLabel;
@@ -257,7 +264,7 @@ type
     L_Spline_Edges_Shape                             : TLabel;
     L_Spline_Points_Rectangle_Inner_Rectangle        : TLabel;
     L_Spline_Edges_Settings                          : TLabel;
-    L_Cycloid_Direction_X                            : TLabel;
+    L_Spline_Cycloid_Direction_X                     : TLabel;
     L_Object_Properties                              : TLabel;
     L_Spline_Points_Rectangle_Thikness_Left          : TLabel;
     L_Spline_Points_Count                            : TLabel;
@@ -293,6 +300,10 @@ type
     L_Spline_Mode                                    : TLabel;
     L_Tag_Properties                                 : TLabel;
     Memo1                                            : TMemo;
+    MenuItem3                                        : TMenuItem;
+    MI_Unfold_All                                    : TMenuItem;
+    MI_Fold_All                                      : TMenuItem;
+    M_Text_Text_Field                                : TMemo;
     MI_Button_Style_3                                : TMenuItem;
     MI_Align_Image_On_Inner_Window_Resize            : TMenuItem;
     MenuItem5                                        : TMenuItem;
@@ -319,18 +330,21 @@ type
     PageControl1                                     : TPageControl;
     Panel1                                           : TPanel;
     P_AnimK_Custom_Panel                             : TPanel;
-    P_Spiral                                         : TPanel;
+    P_Text_Drawing_Prop                              : TPanel;
+    P_Spline_Spiral                                  : TPanel;
     P_SGrid                                          : TPanel;
     P_RGrid                                          : TPanel;
-    P_Dynamics_Prop                                  : TPanel;
-    P_Save_Load_Prop                                 : TPanel;
+    P_Spline_Dynamics_Prop                           : TPanel;
+    P_Spline_Save_Prop                               : TPanel;
     P_Map_Editor                                     : TPanel;
-    P_Cycloid                                        : TPanel;
-    P_Epicycloid                                     : TPanel;
-    P_Rose                                           : TPanel;
+    P_Spline_Cycloid                                 : TPanel;
+    P_Spline_Epicycloid                              : TPanel;
+    P_Spline_Rose                                    : TPanel;
     P_Play_Anim                                      : TPanel;
     P_Spline_Freehand_Settings                       : TPanel;
     P_Spline_Freehand                                : TPanel;
+    P_Text_Settings                                  : TPanel;
+    P_Text_Settings_Header                           : TPanel;
     P_Spray                                          : TPanel;
     P_Spline_Template_List                           : TPanel;
     P_Object_Properties                              : TPanel;
@@ -340,10 +354,10 @@ type
     P_Spline_Points_Rectangle_Thickness              : TPanel;
     P_Animation_Buttons                              : TPanel;
     P_Add_Actor                                      : TPanel;
-    P_Optimization_Prop                              : TPanel;
-    P_Edges_Prop                                     : TPanel;
-    P_Drawing_Prop                                   : TPanel;
-    P_Points_Prop                                    : TPanel;
+    P_Spline_Optimization_Prop                       : TPanel;
+    P_Spline_Edges_Prop                              : TPanel;
+    P_Spline_Drawing_Prop                            : TPanel;
+    P_Spline_Points_Prop                             : TPanel;
     P_Objects_Tags                                   : TPanel;
     P_Scene_Tree                                     : TPanel;
     P_Inner_Subgraph1                                : TPanel;
@@ -381,13 +395,14 @@ type
     RB_Spline_Adaptive                               : TRadioButton;
     RB_Spline_Constant                               : TRadioButton;
     RB_Spline_None                                   : TRadioButton;
+    SB_Text_Background_Color                         : TSpeedButton;
+    SB_Text_Background_Color_Random                  : TSpeedButton;
     SB_Spline_Load                                   : TSpeedButton;
     SB_Map_Editor                                    : TSpeedButton;
     SB_RGrid                                         : TSpeedButton;
     SB_SGrid                                         : TSpeedButton;
     SB_RGrid_Color                                   : TSpeedButton;
     SB_Tag_Properties                                : TScrollBox;
-    SB_Text_Select_Font                              : TSpeedButton;
     SB_Spline                                        : TSpeedButton;
     SB_Spline_Template_Superellipse                  : TSpeedButton;
     SB_Add_Actor                                     : TSpeedButton;
@@ -440,7 +455,6 @@ type
     L_Height                                         : TLabel;
     MI_Add_Group                                     : TMenuItem;
     MI_Remove_Object                                 : TMenuItem;
-    MenuItem3                                        : TMenuItem;
     MI_Group_Objects                                 : TMenuItem;
     MI_Select_All                                    : TMenuItem;
     MI_Fold_Selected                                 : TMenuItem;
@@ -472,24 +486,24 @@ type
     SE_Brush_Radius2                                 : TSpinEdit;
     SE_Count_X                                       : TSpinEdit;
     SE_Count_Y                                       : TSpinEdit;
-    SE_Cycloid_Loops_Count                           : TSpinEdit;
-    SE_Cycloid_Points_Count                          : TSpinEdit;
-    SE_Cycloid_Radius                                : TFloatSpinEdit;
-    SE_Epicycloid_Angle                              : TFloatSpinEdit;
-    SE_Epicycloid_Petals_Count                       : TFloatSpinEdit;
-    SE_Epicycloid_Radius                             : TFloatSpinEdit;
-    SE_Epicycloid_Rotation                           : TFloatSpinEdit;
-    SE_Rose_Angle                                    : TFloatSpinEdit;
-    SE_Rose_Radius                                   : TFloatSpinEdit;
-    SE_Rose_Rotation                                 : TFloatSpinEdit;
-    SE_Rose_Points_Count                             : TSpinEdit;
-    SE_Spiral_Angle                                  : TFloatSpinEdit;
-    SE_Spiral_Points_Count                           : TSpinEdit;
-    SE_Spiral_Radius                                 : TFloatSpinEdit;
-    SE_Spiral_Rotation                               : TFloatSpinEdit;
+    SE_Spline_Cycloid_Loops_Count                    : TSpinEdit;
+    SE_Spline_Cycloid_Points_Count                   : TSpinEdit;
+    SE_Spline_Cycloid_Radius                         : TFloatSpinEdit;
+    SE_Spline_Epicycloid_Angle                       : TFloatSpinEdit;
+    SE_Spline_Epicycloid_Petals_Count                : TFloatSpinEdit;
+    SE_Spline_Epicycloid_Radius                      : TFloatSpinEdit;
+    SE_Spline_Epicycloid_Rotation                    : TFloatSpinEdit;
+    SE_Spline_Rose_Angle                             : TFloatSpinEdit;
+    SE_Spline_Rose_Radius                            : TFloatSpinEdit;
+    SE_Spline_Rose_Rotation                          : TFloatSpinEdit;
+    SE_Spline_Rose_Points_Count                      : TSpinEdit;
+    SE_Spline_Spiral_Angle                           : TFloatSpinEdit;
+    SE_Spline_Spiral_Points_Count                    : TSpinEdit;
+    SE_Spline_Spiral_Radius                          : TFloatSpinEdit;
+    SE_Spline_Spiral_Rotation                        : TFloatSpinEdit;
     SE_Spline_Edges_Points_Radius                    : TSpinEdit;
     SE_Spline_Edges_Width                            : TSpinEdit;
-    SE_Epicycloid_Points_Count                       : TSpinEdit;
+    SE_Spline_Epicycloid_Points_Count                : TSpinEdit;
     SE_Spline_Edges_Dash_Length                      : TSpinEdit;
     SE_Spline_Points_Rectangle_Thikness_Left         : TSpinEdit;
     SE_Spline_Points_Rectangle_Inner_Rectangle_Width : TSpinEdit;
@@ -567,16 +581,16 @@ type
     {F_MainForm}
     procedure BB_Add_TilemapClick                                    (      sender           :TObject);
     procedure BB_Add_SpriteClick                                     (      sender           :TObject);
-    procedure BB_GenerateClick                                       (      sender           :TObject);
+    procedure BB_Spline_GenerateClick                                (      sender           :TObject);
     procedure BB_Load_FrameClick                                     (      sender           :TObject);
     procedure BB_Spline_Templates_RightClick                         (      sender           :TObject);
     procedure BB_Spline_Templates_LeftClick                          (      sender           :TObject);
     procedure BB_Use_MagicClick                                      (      sender           :TObject);
     procedure Button1Click                                           (      sender           :TObject);
-    procedure CB_Cycloid_Direction_XSelect                           (      sender           :TObject);
-    procedure CB_Cycloid_Direction_YSelect                           (      sender           :TObject);
-    procedure CB_Dynamics_StyleSelect                                (      sender           :TObject);
-    procedure CB_Epicycloid_HypocycloidChange                        (      sender           :TObject);
+    procedure CB_Spline_Cycloid_Direction_XSelect                    (      sender           :TObject);
+    procedure CB_Spline_Cycloid_Direction_YSelect                    (      sender           :TObject);
+    procedure CB_Spline_Dynamics_StyleSelect                         (      sender           :TObject);
+    procedure CB_Spline_Epicycloid_HypocycloidChange                 (      sender           :TObject);
     procedure CB_Select_Points_Background_StyleSelect                (      sender           :TObject);
     procedure CB_Spline_Best_PrecisionChange                         (      sender           :TObject);
     procedure CB_Spline_Byte_ModeChange                              (      sender           :TObject);
@@ -592,6 +606,7 @@ type
     procedure CB_Spline_Points_ShapeSelect                           (      sender           :TObject);
     procedure CB_Spline_Points_Show_BoundsChange                     (      sender           :TObject);
     procedure CB_Spline_Points_StyleSelect                           (      sender           :TObject);
+    procedure CB_Text_BackgroundChange                               (      sender           :TObject);
     procedure FormMouseMove                                          (      sender           :TObject;
                                                                             shift            :TShiftState;
                                                                             x,y              :integer);
@@ -629,9 +644,9 @@ type
     procedure FormDropFiles                                          (      sender           :TObject;
                                                                       const file_names       :array of string);
     procedure FormResize                                             (      sender           :TObject);
-    procedure FSE_Rose_Petals_CountChange                            (      sender           :TObject);
-    procedure FSE_Cycloid_CurvatureChange                            (      sender           :TObject);
-    procedure FSE_Spiral_Coil_StepChange                             (      sender           :TObject);
+    procedure FSE_Spline_Rose_Petals_CountChange                     (      sender           :TObject);
+    procedure FSE_Spline_Cycloid_CurvatureChange                     (      sender           :TObject);
+    procedure FSE_Spline_Spiral_Coil_StepChange                      (      sender           :TObject);
     procedure I_Frame_ListMouseDown                                  (      sender           :TObject;
                                                                             button           :TMouseButton;
                                                                             shift            :TShiftState;
@@ -651,6 +666,8 @@ type
     procedure MI_System_InfoClick                                    (      sender           :TObject);
     procedure MI_Button_Style_1Click                                 (      sender           :TObject);
     procedure MI_Button_Style_2Click                                 (      sender           :TObject);
+    procedure MI_Fold_AllClick                                       (      sender           :TObject);
+    procedure MI_Unfold_AllClick                                     (      sender           :TObject);
     procedure OpenGLControl2Click                                    (      sender           :TObject);
     procedure P_2D_Operations_AutomaticMouseEnter                    (      sender           :TObject);
     procedure P_2D_Operations_AutomaticMouseLeave                    (      sender           :TObject);
@@ -661,18 +678,18 @@ type
     procedure P_Drawing_ButtonsMouseMove                             (      sender           :TObject;
                                                                             shift            :TShiftState;
                                                                             x,y              :integer);
-    procedure P_Dynamics_PropMouseEnter                              (      sender           :TObject);
-    procedure P_Dynamics_PropMouseLeave                              (      sender           :TObject);
-    procedure P_Optimization_PropMouseEnter                          (      sender           :TObject);
-    procedure P_Optimization_PropMouseLeave                          (      sender           :TObject);
-    procedure P_Edges_PropMouseEnter                                 (      sender           :TObject);
-    procedure P_Edges_PropMouseLeave                                 (      sender           :TObject);
-    procedure P_Drawing_PropMouseEnter                               (      sender           :TObject);
-    procedure P_Drawing_PropMouseLeave                               (      sender           :TObject);
-    procedure P_Points_PropMouseEnter                                (      sender           :TObject);
-    procedure P_Points_PropMouseLeave                                (      sender           :TObject);
-    procedure P_Save_Load_PropMouseEnter                             (      sender           :TObject);
-    procedure P_Save_Load_PropMouseLeave                             (      sender           :TObject);
+    procedure P_Spline_Dynamics_PropMouseEnter                       (      sender           :TObject);
+    procedure P_Spline_Dynamics_PropMouseLeave                       (      sender           :TObject);
+    procedure P_Spline_Optimization_PropMouseEnter                   (      sender           :TObject);
+    procedure P_Spline_Optimization_PropMouseLeave                   (      sender           :TObject);
+    procedure P_Spline_Edges_PropMouseEnter                          (      sender           :TObject);
+    procedure P_Spline_Edges_PropMouseLeave                          (      sender           :TObject);
+    procedure P_Spline_Drawing_PropMouseEnter                        (      sender           :TObject);
+    procedure P_Spline_Drawing_PropMouseLeave                        (      sender           :TObject);
+    procedure P_Spline_Points_PropMouseEnter                         (      sender           :TObject);
+    procedure P_Spline_Points_PropMouseLeave                         (      sender           :TObject);
+    procedure P_Spline_Save_PropMouseEnter                           (      sender           :TObject);
+    procedure P_Spline_Save_PropMouseLeave                           (      sender           :TObject);
     procedure P_Spline_EdgesMouseEnter                               (      sender           :TObject);
     procedure P_Spline_EdgesMouseLeave                               (      sender           :TObject);
     procedure P_Spline_FreehandMouseEnter                            (      sender           :TObject);
@@ -692,6 +709,10 @@ type
                                                                             mousepos         :TPoint;
                                                                       var   handled          :boolean);
     procedure P_Spline_Template_ListPaint                            (      sender           :TObject);
+    procedure P_Text_Drawing_PropMouseEnter                          (      sender           :TObject);
+    procedure P_Text_Drawing_PropMouseLeave                          (      sender           :TObject);
+    procedure P_Text_SettingsMouseEnter                              (      sender           :TObject);
+    procedure P_Text_SettingsMouseLeave                              (      sender           :TObject);
     procedure RB_Spline_AdaptiveChange                               (      sender           :TObject);
     procedure SB_Add_ActorClick                                      (      sender           :TObject);
     procedure SB_Map_EditorClick                                     (      sender           :TObject);
@@ -724,23 +745,27 @@ type
                                                                             shift            :TShiftState;
                                                                             mousepos         :TPoint;
                                                                       var   handled          :boolean);
-    procedure SE_Cycloid_Loops_CountChange                           (      sender           :TObject);
-    procedure SE_Cycloid_Points_CountChange                          (      sender           :TObject);
-    procedure SE_Cycloid_RadiusChange                                (      sender           :TObject);
-    procedure SE_Epicycloid_AngleChange                              (      sender           :TObject);
-    procedure SE_Epicycloid_Petals_CountChange                       (      sender           :TObject);
-    procedure SE_Epicycloid_Points_CountChange                       (      sender           :TObject);
-    procedure SE_Epicycloid_RadiusChange                             (      sender           :TObject);
-    procedure SE_Epicycloid_RotationChange                           (      sender           :TObject);
+    procedure SE_Spline_Cycloid_Loops_CountChange                    (      sender           :TObject);
+    procedure SE_Spline_Cycloid_Points_CountChange                   (      sender           :TObject);
+    procedure SE_Spline_Cycloid_RadiusChange                         (      sender           :TObject);
+    procedure SE_Spline_Epicycloid_AngleChange                       (      sender           :TObject);
+    procedure SE_Spline_Epicycloid_Petals_CountChange                (      sender           :TObject);
+    procedure SE_Spline_Epicycloid_Points_CountChange                (      sender           :TObject);
+    procedure SE_Spline_Epicycloid_RadiusChange                      (      sender           :TObject);
+    procedure SE_Spline_Epicycloid_RotationChange                    (      sender           :TObject);
     procedure SE_Object_Properties_Parallax_ShiftChange              (      sender           :TObject);
-    procedure SE_Rose_AngleChange                                    (      sender           :TObject);
-    procedure SE_Rose_Points_CountChange                             (      sender           :TObject);
-    procedure SE_Rose_RadiusChange                                   (      sender           :TObject);
-    procedure SE_Rose_RotationChange                                 (      sender           :TObject);
-    procedure SE_Spiral_AngleChange                                  (      sender           :TObject);
-    procedure SE_Spiral_Points_CountChange                           (      sender           :TObject);
-    procedure SE_Spiral_RadiusChange                                 (      sender           :TObject);
-    procedure SE_Spiral_RotationChange                               (      sender           :TObject);
+    procedure SE_Spline_Pts_FreqMouseDown                            (      sender           :TObject;
+                                                                            button           :TMouseButton;
+                                                                            shift            :TShiftState;
+                                                                            x,y              :integer);
+    procedure SE_Spline_Rose_AngleChange                             (      sender           :TObject);
+    procedure SE_Spline_Rose_Points_CountChange                      (      sender           :TObject);
+    procedure SE_Spline_Rose_RadiusChange                            (      sender           :TObject);
+    procedure SE_Spline_Rose_RotationChange                          (      sender           :TObject);
+    procedure SE_Spline_Spiral_AngleChange                           (      sender           :TObject);
+    procedure SE_Spline_Spiral_Points_CountChange                    (      sender           :TObject);
+    procedure SE_Spline_Spiral_RadiusChange                          (      sender           :TObject);
+    procedure SE_Spline_Spiral_RotationChange                        (      sender           :TObject);
     procedure SE_Spline_Edges_WidthChange                            (      sender           :TObject);
     procedure SE_Spline_Points_CountChange                           (      sender           :TObject);
     procedure SE_Spline_Points_Rectangle_Inner_Rectangle_HeightChange(      sender           :TObject);
@@ -860,6 +885,11 @@ type
     procedure TV_Scene_TreeEditingEnd                                (      sender           :TObject;
                                                                             node             :TTreeNode;
                                                                             cancel           :boolean);
+    procedure TV_Scene_TreeExpanded                                  (      sender           :TObject;
+                                                                            node             :TTreeNode);
+    procedure TV_Scene_TreeExpanding                                 (      sender           :TObject;
+                                                                            node             :TTreeNode;
+                                                                      var   allowexpansion   :boolean);
     procedure TV_Scene_TreeKeyDown                                   (      sender           :TObject;
                                                                       var   key              :word;
                                                                             shift            :TShiftState);
@@ -1480,6 +1510,21 @@ type
   end; {$endregion}
   PCurve             =^TCurve;
 
+  {Text---------------}
+  TFText             =class {$region -fold}
+    public
+      {array of text sprites}
+      txt_img_arr: TFTxArr;
+
+      {spline global properties which will be shown on panel of spline properties in editor}
+      global_prop: TFTextProp;
+      {create class instance}
+      constructor Create(w,h:TColor); {$ifdef Linux}[local];{$endif}
+      {destroy class instance}
+      destructor  Destroy;  override; {$ifdef Linux}[local];{$endif}
+  end; {$endregion}
+  PFText                =^TFText;
+
   {UV-----------------}
   TUV                =class {$region -fold}
     public
@@ -1895,11 +1940,11 @@ var
   max_sprite_w_h_rct         : TPtRect;
   ini_var                    : TIniFile;
   {inner window margin}
-  inn_wnd_mrg                : integer=1{0}{0};
-  splitter_thickness         : integer=4{2}{1};
+  inn_wnd_mrg                : integer=01{0}{0};
+  splitter_thickness         : integer=04{2}{1};
   status_bar_thickness       : integer=53;
-  pp_iters_cnt               : integer=1;
-  skip_invalidate            : byte   =0;
+  pp_iters_cnt               : integer=01;
+  skip_invalidate            : byte   =00;
   move_with_child_form       : boolean;
   bottom_splitter_to_left    : boolean;
   bottom_splitter_to_right   : boolean;
@@ -1910,7 +1955,7 @@ var
 
   {Show Object---------------------------------} {$region -fold}
   // show objects array
-  show_obj_arr               : array[0..11] of boolean;
+  show_obj_arr               : array[0..9] of boolean;
   // show all objects(visibility list)
   show_all                   : boolean absolute show_obj_arr[00];
   // show texture(visibility list)
@@ -1922,15 +1967,15 @@ var
   // show splines(visibility list)
   show_spline                : boolean absolute show_obj_arr[04];
   // show textures on splines
-  show_tex_on_spline         : boolean absolute show_obj_arr[07];
+  show_tex_on_spline         : boolean absolute show_obj_arr[05];
   // show tile maps(visibility list)
-  show_tile_map              : boolean absolute show_obj_arr[08];
+  show_tile_map              : boolean absolute show_obj_arr[06];
   // show actors(visibility list)
-  show_actor                 : boolean absolute show_obj_arr[09];
+  show_actor                 : boolean absolute show_obj_arr[07];
   // show colliders(visibility list)
-  show_collider              : boolean absolute show_obj_arr[10];
+  show_collider              : boolean absolute show_obj_arr[08];
   // show world axis
-  show_world_axis            : boolean absolute show_obj_arr[11]; {$endregion}
+  show_world_axis            : boolean absolute show_obj_arr[09]; {$endregion}
 
   {Show Bounding Rectangles--------------------} {$region -fold}
   // show bounding rectangles array
@@ -2074,7 +2119,7 @@ var
   {Main Layer}
   srf_var                    : TSurf;
 
-  {Texture}
+  {Background Texture(single instance, not tiled)}
   tex_var                    : TTex;
 
   {Regular Grid}
@@ -2085,6 +2130,9 @@ var
 
   {Spline}
   sln_var                    : TCurve;
+
+  {Text}
+  txt_var                    : TFText;
 
   {UV}
   uv_var                     : TUV;
@@ -2236,6 +2284,9 @@ procedure CheckDIB; inline; {$ifdef Linux}[local];{$endif}
 procedure ObjIndsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
 // calculate objects indices in scene tree:
 procedure ScTIndsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
+// change panels visibility after folding/unfolding or draging items in scene tree :
+procedure CngPnVsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
+
 procedure CreateNodeData     (         node_with_data:TTreeNode;
                                        g_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
 procedure ClearNodeData      (         node_with_data:TTreeNode);     inline; {$ifdef Linux}[local];{$endif}
@@ -2941,9 +2992,9 @@ procedure TF_MainForm.SB_Unfold_Image_WindowClick     (sender:TObject);         
               S_Splitter2  .top       :=F_MainForm.height-splitter_thickness;
               S_Splitter3  .left      :=F_MainForm.width;
               S_TreeView_Splitter.left:=F_MainForm.width;
-              tag                     :=1;
+              tag                     :=1{1};
             end;
-          1:
+          {1:
             begin
               BorderStyle:=TFormBorderStyle.bsNone;
               tag        :=2;
@@ -2952,16 +3003,16 @@ procedure TF_MainForm.SB_Unfold_Image_WindowClick     (sender:TObject);         
             begin
               BorderStyle:=TFormBorderStyle.bsSizeable;
               tag        :=3;
-            end;
-          3:
+            end;}
+          1{3}:
             begin
               SetSplittersAnchors(0,F_MainForm);
               S_Splitter2.top         :=F_MainForm.height-67;
               S_Splitter3.left        :=F_MainForm.width-200;
               S_TreeView_Splitter.left:=F_MainForm.width-50;
-              tag                     :=4;
+              tag                     :=0{4};
             end;
-          4:
+          {4:
             begin
               BorderStyle:=TFormBorderStyle.bsNone;
               tag        :=5;
@@ -2970,7 +3021,7 @@ procedure TF_MainForm.SB_Unfold_Image_WindowClick     (sender:TObject);         
             begin
               BorderStyle:=TFormBorderStyle.bsSizeable;
               tag        :=0;
-            end;
+            end;}
         end;
         SplittersPosCalc;
         SB_Unfold_Image_Window.down:=False;
@@ -3380,7 +3431,7 @@ begin
   SB_Visibility_Actor    .Transparent:=not show_all;
   SB_Visibility_Collider .Transparent:=not show_all;
   SB_Visibility_Show_All .Transparent:=not show_all;
-  for i:=0 to High(show_obj_arr){-1} do
+  for i:=0 to High(show_obj_arr) do
     show_obj_arr[i]:=show_all;
   SB_Visibility_Show_All.Down:=False;
   srf_var.scl_dir            :=sdNone;
@@ -4370,6 +4421,7 @@ begin
       CreateNode('Tile Map',IntToStr(obj_var.tlmap_cnt));
       ObjIndsCalc;
       ScTIndsCalc;
+      CngPnVsCalc;
     end;
 end; {$endregion}
 {Scale Background: Calculation---------------}
@@ -4521,7 +4573,7 @@ begin
                     begin
                       if free_mem_on_scale_down and (fst_img<>Nil) then
                         fst_img.ClrArr;
-                      if ((has_sel_pts_ptr+i)^=0) then
+                      //if ((has_sel_pts_ptr+i)^=0) then
                         begin
                           if b2 then
                             begin
@@ -4583,7 +4635,7 @@ begin
                     begin
                       if free_mem_on_scale_down and (fst_img<>Nil) then
                         fst_img.ClrArr;
-                      if ((has_sel_pts_ptr+i)^=0) then
+                      //if ((has_sel_pts_ptr+i)^=0) then
                         begin
                           AddSplineDupPts0(i);
                           if byte_mode then
@@ -4592,7 +4644,7 @@ begin
                             AddSplinePts0 (i);
                           ClrSplineDupPts0(i);
                         end
-                      else
+                      {else
                         begin
                           AddSplineDupPts1(i);
                           if byte_mode then
@@ -4600,7 +4652,7 @@ begin
                           else
                             AddSplinePts1 (i);
                           ClrSplineDupPts1(i);
-                        end;
+                        end};
                       CrtSplinePts(i);
                     end;
                   lazy_repaint_prev:=b3;
@@ -4834,7 +4886,7 @@ var
   execution_time: double;
 begin
 
-  exec_timer:=TPerformanceTime.Create;
+  //exec_timer:=TPerformanceTime.Create;
   exec_timer.Start;
 
   {Calculation of Some Expressions}
@@ -5056,6 +5108,7 @@ begin
   CreateNode('Background Texture','');
   ObjIndsCalc;
   ScTIndsCalc;
+  CngPnVsCalc;
   SetLength(tex_bmp_rct_pts       ,2);
   SetLength(tex_bmp_rct_origin_pts,2);
   SetLength(tex_list              ,8); // Выделение памяти для массива текстур
@@ -5251,6 +5304,7 @@ begin
   CreateNode('Regular Grid','');
   ObjIndsCalc;
   ScTIndsCalc;
+  CngPnVsCalc;
   rgrid_dnt  :=64;
   rgrid_color:=$00ABAFA3;
   show_grid  :=True;
@@ -5354,6 +5408,7 @@ begin
   CreateNode('Snap Grid','');
   ObjIndsCalc;
   ScTIndsCalc;
+  CngPnVsCalc;
   sgrid_dnt     :=16;
   sgrid_color   :=SetColorInv($007B6693);
   show_snap_grid:=True;
@@ -5536,16 +5591,48 @@ end; {$endregion}
 
 // (Text) Текст:
 {LI} {$region -fold}
+constructor TFText.Create(w,h:TColor); {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  global_prop:=ftext_default_prop;
+end; {$endregion}
+destructor TFText.Destroy;             {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  inherited Destroy;
+end; {$endregion}
 {$endregion}
 {UI} {$region -fold}
-procedure TF_MainForm.SB_TextClick            (sender:TObject); {$region -fold}
+procedure TF_MainForm.SB_TextClick                 (sender:TObject); {$region -fold}
 begin
   DrawingPanelsSetVisibility1(down_text_ptr,P_Text,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
 end; {$endregion}
-procedure TF_MainForm.SB_Text_Select_FontClick(sender:TObject); {$region -fold}
+{Drawing}
+procedure TF_MainForm.P_Text_Drawing_PropMouseEnter(sender:TObject); {$region -fold}
 begin
-  SB_Text_Select_Font.Down:=False;
+  P_Text_Drawing_Prop.Color:=HighLight(P_Text_Drawing_Prop.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.P_Text_Drawing_PropMouseLeave(sender:TObject); {$region -fold}
+begin
+  P_Text_Drawing_Prop.Color:=Darken(P_Text_Drawing_Prop.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.P_Text_SettingsMouseEnter    (sender:TObject); {$region -fold}
+begin
+  P_Text_Settings       .Color:=HighLight(P_Text_Settings       .Color,0,0,0,0,0,16);
+  P_Text_Settings_Header.Color:=HighLight(P_Text_Settings_Header.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.P_Text_SettingsMouseLeave    (sender:TObject); {$region -fold}
+begin
+  P_Text_Settings       .Color:=Darken(P_Text_Settings       .Color,0,0,0,0,0,16);
+  P_Text_Settings_Header.Color:=Darken(P_Text_Settings_Header.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.CB_Text_BackgroundChange     (sender:TObject); {$region -fold}
+begin
+  txt_var.global_prop.bkgnd_draw:=not txt_var.global_prop.bkgnd_draw;
+end; {$endregion}
+
+procedure TF_MainForm.SB_Text_Select_FontClick     (sender:TObject); {$region -fold}
+begin
+  //SB_Text_Select_Font.Down:=False;
   if (not FontDialog1.Execute) then
     Exit;
   try
@@ -12317,6 +12404,13 @@ begin
       (sln_pts_add_ptr+i)^.x:=w_+Random(w);
       (sln_pts_add_ptr+i)^.y:=h_+Random(h);
     end;
+  {for i:=0 to Trunc(sln_pts_cnt_add/2)-1 do
+    begin
+      sln_pts_add[i<<1+0].x:=w_;
+      sln_pts_add[i<<1+0].y:=h_;
+      sln_pts_add[i<<1+1].x:=w_+w;
+      sln_pts_add[i<<1+1].y:=h_+h;
+    end;}
 end; {$endregion}
 procedure TCurve.SmpSplineEds      (constref spline_ind       :TColor);                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -12352,15 +12446,15 @@ begin
   DrawingPanelsSetVisibility2;
 end; {$endregion}
 {Edges-------}
-procedure TF_MainForm.P_Edges_PropMouseEnter                                 (sender:TObject); {$region -fold}
+procedure TF_MainForm.P_Spline_Edges_PropMouseEnter                          (sender:TObject); {$region -fold}
 begin
-  P_Edges_Prop.Color:=NAV_SEL_COL_1;
-  //P_Edges_Prop.Width:=158;
+  P_Spline_Edges_Prop.Color:=HighLight(P_Spline_Edges_Prop.Color,0,0,0,0,0,16);
+  //P_Spline_Edges_Prop.Color:=NAV_SEL_COL_1;
 end; {$endregion}
-procedure TF_MainForm.P_Edges_PropMouseLeave                                 (sender:TObject); {$region -fold}
+procedure TF_MainForm.P_Spline_Edges_PropMouseLeave                          (sender:TObject); {$region -fold}
 begin
-  P_Edges_Prop.Color:=$00BAB5A3;
-  //P_Edges_Prop.Width:=32;
+  P_Spline_Edges_Prop.Color:=Darken(P_Spline_Edges_Prop.Color,0,0,0,0,0,16);
+  //P_Spline_Edges_Prop.Color:=$00BAB5A3;
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_Edges_StyleSelect                            (sender:TObject); {$region -fold}
 begin
@@ -12454,13 +12548,13 @@ begin
   sln_var.global_prop.pts_ord_inv:=not sln_var.global_prop.pts_ord_inv;
 end; {$endregion}
 {Points------}
-procedure TF_MainForm.P_Points_PropMouseEnter                                (sender:TObject); {$region -fold}
+procedure TF_MainForm.P_Spline_Points_PropMouseEnter                         (sender:TObject); {$region -fold}
 begin
-  P_Points_Prop.Color:=NAV_SEL_COL_1;
+  P_Spline_Points_Prop.Color:=HighLight(P_Spline_Points_Prop.Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.P_Points_PropMouseLeave                                (sender:TObject); {$region -fold}
+procedure TF_MainForm.P_Spline_Points_PropMouseLeave                         (sender:TObject); {$region -fold}
 begin
-  P_Points_Prop.Color:=$00BAB5A3;
+  P_Spline_Points_Prop.Color:=Darken(P_Spline_Points_Prop.Color,0,0,0,0,0,16);
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_Points_StyleSelect                           (sender:TObject); {$region -fold}
 begin
@@ -12544,7 +12638,15 @@ begin
   SetRctHeight(sln_var.global_prop);
   SetRctValues(sln_var.global_prop);
   SetRctDupId (sln_var.global_prop);
-end; {$endregion}
+end;
+
+procedure TF_MainForm.SE_Spline_Pts_FreqKeyDown(sender: TObject; var key: word;
+  shift: TShiftState);
+begin
+
+end;
+
+ {$endregion}
 procedure TF_MainForm.SE_Spline_Points_Rectangle_Thikness_RightChange        (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.pts_rct_tns_right:=SE_Spline_Points_Rectangle_Thikness_Right.value;
@@ -12573,6 +12675,7 @@ begin
   SetRctValues(sln_var.global_prop);
   SetRctDupId (sln_var.global_prop);
 end; {$endregion}
+{Drawing-----}
 {Drawing-----}
 procedure DrawCanvas;                                                                  inline; {$region -fold}
 begin
@@ -12621,13 +12724,13 @@ begin
   if Result then
     DrawCanvas;
 end; {$endregion}
-procedure TF_MainForm.P_Drawing_PropMouseEnter                               (sender:TObject); {$region -fold}
+procedure TF_MainForm.P_Spline_Drawing_PropMouseEnter                        (sender:TObject); {$region -fold}
 begin
-  P_Drawing_Prop.Color:=NAV_SEL_COL_1;
+  P_Spline_Drawing_Prop.Color:=HighLight(P_Spline_Drawing_Prop.Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.P_Drawing_PropMouseLeave                               (sender:TObject); {$region -fold}
+procedure TF_MainForm.P_Spline_Drawing_PropMouseLeave                        (sender:TObject); {$region -fold}
 begin
-  P_Drawing_Prop.Color:=$00BAB5A3;
+  P_Spline_Drawing_Prop.Color:=Darken(P_Spline_Drawing_Prop.Color,0,0,0,0,0,16);
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_TypeSelect                                   (sender:TObject); {$region -fold}
 var
@@ -12645,10 +12748,10 @@ begin
       if (not (b0 or b2)) and (cur_tlt_dwn_btn_ind<>-1) then
         L_Spline_Templates_Name.Caption:=sln_tlt_nam_arr1[cur_tlt_dwn_btn_ind];
       case cur_tlt_dwn_btn_ind of
-        0: P_Cycloid   .Visible:=not (b0 or b2 or b3);
-        1: P_Epicycloid.Visible:=not (b0 or b2 or b3);
-        2: P_Rose      .Visible:=not (b0 or b2 or b3);
-        3: P_Spiral    .Visible:=not (b0 or b2 or b3);
+        0: P_Spline_Cycloid   .Visible:=not (b0 or b2 or b3);
+        1: P_Spline_Epicycloid.Visible:=not (b0 or b2 or b3);
+        2: P_Spline_Rose      .Visible:=not (b0 or b2 or b3);
+        3: P_Spline_Spiral    .Visible:=not (b0 or b2 or b3);
         4:;
       end;
       P_Spline_Freehand        .Visible:=b0;
@@ -12721,7 +12824,7 @@ procedure TF_MainForm.SE_Spline_Pts_FreqChange                               (se
 begin
   sln_var.global_prop.sln_pts_frq:=SE_Spline_Pts_Freq.value;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Pts_FreqKeyDown                              (sender:TObject; var key:word; shift:TShiftState); {$region -fold}
+procedure TF_MainForm.SE_Spline_Pts_FreqMouseDown                            (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer); {$region -fold}
 begin
   KeysDisable;
 end; {$endregion}
@@ -12780,10 +12883,10 @@ var
   var
     j: integer;
   begin
-    panel_arr[0]:=@P_Cycloid   ;
-    panel_arr[1]:=@P_Epicycloid;
-    panel_arr[2]:=@P_Rose;
-    panel_arr[3]:=@P_Spiral;
+    panel_arr[0]:=@P_Spline_Cycloid   ;
+    panel_arr[1]:=@P_Spline_Epicycloid;
+    panel_arr[2]:=@P_Spline_Rose;
+    panel_arr[3]:=@P_Spline_Spiral;
     for j:=0 to 3 do
       panel_arr[j]^.visible:=False;
   end; {$endregion}
@@ -12815,7 +12918,7 @@ begin
             1:
               begin
                 PanelsVisible;
-                if not CB_Epicycloid_Hypocycloid.Checked then
+                if not CB_Spline_Epicycloid_Hypocycloid.Checked then
                   global_prop.fml_type:=sfEpicycloid
                 else
                   global_prop.fml_type:=sfHypocycloid;
@@ -12885,7 +12988,7 @@ begin
   //SB_Drawing.VertScrollBar.Visible:=True;
   P_Spline_Template_List.Color:=Darken(P_Spline_Template_List.Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.BB_GenerateClick                                       (sender:TObject); {$region -fold}
+procedure TF_MainForm.BB_Spline_GenerateClick                                (sender:TObject); {$region -fold}
 begin
   with srf_var,sln_var,global_prop do
     begin
@@ -12938,115 +13041,115 @@ begin
       end;
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Cycloid_Points_CountChange                          (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Cycloid_Points_CountChange                   (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      cycloid_pts_cnt:=SE_Cycloid_Points_Count.value;
+      cycloid_pts_cnt:=SE_Spline_Cycloid_Points_Count.value;
       if CycloidRangeCheck then
         Exit;
       SetLength(fml_pts,cycloid_pts_cnt);
       FmlSplinePrev(cycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Cycloid_Loops_CountChange                           (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Cycloid_Loops_CountChange                    (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      cycloid_loop_cnt:=SE_Cycloid_Loops_Count.value;
+      cycloid_loop_cnt:=SE_Spline_Cycloid_Loops_Count.value;
       if CycloidRangeCheck then
         Exit;
       FmlSplinePrev(cycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Cycloid_RadiusChange                                (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Cycloid_RadiusChange                         (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      cycloid_loop_rad:=SE_Cycloid_Radius.value;
+      cycloid_loop_rad:=SE_Spline_Cycloid_Radius.value;
       if CycloidRangeCheck then
         Exit;
       FmlSplinePrev(cycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.FSE_Cycloid_CurvatureChange                            (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Cycloid_CurvatureChange                     (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      cycloid_curvature:=FSE_Cycloid_Curvature.value;
+      cycloid_curvature:=FSE_Spline_Cycloid_Curvature.value;
       FmlSplinePrev(cycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.CB_Cycloid_Direction_XSelect                           (sender:TObject); {$region -fold}
+procedure TF_MainForm.CB_Spline_Cycloid_Direction_XSelect                    (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      cycloid_dir_x:=TMovingDirection(CB_Cycloid_Direction_X.ItemIndex);
+      cycloid_dir_x:=TMovingDirection(CB_Spline_Cycloid_Direction_X.ItemIndex);
       FmlSplinePrev(cycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.CB_Cycloid_Direction_YSelect                           (sender:TObject); {$region -fold}
+procedure TF_MainForm.CB_Spline_Cycloid_Direction_YSelect                    (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      cycloid_dir_y:=TMovingDirection(CB_Cycloid_Direction_Y.ItemIndex+2);
+      cycloid_dir_y:=TMovingDirection(CB_Spline_Cycloid_Direction_Y.ItemIndex+2);
       FmlSplinePrev(cycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Epicycloid_Points_CountChange                       (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Epicycloid_Points_CountChange                (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_pts_cnt:=SE_Epicycloid_Points_Count.value;
+      epicycloid_pts_cnt:=SE_Spline_Epicycloid_Points_Count.value;
       if EpicycloidRangeCheck then
         Exit;
       SetLength    (fml_pts,epicycloid_pts_cnt);
       FmlSplinePrev(        epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Epicycloid_Petals_CountChange                       (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Epicycloid_Petals_CountChange                (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_petals_cnt:=SE_Epicycloid_Petals_Count.value;
+      epicycloid_petals_cnt:=SE_Spline_Epicycloid_Petals_Count.value;
       if EpicycloidRangeCheck then
         Exit;
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Epicycloid_RadiusChange                             (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Epicycloid_RadiusChange                      (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_rad:=SE_Epicycloid_Radius.value;
+      epicycloid_rad:=SE_Spline_Epicycloid_Radius.value;
       if EpicycloidRangeCheck then
         Exit;
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Epicycloid_RotationChange                           (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Epicycloid_RotationChange                    (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_rot:=SE_Epicycloid_Rotation.value;
+      epicycloid_rot:=SE_Spline_Epicycloid_Rotation.value;
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Epicycloid_AngleChange                              (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Epicycloid_AngleChange                       (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_angle:=SE_Epicycloid_Angle.value;
+      epicycloid_angle:=SE_Spline_Epicycloid_Angle.value;
       if EpicycloidRangeCheck then
         Exit;
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.CB_Epicycloid_HypocycloidChange                        (sender:TObject); {$region -fold}
+procedure TF_MainForm.CB_Spline_Epicycloid_HypocycloidChange                 (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      if CB_Epicycloid_Hypocycloid.Checked then
+      if CB_Spline_Epicycloid_Hypocycloid.Checked then
         fml_type:=sfHypocycloid
       else
         fml_type:=sfEpicycloid;
@@ -13055,176 +13158,101 @@ begin
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Rose_Points_CountChange                             (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Rose_Points_CountChange                      (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_pts_cnt:=SE_Rose_Points_Count.value;
+      rose_pts_cnt:=SE_Spline_Rose_Points_Count.value;
       if RoseRangeCheck then
         Exit;
       SetLength    (fml_pts,rose_pts_cnt);
       FmlSplinePrev(        rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.FSE_Rose_Petals_CountChange                            (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Rose_Petals_CountChange                     (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_petals_cnt:=FSE_Rose_Petals_Count.value;
+      rose_petals_cnt:=FSE_Spline_Rose_Petals_Count.value;
       if RoseRangeCheck then
         Exit;
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Rose_RadiusChange                                   (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Rose_RadiusChange                            (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_rad:=SE_Rose_Radius.value;
+      rose_rad:=SE_Spline_Rose_Radius.value;
       if RoseRangeCheck then
         Exit;
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Rose_RotationChange                                 (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Rose_RotationChange                          (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_rot:=SE_Rose_Rotation.value;
+      rose_rot:=SE_Spline_Rose_Rotation.value;
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Rose_AngleChange                                    (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Rose_AngleChange                             (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_angle:=SE_Rose_Angle.value;
+      rose_angle:=SE_Spline_Rose_Angle.value;
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spiral_Points_CountChange                           (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Spiral_Points_CountChange                    (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_pts_cnt:=SE_Spiral_Points_Count.value;
+      spiral_pts_cnt:=SE_Spline_Spiral_Points_Count.value;
       if SpiralRangeCheck then
         Exit;
       SetLength    (fml_pts,spiral_pts_cnt);
       FmlSplinePrev(        spiral_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.FSE_Spiral_Coil_StepChange                             (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Spiral_Coil_StepChange                      (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_coil_step:=FSE_Spiral_Coil_Step.value;
+      spiral_coil_step:=FSE_Spline_Spiral_Coil_Step.value;
       FmlSplinePrev(spiral_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spiral_RadiusChange                                 (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Spiral_RadiusChange                          (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_rad:=SE_Spiral_Radius.value;
+      spiral_rad:=SE_Spline_Spiral_Radius.value;
       if SpiralRangeCheck then
         Exit;
       FmlSplinePrev(spiral_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spiral_RotationChange                               (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Spiral_RotationChange                        (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_rot:=SE_Spiral_Rotation.value;
+      spiral_rot:=SE_Spline_Spiral_Rotation.value;
       FmlSplinePrev(spiral_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spiral_AngleChange                                  (sender:TObject); {$region -fold}
+procedure TF_MainForm.SE_Spline_Spiral_AngleChange                           (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_angle:=SE_Spiral_Angle.value;
+      spiral_angle:=SE_Spline_Spiral_Angle.value;
       FmlSplinePrev(spiral_pts_cnt);
     end;
 end; {$endregion}
 procedure TF_MainForm.SE_Spline_Points_CountChange                           (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.pts_cnt_val:=SE_Spline_Points_Count.Value;
-end; {$endregion}
-{Optimization}
-procedure TF_MainForm.P_Optimization_PropMouseEnter                          (sender:TObject); {$region -fold}
-begin
-  P_Optimization_Prop.Color:=NAV_SEL_COL_1;
-end; {$endregion}
-procedure TF_MainForm.P_Optimization_PropMouseLeave                          (sender:TObject); {$region -fold}
-begin
-  P_Optimization_Prop.Color:=$00BAB5A3;
-end; {$endregion}
-procedure TF_MainForm.CB_Spline_Edges_LODChange                              (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.eds_lod            :=not sln_var.global_prop.eds_lod;
-  FSE_Spline_Simplification_Angle.Enabled:=CB_Spline_Edges_LOD.Checked;
-  L_Spline_Simplification_Angle  .Enabled:=CB_Spline_Edges_LOD.Checked;
-end; {$endregion}
-procedure TF_MainForm.FSE_Spline_Simplification_AngleChange                  (sender:TObject); {$region -fold}
-begin
-
-end; {$endregion}
-procedure TF_MainForm.CB_Spline_Hidden_Line_EliminationChange                (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.hid_ln_elim:=not sln_var.global_prop.hid_ln_elim;
-end; {$endregion}
-procedure TF_MainForm.CB_Spline_Best_PrecisionChange                         (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.best_precision:=not sln_var.global_prop.best_precision;
-end; {$endregion}
-procedure TF_MainForm.CB_Spline_Lazy_RepaintChange                           (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.lazy_repaint:=not sln_var.global_prop.lazy_repaint;
-end; {$endregion}
-procedure TF_MainForm.CB_Spline_Byte_ModeChange                              (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.byte_mode:=not sln_var.global_prop.byte_mode;
-end; {$endregion}
-procedure TF_MainForm.CB_Spline_On_Out_Of_WindowChange                       (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.free_mem_on_out_of_wnd:=not sln_var.global_prop.free_mem_on_out_of_wnd;
-end; {$endregion}
-procedure TF_MainForm.CB_Spline_On_Scale_DownChange                          (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.free_mem_on_scale_down:=not sln_var.global_prop.free_mem_on_scale_down;
-end; {$endregion}
-procedure TF_MainForm.RB_Spline_AdaptiveChange                               (sender:TObject); {$region -fold}
-begin
-  with sln_var.global_prop do
-    begin
-      remove_brunching_adaptive:=RB_Spline_Adaptive.Checked;
-      remove_brunching_constant:=RB_Spline_Constant  .Checked;
-      remove_brunching_none    :=RB_Spline_None    .Checked;
-    end;
-end; {$endregion}
-{Dynamics}
-procedure TF_MainForm.CB_Dynamics_StyleSelect                                (sender:TObject); {$region -fold}
-begin
-  sln_var.global_prop.dyn_stl:=TDynamicsStyle(CB_Dynamics_Style.ItemIndex);
-  //F_MainForm.Memo1.Lines.Text:=GetEnumName(TypeInfo(TDynamicsStyle),Ord(TDynamicsStyle(F_MainForm.CB_Dynamics_Style.ItemIndex)));
-end; {$endregion}
-procedure TF_MainForm.P_Dynamics_PropMouseEnter                              (sender:TObject); {$region -fold}
-begin
-  P_Dynamics_Prop.Color:=NAV_SEL_COL_1;
-end; {$endregion}
-procedure TF_MainForm.P_Dynamics_PropMouseLeave                              (sender:TObject); {$region -fold}
-begin
-  P_Dynamics_Prop.Color:=$00BAB5A3;
-end; {$endregion}
-{Save/Load}
-procedure TF_MainForm.P_Save_Load_PropMouseEnter                             (sender:TObject); {$region -fold}
-begin
-  P_Save_Load_Prop.Color:=NAV_SEL_COL_1;
-end; {$endregion}
-procedure TF_MainForm.P_Save_Load_PropMouseLeave                             (sender:TObject); {$region -fold}
-begin
-  P_Save_Load_Prop.Color:=$00BAB5A3;
 end; {$endregion}
 procedure TF_MainForm.SB_Spline_LoadClick                                    (sender:TObject); {$region -fold}
 var
@@ -13302,6 +13330,81 @@ begin
     on E: Exception do
       MessageDlg('Error','Error: '+E.Message,mtError,[mbOk],0);
   end;
+end; {$endregion}
+{Optimization}
+procedure TF_MainForm.P_Spline_Optimization_PropMouseEnter                   (sender:TObject); {$region -fold}
+begin
+  P_Spline_Optimization_Prop.Color:=HighLight(P_Spline_Optimization_Prop.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.P_Spline_Optimization_PropMouseLeave                   (sender:TObject); {$region -fold}
+begin
+  P_Spline_Optimization_Prop.Color:=Darken(P_Spline_Optimization_Prop.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_Edges_LODChange                              (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.eds_lod            :=not sln_var.global_prop.eds_lod;
+  FSE_Spline_Simplification_Angle.Enabled:=CB_Spline_Edges_LOD.Checked;
+  L_Spline_Simplification_Angle  .Enabled:=CB_Spline_Edges_LOD.Checked;
+end; {$endregion}
+procedure TF_MainForm.FSE_Spline_Simplification_AngleChange                  (sender:TObject); {$region -fold}
+begin
+
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_Hidden_Line_EliminationChange                (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.hid_ln_elim:=not sln_var.global_prop.hid_ln_elim;
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_Best_PrecisionChange                         (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.best_precision:=not sln_var.global_prop.best_precision;
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_Lazy_RepaintChange                           (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.lazy_repaint:=not sln_var.global_prop.lazy_repaint;
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_Byte_ModeChange                              (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.byte_mode:=not sln_var.global_prop.byte_mode;
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_On_Out_Of_WindowChange                       (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.free_mem_on_out_of_wnd:=not sln_var.global_prop.free_mem_on_out_of_wnd;
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_On_Scale_DownChange                          (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.free_mem_on_scale_down:=not sln_var.global_prop.free_mem_on_scale_down;
+end; {$endregion}
+procedure TF_MainForm.RB_Spline_AdaptiveChange                               (sender:TObject); {$region -fold}
+begin
+  with sln_var.global_prop do
+    begin
+      remove_brunching_adaptive:=RB_Spline_Adaptive.Checked;
+      remove_brunching_constant:=RB_Spline_Constant  .Checked;
+      remove_brunching_none    :=RB_Spline_None    .Checked;
+    end;
+end; {$endregion}
+{Dynamics----}
+procedure TF_MainForm.CB_Spline_Dynamics_StyleSelect                         (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.dyn_stl:=TDynamicsStyle(CB_Spline_Dynamics_Style.ItemIndex);
+  //F_MainForm.Memo1.Lines.Text:=GetEnumName(TypeInfo(TDynamicsStyle),Ord(TDynamicsStyle(F_MainForm.CB_Dynamics_Style.ItemIndex)));
+end; {$endregion}
+procedure TF_MainForm.P_Spline_Dynamics_PropMouseEnter                       (sender:TObject); {$region -fold}
+begin
+  P_Spline_Dynamics_Prop.Color:=HighLight(P_Spline_Dynamics_Prop.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.P_Spline_Dynamics_PropMouseLeave                       (sender:TObject); {$region -fold}
+begin
+  P_Spline_Dynamics_Prop.Color:=Darken(P_Spline_Dynamics_Prop.Color,0,0,0,0,0,16);
+end; {$endregion}
+{Save--------}
+procedure TF_MainForm.P_Spline_Save_PropMouseEnter                           (sender:TObject); {$region -fold}
+begin
+  P_Spline_Save_Prop.Color:=HighLight(P_Spline_Save_Prop.Color,0,0,0,0,0,16);
+end; {$endregion}
+procedure TF_MainForm.P_Spline_Save_PropMouseLeave                           (sender:TObject); {$region -fold}
+begin
+  P_Spline_Save_Prop.Color:=Darken(P_Spline_Save_Prop.Color,0,0,0,0,0,16);
 end; {$endregion}
 {$endregion}
 
@@ -16567,10 +16670,23 @@ begin
   SetTextInfo(srf_var.srf_bmp.Canvas,32);
   srf_var.srf_bmp.Canvas.TextOut(srf_var.world_axis.x+32,
                                  srf_var.world_axis.y,
-                                'Hello World');
+                                 'Hello World');
 
   CnvToCnv(srf_var.srf_bmp_rct,Canvas,srf_var.srf_bmp.Canvas,SRCCOPY);
+
+  {with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
+    begin
+      if Items[3].GetParentNodeOfAbsoluteLevel(1).Expanded then
+        Memo1.Lines.Text:='Expanded'
+      else
+        Memo1.Lines.Text:='not Expanded';
+    end;}
+  {with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
+    Memo1.Lines.Text:=IntToStr(Items[1].Top);}
+    //Memo1.Lines.Text:=IntToStr(obj_var.obj_inds_arr[1]);
+
   //InvalidateInnerWindow;
+
 end;
 {$endregion}
 
@@ -16913,8 +17029,8 @@ begin
   else
     mciSendString(PChar('stop "C:\Popl_Uniy_Orel.wav"'),nil,0,0);}
 
-  {OpenGLControl2.Visible:=down_play_anim_ptr^;
-  OpenGLControl2.Enabled:=down_play_anim_ptr^;}
+  OpenGLControl2.Visible:=down_play_anim_ptr^;
+  OpenGLControl2.Enabled:=down_play_anim_ptr^;
   with srf_var do
     begin
       // Get Target Render For OpenGL Output:
@@ -17704,7 +17820,7 @@ begin
           begin
             //VisibilityChange(False);
             need_repaint:=True;
-            LowerBmpToMainBmp;
+            LowerBmp2ToMainBmp;
             if draw_selected_pts then
               SelectdPointsToBmp(x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct);
           //PivotToPoint(x,y,sln_pts,sln_pts_cnt,                  crc_rad_sqr);
@@ -17740,9 +17856,9 @@ begin
 
   {Spline---} {$region -fold}
   with srf_var,sln_var do
-    if draw_spline                  and
-      ((CB_Spline_Mode.ItemIndex=0) or
-      (CB_Spline_Mode.ItemIndex=2)) then
+    if draw_spline                   and
+      ((CB_Spline_Mode.ItemIndex=0)  or
+       (CB_Spline_Mode.ItemIndex=2)) then
       begin
         if down_play_anim_ptr^ then
           AddPoint
@@ -18724,6 +18840,8 @@ var
   i               : integer;
 begin
 
+  exec_timer:=TPerformanceTime.Create;
+
   {Scene Tree-----------} {$region -fold}
   obj_var:=TSceneTree.Create;
   if (srf_var<>Nil) then
@@ -18731,9 +18849,10 @@ begin
   else
     world_axis_shift:=Default(TPtPos);
   obj_var.Add(kooEmpty,world_axis_shift);
-  CreateNode('','',True);
+  CreateNode('','0',True);
   ObjIndsCalc;
-  ScTIndsCalc; {$endregion}
+  ScTIndsCalc;
+  CngPnVsCalc; {$endregion}
 
   {Post-Process Init.---} {$region -fold}
   PPDec2ProcInit;
@@ -18832,6 +18951,7 @@ begin
   down_rgrid_ptr      :=Unaligned(@SB_RGrid.Down); {$endregion}
 
   {Text-----------------} {$region -fold}
+  txt_var      :=TFText.Create(width,height);
   down_text_ptr:=Unaligned(@SB_Text.Down); {$endregion}
 
   {Brush----------------} {$region -fold}
@@ -18947,7 +19067,8 @@ begin
            SRCCOPY);
   add_actor_var     :=TSurfInst.Create(I_Frame_List.width,
                                        I_Frame_List.height);
-  down_add_actor_ptr:=@SB_Add_Actor.Down; {$endregion}
+  down_add_actor_ptr:=@SB_Add_Actor.Down;
+  show_actor        :=True; {$endregion}
 
   {TimeLine-------------} {$region -fold}
   TimeLineButtonsCreate; {$endregion}
@@ -19262,6 +19383,44 @@ begin
           kooCurve: SetIndsSctArrVal(curve_inds_sct_arr,i9,i);
         end;
 end; {$endregion}
+procedure CngPnVsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i,v: integer;
+
+  function HasNotExpandedParent(ind:integer): boolean; {$ifdef Linux}[local];{$endif} {$region -fold}
+  var
+    j: integer;
+  begin
+    j:=0;
+    Result:=False;
+    with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
+      while (Items[ind].GetParentNodeOfAbsoluteLevel(j)<>Items[ind]) do
+        begin
+          if (not Items[ind].GetParentNodeOfAbsoluteLevel(j).Expanded) then
+            begin
+              Result:=True;
+              Break;
+            end;
+          Inc(j);
+        end;
+  end; {$endregion}
+
+begin
+  with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
+    begin
+      for i:=0 to ControlCount-1 do
+        (Controls[i] as TPanel).Visible:=not HasNotExpandedParent(obj_var.obj_arr[i].t_ind);
+      v:=0;
+      for i:=0 to ControlCount-1 do
+        begin
+          if (Controls[obj_var.obj_inds_arr[i]] as TPanel).Visible then
+            begin
+             (Controls[obj_var.obj_inds_arr[i]] as TPanel).Top:=v*(P_TreeView_Attributes_Cells.Height-1)-P_TreeView_Attributes_Cells.Height;
+             Inc(v);
+            end;
+        end;
+    end;
+end; {$endregion}
 procedure CreateNodeData(node_with_data:TTreeNode; g_ind:TColor);                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   node_data_pointer: PNodeData;
@@ -19338,13 +19497,14 @@ begin
       AnchorParallel(akRight,0,SB_TreeView_Object_Tags);
       BevelColor:=clGray;
       Parent    :=SB_TreeView_Object_Tags;
-      Left      :=1;
-      Top       :=Items[ind].Top+1;
       Width     :=62;
       Height    :=27;
+      Left      :=1;
+      Top       :=Items[ind].Top-Height;
       Color     :=$00ABAFA3;
       Caption   :=IntToStr(ind);
       Font.Color:=clBlue;
+      //Tag       :=ind;
     end;
 end; {$endregion}
 procedure CreateNode(item_text1,item_text2:ansistring; is_first_node:boolean=False); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -19391,7 +19551,7 @@ end; {$endregion}
 procedure TF_MainForm.MI_Add_GroupClick                        (sender:TObject);                                                           {$region -fold}
 var
   world_axis_shift: TPtPos;
-  items_text      : ansistring;
+  //items_text      : ansistring;
 begin
   with TV_Scene_Tree,obj_var do
     begin
@@ -19446,7 +19606,7 @@ begin
   with TV_Scene_Tree do
     begin
       Items.BeginUpdate;
-      Items.Insert(Items[m+1],'Group'+IntToStr(Random(100)));
+      Items.Insert(Items[m+1],'Group'+IntToStr(obj_var.group_cnt+1));
       for j:=1 to Items.Count-1 do
         if Items[j].MultiSelected then
           Items[j].MoveTo(Items[m+1],naAddChild);
@@ -19475,6 +19635,19 @@ begin
   for i:=1 to TV_Scene_Tree.Items.Count-1 do
     TV_Scene_Tree.Items[i].Selected:=True;
 end; {$endregion}
+procedure TF_MainForm.MI_Fold_AllClick                         (sender:TObject);                                                           {$region -fold}
+var
+  i: integer;
+begin
+  for i:=1 to TV_Scene_Tree.Items.Count-1 do
+    TV_Scene_Tree.Items[i].Expanded:=False;
+  CngPnVsCalc;
+end; {$endregion}
+procedure TF_MainForm.MI_Unfold_AllClick                       (sender:TObject);                                                           {$region -fold}
+begin
+  TV_Scene_Tree.FullExpand;
+  CngPnVsCalc;
+end; {$endregion}
 procedure TF_MainForm.MI_Fold_SelectedClick                    (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
@@ -19482,14 +19655,30 @@ begin
   for i:=1 to TV_Scene_Tree.Items.Count-1 do
     if TV_Scene_Tree.Items[i].Selected then
       TV_Scene_Tree.Items[i].Expanded:=False;
+  CngPnVsCalc;
 end; {$endregion}
 procedure TF_MainForm.MI_Unfold_SelectedClick                  (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
   for i:=1 to TV_Scene_Tree.Items.Count-1 do
-    if TV_Scene_Tree.Items[i].MultiSelected then
+    if TV_Scene_Tree.Items[i].{Multi}Selected then
       TV_Scene_Tree.Items[i].Expanded:=True;
+  CngPnVsCalc;
+end; {$endregion}
+procedure TF_MainForm.TV_Scene_TreeExpanded                    (sender:TObject; node:TTreeNode);                                           {$region -fold}
+begin
+  {with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
+    if Items[Items.Count-1{obj_var.obj_inds_arr[(Controls[4] as TPanel).Tag]}].Expanded then
+      Memo1.Lines.Text:='expanded'
+    else
+      Memo1.Lines.Text:=' not expanded';}
+  CngPnVsCalc;
+  //Memo1.Lines.Text:=IntToStr(Random(100));
+end; {$endregion}
+procedure TF_MainForm.TV_Scene_TreeExpanding                   (sender:TObject; node:TTreeNode; var allowexpansion:boolean);               {$region -fold}
+begin
+  CngPnVsCalc;
 end; {$endregion}
 procedure TF_MainForm.MI_Goto_First_ObjectClick                (sender:TObject);                                                           {$region -fold}
 begin
@@ -19525,8 +19714,8 @@ begin
             //Delete(s,1,3);
             //Memo1.Lines.Text:=IntToStr(PNodeData(target_node.Data)^.obj^.k_ind);
             //Memo1.Lines.Text:=s;
-           {Memo2.Lines.Add(IntToStr(PNodeData(TargetNode.Data)^.curve_prop.obj_ind));
-            Memo2.Lines.Add(IntToStr(PNodeData(TargetNode.Data)^.curve_prop.pts_cnt));}
+           {M_Text_Text_Field.Lines.Add(IntToStr(PNodeData(TargetNode.Data)^.curve_prop.obj_ind));
+            M_Text_Text_Field.Lines.Add(IntToStr(PNodeData(TargetNode.Data)^.curve_prop.pts_cnt));}
           end
         else
         if (SelectionCount<>0) then
@@ -19606,6 +19795,7 @@ begin
     end;
   ObjIndsCalc;
   ScTIndsCalc;
+  CngPnVsCalc;
   srf_var.EventGroupsCalc(calc_arr,[30]);
 end; {$endregion}
 procedure TF_MainForm.S_TreeView_SplitterChangeBounds          (sender:TObject);                                                           {$region -fold}
@@ -19974,7 +20164,10 @@ var
   x0,y0,x1,y1,v1,w1,k,b: double;
   str                  : string;
   projectile_arr_ptr   : PProjectile;
+  execution_time       : double;
 begin
+
+  exec_timer.Start;
 
   with srf_var,sln_var,tex_var,srf_var,tex_var,sln_var,sel_var,crc_sel_var,pvt_var,fast_physics_var,fast_fluid_var do
     begin
@@ -20677,17 +20870,26 @@ begin
                       045); {$endregion}
 
       {Minimap-----------} {$region -fold}
-      {ITScl(srf_bmp_ptr,srf_bmp_ptr,low_bmp.width,low_bmp.height,6,6);} {$endregion}
+      {ImgScl(srf_bmp_ptr,srf_bmp_ptr,low_bmp.width,low_bmp.height,8,8);} {$endregion}
 
       {Full Scene Drawing} {$region -fold}
-      CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
+
+      exec_timer.Stop;
+      execution_time:=Trunc(exec_timer.Delay*1000);
+
+      SetTextInfo(srf_var.srf_bmp.Canvas,22);
+      srf_var.srf_bmp.Canvas.TextOut(L_Exec_Time_Info.left,
+                                     L_Exec_Time_Info.top,
+                                    'Execution time: '+FloatToStr(execution_time)+' ms.');
+
+      //CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
       //glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT);
       //glLoadIdentity;
-      {with srf_var do
+      with srf_var do
         begin
           //glDrawPixels(srf_bmp.Width,srf_bmp.Height,32993{swap channels: GL_RGBA=$1908 to GL_BGRA=32993},GL_UNSIGNED_BYTE,{srf_bmp_ptr}buffer.bmBits);
           glEnable       (GL_TEXTURE_2D);
-          glTexImage2D   (GL_TEXTURE_2D,0,3,srf_bmp.Width,srf_bmp.Height,0,32993{swap channels: GL_RGBA=$1908 to GL_BGRA=32993},GL_UNSIGNED_BYTE,buffer.bmBits);
+          glTexImage2D   (GL_TEXTURE_2D,0,3,srf_bmp.Width,srf_bmp.Height,0,32993{swap channels: GL_RGBA=$1908 to GL_BGRA=32993},GL_UNSIGNED_BYTE,srf_bmp_ptr{buffer.bmBits});
           glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST{GL_LINEAR});
           {glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST{GL_LINEAR});
           glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S    ,GL_CLAMP  {GL_REPEAT});
@@ -20707,7 +20909,7 @@ begin
             glVertex3f   (-1,-1,0);
           glEnd;
         end;
-      OpenGLControl2.SwapBuffers;} {$endregion}
+      OpenGLControl2.SwapBuffers; {$endregion}
 
     end;
 
@@ -21286,7 +21488,7 @@ begin
 end; {$endregion}
 {$endregion}
 
-end.  SetTextInfo
+end.
 
 initialization
 
