@@ -14,6 +14,7 @@ uses
 
 const
 
+  ONE_MUL_1024       =1<<10;
   DEFAULT_SCL_MUL    =6/5;
   DEFAULT_SCL_MUL_INV=5/6;
   FULL_ROT           =pi/180;
@@ -36,6 +37,8 @@ type
   PColor            =^TColor;
   TColorArr         =array of TColor;
   PColorArr         =^TColorArr;
+  TColor2Arr        =array of array of TColor;
+  PColor2Arr        =^TColor2Arr;
 
 
 
@@ -44,6 +47,7 @@ type
   TFastActor        =class;
   TFastImage        =class;
   TFastLine         =class;
+  TFastText         =class;
   {****************************************************************************}
 
 
@@ -101,8 +105,16 @@ type
   TSubgraphOp       =(soSub,soAdd);
   PSubgraphOp       =^TSubgraphOp;
 
+  {Selection Mode}
+  TSelectionMode     =(smCircle,smBrush,smRectangle,smRegion,smSelectAll);
+  PSelectionMode     =^TSelectionMode;
+
+  {Background Post-Processing}
+  TBackgroundStyle   =(bsGrayscale,bsBlur,bsBoth,bsNone);
+  PBackgroundStyle   =^TBackgroundStyle;
+
   {Clipping}
-  TClipStyle        =(csRemoveEdges,csClippedEdges1,csClippedEdges2,csAdvancedClip,csResilientEdges);
+  TClipStyle        =(csClippedEdges1,csClippedEdges2,csRemoveEdges,csResilientEdges,csAdvancedClip);
   PClipStyle        =^TClipStyle;
 
   {Blur}
@@ -328,6 +340,11 @@ type
     next_item: PFList;
     x,y      : double;
   end; {$endregion}
+
+  TGCDGrid          =packed record {$region -fold}
+    f_ln_kind,a,b,c,d: integer;
+  end; {$endregion}
+  PGCDGrid          =^TGCDGrid;
   {****************************************************************************}
 
 
@@ -367,6 +384,9 @@ type
 
   TFLnArr           =array of TFastLine;
   PFLnArr           =^TFLnArr;
+
+  TFTxArr           =array of TFastText;
+  PFTxArr           =^TFTxArr;
 
   TAALnArr          =array of TFastAALine;
   PAALnArr          =^TAALnArr;
@@ -436,6 +456,9 @@ type
 
   TBool2Arr         =array[0..100] of boolean;
   PBool2Arr         =^TBool2Arr;
+
+  TGCDArr           =array of TGCDGrid;
+  PGCDArr           =TGCDArr;
   {****************************************************************************}
 
 
@@ -524,9 +547,23 @@ type
 
 
 
+  {Text Properties(Attributes) ************************************************}
+  TFTextProp        =packed record {$region -fold}
+    // background color:
+    bkgnd_col    : TColor;
+    // background drawing:
+    bkgnd_draw   : boolean;
+    // background random color:
+    bkgnd_rnd_col: boolean;
+  end; {$endregion}
+  PFTextProp        =^TFTextProp;
+  {****************************************************************************}
+
+
+
   {Spline Properties(Attributes) **********************************************}
   TCurveProp        =packed record {$region -fold}
-    // duplicated
+    // duplicated points id:
     dup_pts_id               : TPtPos2;
     // global spline object index:
     curve_obj_ind            : TColor;
@@ -652,6 +689,8 @@ type
     clp_stl                  : TClipStyle;
     // edges level of details:
     eds_lod                  : boolean;
+    // simplification angle
+    eds_simpl_angle          : double;
     // hidden-line elimination:
     hid_ln_elim              : boolean;
     // best precision for hidden-line elimination:
@@ -664,7 +703,7 @@ type
     byte_mode_prev           : boolean;
     // free memory on out of window:
     free_mem_on_out_of_wnd   : boolean;
-    // free memory on out of window:
+    // free memory on scale down:
     free_mem_on_scale_down   : boolean;
     // remove brunching:
     remove_brunching_adaptive: boolean;
@@ -744,6 +783,16 @@ type
 
   end; {$endregion}
   PCurveProp        =^TCurveProp;
+  {****************************************************************************}
+
+
+
+  {Select Items Properties(Attributes) ****************************************}
+  TSelItProp        =packed record {$region -fold}
+    bkgnd_style   : TBackgroundStyle;
+    selection_mode: TSelectionMode;
+  end; {$endregion}
+  PSelItProp        =^TSelItProp;
   {****************************************************************************}
 
 
@@ -2372,7 +2421,8 @@ type
     destructor  Destroy; override;                                          {$ifdef Linux}[local];{$endif}
     procedure SetBkgnd  (constref bkgnd_ptr     :PInteger;
                          constref bkgnd_width,
-                                  bkgnd_height  :TColor);           inline; {$ifdef Linux}[local];{$endif}
+                                  bkgnd_height  :TColor;
+                         constref rct_clp       :TPtRect);          inline; {$ifdef Linux}[local];{$endif}
     procedure SetClpRct (constref rct_clp       :TPtRect);          inline; {$ifdef Linux}[local];{$endif}
     procedure SetValInfo(constref bmp_color_ptr_,
                                   bmp_alpha_ptr_,
@@ -2397,11 +2447,11 @@ type
   TFastLine         =class {$region -fold}
 
     {Misc. Types------------------------------------} {$region -fold}
-    type
+    {type
       TGCDGrid={type} packed record
         f_ln_kind,a,b,c,d: integer;
       end;
-      TGCDArr =array of TGCDGrid; {$endregion}
+      TGCDArr =array of TGCDGrid;} {$endregion}
 
     {State Machine for Line Drawing Routines--------} {$region -fold}
     protected
@@ -2443,19 +2493,23 @@ type
         dx,dy,a,b,c,m1,m2: integer;
         r0,p0,r1,p1,g    : integer; {$endregion}
 
-    {Hidden-Pixel Elimination-----------------------} {$region -fold}
+    {Hidden-Line Elimination------------------------} {$region -fold}
     public
      {is line visible array:
       0 - line is invisible;
       1 - line is   visible}
       useless_arr: T1Byte1Arr;
-     {hidden lines count}
-      hid_ln_cnt : TColor; {$endregion}
+     {hidden  lines count}
+      hid_ln_cnt : TColor;
+     {visible lines count}
+      vis_ln_cnt : TColor;
+     {existing lines count}
+      has_ln_cnt : TColor; {$endregion}
 
     {Misc. Variables: Clipping----------------------} {$region -fold}
     public
       {drawing window rectangle pointer}
-      rct_out_ptr: PPtRect;
+      rct_clp_ptr: PPtRect;
       ln_pos     : TLnPos;
       color_info : TColorInfo;
       pix_cnt    : TColor; {$endregion}
@@ -2464,12 +2518,12 @@ type
     res_ln_pts_cnt: TColorArr; {$endregion}
 
     {Precalculated Table of Greatest Common Divisors} {$region -fold}
-    public
+    {public
       {class} var
         {array of greatest common divisors}
         gcd_arr    : TGCDArr;
         {precision of calculation}
-        grid_pt_rad: TColor; {$endregion}
+        grid_pt_rad: TColor;} {$endregion}
 
     {Spline Local Properties------------------------} {$region -fold}
     public
@@ -2514,7 +2568,8 @@ type
                                             aa_buff_init   :boolean);       inline; {$ifdef Linux}[local];{$endif}
       procedure SetBkgnd          (constref bmp_dst_ptr_   :PInteger;
                                    constref bmp_dst_width_,
-                                            bmp_dst_height_:TColor);        inline; {$ifdef Linux}[local];{$endif}
+                                            bmp_dst_height_:TColor;
+                                   constref rct_clp_ptr_   :PPtRect);       inline; {$ifdef Linux}[local];{$endif}
       procedure MinimizeArrs      (         aa_buff_clear  :boolean);       inline; {$ifdef Linux}[local];{$endif}
       {Fast Line Grid Precalculation}
     {class} procedure LinePrecalc (         w,h            :TColor);                {$ifdef Linux}[local];{$endif}
@@ -2612,10 +2667,27 @@ type
                                    constref proc2          :TProc0;
                                    constref proc3          :TProc0);                {$ifdef Linux}[local];{$endif}
       procedure ClippedLine2      (         x0,y0,x1,y1    :integer;
-                                   const    rct_clp        :TPtRect);               {$ifdef Linux}[local];{$endif} {$endregion}
+                                   const    rct_clp        :TPtRect);               {$ifdef Linux}[local];{$endif}
+      procedure FillBuffer        (constref rct_clp        :TPtRect);               {$ifdef Linux}[local];{$endif} {$endregion}
 
   end; {$endregion}
   PFastLine         =^TFastLine;
+  {****************************************************************************}
+
+
+
+  {Fast Text ******************************************************************}
+  TFastText         =class {$region -fold}
+    public
+      var
+        {text sprite}
+        fst_img   : TFastImage;
+        {Text Local Properties}
+        local_prop: TFTextProp;
+      constructor Create;            {$ifdef Linux}[local];{$endif}
+      destructor  Destroy; override; {$ifdef Linux}[local];{$endif}
+  end; {$endregion}
+  PFastText         =^TFastText;
   {****************************************************************************}
 
 
@@ -2761,6 +2833,11 @@ procedure BlurGGG               (         pixel_ptr          :PInteger;
                                           bmp_dst_width      :TColor);                 inline; {$ifdef Linux}[local];{$endif}
 procedure BlurBBB               (         pixel_ptr          :PInteger;
                                           bmp_dst_width      :TColor);                 inline; {$ifdef Linux}[local];{$endif}
+procedure Contrast              (         pixel_ptr          :PInteger;
+                                 constref r                  :byte=0;
+                                 constref g                  :byte=0;
+                                 constref b                  :byte=0;
+                                 constref contrast_pow2      :double=0.0);             inline; {$ifdef Linux}[local];{$endif}
 function AdditiveDec            (         pixel              :TColor;
                                  constref r,g,b              :byte;
                                  constref alpha_fade         :byte): TColor;           inline; {$ifdef Linux}[local];{$endif}
@@ -2955,6 +3032,7 @@ function Max9                   (constref arr                :TEdgeArr;
                                  constref min_item_val       :TColor;
                                  constref item_cnt           :TColor): TColor;         inline; {$ifdef Linux}[local];{$endif}
 function InvSqrt                (constref x                  :single): single;         inline; {$ifdef Linux}[local];{$endif}
+function Limit                  (         x                  :integer): byte;          inline; {$ifdef Linux}[local];{$endif}
 procedure PtrInit               (var      ptr                :PInteger;
                                  constref arr                :TIntrArr);               inline; {$ifdef Linux}[local];{$endif}
 procedure PtrInit               (var      ptr                :PInteger;
@@ -3346,6 +3424,12 @@ function ArrNzItCnt             (constref bmp_dst_ptr        :PInteger;
                                  constref rct_dst            :TPtRect;
                                  constref bmp_dst_width      :TColor;
                                  constref col                :TColor): TColor;                 {$ifdef Linux}[local];{$endif}
+function ArrNzItCnt             (constref arr1_ptr           :PShortInt;
+                                 constref arr2_ptr           :PByte;
+                                 constref length             :integer): TColor;                {$ifdef Linux}[local];{$endif}
+function ArrNzItCnt             (constref arr1_ptr           :PShortInt;
+                                 constref length             :integer;
+                                          b                  :boolean): TColor;                {$ifdef Linux}[local];{$endif}
 function ArrNzItCnt             (constref arr                :T1Byte1Arr;
                                  constref max_arr_it_val     :TColor=MAXBYTE ): TColor;        {$ifdef Linux}[local];{$endif}
 function ArrNzItCnt             (constref arr                :TWordArr;
@@ -3353,13 +3437,24 @@ function ArrNzItCnt             (constref arr                :TWordArr;
 function ArrNzItCnt             (constref arr                :TColorArr;
                                  constref max_arr_it_val     :TColor=MAXDWORD): TColor;        {$ifdef Linux}[local];{$endif}
 
+// Create Array With "Visible" Items:
+procedure ArrNzItCrt            (constref arr1_src_ptr       :PShortInt;
+                                 constref arr2_src_ptr       :PByte;
+                                          arr_dst_ptr        :PColor;
+                                 constref length1,
+                                          length2            :integer);                        {$ifdef Linux}[local];{$endif}
+procedure ArrNzItCrt            (constref arr1_src_ptr       :PShortInt;
+                                          arr_dst_ptr        :PColor;
+                                 constref length1,
+                                          length2            :integer);                        {$ifdef Linux}[local];{$endif}
+
 // Copy One Array To Another:
 procedure ArrToArr1             (         arr_src_ptr        :PPtPosF;
                                           arr_dst_ptr        :PPtPosF;
-                                          pts_cnt            :integer);                     {$ifdef Linux}[local];{$endif}
+                                          pts_cnt            :integer);                        {$ifdef Linux}[local];{$endif}
 procedure ArrToArr2             (         arr_src_ptr        :PPtPosF;
                                           arr_dst_ptr        :PPtPosF;
-                                          pts_cnt            :integer);                     {$ifdef Linux}[local];{$endif}
+                                          pts_cnt            :integer);                        {$ifdef Linux}[local];{$endif}
 
 {Linked Lists}
 procedure AddListItem           (constref pt_x               :integer;
@@ -3379,6 +3474,12 @@ procedure FreeList2             (var      first_item,p1,p2   :PFList);
 
 
 {Edge Antialiasing}
+procedure BorderCalc000         (constref arr_src            :T1Byte1Arr;
+                                 var      arr_dst            :T1Byte1Arr;
+                                 constref arr_src_width,
+                                          arr_dst_width      :TColor;
+                                 constref rct_dst            :TPtRect;
+                                 var      aa_nz_arr_it_cnt   :TColor);                         {$ifdef Linux}[local];{$endif}
 procedure BorderCalc0           (constref arr_src_ptr        :PInteger;
                                  var      arr_dst            :T1Byte1Arr;
                                  constref arr_src_width,
@@ -4160,6 +4261,10 @@ function LineCircIntPt          (constref x0,y0,x1,y1        :double;
                                  constref x,y,r              :double ): TLnPosF;       inline; {$ifdef Linux}[local];{$endif}
 function CrPosF                 (constref x,y,r              :double ): TCrPosF;       inline; {$ifdef Linux}[local];{$endif}
 
+// (Angle Between Two Connected Segments,(x1,y1) - Connection Point) Угол между двумя соединенными сегментами,(x1,y1) - точка соединения:
+function Angle1                 (constref x0,y0,x1,y1,x2,y2  :double): double;         inline; {$ifdef Linux}[local];{$endif}
+function Angle2                 (constref x0,y0,x1,y1,x2,y2  :double): double;         inline; {$ifdef Linux}[local];{$endif}
+
 (********************************** Blitters **********************************)
 
 function  GetBmpHandle          (         bmp                :TBitmap): PInteger{pointer}; inline;
@@ -4504,6 +4609,16 @@ procedure PPColorCorrectionP1   (         ColorizeP          :TFunc1;
                                  constref pow                :byte=32;
                                           alpha_max          :byte=255);
 
+// (Contrast) Контрастность:
+procedure PPContrast1           (constref bmp_dst_ptr        :PInteger;
+                                 constref rct_dst            :TPtRect;
+                                 constref bmp_dst_width      :TColor;
+                                 constref pow                :byte=64);
+procedure PPContrast2           (constref bmp_dst_ptr        :PInteger;
+                                 constref rct_dst            :TPtRect;
+                                 constref bmp_dst_width      :TColor;
+                                 constref pow                :byte=64);
+
 // (Blur) Размытие:
 procedure PPBlurProc00          (constref bmp_dst_ptr        :PInteger;
                                  constref rct_dst            :TPtRect;
@@ -4555,6 +4670,12 @@ procedure PPBlur                (constref bmp_src_ptr,
                                  constref blur_type          :byte=0);
 
 var
+
+  {Precalculated Table of Greatest Common Divisors}
+  {array of greatest common divisors}
+  gcd_arr             : TGCDArr;
+  {precision of calculation}
+  grid_pt_rad         : TColor;
 
   DefaultParallaxShift: TPtPos=(x:16; y:16);
   PPDec2Proc          : array[0..29] of TFunc2;
@@ -4633,6 +4754,7 @@ var
     pts_bld_stl              : dsAlphaBlend;
     clp_stl                  : csClippedEdges1;
     eds_lod                  : False;
+    eds_simpl_angle          : 20.0;
     hid_ln_elim              : True;
     best_precision           : False;
     lazy_repaint             : True;
@@ -4686,6 +4808,17 @@ var
 
     {Superellipse}
 
+  ); {$endregion}
+  ftext_default_prop  : TFTextProp={$region -fold}
+  (
+    bkgnd_col    : clWhite;
+    bkgnd_draw   : False;
+    bkgnd_rnd_col: false;
+  ); {$endregion}
+  selit_default_prop  : TSelItProp={$region -fold}
+  (
+    bkgnd_style   : bsBoth;
+    selection_mode: smCircle;
   ); {$endregion}
 
 implementation
@@ -4952,6 +5085,17 @@ begin
   Result       :=x;
   result_as_int:=$5F3759DF-(result_as_int>>1);
   Result       *=(1.5-(x*0.5*Result*Result));
+end; {$endregion}
+//
+function Limit(x:integer): byte;                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  if (x<0) then
+    Result:=0
+  else
+  if (x>255) then
+    Result:=255
+  else
+    Result:=x;
 end; {$endregion}
 //
 procedure PtrInit(var ptr:PInteger; constref arr:TIntrArr );                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -5323,6 +5467,12 @@ begin
       Blue((pixel_ptr+0+bmp_dst_width<<1)^)+
       Blue((pixel_ptr+2+bmp_dst_width<<1)^))>>2;
            (pixel_ptr+bmp_dst_width+1)^:=RGB(b,b,b);
+end; {$endregion}
+procedure Contrast     (pixel_ptr:PInteger; constref r:byte=0; constref g:byte=0; constref b:byte=0; constref contrast_pow2:double=0.0                                                      );         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  pixel_ptr^:=RGB(Limit(r+Trunc((Red  (pixel_ptr^)-r)*contrast_pow2)),
+                  Limit(g+Trunc((Green(pixel_ptr^)-g)*contrast_pow2)),
+                  Limit(b+Trunc((Blue (pixel_ptr^)-b)*contrast_pow2)));
 end; {$endregion}
 // Decrease Effect:
 function AdditiveDec   (pixel:TColor; constref r,g,b:byte;                     constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -6893,10 +7043,20 @@ begin
   Result.r:=r;
 end; {$endregion}
 
+// (Angle Between Two Connected Segments,(x1,y1) - Connection Point) Угол между двумя соединенными сегментами,(x1,y1) - точка соединения:
+function Angle1(constref x0,y0,x1,y1,x2,y2:double): double ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=ONE_DIV_BY_FULL_ROT*ArcCos(((x0-x1)*(x2-x1)+(y0-y1)*(y2-y1))/Sqrt((Sqr(x0-x1)+Sqr(y0-y1))*(Sqr(x2-x1)+Sqr(y2-y1))));
+end; {$endregion}
+function Angle2(constref x0,y0,x1,y1,x2,y2:double): double ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=ONE_DIV_BY_FULL_ROT*ArcCos(((x0-x1)*(x2-x1)+(y0-y1)*(y2-y1))/Sqrt((Sqr(x0-x1)+Sqr(y0-y1))*(Sqr(x2-x1)+Sqr(y2-y1))));
+  Result:=180-Result;
+end; {$endregion}
+
 // (Parallax) Параллакс:
 function DistToObj(constref parallax_shift:TColor): double; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  //Result:=
 end; {$endregion}
 {$endregion}
 
@@ -8059,7 +8219,7 @@ begin
 end; {$endregion}
 
 // Non-Zero Items Count:
-function ArrNzItCnt(constref arr:T1Byte1Arr): TColor;                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
+function ArrNzItCnt(constref arr:T1Byte1Arr                                                                                    ): TColor; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   arr_ptr: PByte;
   i      : integer;
@@ -8088,7 +8248,26 @@ begin
       Inc (dst_pixel_ptr,bmp_dst_width);
     end;
 end; {$endregion}
-function ArrNzItCnt(constref arr:T1Byte1Arr; constref max_arr_it_val:TColor=MAXBYTE ): TColor;                                            {$ifdef Linux}[local];{$endif} {$region -fold}
+function ArrNzItCnt(constref arr1_ptr:PShortInt;   constref arr2_ptr:PByte;  constref length:integer                           ): TColor; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
+begin
+  Result:=0;
+  for i:=0 to length-1 do
+    if ((arr1_ptr+i)^=0) and
+       ((arr2_ptr+i)^=1) then
+      Inc(Result);
+end; {$endregion}
+function ArrNzItCnt(constref arr1_ptr:PShortInt;                             constref length:integer; b:boolean                ): TColor; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
+begin
+  Result:=0;
+  for i:=0 to length-1 do
+    if ((arr1_ptr+i)^=0) then
+      Inc(Result);
+end; {$endregion}
+function ArrNzItCnt(constref arr:T1Byte1Arr;       constref max_arr_it_val:TColor=MAXBYTE                                      ): TColor; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   n,m: TColor;
   i  : integer;
@@ -8102,7 +8281,7 @@ begin
                                                                                                // "if arr[i]<>0 then
                                                                                                //    Inc(Result);"
 end; {$endregion}
-function ArrNzItCnt(constref arr:TWordArr;   constref max_arr_it_val:TColor=MAXWORD ): TColor;                                            {$ifdef Linux}[local];{$endif} {$region -fold}
+function ArrNzItCnt(constref arr:TWordArr;         constref max_arr_it_val:TColor=MAXWORD                                      ): TColor; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   n,m: TColor;
   i  : integer;
@@ -8116,7 +8295,7 @@ begin
                                                                                                // "if arr[i]<>0 then
                                                                                                //    Inc(Result);"
 end; {$endregion}
-function ArrNzItCnt(constref arr:TColorArr;  constref max_arr_it_val:TColor=MAXDWORD): TColor;                                            {$ifdef Linux}[local];{$endif} {$region -fold}
+function ArrNzItCnt(constref arr:TColorArr;        constref max_arr_it_val:TColor=MAXDWORD                                     ): TColor; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   n,m: TColor;
   i  : integer;
@@ -8129,6 +8308,39 @@ begin
                                                                                                // as compared with:
                                                                                                // "if arr[i]<>0 then
                                                                                                //    Inc(Result);"
+end; {$endregion}
+
+// Create Array With "Visible" Items:
+procedure ArrNzItCrt(constref arr1_src_ptr:PShortInt; constref arr2_src_ptr:PByte; arr_dst_ptr:PColor; constref length1,length2:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  arr_dst_ptr0: PColor;
+  i           : integer;
+begin
+  arr_dst_ptr0:=arr_dst_ptr;
+  for i:=0 to length1-1 do
+    if ((arr1_src_ptr+i)^=0) and
+       ((arr2_src_ptr+i)^=1) then
+      begin
+        arr_dst_ptr^:=i;
+        Inc(arr_dst_ptr);
+        if (arr_dst_ptr-arr_dst_ptr0=length2) then
+          Break;
+      end;
+end; {$endregion}
+procedure ArrNzItCrt(constref arr1_src_ptr:PShortInt;                              arr_dst_ptr:PColor; constref length1,length2:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  arr_dst_ptr0: PColor;
+  i           : integer;
+begin
+  arr_dst_ptr0:=arr_dst_ptr;
+  for i:=0 to length1-1 do
+    if ((arr1_src_ptr+i)^=0) then
+      begin
+        arr_dst_ptr^:=i;
+        Inc(arr_dst_ptr);
+        if (arr_dst_ptr-arr_dst_ptr0=length2) then
+          Break;
+      end;
 end; {$endregion}
 
 // Copy One Array To Another:
@@ -8150,7 +8362,7 @@ end; {$endregion}
 
 
 
-(********************************* Linked Lists *******************************) {$region -fold}
+(******************************** Linked Lists ********************************) {$region -fold}
 
 procedure AddListItem(constref pt_x   :integer;    var first_item,p1,p2:PIList); {$region -fold}
 begin
@@ -8423,8 +8635,9 @@ end.
 
 
 (****************************** Edge Antialiasing *****************************) {$region -fold}
-{
-procedure BorderCalc0(constref arr_src    :T1IntrArr; var arr_dst:T1ByteArr;                          constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+
+{$region -fold}
+{procedure BorderCalc0(constref arr_src    :T1IntrArr; var arr_dst:T1ByteArr;                          constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   arr_src_ptr          : PInteger;
   arr_dst_ptr          : PByte;
@@ -8518,8 +8731,10 @@ begin
       Inc(arr_src_ptr,d_width1);
       Inc(arr_dst_ptr,d_width2);
     end;
-end; {$endregion}
-procedure BorderCalc0(constref arr_src    :T1ByteArr; var arr_dst:T1ByteArr;                          constref arr_src_width,arr_dst_width:integer; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+end; {$endregion}}
+{$endregion}
+
+procedure BorderCalc000(constref arr_src   :T1Byte1Arr; var arr_dst:T1Byte1Arr;                         constref arr_src_width,arr_dst_width:TColor; constref rct_dst:TPtRect; var aa_nz_arr_it_cnt:TColor); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   arr_src_ptr          : PByte;
   arr_dst_ptr          : PByte;
@@ -8651,7 +8866,7 @@ begin
     end;
     //until (arr_dst_ptr^<>3);
 end; {$endregion}
-}
+
 procedure BorderCalc0 (constref arr_src_ptr:PInteger  ; var arr_dst:T1Byte1Arr;                         constref arr_src_width,arr_dst_width:TColor; constref rct_dst:TPtRect; var      aa_nz_arr_it_cnt:TColor; constref background_color:TColor                  ); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   arr_src_ptr2         : PInteger;
@@ -27211,7 +27426,7 @@ begin
   alpha_max:=maxbyte; {$endregion}
 
   {Set Drawing Surface(Background)} {$region -fold}
-  SetBkgnd(bkgnd_ptr,bkgnd_width,bkgnd_height); {$endregion}
+  SetBkgnd(bkgnd_ptr,bkgnd_width,bkgnd_height,rct_clp); {$endregion}
 
   {Misc. Precalc. Settings--------} {$region -fold}
   CmpProcInit;
@@ -27223,7 +27438,7 @@ begin
   SetPPInfo; {$endregion}
 
   {Set Clipping Rectangle---------} {$region -fold}
-  SetClpRct(rct_clp); {$endregion}
+  {SetClpRct(rct_clp);} {$endregion}
 
 end; {$endregion}
 constructor TFastImage.Create  (constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; var rct_clp:TPtRect; constref bmp_src_rct:TPtRect; constref location:string=''; constref ImgLstGetBmp:TProc1=Nil; constref img_ind:TColor=0; constref mask_tpl_calc:boolean=False; constref pic_src:TPicture=Nil); {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -27245,7 +27460,7 @@ begin
     sln_prop_var:=curve_default_prop; {$endregion}
 
   {Set Drawing Surface(Background)} {$region -fold}
-  SetBkgnd(bkgnd_ptr,bkgnd_width,bkgnd_height); {$endregion}
+  SetBkgnd(bkgnd_ptr,bkgnd_width,bkgnd_height,rct_clp); {$endregion}
 
   {Misc. Precalc. Settings--------} {$region -fold}
   CmpProcInit;
@@ -27287,7 +27502,7 @@ begin
   bmp_ftimg_height:=bmp_src_rct_clp.height; {$endregion}
 
   {Set Clipping Rectangle---------} {$region -fold}
-  SetClpRct(rct_clp); {$endregion}
+  {SetClpRct(rct_clp);} {$endregion}
 
   {Clear Resources----------------} {$region -fold}
   DeleteObject(icn_src.Canvas.Handle);
@@ -27305,11 +27520,12 @@ begin
   self.Free;
   inherited Destroy;
 end; {$endregion}
-procedure TFastImage.SetBkgnd  (constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastImage.SetBkgnd  (constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; constref rct_clp:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   bmp_bkgnd_ptr   :=bkgnd_ptr   ;
   bmp_bkgnd_width :=bkgnd_width ;
   bmp_bkgnd_height:=bkgnd_height;
+  rct_clp_ptr     :=@rct_clp;
 end; {$endregion}
 procedure TFastImage.SetClpRct (constref rct_clp:TPtRect);                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -27445,29 +27661,29 @@ end; {$endregion}
 (***************************** Fast Line Routines *****************************) {$region -fold}
 
 {Init. Part--} {$region -fold}
-constructor TFastLine.Create;                                                                                                               {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TFastLine.Create;                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   LineSInit;
 end; {$endregion}
-destructor TFastLine.Destroy;                                                                                                               {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor TFastLine.Destroy;                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   self.Free;
   inherited Destroy;
 end; {$endregion}
-procedure TFastLine.GCCArrInit;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.GCCArrInit;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   gcd_arr:=Nil;
   SetLength  (gcd_arr,ln_arr_width*ln_arr_height);
   LinePrecalc(        ln_arr_width,ln_arr_height);
 end; {$endregion}
 // Replace Lookup Table(Precalculated Array):
-procedure TFastLine.GCCArrRepl(dst_fl_var:TFastLine);                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.GCCArrRepl(dst_fl_var:TFastLine);                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  gcd_arr:=Nil;
+  {gcd_arr:=Nil;
   SetLength(gcd_arr,ln_arr_width*ln_arr_height);
-  gcd_arr:=dst_fl_var.gcd_arr;
+  gcd_arr:=dst_fl_var.gcd_arr;}
 end; {$endregion}
-procedure TFastLine.SplineInit(w,h:TColor; ln_arr0_init:boolean; ln_arr1_init:boolean; ln_arr2_init:boolean; aa_buff_init:boolean); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.SplineInit(w,h:TColor; ln_arr0_init:boolean; ln_arr1_init:boolean; ln_arr2_init:boolean; aa_buff_init:boolean);     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -27497,13 +27713,14 @@ begin
       SetLength(aa_arr2,w*h);
     end;
 end; {$endregion}
-procedure TFastLine.SetBkgnd(constref bmp_dst_ptr_:PInteger; constref bmp_dst_width_,bmp_dst_height_:TColor);                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.SetBkgnd(constref bmp_dst_ptr_:PInteger; constref bmp_dst_width_,bmp_dst_height_:TColor; constref rct_clp_ptr_:PPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   bmp_dst_ptr   :=bmp_dst_ptr_;
   bmp_dst_width :=bmp_dst_width_;
   bmp_dst_height:=bmp_dst_height_;
+  rct_clp_ptr   :=rct_clp_ptr_;
 end; {$endregion}
-procedure TFastLine.MinimizeArrs(aa_buff_clear:boolean);                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.MinimizeArrs(aa_buff_clear:boolean);                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Setlength(ln_arr0,0);
   Setlength(ln_arr1,0);
@@ -27518,7 +27735,7 @@ end; {$endregion} {$endregion}
 // (Fast Line Grid Precalculation) Предпросчет сетки для быстрой линии:
 {class} procedure TFastLine.LinePrecalc(w,h:TColor); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  gcd_arr_ptr            :^TFastLine.TGCDGrid;
+  gcd_arr_ptr            : PGCDGrid; //^TFastLine.TGCDGrid;
   i,j,k,t1,t2,s1,s2,v1,v2: integer;
 
   {(Binary Stein Algorithm, which finds Greatest Common Divisor of two integer numbers) Бинарный алгоритм Стейна нахождения НСД двух натуральных чисел}
@@ -28027,25 +28244,25 @@ begin
         begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
-          p0_shift:=p0*ln_arr_width;
+          p0_shift:=p0*ln_arr_width{<<10};
           while (p0<=long_len) do
             begin
               ln_arr0[(i>>16)+p0_shift]+=1;
 	      i+=dec_inc;
               Inc(p0);
-              Inc(p0_shift,ln_arr_width);
+              Inc(p0_shift,ln_arr_width{ONE_MUL_1024});
             end;
           Exit;
         end;
       long_len+=p0;
       i:=$8000+(r0<<16);
-      p0_shift:=p0*ln_arr_width;
+      p0_shift:=p0*ln_arr_width{<<10};
       while (p0>=long_len) do
         begin
           ln_arr0[(i>>16)+p0_shift]+=1;
           i-=dec_inc;
           Dec(p0);
-          Dec(p0_shift,ln_arr_width);
+          Dec(p0_shift,ln_arr_width{ONE_MUL_1024});
         end;
       Exit;
     end;
@@ -28056,7 +28273,7 @@ begin
       i:=$8000+(p0<<16);
       while (r0<=long_len) do
         begin
-          ln_arr0[r0+(i>>16)*ln_arr_width]+=1;
+          ln_arr0[r0+(i>>16)*ln_arr_width{<<10}]+=1;
           i+=dec_inc;
           Inc(r0);
         end;
@@ -28067,7 +28284,7 @@ begin
   i:=$8000+(p0<<16);
   while (r0>=long_len) do
     begin
-      ln_arr0[r0+(i>>16)*ln_arr_width]+=1;
+      ln_arr0[r0+(i>>16)*ln_arr_width{<<10}]+=1;
       i-=dec_inc;
       Dec(r0);
     end;
@@ -30524,6 +30741,75 @@ begin
             y1:=y[1];
           end;
     end;
+end; {$endregion}
+
+// Fill Buffer With Anti-Aliasing:
+procedure TFastLine.FillBuffer(constref rct_clp:TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  rct: TPtRect;
+begin
+  with local_prop do
+    if (clp_stl<>csResilientEdges) then
+      begin
+        with rct_clp do
+          rct:=PtRct(left+1,top+1,right-1,bottom-1);
+        ArrAdd(ln_arr0,
+               ln_arr2,
+               rct_clp,
+               ln_arr_width,
+               ln_arr_height);
+
+        {Fill Buffer---------} {$region -fold}
+        ArrFillProc[Byte(eds_bld_stl)](ln_arr0,
+                                       bmp_dst_ptr,
+                                       ln_arr_width,
+                                       ln_arr_height,
+                                       rct_clp,
+                                       eds_col); {$endregion}
+
+        {Border Anti-Aliasing} {$region -fold}
+        if eds_aa then
+          begin
+            BorderCalc1 (ln_arr0,
+                         aa_arr1,
+                         ln_arr_width,
+                         ln_arr_width,
+                         rct,
+                         aa_nz_arr_items_cnt);
+            BorderCalc22(ln_arr0,
+                         aa_arr1,
+                         aa_arr2,
+                         ln_arr_width,
+                         ln_arr_width,
+                         rct,
+                         aa_line_cnt);
+            BorderFill  (aa_arr2,
+                         0,
+                         0,
+                         bmp_dst_ptr,
+                         ln_arr_width,
+                         aa_line_cnt,
+                         eds_col,
+                         args,
+                         PPDec2Proc[pp_dec_2_proc_ind]);
+          end; {$endregion}
+
+      end;
+end; {$endregion} {$endregion}
+{$endregion}
+
+
+
+(***************************** Fast Text Routines *****************************) {$region -fold}
+
+{Init. Part--} {$region -fold}
+constructor TFastText.Create;                                                                                                               {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+end; {$endregion}
+destructor TFastText.Destroy;                                                                                                               {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  self.Free;
+  inherited Destroy;
 end; {$endregion} {$endregion}
 {$endregion}
 
@@ -34827,7 +35113,6 @@ begin
     begin
       x1:=x*arr_dst_width;
       y1:=y*arr_dst_width;
-
       if (y>=+c0) and (y<+c1) then
         begin
           if (x<=+c2) and (x>+c3) and ((p+y-x1)^.obj_ind<>-1) then //(x0+y)+(y0-x)*arr_dst_width
@@ -34937,23 +35222,20 @@ begin
           dist_sqr:=i*i-rad2*i<<1+d_sqr;
           if (dist_sqr<rad1_sqr) and (pixel_ptr^>>24=0) then
             begin
-              //m:=Max2(pow-Trunc(alpha_max*sqrt(dist_sqr)/rad1),0);
-              //if (m<>0) then
-                  pixel_ptr^:=AlphaBlend(pixel_ptr^,
-                                         color_info.r,
-                                         color_info.g,
-                                         color_info.b,
-                                         0,
-                                         pow)
-                              {Highlight(pixel_ptr^,
-                                         0,
-                                         0,
-                                         0,
-                                         0,
-                                         0,
-                                         pow)}
-                              {pix_col};
-                  pixel_ptr^+=%00000001000000000000000000000000;
+              pixel_ptr^:=AlphaBlend(pixel_ptr^,
+                                     color_info.r,
+                                     color_info.g,
+                                     color_info.b,
+                                     0,
+                                     pow)
+                          {Highlight(pixel_ptr^,
+                                     0,
+                                     0,
+                                     0,
+                                     0,
+                                     0,
+                                     pow)};
+              pixel_ptr^+=%00000001000000000000000000000000;
             end;
           Inc(pixel_ptr);
         end;
@@ -35061,18 +35343,46 @@ end; {$endregion}
 procedure CnvToCnv(rct_dst:TPtRect; cnv_dst,cnv_src:TCanvas; copy_mode:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   {$ifdef Windows}
-  BitBlt(cnv_dst.Handle,
-         rct_dst.left,
-         rct_dst.top,
-         rct_dst.width,
-         rct_dst.height,
-         cnv_src.Handle,
-         0,
-         0,
-         copy_mode);
+  BitBlt
+  (
+    cnv_dst.Handle,
+    rct_dst.left,
+    rct_dst.top,
+    rct_dst.width,
+    rct_dst.height,
+    cnv_src.Handle,
+    0,
+    0,
+    copy_mode
+  );
+  {StretchBlt
+  (
+    cnv_dst.Handle,
+    rct_dst.left,
+    rct_dst.top,
+    rct_dst.width,
+    rct_dst.height,
+    cnv_src.Handle,
+    0,
+    0,
+    rct_dst.width,
+    rct_dst.height,
+    copy_mode
+  );}
   {$else}
   cnv_dst.CopyMode:=copy_mode;
-  cnv_dst.CopyRect(rct_dst,cnv_src,Rect(0,0,rct_dst.width,rct_dst.height));
+  cnv_dst.CopyRect
+  (
+    Rect
+    (
+      rct_dst.left,
+      rct_dst.top,
+      rct_dst.right,
+      rct_dst.bottom
+    ),
+    cnv_src,
+    Rect(0,0,rct_dst.width,rct_dst.height)
+  );
   {$endif}
 end; {$endregion}
 
@@ -37461,6 +37771,82 @@ var
   r,g,b        : byte;
 begin
 
+end; {$endregion}
+
+// (Contrast) Контрастность:
+procedure PPContrast1        (                  constref             bmp_dst_ptr:PInteger;                           constref rct_dst:TPtRect;  constref               bmp_dst_width:TColor; constref pow:byte=64); {$region -fold}
+var
+  contrast_pow : double;
+  dst_pixel_ptr: PInteger;
+  d_width      : integer;
+  x,y          : integer;
+  r,g,b        : byte;
+  pow2         : shortint;
+begin
+  r   :=128;
+  g   :=128;
+  b   :=128;
+  pow2:=pow;
+  if (pow2>0) then
+    contrast_pow:=1+(pow2/10)
+  else
+    contrast_pow:=1-(Sqrt(-pow2)/10);
+  d_width      :=bmp_dst_width-rct_dst.width;
+  dst_pixel_ptr:=Unaligned(bmp_dst_ptr+rct_dst.left+rct_dst.top*bmp_dst_width);
+  for y:=0 to rct_dst.height-1 do
+    begin
+      for x:=0 to rct_dst.width-1 do
+        begin
+          Contrast(dst_pixel_ptr,r,g,b,contrast_pow);
+          Inc     (dst_pixel_ptr);
+        end;
+      Inc         (dst_pixel_ptr,d_width);
+    end;
+end; {$endregion}
+procedure PPContrast2        (                  constref             bmp_dst_ptr:PInteger;                           constref rct_dst:TPtRect;  constref               bmp_dst_width:TColor; constref pow:byte=64); {$region -fold}
+var
+  contrast_pow : double;
+  dst_pixel_ptr: PInteger;
+  d_width      : integer;
+  x,y          : integer;
+  r,g,b        : byte;
+  r_,g_,b_     : longword;
+  pow2         : shortint;
+begin
+  d_width      :=bmp_dst_width-rct_dst.width;
+  dst_pixel_ptr:=Unaligned(bmp_dst_ptr+rct_dst.left+rct_dst.top*bmp_dst_width);
+  r_           :=0;
+  g_           :=0;
+  b_           :=0;
+  for y:=0 to rct_dst.height-1 do
+    begin
+      for x:=0 to rct_dst.width-1 do
+        begin
+          Inc(r_,Red  ((dst_pixel_ptr)^));
+          Inc(g_,Green((dst_pixel_ptr)^));
+          Inc(b_,Blue ((dst_pixel_ptr)^));
+          Inc          (dst_pixel_ptr);
+        end;
+      Inc              (dst_pixel_ptr,d_width);
+    end;
+  r:=Trunc(r_/(rct_dst.width*rct_dst.height));
+  g:=Trunc(g_/(rct_dst.width*rct_dst.height));
+  b:=Trunc(b_/(rct_dst.width*rct_dst.height));
+  pow2:=pow;
+  if (pow2>0) then
+    contrast_pow:=1+(pow2/10)
+  else
+    contrast_pow:=1-(Sqrt(-pow2)/10);
+  dst_pixel_ptr:=Unaligned(bmp_dst_ptr+rct_dst.left+rct_dst.top*bmp_dst_width);
+  for y:=0 to rct_dst.height-1 do
+    begin
+      for x:=0 to rct_dst.width-1 do
+        begin
+          Contrast(dst_pixel_ptr,r,g,b,contrast_pow);
+          Inc     (dst_pixel_ptr);
+        end;
+      Inc         (dst_pixel_ptr,d_width);
+    end;
 end; {$endregion}
 {$endregion}
 

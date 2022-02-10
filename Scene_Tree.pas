@@ -12,59 +12,62 @@ uses
 
 type
 
-  TSceneTree   =class;
+  TSceneTree    =class;
 
-  TLayerType   =(ltStatic,ltDynamic);
-  PLayerType   =^TLayerType;
+  TLayerType    =(ltStatic,ltDynamic);
+  PLayerType    =^TLayerType;
 
-  TKindOfObject=(kooEmpty,kooBkgnd,kooBkTex,kooRGrid,kooSGrid,kooGroup,kooTlMap,kooActor,kooPrtcl,kooCurve);
-  PKindOfObject=^TKindOfObject;
+  TKindOfObject =(kooEmpty,kooBkgnd,kooBkTex,kooRGrid,kooSGrid,kooGroup,kooTlMap,kooActor,kooPrtcl,kooCurve,kooFText,kooMiscellaneous);
+  PKindOfObject =^TKindOfObject;
 
-  TPosShiftType=(pstAll,pstChildren);
-  PPosShiftType=^TPosShiftType;
+  TObjShowForced=(osfNone,osfVisible,osfInvisible);
+  PObjShowForced=^TObjShowForced;
 
-  TBkgndProp   =packed record {$region -fold}
+  TPosShiftType =(pstAll,pstChildren);
+  PPosShiftType =^TPosShiftType;
+
+  TBkgndProp    =packed record {$region -fold}
     bckgd_obj_ind: TColor;
   end; {$endregion}
-  PBkgndProp   =^TBkgndProp;
+  PBkgndProp    =^TBkgndProp;
 
-  TBkTexProp   =packed record {$region -fold}
+  TBkTexProp    =packed record {$region -fold}
     bktex_obj_ind: TColor;
   end; {$endregion}
-  PBkTexProp   =^TBkTexProp;
+  PBkTexProp    =^TBkTexProp;
 
-  TRGridProp   =packed record {$region -fold}
+  TRGridProp    =packed record {$region -fold}
     rgrid_obj_ind: TColor;
   end; {$endregion}
-  PRGridProp   =^TRGridProp;
+  PRGridProp    =^TRGridProp;
 
-  TSGridProp   =packed record {$region -fold}
+  TSGridProp    =packed record {$region -fold}
     sgrid_obj_ind: TColor;
   end; {$endregion}
-  PSGridProp   =^TSGridProp;
+  PSGridProp    =^TSGridProp;
 
-  TGroupProp   =packed record {$region -fold}
+  TGroupProp    =packed record {$region -fold}
     group_obj_ind: TColor;
     children_cnt : TColor;
   end; {$endregion}
-  PGroupProp   =^TGroupProp;
+  PGroupProp    =^TGroupProp;
 
-  TTlMapProp   =packed record {$region -fold}
+  TTlMapProp    =packed record {$region -fold}
     tlmap_obj_ind: TColor;
   end; {$endregion}
-  PTlMapProp   =^TTlMapProp;
+  PTlMapProp    =^TTlMapProp;
 
-  TActorProp   =packed record {$region -fold}
+  TActorProp    =packed record {$region -fold}
     actor_obj_ind: TColor;
   end; {$endregion}
-  PActorProp   =^TActorProp;
+  PActorProp    =^TActorProp;
 
-  TPrtclProp   =packed record {$region -fold}
+  TPrtclProp    =packed record {$region -fold}
     prtcl_obj_ind: TColor;
   end; {$endregion}
-  PPrtclProp   =^TPrtclProp;
+  PPrtclProp    =^TPrtclProp;
 
-  TObjInfo     =packed record {$region -fold}
+  TObjInfo      =packed record {$region -fold}
     // background (bitmap destination) handle:
     bkgnd_ptr                : PInteger;
     // background (bitmap destination) width:
@@ -72,10 +75,10 @@ type
     // background (bitmap destination) height:
     bkgnd_height             : TColor;
     // outter clipping rectangle:
-    rct_clp                  : TPtRect;
+    rct_clp_ptr              : PPtRect;
     // (global) position of an object inside object array:
     g_ind                    : TColor;
-    // (local) position of an object inside kind og oject:
+    // (local ) position of an object inside kind of object:
     k_ind                    : TColor;
     // (global) position of an object inside scene tree:
     t_ind                    : TColor;
@@ -85,6 +88,7 @@ type
     koo                      : TKindOfObject;
     // is object visible:
     obj_show                 : boolean;
+    obj_show_forced          : TObjShowForced;
     // is object abstract(for example prefab/null/group) or drawable in scene:
     abstract                 : boolean;
     // does object allow to move itself:
@@ -107,9 +111,9 @@ type
     // distance between camera and current object:
     obj_dist2                : TColor;
   end; {$endregion}
-  PObjInfo     =^TObjInfo;
+  PObjInfo      =^TObjInfo;
 
-  TSceneTree   =class         {$region -fold}
+  TSceneTree    =class         {$region -fold}
     public
       global_prop   : TObjInfo;
       //
@@ -131,7 +135,8 @@ type
       tlmap_inds_obj_arr: TColorArr;
       actor_inds_obj_arr: TColorArr;
       prtcl_inds_obj_arr: TColorArr;
-      curve_inds_obj_arr: TColorArr; {$endregion}
+      curve_inds_obj_arr: TColorArr;
+      ftext_inds_obj_arr: TColorArr; {$endregion}
 
       {array of indices inside of scene tree--} {$region -fold}
       empty_inds_sct_arr: TColorArr;
@@ -143,7 +148,8 @@ type
       tlmap_inds_sct_arr: TColorArr;
       actor_inds_sct_arr: TColorArr;
       prtcl_inds_sct_arr: TColorArr;
-      curve_inds_sct_arr: TColorArr; {$endregion}
+      curve_inds_sct_arr: TColorArr;
+      ftext_inds_sct_arr: TColorArr; {$endregion}
 
       {count of items-------------------------} {$region -fold}
       empty_cnt     : TColor;
@@ -155,7 +161,8 @@ type
       tlmap_cnt     : TColor;
       actor_cnt     : TColor;
       prtcl_cnt     : TColor;
-      curve_cnt     : TColor; {$endregion}
+      curve_cnt     : TColor;
+      ftext_cnt     : TColor; {$endregion}
 
       // current object index:
       curr_obj_ind  : TColor;
@@ -163,6 +170,8 @@ type
       obj_cnt       : TColor;
       // low layer objects count:
       low_lr_obj_cnt: TColor;
+      // is item with children in scene tree:
+      has_it_with_ch: boolean;
 
       // count of selected objects of "Groups":
       group_selected: boolean;
@@ -174,6 +183,8 @@ type
       prtcl_selected: boolean;
       // count of selected objects of "Splines"("Curves"):
       curve_selected: boolean;
+      // count of selected objects of "FText":
+      ftext_selected: boolean;
 
       constructor Create;                                                                    {$ifdef Linux}[local];{$endif}
       destructor  Destroy;                                                         override; {$ifdef Linux}[local];{$endif}
@@ -187,6 +198,7 @@ type
       procedure FilActor;                                                            inline; {$ifdef Linux}[local];{$endif}
       procedure FilPrtcl;                                                            inline; {$ifdef Linux}[local];{$endif}
       procedure FilCurve;                                                            inline; {$ifdef Linux}[local];{$endif}
+      procedure FilFText;                                                            inline; {$ifdef Linux}[local];{$endif}
       procedure MovCurve;                                                            inline; {$ifdef Linux}[local];{$endif}
       procedure FilScene;                                                            inline; {$ifdef Linux}[local];{$endif}
       procedure MovWorldAxisShiftRight;                                              inline; {$ifdef Linux}[local];{$endif}
@@ -207,7 +219,7 @@ type
                                       constref bkgnd_ptr        :PInteger;
                                       constref bkgnd_width,
                                                bkgnd_height     :TColor;
-                                      constref rct_clp          :TPtRect);           inline; {$ifdef Linux}[local];{$endif}
+                                      constref rct_clp_ptr      :PPtRect);           inline; {$ifdef Linux}[local];{$endif}
       // (Checks If Another Kind Of Object Is Available After Selected Object(From start_ind) In Objects array(obj_arr)) Проверяет есть ли другой вид обьектов после выбранного(начиная с start_ind) в массиве обьектов(obj_arr):
       function  IsAnotherObjKindAfter(constref koo              :TKindOfObject;
                                       constref start_ind        :TColor=0): boolean; inline; {$ifdef Linux}[local];{$endif}
@@ -229,9 +241,9 @@ type
                                       constref max_item_val     :TColor;
                                       constref item_cnt         :TColor): TColor;    inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
-  PSceneTree   =^TSceneTree;
+  PSceneTree    =^TSceneTree;
 
-  TNodeData    =packed record {$region -fold}
+  TNodeData     =packed record {$region -fold}
     g_ind: TColor;
     {case TKindOfObject of
       kooBckgd: (bckgd_prop: TBckgdProp);
@@ -244,7 +256,7 @@ type
       kooPrtcl: (prtcl_prop: TPrtclProp);
       kooCurve: (curve_prop: TCurveProp);}
   end; {$endregion}
-  PNodeData    =^TNodeData;
+  PNodeData     =^TNodeData;
 
 var
 
@@ -258,6 +270,7 @@ var
   actor_prop: TActorProp;
   prtcl_prop: TPrtclProp;
   curve_prop: TCurveProp;
+  ftext_prop: TFTextProp;
 
   {Object Default Properties}
   obj_default_prop: TObjInfo={$region -fold}
@@ -265,18 +278,14 @@ var
     bkgnd_ptr                : Nil;
     bkgnd_width              : 0;
     bkgnd_height             : 0;
-    rct_clp                  : (left  :0;
-                                top   :0;
-                                width :0;
-                                height:0;
-                                right :0;
-                                bottom:0);
+    rct_clp_ptr              : Default(PPtRect);
     g_ind                    : 0;
     k_ind                    : 0;
     t_ind                    : 0;
     anim_type                : ltStatic;
     koo                      : kooBkgnd;
     obj_show                 : True;
+    obj_show_forced          : osfNone;
     abstract                 : True;
     movable                  : True;
     scalable                 : True;
@@ -292,84 +301,88 @@ var
 
 implementation
 
-uses
+uses //
 
   Main;
 
-constructor TSceneTree.Create;                                                                                                                                                         {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TSceneTree.Create;                                                                                                                                                             {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   global_prop :=obj_default_prop;
   curr_obj_ind:=0;
 end; {$endregion}
-destructor  TSceneTree.Destroy;                                                                                                                                                        {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TSceneTree.Destroy;                                                                                                                                                            {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   self.Free;
   inherited Destroy;
 end; {$endregion}
-procedure   TSceneTree.FilEmpty;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilEmpty;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure   TSceneTree.FilBkgnd;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilBkgnd;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   srf_var_inst_ptr: PSurf=Nil;
 begin
   srf_var_inst_ptr:=@srf_var;
   srf_var_inst_ptr^.FilBkgndObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.FilBkTex;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilBkTex;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   tex_var_inst_ptr: PTex=Nil;
 begin
   tex_var_inst_ptr:=@tex_var;
   tex_var_inst_ptr^.FilBkTexObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.FilRGrid;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilRGrid;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rgrd_var_inst_ptr: PRGrid=Nil;
 begin
   rgrd_var_inst_ptr:=@rgr_var;
   rgrd_var_inst_ptr^.FilRGridObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.FilSGrid;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilSGrid;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   sgrd_var_inst_ptr: PSGrid=Nil;
 begin
   sgrd_var_inst_ptr:=@sgr_var;
   sgrd_var_inst_ptr^.FilSGridObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.FilGroup;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilGroup;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure   TSceneTree.FilTlMap;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilTlMap;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   tlm_var_inst_ptr: PTlMap=Nil;
 begin
   tlm_var_inst_ptr:=Unaligned(@tlm_var);
   tlm_var_inst_ptr^.FilTileMapObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.FilActor;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilActor;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
 end; {$endregion}
-procedure   TSceneTree.FilPrtcl;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilPrtcl;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
 end; {$endregion}
-procedure   TSceneTree.FilCurve;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilFText;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+
+end; {$endregion}
+procedure   TSceneTree.FilCurve;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   sln_var_inst_ptr: PCurve=Nil;
 begin
   sln_var_inst_ptr:=Unaligned(@sln_var);
   sln_var_inst_ptr^.FilSplineObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.MovCurve;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovCurve;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   sln_var_inst_ptr: PCurve=Nil;
 begin
   {sln_var_inst_ptr:=@sln_var;
   sln_var_inst_ptr^.MovSplineObj(obj_arr[curr_obj_ind].k_ind,...);}
 end; {$endregion}
-procedure   TSceneTree.FilScene;                                                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilScene;                                                                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -381,12 +394,15 @@ begin
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=0 to obj_cnt-1 do
     begin
-      curr_obj_ind:=(obj_arr_ptr+obj_inds_arr_ptr^)^.k_ind;
-      FilProc[obj_inds_arr_ptr^];
+      if (obj_arr_ptr+obj_inds_arr_ptr^)^.obj_show then
+        begin
+          curr_obj_ind:=(obj_arr_ptr+obj_inds_arr_ptr^)^.k_ind;
+          FilProc[obj_inds_arr_ptr^];
+        end;
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.MovWorldAxisShiftRight;                                                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftRight;                                                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -402,7 +418,7 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.MovWorldAxisShiftLeft ;                                                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftLeft ;                                                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -418,7 +434,7 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.MovWorldAxisShiftDown ;                                                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftDown ;                                                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -434,7 +450,7 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.MovWorldAxisShiftUp   ;                                                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftUp   ;                                                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -450,7 +466,7 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.SetWorldAxisShift     (world_axis_shift_:TPtPos);                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.SetWorldAxisShift     (world_axis_shift_:TPtPos);                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -466,7 +482,7 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.SetParallaxShift      (parallax_shift_  :TPtPos);                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.SetParallaxShift      (parallax_shift_  :TPtPos);                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -482,7 +498,7 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.SetParallaxShift      (parallax_shift_  :TColor);                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.SetParallaxShift      (parallax_shift_  :TColor);                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -498,17 +514,17 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.SetFilProc            (abstract_:boolean; Proc0:TProc0; var obj_cnt_:TColor; var inds_obj_arr_,inds_sct_arr_:TColorArr);                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.SetFilProc            (abstract_:boolean; Proc0:TProc0; var obj_cnt_:TColor; var inds_obj_arr_,inds_sct_arr_:TColorArr);                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Inc(obj_cnt_);
   SetLength(inds_obj_arr_,obj_cnt_);
   SetLength(inds_sct_arr_,obj_cnt_);
-  inds_obj_arr_[obj_cnt_-1]  :=obj_cnt -1;
-  obj_arr[obj_cnt-1].k_ind   :=obj_cnt_-1;
-  obj_arr[obj_cnt-1].abstract:=abstract_;
-  FilProc[obj_cnt-1]         :=Proc0;
+  inds_obj_arr_[obj_cnt_-1]         :=obj_cnt -1;
+  obj_arr      [obj_cnt -1].k_ind   :=obj_cnt_-1;
+  obj_arr      [obj_cnt -1].abstract:=abstract_;
+  FilProc      [obj_cnt -1]         :=Proc0;
 end; {$endregion}
-procedure   TSceneTree.Add                   (constref koo:TKindOfObject; constref world_axis_shift_:TPtPos);                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.Add                   (constref koo:TKindOfObject; constref world_axis_shift_:TPtPos);                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_var_ptr: PObjInfo;
 begin
@@ -522,28 +538,29 @@ begin
   obj_var_ptr^.koo             :=koo;
   obj_var_ptr^.world_axis_shift:=world_axis_shift_;
   case koo of
-    kooEmpty: SetFilProc(True ,@FilEmpty,empty_cnt,empty_inds_obj_arr,empty_inds_sct_arr);
-    kooBkgnd: SetFilProc(False,@FilBkgnd,bkgnd_cnt,bkgnd_inds_obj_arr,bkgnd_inds_sct_arr);
-    kooBkTex: SetFilProc(False,@FilBkTex,bktex_cnt,bktex_inds_obj_arr,bktex_inds_sct_arr);
-    kooRGrid: SetFilProc(False,@FilRGrid,rgrid_cnt,rgrid_inds_obj_arr,rgrid_inds_sct_arr);
-    kooSGrid: SetFilProc(False,@FilSGrid,sgrid_cnt,sgrid_inds_obj_arr,sgrid_inds_sct_arr);
-    kooGroup: SetFilProc(True ,@FilGroup,group_cnt,group_inds_obj_arr,group_inds_sct_arr);
-    kooTlMap: SetFilProc(False,@FilTlMap,tlmap_cnt,tlmap_inds_obj_arr,tlmap_inds_sct_arr);
-    kooActor: SetFilProc(False,@FilActor,actor_cnt,actor_inds_obj_arr,actor_inds_sct_arr);
-    kooPrtcl: SetFilProc(False,@FilPrtcl,prtcl_cnt,prtcl_inds_obj_arr,prtcl_inds_sct_arr);
-    kooCurve: SetFilProc(False,@FilCurve,curve_cnt,curve_inds_obj_arr,curve_inds_sct_arr);
+    TKindOfObject(00){kooEmpty}: SetFilProc(True ,@FilEmpty,empty_cnt,empty_inds_obj_arr,empty_inds_sct_arr);
+    TKindOfObject(01){kooBkgnd}: SetFilProc(False,@FilBkgnd,bkgnd_cnt,bkgnd_inds_obj_arr,bkgnd_inds_sct_arr);
+    TKindOfObject(02){kooBkTex}: SetFilProc(False,@FilBkTex,bktex_cnt,bktex_inds_obj_arr,bktex_inds_sct_arr);
+    TKindOfObject(03){kooRGrid}: SetFilProc(False,@FilRGrid,rgrid_cnt,rgrid_inds_obj_arr,rgrid_inds_sct_arr);
+    TKindOfObject(04){kooSGrid}: SetFilProc(False,@FilSGrid,sgrid_cnt,sgrid_inds_obj_arr,sgrid_inds_sct_arr);
+    TKindOfObject(05){kooGroup}: SetFilProc(True ,@FilGroup,group_cnt,group_inds_obj_arr,group_inds_sct_arr);
+    TKindOfObject(06){kooTlMap}: SetFilProc(False,@FilTlMap,tlmap_cnt,tlmap_inds_obj_arr,tlmap_inds_sct_arr);
+    TKindOfObject(07){kooActor}: SetFilProc(False,@FilActor,actor_cnt,actor_inds_obj_arr,actor_inds_sct_arr);
+    TKindOfObject(08){kooPrtcl}: SetFilProc(False,@FilPrtcl,prtcl_cnt,prtcl_inds_obj_arr,prtcl_inds_sct_arr);
+    TKindOfObject(09){kooCurve}: SetFilProc(False,@FilCurve,curve_cnt,curve_inds_obj_arr,curve_inds_sct_arr);
+    TKindOfObject(10){kooFtext}: SetFilProc(False,@FilFText,ftext_cnt,ftext_inds_obj_arr,ftext_inds_sct_arr);
   end;
   //CmpAllObjKindEqual(obj_cnt-1);
 end; {$endregion}
-procedure   TSceneTree.SetObjBkgnd           (constref obj_arr_ptr:PObjInfo; constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; constref rct_clp:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.SetObjBkgnd           (constref obj_arr_ptr:PObjInfo; constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; constref rct_clp_ptr:PPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   obj_arr_ptr^.bkgnd_ptr   :=bkgnd_ptr   ;
   obj_arr_ptr^.bkgnd_width :=bkgnd_width ;
   obj_arr_ptr^.bkgnd_height:=bkgnd_height;
-  obj_arr_ptr^.rct_clp     :=rct_clp     ;
+  obj_arr_ptr^.rct_clp_ptr :=rct_clp_ptr ;
 end; {$endregion}
 // (Checks If Another Kind Of Object Is Available After Selected Object(From start_ind) In Objects array(obj_arr)) Проверяет есть ли другой вид обьектов после выбранного(начиная с start_ind) в иерархии сцены(scene tree):
-function    TSceneTree.IsAnotherObjKindAfter (constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.IsAnotherObjKindAfter (constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -555,7 +572,7 @@ begin
         Break;
       end;
 end; {$endregion}
-function    TSceneTree.IsNotAbstObjKindAfter (constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.IsNotAbstObjKindAfter (constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -567,7 +584,7 @@ begin
         Break;
       end;
 end; {$endregion}
-function    TSceneTree.IsNotAbstObjKindAfter (                            constref start_ind:TColor=0): boolean;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.IsNotAbstObjKindAfter (                            constref start_ind:TColor=0): boolean;                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -580,7 +597,7 @@ begin
       end;
 end; {$endregion}
 // (Calculate Low Layer Objects Count) Подсчет количества обьектов "нижнего" слоя:
-function    TSceneTree.LowLrObjCntCalc: TColor;                                                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.LowLrObjCntCalc: TColor;                                                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i     : integer;
   p_s   : TPtPos;
@@ -595,12 +612,12 @@ begin
       end;
 end; {$endregion}
 // (Check Equality Of Two Objects By Kind) Проверка на равенство двух обьектов по виду:
-function    TSceneTree.AreTwoObjKindEqual    (constref obj_ind1,obj_ind2:TColor): boolean;                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.AreTwoObjKindEqual    (constref obj_ind1,obj_ind2:TColor): boolean;                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(obj_arr[obj_ind1].koo=obj_arr[obj_ind2].koo);
 end; {$endregion}
 //
-function    TSceneTree.Min9(constref obj_inds_arr_:TColorArr; constref arr:TEdgeArr; constref max_item_val:TColor; constref item_cnt:TColor): TColor;                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.Min9(constref obj_inds_arr_:TColorArr; constref arr:TEdgeArr; constref max_item_val:TColor; constref item_cnt:TColor): TColor;                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -609,7 +626,7 @@ begin
     if (obj_arr[obj_inds_arr_[arr[i].obj_ind]].t_ind<=Result) then
       Result:=obj_arr[obj_inds_arr_[arr[i].obj_ind]].t_ind;
 end; {$endregion}
-function    TSceneTree.Min9(constref obj_inds_arr_:TColorArr; constref arr:TSlPtArr; constref max_item_val:TColor; constref item_cnt:TColor): TColor;                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.Min9(constref obj_inds_arr_:TColorArr; constref arr:TSlPtArr; constref max_item_val:TColor; constref item_cnt:TColor): TColor;                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
