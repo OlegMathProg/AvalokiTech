@@ -4482,6 +4482,7 @@ begin
                   with rct_eds_img_arr[i],local_prop do
                     if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
+                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
                         AddSplineRctEds (i);
                         CrtSplineRctEds (i);
                       end;
@@ -4489,6 +4490,7 @@ begin
                   with rct_pts_img_arr[i],local_prop do
                     if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
+                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
                         AddSplineRctPts (i);
                         CrtSplineRctPts (i);
                       end;
@@ -4496,6 +4498,7 @@ begin
                   with eds_img_arr[i],local_prop do
                     if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
+                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
                         RepSplineEds    (i);
                         AddSplineEds03  (i);
                         CrtSplineEds    (i);
@@ -4504,6 +4507,7 @@ begin
                   with pts_img_arr[i],local_prop do
                     if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
+                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
                         AddSplineDupPts2(i);
                         RepSplinePts    (i);
                         AddSplinePts2   (i);
@@ -5021,6 +5025,7 @@ begin
 
         end;
     end;
+
 end; {$endregion}
 procedure TSurf.RepSplineDraw1;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -5161,6 +5166,7 @@ begin
 
         end;
     end;
+
 end; {$endregion}
 {Duplicated Points: Drawing------------------}
 procedure TSurf.DupPtsDraw;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -14701,7 +14707,6 @@ begin
     file_path:=OD_Spline_Load.Filename;
     AssignFile(file_import,file_path);
     Reset     (file_import);
-    //F_MainForm.Memo1.lines.Text:='';
     line_cnt:=0;
     pts_cnt :=0;
     while (not EOF(file_import)) do
@@ -18021,34 +18026,15 @@ procedure TF_MainForm.SB_Select_Texture_RegionClick(sender:TObject);
 begin
   DrawingPanelsSetVisibility1(down_select_texture_region_ptr,P_Select_Texture_Region,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
-
-  //PPBlurProc10(srf_var.srf_bmp_ptr,srf_var.srf_bmp_rct,srf_var.srf_bmp.width);
+  {
+  PPBlurProc10(srf_var.srf_bmp_ptr,srf_var.srf_bmp_rct,srf_var.srf_bmp.width);
   PPContrast1(srf_var.srf_bmp_ptr,srf_var.inn_wnd_rct,srf_var.srf_bmp.width,10);
   SetTextInfo(srf_var.srf_bmp.Canvas,32);
   srf_var.srf_bmp.Canvas.TextOut(srf_var.world_axis.x+32,
                                  srf_var.world_axis.y,
                                  'Hello World');
-
-
-
   CnvToCnv(srf_var.srf_bmp_rct,Canvas,srf_var.srf_bmp.Canvas,SRCCOPY);
-
-  {Memo1.Lines.Text:=FloatToStr(Fast_Primitives.Angle2(sln_var.sln_pts[0].x,sln_var.sln_pts[0].y,
-                                                      sln_var.sln_pts[1].x,sln_var.sln_pts[1].y,
-                                                      sln_var.sln_pts[2].x,sln_var.sln_pts[2].y));}
-  {with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
-    begin
-      if Items[3].GetParentNodeOfAbsoluteLevel(1).Expanded then
-        Memo1.Lines.Text:='Expanded'
-      else
-        Memo1.Lines.Text:='not Expanded';
-    end;}
-  {with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
-    Memo1.Lines.Text:=IntToStr(Items[1].Top);}
-    //Memo1.Lines.Text:=IntToStr(obj_var.obj_inds_arr[1]);
-
-  //InvalidateInnerWindow;
-
+  }
 end;
 {$endregion}
 
@@ -18840,11 +18826,6 @@ begin
                 SelectedPtsBmpPositionCalc(x,y,sel_pts_rct);
                 pvt:=PtPosF               (x,y);
                 srf_bmp.Canvas.Draw(Trunc(pvt.x-7),Trunc(pvt.y-7),pvt_bmp);
-                {if show_selected_pts_b_rect then
-                  SelectedPtsRectDraw(srf_bmp.Canvas,
-                                      sel_var.sel_pts_rct,
-                                      clPurple,
-                                      clNavy);}
                 PivotModeDraw(srf_bmp.Canvas);
                 PivotAxisDraw(srf_bmp.Canvas,pvt_axis_rect,Ptpos(0,0));
                 CnvToCnv     (srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY{NOTSRCCOPY});
@@ -19161,7 +19142,6 @@ begin
                                   MainBmpToLowerBmp2;
                                   CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                                   need_repaint:=False;
-                                  Memo1.Lines.Text:=IntToStr(sel_pts_cnt);
                                 end;
                               UnselectedPtsCalc0(fst_lst_sln_obj_pts,sln_pts,pvt,pvt_origin);
                             end;
@@ -19177,7 +19157,6 @@ begin
                         srf_var.EventGroupsCalc(calc_arr,[16,27,30,31,32]);
                       sel_var.sel_pts:=True;
                       ChangeSelectionMode(CB_Select_Items_Selection_Drawing_Mode.ItemIndex);
-                      Memo1.Lines.Text:=IntToStr(sel_pts_cnt);
                       KeysEnable;
                       TV_Scene_Tree.Items.ClearMultiSelection(True);
                       UnsPnlsCalc;
