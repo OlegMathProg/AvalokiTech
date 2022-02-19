@@ -14,6 +14,7 @@ uses
 
 const
 
+  ONE_DIV_BY_SQRT_TWO=1/sqrt(2);
   ONE_MUL_1024       =1<<10;
   DEFAULT_SCL_MUL    =6/5;
   DEFAULT_SCL_MUL_INV=5/6;
@@ -4218,6 +4219,11 @@ function IsRct1OutOfRct2        (constref rct1               :TRect;
                                  constref rct2               :TPtRect): boolean;       inline; {$ifdef Linux}[local];{$endif}
 
 // (Point in Rectangle) Точка в прямоугольнике:
+function IsPtInRct              (constref x,y,
+                                          rct_dst_left,
+                                          rct_dst_top,
+                                          rct_dst_right,
+                                          rct_dst_bottom     :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
 function IsPtInRct              (constref x,y                :integer;
                                  constref rct_dst            :TRect)  : boolean;       inline; {$ifdef Linux}[local];{$endif}
 function IsPtInRct              (constref x,y                :integer;
@@ -4235,13 +4241,25 @@ function IsPtInRct              (constref pt                 :TPtPosF;
                                  constref rad                :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
 
 // (Point in Circle) Точка в окружности:
-function IsPtInCrc              (constref x,y,prec           :integer;
-                                 constref crc_dst            :TCrPos): boolean;        inline; {$ifdef Linux}[local];{$endif}
-function IsPtInCrc              (constref x,y,prec           :integer;
-                                 constref crc_dst            :TCrPosF): boolean;       inline; {$ifdef Linux}[local];{$endif}
+function IsPtInCrc              (constref x,y                :integer;
+                                 constref crc_dst            :TCrPos;
+                                 constref prec               :integer): boolean;        inline; {$ifdef Linux}[local];{$endif}
+function IsPtInCrc              (constref x,y                :integer;
+                                 constref crc_dst            :TCrPosF;
+                                 constref prec               :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
 function IsPtInCrc              (constref x,y                :double;
-                                 constref prec               :integer;
-                                 constref crc_dst            :TCrPosF): boolean;       inline; {$ifdef Linux}[local];{$endif}
+                                 constref crc_dst            :TCrPosF;
+                                 constref prec               :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
+function IsPtInCrc              (constref x,y                :double;
+                                 constref crc_x,
+                                          crc_y,
+                                          crc_r              :integer;
+                                 constref prec               :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
+function IsPtInCrc              (constref x,y                :integer;
+                                 constref crc_x,
+                                          crc_y,
+                                          crc_r              :integer;
+                                 constref prec               :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
 
 // (Distance Between Two Points) Расстояние между двумя точками:
 function PtDist                 (constref x0,y0,x1,y1        :integer): double ;       inline; {$ifdef Linux}[local];{$endif}
@@ -4255,11 +4273,17 @@ function LineLineIntPt          (constref x0,y0,x1,y1,
                                           v0,w0,v1,w1        :double):TPtPosF;         inline; {$ifdef Linux}[local];{$endif}
 
 // (Line-Circle Intersection Point) Точка пересечение линии и окружности:
-function LineCircIntPt          (constref x0,y0,x1,y1        :double;
+function LineCrcIntPt           (constref x0,y0,x1,y1        :double;
                                  constref crc_dst            :TCrPosF): TLnPosF;       inline; {$ifdef Linux}[local];{$endif}
-function LineCircIntPt          (constref x0,y0,x1,y1        :double;
+function LineCrcIntPt           (constref x0,y0,x1,y1        :double;
                                  constref x,y,r              :double ): TLnPosF;       inline; {$ifdef Linux}[local];{$endif}
-function CrPosF                 (constref x,y,r              :double ): TCrPosF;       inline; {$ifdef Linux}[local];{$endif}
+function CrcPosF                (constref x,y,r              :double ): TCrPosF;       inline; {$ifdef Linux}[local];{$endif}
+
+// (Rectangle-Circle Intersection) Пересечение прямоугольника и окружности:
+function RctCrcInt              (constref rct                :TRect;
+                                 constref x,y,r              :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
+function RctCrcInt              (constref rct                :TPtRect;
+                                 constref x,y,r              :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
 
 // (Angle Between Two Connected Segments,(x1,y1) - Connection Point) Угол между двумя соединенными сегментами,(x1,y1) - точка соединения:
 function Angle1                 (constref x0,y0,x1,y1,x2,y2  :double): double;         inline; {$ifdef Linux}[local];{$endif}
@@ -6908,49 +6932,56 @@ begin
 end; {$endregion}
 
 // (Point in Rectangle) Точка в прямоугольнике:
-function IsPtInRct(constref x,y:integer; constref rct_dst:TRect                        ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInRct(constref x,y,rct_dst_left,rct_dst_top,rct_dst_right,rct_dst_bottom:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(rct_dst_left  <x) and
+          (rct_dst_top   <y) and
+          (rct_dst_right >x) and
+          (rct_dst_bottom>y);
+end; {$endregion}
+function IsPtInRct(constref x,y:integer; constref rct_dst:TRect                              ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct_dst.left  <x) and
           (rct_dst.top   <y) and
           (rct_dst.right >x) and
           (rct_dst.bottom>y);
 end; {$endregion}
-function IsPtInRct(constref x,y:integer; constref rct_dst:TPtRect                      ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInRct(constref x,y:integer; constref rct_dst:TPtRect                            ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct_dst.left  <x) and
           (rct_dst.top   <y) and
           (rct_dst.right >x) and
           (rct_dst.bottom>y);
 end; {$endregion}
-function IsPtInRct(constref pt:TPtPos  ; constref rct_dst:TRect                        ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInRct(constref pt:TPtPos  ; constref rct_dst:TRect                              ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct_dst.left  <pt.x) and
           (rct_dst.top   <pt.y) and
           (rct_dst.right >pt.x) and
           (rct_dst.bottom>pt.y);
 end; {$endregion}
-function IsPtInRct(constref pt:TPtPos  ; constref rct_dst:TPtRect                      ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInRct(constref pt:TPtPos  ; constref rct_dst:TPtRect                            ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct_dst.left  <pt.x) and
           (rct_dst.top   <pt.y) and
           (rct_dst.right >pt.x) and
           (rct_dst.bottom>pt.y);
 end; {$endregion}
-function IsPtInRct(constref pt:TPtPosF ; constref rct_dst:TRect                        ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInRct(constref pt:TPtPosF ; constref rct_dst:TRect                              ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct_dst.left  <pt.x) and
           (rct_dst.top   <pt.y) and
           (rct_dst.right >pt.x) and
           (rct_dst.bottom>pt.y);
 end; {$endregion}
-function IsPtInRct(constref pt:TPtPosF ; constref rct_dst:TPtRect                      ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInRct(constref pt:TPtPosF ; constref rct_dst:TPtRect                            ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct_dst.left  <pt.x) and
           (rct_dst.top   <pt.y) and
           (rct_dst.right >pt.x) and
           (rct_dst.bottom>pt.y);
 end; {$endregion}
-function IsPtInRct(constref pt:TPtPosF ; constref rct_dst:TPtRect; constref rad:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInRct(constref pt:TPtPosF ; constref rct_dst:TPtRect; constref rad:integer      ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct_dst.left  <pt.x-rad) and
           (rct_dst.top   <pt.y-rad) and
@@ -6959,17 +6990,25 @@ begin
 end; {$endregion}
 
 // (Point in Circle) Точка в окружности:
-function IsPtInCrc(constref x,y,                 prec:integer; constref crc_dst:TCrPos ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInCrc(constref x,y:integer; constref crc_dst:TCrPos           ; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.x)*(y-crc_dst.x)<=(crc_dst.r+prec)*(crc_dst.r+prec);
+  Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.y)*(y-crc_dst.y)<=(crc_dst.r+prec)*(crc_dst.r+prec);
 end; {$endregion}
-function IsPtInCrc(constref x,y,                 prec:integer; constref crc_dst:TCrPosF): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInCrc(constref x,y:integer; constref crc_dst:TCrPosF          ; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.x)*(y-crc_dst.x)<=(crc_dst.r+prec)*(crc_dst.r+prec);
+  Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.y)*(y-crc_dst.y)<=(crc_dst.r+prec)*(crc_dst.r+prec);
 end; {$endregion}
-function IsPtInCrc(constref x,y:double; constref prec:integer; constref crc_dst:TCrPosF): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInCrc(constref x,y:double ; constref crc_dst:TCrPosF          ; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.x)*(y-crc_dst.x)<=(crc_dst.r+prec)*(crc_dst.r+prec);
+  Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.y)*(y-crc_dst.y)<=(crc_dst.r+prec)*(crc_dst.r+prec);
+end; {$endregion}
+function IsPtInCrc(constref x,y:double ; constref crc_x,crc_y,crc_r:integer; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(x-crc_x)*(x-crc_x)+(y-crc_y)*(y-crc_y)<=(crc_r+prec)*(crc_r+prec);
+end; {$endregion}
+function IsPtInCrc(constref x,y:integer; constref crc_x,crc_y,crc_r:integer; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(x-crc_x)*(x-crc_x)+(y-crc_y)*(y-crc_y)<=(crc_r+prec)*(crc_r+prec);
 end; {$endregion}
 
 // (Distance Between Two Points) Расстояние между двумя точками:
@@ -7002,7 +7041,7 @@ begin
 end; {$endregion}
 
 // (Line-Circle Intersection Point) Точка пересечение линии и окружности:
-function LineCircIntPt(constref x0,y0,x1,y1:double; constref crc_dst:TCrPosF): TLnPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function LineCrcIntPt(constref x0,y0,x1,y1:double; constref crc_dst:TCrPosF): TLnPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   k,b,g,s,h: double;
 begin
@@ -7019,7 +7058,7 @@ begin
       y1:=k*x1+b;
     end;
 end; {$endregion}
-function LineCircIntPt(constref x0,y0,x1,y1:double; constref x,y,r  :double ): TLnPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function LineCrcIntPt(constref x0,y0,x1,y1:double; constref x,y,r  :double ): TLnPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   k,b,g,s,h: double;
 begin
@@ -7036,11 +7075,43 @@ begin
       y1:=k*x1+b;
     end;
 end; {$endregion}
-function CrPosF       (                             constref x,y,r  :double ): TCrPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function CrcPosF     (                             constref x,y,r  :double ): TCrPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result.x:=x;
   Result.y:=y;
   Result.r:=r;
+end; {$endregion}
+
+// (Rectangle-Circle Intersection) Пересечение прямоугольника и окружности:
+function RctCrcInt(constref rct:TRect  ; constref x,y,r:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=False;
+  if (rct.width =0) then
+    Exit;
+  if (rct.height=0) then
+    Exit;
+  with rct do
+    Result:=IsPtInRct(x,y,left-r,top   ,right+r,bottom  ) or
+            IsPtInRct(x,y,left  ,top-r ,right  ,bottom+r) or
+            IsPtInCrc(x,y,left  ,top   ,r,0) or
+            IsPtInCrc(x,y,left  ,bottom,r,0) or
+            IsPtInCrc(x,y,right ,top   ,r,0) or
+            IsPtInCrc(x,y,right ,bottom,r,0);
+end; {$endregion}
+function RctCrcInt(constref rct:TPtRect; constref x,y,r:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=False;
+  if (rct.width =0) then
+    Exit;
+  if (rct.height=0) then
+    Exit;
+  with rct do
+    Result:=IsPtInRct(x,y,left-r,top   ,right+r,bottom  ) or
+            IsPtInRct(x,y,left  ,top-r ,right  ,bottom+r) or
+            IsPtInCrc(x,y,left  ,top   ,r,0) or
+            IsPtInCrc(x,y,left  ,bottom,r,0) or
+            IsPtInCrc(x,y,right ,top   ,r,0) or
+            IsPtInCrc(x,y,right ,bottom,r,0);
 end; {$endregion}
 
 // (Angle Between Two Connected Segments,(x1,y1) - Connection Point) Угол между двумя соединенными сегментами,(x1,y1) - точка соединения:
@@ -28492,7 +28563,6 @@ begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
           ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-          //Prefetch(ln_arr1_ptr2);
           while (p0<=long_len) do
             begin
               ((i>>16)+ln_arr1_ptr2)^+=1;
@@ -28505,7 +28575,6 @@ begin
       long_len+=p0;
       i:=$8000+(r0<<16);
       ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-      //Prefetch(ln_arr1_ptr2);
       while (p0>=long_len) do
         begin
           ((i>>16)+ln_arr1_ptr2)^+=1;
@@ -28520,7 +28589,6 @@ begin
     begin
       long_len+=r0;
       i:=$8000+(p0<<16);
-      //Prefetch(ln_arr1_ptr);
       while (r0<=long_len) do
         begin
           (ln_arr1_ptr+r0+(i>>16)*ln_arr_width)^+=1;
@@ -28532,7 +28600,6 @@ begin
 
   long_len+=r0;
   i:=$8000+(p0<<16);
-  //Prefetch(ln_arr1_ptr);
   while (r0>=long_len) do
     begin
       (ln_arr1_ptr+r0+(i>>16)*ln_arr_width)^+=1;
@@ -28577,7 +28644,6 @@ begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
           ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-          //Prefetch(ln_arr1_ptr2);
           while (p0<=long_len) or (clip_shift=pix_cnt) do
             begin
               Inc(clip_shift);
@@ -28591,7 +28657,6 @@ begin
       long_len+=p0;
       i:=$8000+(r0<<16);
       ln_arr1_ptr2:=ln_arr1_ptr+p0*ln_arr_width;
-      //Prefetch(ln_arr1_ptr2);
       while (p0>=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
@@ -28607,7 +28672,6 @@ begin
     begin
       long_len+=r0;
       i:=$8000+(p0<<16);
-      //Prefetch(ln_arr1_ptr);
       while (r0<=long_len) or (clip_shift=pix_cnt) do
         begin
           Inc(clip_shift);
@@ -28620,7 +28684,6 @@ begin
 
   long_len+=r0;
   i:=$8000+(p0<<16);
-  //Prefetch(ln_arr1_ptr);
   while (r0>=long_len) or (clip_shift=pix_cnt) do
     begin
       Inc(clip_shift);
@@ -28662,7 +28725,6 @@ begin
 	  long_len+=p0;
           i:=$8000+(r0<<16);
           bmp_dst_ptr2:=bmp_dst_ptr+p0*bmp_dst_width;
-          //Prefetch(bmp_dst_ptr2);
           while (p0<=long_len) do
             begin
               ((i>>16)+bmp_dst_ptr2)^:=local_prop.eds_col_inv;
@@ -28675,7 +28737,6 @@ begin
       long_len+=p0;
       i:=$8000+(r0<<16);
       bmp_dst_ptr2:=bmp_dst_ptr+p0*bmp_dst_width;
-      //Prefetch(bmp_dst_ptr2);
       while (p0>=long_len) do
         begin
           ((i>>16)+bmp_dst_ptr2)^:=local_prop.eds_col_inv;
@@ -28690,7 +28751,6 @@ begin
     begin
       long_len+=r0;
       i:=$8000+(p0<<16);
-      //Prefetch(bmp_dst_ptr);
       while (r0<=long_len) do
         begin
           (bmp_dst_ptr+r0+(i>>16)*bmp_dst_width)^:=local_prop.eds_col_inv;
@@ -28702,7 +28762,6 @@ begin
 
   long_len+=r0;
   i:=$8000+(p0<<16);
-  //Prefetch(bmp_dst_ptr);
   while (r0>=long_len) do
     begin
       (bmp_dst_ptr+r0+(i>>16)*bmp_dst_width)^:=local_prop.eds_col_inv;
@@ -31085,10 +31144,10 @@ begin
   d2        :=pvt.y*(1-scl_mul.y);
   with rct do
     begin
-      left  :=Trunc (0+scl_mul.x*left  +d1);
-      top   :=Trunc (0+scl_mul.y*top   +d2);
-      right :=Trunc (0+scl_mul.x*right +d1);
-      bottom:=Trunc (0+scl_mul.y*bottom+d2);
+      left  :=Trunc (scl_mul.x*left  +d1);
+      top   :=Trunc (scl_mul.y*top   +d2);
+      right :=Trunc (scl_mul.x*right +d1);
+      bottom:=Trunc (scl_mul.y*bottom+d2);
       width :=right-left;
       height:=bottom-top;
     end;

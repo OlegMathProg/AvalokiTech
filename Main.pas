@@ -1147,12 +1147,6 @@ type
       procedure SelectPivotDraw;                                                  inline; {$ifdef Linux}[local];{$endif}
       {Unselect Pivot: Drawing---------------------}
       procedure UnselectPivotDraw;                                                inline; {$ifdef Linux}[local];{$endif}
-      {Selected Subgraph: Drawing------------------}
-      procedure OuterSubgraphDraw;                                                inline; {$ifdef Linux}[local];{$endif}
-      {Selected Subgraph: Drawing------------------}
-      procedure InnerSubgraphDraw;                                                inline; {$ifdef Linux}[local];{$endif}
-      {Selected Points  : Drawing------------------}
-      procedure SelectdPointsDraw;                                                inline; {$ifdef Linux}[local];{$endif}
       {Add Spline: Calculation---------------------}
       procedure AddSplineCalc;                                                    inline; {$ifdef Linux}[local];{$endif}
       {Add Spline: Hidden Lines--------------------}
@@ -1656,6 +1650,7 @@ type
       sel_pts_big_img            : TFastLine;
       {selection properties}
       selit_prop                 : TSelItProp;
+      sel_bounds_prop            : TCurveProp;
       {subgraph indices arrays} {$region -fold}
         {TODO}
         outer_subgraph1          : TEdgeArr;
@@ -1685,12 +1680,15 @@ type
       is_point_duplicated        : TBool1Arr;
       {is point in circle}
       is_point_in_circle         : TBool1Arr;
+      {is point position calculated}
+      is_point_pos_calc          : TBool1Arr;
       {selected points bitmap}
       ///
       {selected points bitmap handle}
       ///
       {selected points bounding rectangle}
       sel_pts_rct                : TRect;
+      sel_pts_rct_mrgn           : TColor;
       {TODO}
       not_sel_pts_rct            : TPtRect;
       {TODO}
@@ -1757,7 +1755,9 @@ type
                                                  constref pvt_pos_curr,
                                                           pvt_pos_prev       :TPtPosF);       inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure SelPtsIndsToFalse;                                                            inline; {$ifdef Linux}[local];{$endif}
+      procedure SelPtsIndsToFalse1;                                                           inline; {$ifdef Linux}[local];{$endif}
+      {TODO}
+      procedure SelPtsIndsToFalse2;                                                           inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure DuplicatedPtsCalc;                                                            inline; {$ifdef Linux}[local];{$endif}
       {TODO}
@@ -1767,23 +1767,50 @@ type
       {TODO}
       procedure DuplicatedPtsToBmp;                                                           inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure OuterSubgraphToBmp              (         x,y                :integer;
+      procedure OuterSubgraphCalc               (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
+      procedure OuterSubgraphDraw               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
                                                  constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure InnerSubgraphToBmp              (         x,y                :integer;
+      procedure InnerSubgraphCalc               (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
+      procedure InnerSubgraphDraw               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
                                                  constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure SelectdPointsToBmp              (         x,y                :integer;
+      procedure SelectdPointsCalc               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
                                                  constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
+      procedure SelectdPointsDraw               (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
+      {TODO}
+      procedure SelectdPointsBounds             (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct_clp            :TPtRect);               {$ifdef Linux}[local];{$endif}
+      {TODO}
+      procedure WholeSubgraphDraw               (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct1,rct2          :TPtRect);               {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure SelPvtAndSplineEdsToBmp;                                                      inline; {$ifdef Linux}[local];{$endif}
       {TODO}
@@ -2181,6 +2208,7 @@ var
   show_obj_info              : boolean=True;
 
   {Buttons:Draw-} {$region -fold}
+  P_Drawing_Buttons_ClickArr : array of TNotifyEvent;
   prev_panel_draw            : TPanel;
   curr_panel_draw            : TPanel; {$endregion}
 
@@ -2451,26 +2479,21 @@ end; {$endregion}
 {LI} {$region -fold}
 function ObjectInfo0: string;                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  info_arr: array[0..19] of string;
-  i       : integer;
-  low_lr_obj_cnt: integer;
-  upp_lr_obj_cnt: integer;
-  hid_ln_cnt    : integer;
+  info_arr  : array[0..19] of string;
+  i         : integer;
+  hid_ln_cnt: integer;
 begin
 
-  Result:='';
-
-  low_lr_obj_cnt:=obj_var.LowLrObjCntCalc;
-  upp_lr_obj_cnt:=obj_var.obj_cnt-obj_var.LowLrObjCntCalc;
+  Result    :='';
   hid_ln_cnt:=0;
   if (sln_var<>Nil) then
     for i:=0 to sln_var.sln_obj_cnt-1 do
       Inc(hid_ln_cnt,sln_var.eds_img_arr[i].hid_ln_cnt);
 
   if (obj_var<>Nil) then
-    info_arr[00]:='Objects: '                                                             +InttoStr(obj_var.obj_cnt               )+';';
-  info_arr[01]:=#13+'Objects of lower layer: '                                            +IntToStr(low_lr_obj_cnt                )+';';
-  info_arr[02]:=#13+'Objects of upper layer: '                                            +IntToStr(upp_lr_obj_cnt                )+';';
+    info_arr[00]:='Objects: '                                                             +InttoStr(obj_var.obj_cnt-1             )+';';
+  info_arr[01]:=#13+'Objects of lower layer: '                                            +IntToStr(obj_var.low_lr_obj_cnt-1      )+';';
+  info_arr[02]:=#13+'Objects of upper layer: '                                            +IntToStr(obj_var.upp_lr_obj_cnt        )+';';
   info_arr[03]:=#13+'Groups: '                                                            +IntToStr(obj_var.group_cnt             )+';';
   info_arr[04]:=#13+'Actors: '                                                            +IntToStr(obj_var.actor_cnt             )+';';
   info_arr[05]:=#13+'  • Static: '                                                                                                 +';';
@@ -4442,7 +4465,9 @@ begin
     Exit;
   with obj_var,sln_var,sel_var,crc_sel_var,pvt_var do
     begin
-      if (not outer_subgraph_img.local_prop.eds_show) and (pvt_draw_sel_eds_off<>pvt) then
+      if (((not outer_subgraph_img.local_prop.eds_show) and (not inner_subgraph_img.local_prop.eds_show))  or
+          (     outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show))) and
+         (pvt_draw_sel_eds_off<>pvt) then
         UnselectedPtsCalc1(fst_lst_sln_obj_pts,sln_pts,pvt,pvt_origin);
       if rectangles_calc then
         RctSplineAll1(sel_obj_min_ind,obj_var.obj_cnt-1);
@@ -4491,7 +4516,7 @@ begin
       if (not is_not_abst_obj_kind_after) then
         FilSplineAll(sel_obj_min_ind,obj_var.obj_cnt-1);
       SelPvtAndSplineEdsToBmp;
-      SelPtsIndsToFalse;
+      SelPtsIndsToFalse1;
       FillByte((@has_sel_pts[0])^,Length(has_sel_pts),0);
       crc_sel_rct               :=Default(TRect  );
       pvt                       :=Default(TPtPosF);
@@ -4512,39 +4537,6 @@ begin
       exp1                      :=(sel_pts_cnt<>sln_pts_cnt);
       exp2                      :=(sln_pts_cnt >0);
     end;
-end; {$endregion}
-{Selected Subgraph: Drawing------------------}
-procedure TSurf.OuterSubgraphDraw;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  with sln_var,sel_var,pvt_var do
-    OuterSubgraphToBmp(Trunc(pvt.x),
-                       Trunc(pvt.y),
-                       pvt,
-                       sln_pts,
-                       srf_bmp_ptr,
-                       inn_wnd_rct);
-end; {$endregion}
-{Selected Subgraph: Drawing------------------}
-procedure TSurf.InnerSubgraphDraw;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  with sln_var,sel_var,pvt_var do
-    InnerSubgraphToBmp(Trunc(pvt.x),
-                       Trunc(pvt.y),
-                       pvt,
-                       sln_pts,
-                       srf_bmp_ptr,
-                       ClippedRct(inn_wnd_rct,sel_pts_rct));
-end; {$endregion}
-{Selected Points  : Drawing------------------}
-procedure TSurf.SelectdPointsDraw;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  with sln_var,sel_var,pvt_var do
-    SelectdPointsToBmp(Trunc(pvt.x),
-                       Trunc(pvt.y),
-                       pvt,
-                       sln_pts,
-                       srf_bmp_ptr,
-                       inn_wnd_rct);
 end; {$endregion}
 {Add Spline: Calculation---------------------}
 procedure TSurf.AddSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -5184,15 +5176,8 @@ end; {$endregion}
 {Selected Subgraph: Drawing------------------}
 procedure TSurf.SelectedSubgrtaphDraw;                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with sel_var do
-    begin
-      if outer_subgraph_img.local_prop.eds_show then
-        OuterSubgraphDraw;
-      if inner_subgraph_img.local_prop.eds_show and (not IsRct1OutOfRct2(sel_pts_rct,inn_wnd_rct)) then
-        InnerSubgraphDraw;
-      if sel_pts_big_img.local_prop.eds_show then
-        SelectdPointsDraw;
-    end;
+  with sln_var,sel_var,pvt_var do
+    WholeSubgraphDraw(Trunc(pvt.x),Trunc(pvt.y),pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
 end; {$endregion}
 {Sel. Tools Marker: Reset Background Settings}
 procedure TSurf.STMSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -6445,9 +6430,10 @@ begin
   with sel_var do
     begin
       SetLength(out_or_inn_subgraph_pts,sln_pts_cnt);
-      SetLength(sel_pts_inds           ,sln_pts_cnt); // Выделение памяти для массива индексов выделенных точек всех полилиний
-      SetLength(is_point_selected      ,sln_pts_cnt); // Выделение памяти для массива значений "point is selected"
-      SetLength(is_point_in_circle     ,sln_pts_cnt); // Выделение памяти для массива значений "point is in circle")
+      SetLength(sel_pts_inds           ,sln_pts_cnt);
+      SetLength(is_point_selected      ,sln_pts_cnt);
+      SetLength(is_point_in_circle     ,sln_pts_cnt);
+      SetLength(is_point_pos_calc      ,sln_pts_cnt);
     end;
 
   if (sln_pts_cnt_add>0) then
@@ -6501,7 +6487,7 @@ begin
       fst_lst_sln_obj_pts[partial_pts_sum[m]                     ]:=1; // set first spline object point
       fst_lst_sln_obj_pts[partial_pts_sum[m]+sln_obj_pts_cnt[m]-1]:=2; // set last  spline object point
     end;
-  if (global_prop.sln_mode=smSpray) then
+  if (global_prop.sln_mode=smSpray) and (global_prop.sln_type=stFreeHand) then
     FillByte ((@has_edge[partial_pts_sum[m]])^,sln_obj_pts_cnt[m]-1,1);
   {for i:=0 to sln_obj_pts_cnt[m]-1 do
     begin
@@ -6520,9 +6506,7 @@ begin
   // spline edges bounding rectangles:
   with rct_eds_img_arr[m],local_prop do
     begin
-
       rct_clp_ptr:=obj_var.obj_arr[obj_var.curve_inds_obj_arr[obj_var.curve_cnt-1]].rct_clp_ptr;
-      F_MainForm.Memo1.Lines.Text:=IntToStr(obj_var.curve_inds_obj_arr[obj_var.curve_cnt-1]);
       pts_col_inv:=SetColorInv(clRed);
     end;
 
@@ -14836,7 +14820,6 @@ end; {$endregion}
 procedure TF_MainForm.CB_Spline_Dynamics_StyleSelect                         (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.dyn_stl:=TDynamicsStyle(CB_Spline_Dynamics_Style.ItemIndex);
-  //F_MainForm.Memo1.Lines.Text:=GetEnumName(TypeInfo(TDynamicsStyle),Ord(TDynamicsStyle(F_MainForm.CB_Dynamics_Style.ItemIndex)));
 end; {$endregion}
 procedure TF_MainForm.P_Spline_Dynamics_PropMouseEnter                       (sender:TObject); {$region -fold}
 begin
@@ -14859,7 +14842,7 @@ end; {$endregion}
 
 // (Select Points) Выделение точек:
 {LI} {$region -fold}
-constructor TSelPts.Create(constref w,h:TColor; constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; var rct_clp:TPtRect);          {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TSelPts.Create(constref w,h:TColor; constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; var rct_clp:TPtRect);             {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
   // outer subgraph:
@@ -14902,16 +14885,16 @@ begin
   sel_pts_big_img:=TFastLine.Create;
   with sel_pts_big_img,local_prop do
     begin
-      rct_clp    :=PtRct(0,0,bkgnd_width,bkgnd_height);
-      rct_clp_ptr:=@rct_clp;
-      selit_prop :=selit_default_prop;
-      local_prop :=curve_default_prop;
-      eds_col    :=clGreen;
-      eds_col_inv:=SetColorInv(eds_col);
-      eds_aa     :=True;
-      eds_bld_stl:=dsAdditive;
-      pts_col    :=clLime;
-      pts_col_inv:=SetColorInv(pts_col);
+      rct_clp           :=PtRct(0,0,bkgnd_width,bkgnd_height);
+      rct_clp_ptr       :=@rct_clp;
+      selit_prop        :=selit_default_prop;
+      local_prop        :=curve_default_prop;
+      eds_col           :=clGreen;
+      eds_col_inv       :=SetColorInv(eds_col);
+      eds_aa            :=True;
+      eds_bld_stl       :=dsAdditive;
+      pts_col           :=clLime;
+      pts_col_inv       :=SetColorInv(pts_col);
       SetColorInfo(eds_col,color_info);
       with args do
         begin
@@ -14923,16 +14906,30 @@ begin
       SetBkgnd  (bkgnd_ptr,bkgnd_width,bkgnd_height,rct_clp_ptr);
     end;
 
+  // selected points bounds:
+  with sel_bounds_prop do
+    begin
+      sel_bounds_prop   :=curve_default_prop;
+      pts_bld_stl       :=dsInverse;
+      pts_col           :=clBlue;
+      pts_col_inv       :=SetColorInv(pts_col);
+      pts_rct_tns_left  :=1;
+      pts_rct_tns_top   :=1;
+      pts_rct_tns_right :=1;
+      pts_rct_tns_bottom:=1;
+    end;
+
+  sel_pts_rct_mrgn          :=32;
   bucket_rct.Width          :=8;
   bucket_rct.Height         :=8;
   is_not_abst_obj_kind_after:=True;
 
 end; {$endregion}
-destructor  TSelPts.Destroy;                                                                                                                          {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TSelPts.Destroy;                                                                                                                             {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-procedure BucketSizeChange(chng_val:integer);                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure BucketSizeChange(chng_val:integer);                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,bucket_mul,m1,m2: integer;
 begin
@@ -14973,7 +14970,7 @@ begin
       {$endif}
     end;
 end; {$endregion}
-procedure IsObjColorAMaskColor;                                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure IsObjColorAMaskColor;                                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sel_var do
     begin
@@ -14994,7 +14991,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure FillSelectedBmpAndSelectedPtsBRectDraw;                                                                                             inline; {$ifdef linux}[local];{$endif} {$region -fold}
+procedure FillSelectedBmpAndSelectedPtsBRectDraw;                                                                                                inline; {$ifdef linux}[local];{$endif} {$region -fold}
 begin
   if exp0 then
     if show_spline then
@@ -15003,26 +15000,26 @@ begin
           LowerBmpToMainBmp;
           {Fill Selected Bmp}
           if outer_subgraph_img.local_prop.eds_show then
-            OuterSubgraphToBmp(Trunc(pvt_var.pvt.X),
-                               Trunc(pvt_var.pvt.Y),
-                               pvt_var.pvt,
-                               sln_pts,
-                               srf_bmp_ptr,
-                               inn_wnd_rct);
+            OuterSubgraphDraw(Trunc(pvt_var.pvt.X),
+                              Trunc(pvt_var.pvt.Y),
+                              pvt_var.pvt,
+                              sln_pts,
+                              srf_bmp_ptr,
+                              inn_wnd_rct);
           if inner_subgraph_img.local_prop.eds_show and (not IsRct1OutOfRct2(sel_var.sel_pts_rct,inn_wnd_rct)) then
-            InnerSubgraphToBmp(Trunc(pvt_var.pvt.X),
-                               Trunc(pvt_var.pvt.Y),
-                               pvt_var.pvt,
-                               sln_pts,
-                               srf_bmp_ptr,
-                               ClippedRct(inn_wnd_rct,sel_pts_rct));
+            InnerSubgraphDraw(Trunc(pvt_var.pvt.X),
+                              Trunc(pvt_var.pvt.Y),
+                              pvt_var.pvt,
+                              sln_pts,
+                              srf_bmp_ptr,
+                              ClippedRct(inn_wnd_rct,sel_pts_rct));
           if sel_pts_big_img.local_prop.eds_show then
-            SelectdPointsToBmp(Trunc(pvt_var.pvt.X),
-                               Trunc(pvt_var.pvt.Y),
-                               pvt_var.pvt,
-                               sln_pts,
-                               srf_bmp_ptr,
-                               inn_wnd_rct);
+            SelectdPointsDraw(Trunc(pvt_var.pvt.X),
+                              Trunc(pvt_var.pvt.Y),
+                              pvt_var.pvt,
+                              sln_pts,
+                              srf_bmp_ptr,
+                              inn_wnd_rct);
           {Draw Selected Points Bounding Rectangle}
           if show_selected_pts_b_rect then
             SelectedPtsRectDraw(srf_bmp.Canvas,sel_pts_rct,clPurple,clNavy);
@@ -15030,23 +15027,22 @@ begin
           //InvalidateInnerWindow;
         end;
 end; {$endregion}
-constructor TCircSel.Create;                                                                                                                          {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TCircSel.Create;                                                                                                                             {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   crc_sel_col :=clGreen;
   crc_rad     :=10;
   crc_rad_sqr :=crc_rad*crc_rad;
   draw_crc_sel:=True;
 end; {$endregion}
-destructor  TCircSel.Destroy;                                                                                                                         {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TCircSel.Destroy;                                                                                                                            {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
 procedure TCircSel.CircleSelection        (x,y:integer; constref m_c_var:TSurf; constref s_c_var:TSelPts; constref pts:TPtPosFArr; constref pts_cnt:TColor; constref sel_draw:boolean=True); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  is_point_selected_ptr: PByteBool;
-  sel_pts_inds_ptr     : PInteger;
-  pts_ptr              : PPtPosF;
-  i,m1,m2,m3,m4        : integer;
+  obj_arr_ptr    : PObjInfo;
+  i,j,m1,m2,m3,m4: integer;
+  pts_col_inv    : TColor;
 begin
 
   {Set Bounding Rectangle---------------} {$region -fold}
@@ -15059,128 +15055,130 @@ begin
     end; {$endregion}
 
   {Drawing Of Selected Points Rectangles} {$region -fold}
-  with m_c_var,s_c_var do
+  with m_c_var,s_c_var,sln_var do
     begin
       if sel_draw then
         begin
           sel_pts_big_img.bmp_dst_ptr :=srf_bmp_ptr;
           sel_pts_big_img.ln_arr_width:=srf_bmp_rct.Width;
-          if not ((X-crc_rad>m1)  and
-                  (X+crc_rad<m3)  and
-                  (Y-crc_rad>m2)  and
-                  (Y+crc_rad<m4)) then
+          if ((X-crc_rad>m1)  and
+              (X+crc_rad<m3)  and
+              (Y-crc_rad>m2)  and
+              (Y+crc_rad<m4)) then
             begin
-              pts_ptr              :=@pts              [0];
-              is_point_selected_ptr:=@is_point_selected[0];
-              sel_pts_inds_ptr     :=@sel_pts_inds     [0];
-              for i:=0 to pts_cnt-1 do
-                begin
-                  if (pts_ptr^.x+world_axis_shift.x>m1)                        and
-                     (pts_ptr^.x+world_axis_shift.x<m3)                        and
-                     (pts_ptr^.y+world_axis_shift.y>m2)                        and
-                     (pts_ptr^.y+world_axis_shift.y<m4)                        and
-                     (sqr(Trunc(pts_ptr^.x)+world_axis_shift.x-x)+
-                      sqr(Trunc(pts_ptr^.y)+world_axis_shift.y-y)<crc_rad_sqr) and
-                     (not (is_point_selected_ptr+i)^)                          then
-                    begin
-                      (is_point_selected_ptr+i)^     :=True;
-                      (sel_pts_inds_ptr+sel_pts_cnt)^:=i;
-                      Rectangle
-                      (
-                        Trunc(pts_ptr^.x)+world_axis_shift.x,
-                        Trunc(pts_ptr^.y)+world_axis_shift.y,
-                        low_bmp_ptr,
-                        low_bmp.width,
-                        low_bmp.height,
-                        inn_wnd_rct,
-                        sel_pts_big_img.local_prop
-                      );
-                      Inc(sel_pts_cnt);
-                    end;
-                  Inc(pts_ptr);
-                end;
+              for i:=0 to sln_obj_cnt-1 do
+                if RctCrcInt(pts_img_arr[i].rct_vis,x,y,crc_rad) then
+                  begin
+                    pts_col_inv                          :=pts_img_arr[i] .local_prop.pts_col_inv;
+                    pts_img_arr[i].local_prop.pts_col_inv:=sel_pts_big_img.local_prop.pts_col_inv;
+                    obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[partial_pts_sum[i]]]]);
+                    for j:=partial_pts_sum[i] to partial_pts_sum[i]+sln_obj_pts_cnt[i]-1 do
+                      if (sqr(Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x-x)+
+                          sqr(Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y-y)<crc_rad_sqr) and
+                         (not is_point_selected[j])                                          then
+                        begin
+                          is_point_selected[j]     :=True;
+                          sel_pts_inds[sel_pts_cnt]:=j;
+                          Inc(sel_pts_cnt);
+                          Rectangle
+                          (
+                            Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x,
+                            Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y,
+                            low_bmp_ptr,
+                            low_bmp.width,
+                            low_bmp.height,
+                            inn_wnd_rct,
+                            pts_img_arr[i].local_prop
+                          );
+                        end;
+                    pts_img_arr[i].local_prop.pts_col_inv:=pts_col_inv;
+                  end;
             end
           else
             begin
-              pts_ptr              :=@pts              [0];
-              is_point_selected_ptr:=@is_point_selected[0];
-              sel_pts_inds_ptr     :=@sel_pts_inds     [0];
-              for i:=0 to pts_cnt-1 do
-                begin
-                  if (sqr(Trunc(pts_ptr^.x)+world_axis_shift.x-x)+
-                      sqr(Trunc(pts_ptr^.y)+world_axis_shift.y-y)<crc_rad_sqr) and
-                     (not (is_point_selected_ptr+i)^)                          then
-                      begin
-                        (is_point_selected_ptr+i)^     :=True;
-                        (sel_pts_inds_ptr+sel_pts_cnt)^:=i;
-                        Rectangle
-                        (
-                          Trunc(pts_ptr^.x)+world_axis_shift.x,
-                          Trunc(pts_ptr^.y)+world_axis_shift.y,
-                          low_bmp_ptr,
-                          low_bmp.width,
-                          low_bmp.height,
-                          inn_wnd_rct,
-                          sel_pts_big_img.local_prop
-                        );
-                        Inc(sel_pts_cnt);
-                      end;
-                  Inc(pts_ptr);
-                end;
+              for i:=0 to sln_obj_cnt-1 do
+                if RctCrcInt(pts_img_arr[i].rct_vis,x,y,crc_rad) then
+                  begin
+                    pts_col_inv                          :=pts_img_arr[i] .local_prop.pts_col_inv;
+                    pts_img_arr[i].local_prop.pts_col_inv:=sel_pts_big_img.local_prop.pts_col_inv;
+                    obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[partial_pts_sum[i]]]]);
+                    for j:=partial_pts_sum[i] to partial_pts_sum[i]+sln_obj_pts_cnt[i]-1 do
+                      if (          pts[j].x +obj_arr_ptr^.world_axis_shift.x>m1)             and
+                         (          pts[j].x +obj_arr_ptr^.world_axis_shift.x<m3)             and
+                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y>m2)             and
+                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y<m4)             and
+                         (sqr(Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x-x)+
+                          sqr(Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y-y)<crc_rad_sqr) and
+                         (not is_point_selected[j])                                          then
+                        begin
+                          is_point_selected[j]     :=True;
+                          sel_pts_inds[sel_pts_cnt]:=j;
+                          Inc(sel_pts_cnt);
+                          Rectangle
+                          (
+                            Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x,
+                            Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y,
+                            low_bmp_ptr,
+                            low_bmp.width,
+                            low_bmp.height,
+                            inn_wnd_rct,
+                            pts_img_arr[i].local_prop
+                          );
+                        end;
+                    pts_img_arr[i].local_prop.pts_col_inv:=pts_col_inv;
+                  end;
             end;
         end
       else
         begin
           sel_pts_big_img.bmp_dst_ptr :=srf_bmp_ptr;
           sel_pts_big_img.ln_arr_width:=srf_bmp_rct.Width;
-          if not ((X-crc_rad>m1)  and
-                  (X+crc_rad<m3)  and
-                  (Y-crc_rad>m2)  and
-                  (Y+crc_rad<m4)) then
+          if ((X-crc_rad>m1)  and
+              (X+crc_rad<m3)  and
+              (Y-crc_rad>m2)  and
+              (Y+crc_rad<m4)) then
             begin
-              pts_ptr              :=@pts              [0];
-              is_point_selected_ptr:=@is_point_selected[0];
-              sel_pts_inds_ptr     :=@sel_pts_inds     [0];
-              for i:=0 to pts_cnt-1 do
-                begin
-                  if (pts_ptr^.x+world_axis_shift.x>m1)                        and
-                     (pts_ptr^.x+world_axis_shift.x<m3)                        and
-                     (pts_ptr^.y+world_axis_shift.y>m2)                        and
-                     (pts_ptr^.y+world_axis_shift.y<m4)                        and
-                     (sqr(Trunc(pts_ptr^.x)+world_axis_shift.x-x)+
-                      sqr(Trunc(pts_ptr^.y)+world_axis_shift.y-y)<crc_rad_sqr) and
-                     (not (is_point_selected_ptr+i)^)                          then
-                    begin
-                      (is_point_selected_ptr+i)^     :=True;
-                      (sel_pts_inds_ptr+sel_pts_cnt)^:=i;
-                      Inc(sel_pts_cnt);
-                    end;
-                  Inc(pts_ptr);
-                end;
+              for i:=0 to sln_obj_cnt-1 do
+                if RctCrcInt(pts_img_arr[i].rct_vis,x,y,crc_rad) then
+                  begin
+                    obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[partial_pts_sum[i]]]]);
+                    for j:=partial_pts_sum[i] to partial_pts_sum[i]+sln_obj_pts_cnt[i]-1 do
+                      if (sqr(Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x-x)+
+                          sqr(Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y-y)<crc_rad_sqr) and
+                         (not is_point_selected[j])                                          then
+                        begin
+                          is_point_selected[j]     :=True;
+                          sel_pts_inds[sel_pts_cnt]:=j;
+                          Inc(sel_pts_cnt);
+                        end;
+                  end;
             end
           else
             begin
-              pts_ptr              :=@pts              [0];
-              is_point_selected_ptr:=@is_point_selected[0];
-              sel_pts_inds_ptr     :=@sel_pts_inds     [0];
-              for i:=0 to pts_cnt-1 do
-                begin
-                  if (sqr(Trunc(pts_ptr^.x)+world_axis_shift.x-x)+
-                      sqr(Trunc(pts_ptr^.y)+world_axis_shift.y-y)<crc_rad_sqr) and
-                     (not (is_point_selected_ptr+i)^)                          then
-                    begin
-                      (is_point_selected_ptr+i)^     :=True;
-                      (sel_pts_inds_ptr+sel_pts_cnt)^:=i;
-                      Inc(sel_pts_cnt);
-                    end;
-                  Inc(pts_ptr);
-                end;
+              for i:=0 to sln_obj_cnt-1 do
+                if RctCrcInt(pts_img_arr[i].rct_vis,x,y,crc_rad) then
+                  begin
+                    obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[partial_pts_sum[i]]]]);
+                    for j:=partial_pts_sum[i] to partial_pts_sum[i]+sln_obj_pts_cnt[i]-1 do
+                      if (          pts[j].x +obj_arr_ptr^.world_axis_shift.x>m1)             and
+                         (          pts[j].x +obj_arr_ptr^.world_axis_shift.x<m3)             and
+                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y>m2)             and
+                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y<m4)             and
+                         (sqr(Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x-x)+
+                          sqr(Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y-y)<crc_rad_sqr) and
+                         (not is_point_selected[j])                                          then
+                        begin
+                          is_point_selected[j]     :=True;
+                          sel_pts_inds[sel_pts_cnt]:=j;
+                          Inc(sel_pts_cnt);
+                        end;
+                  end;
             end;
         end
     end; {$endregion}
 
 end; {$endregion}
-procedure TCircSel.CircleSelectionModeDraw(x,y:integer; constref m_c_var:TSurf);                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCircSel.CircleSelectionModeDraw(x,y:integer; constref m_c_var:TSurf);                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with srf_var do
     if IsPtInRct(x,y,PtRct(inn_wnd_rct.left  +crc_rad,
@@ -15191,7 +15189,7 @@ begin
     else
       CircleC(x,y,crc_rad,srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,crc_sel_col);
 end; {$endregion}
-procedure TCircSel.ResizeCircleSelectionModeDraw;                                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCircSel.ResizeCircleSelectionModeDraw;                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   sel_pos: TPtPos;
 begin
@@ -15202,23 +15200,23 @@ begin
   crc_sel_rct.width :=crc_rad<<1;
   crc_sel_rct.height:=crc_rad<<1;
 end; {$endregion}
-constructor TBrushSel.Create;                                                                                                                         {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TBrushSel.Create;                                                                                                                            {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   draw_brs_sel:=False;
 end; {$endregion}
-destructor  TBrushSel.Destroy;                                                                                                                        {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TBrushSel.Destroy;                                                                                                                           {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-constructor TRectSel.Create;                                                                                                                          {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TRectSel.Create;                                                                                                                             {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   rct_width:=10;
 end; {$endregion}
-destructor  TRectSel.Destroy;                                                                                                                         {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TRectSel.Destroy;                                                                                                                            {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-procedure TSelPts.ChangeSelectionMode(item_ind:TColor);                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.ChangeSelectionMode(item_ind:TColor);                                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   crc_sel_var.draw_crc_sel :=item_ind in [0..1];
   brs_sel_var.draw_brs_sel :=False;
@@ -15235,7 +15233,7 @@ begin
   end;
   //InvalidateInnerWindow;
 end; {$endregion}
-procedure TSelPts.AddCircleSelection;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.AddCircleSelection;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -15254,7 +15252,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TSelPts.PrimitiveComp(constref pmt_img_ptr:PFastLine; pmt_bld_stl:TDrawingStyle);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.PrimitiveComp(constref pmt_img_ptr:PFastLine; pmt_bld_stl:TDrawingStyle);                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   bmp_alpha_ptr2_: PByte;
 begin
@@ -15359,7 +15357,7 @@ begin
       SetSdrType;
     end;
 end; {$endregion}
-procedure TSelPts.CrtCircleSelection;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.CrtCircleSelection;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sel_pts_big_img,local_prop do
     begin
@@ -15399,7 +15397,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TSelPts.FilSelPtsObj(constref x,y:integer);                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.FilSelPtsObj(constref x,y:integer);                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sel_pts_big_img,fst_img do
     begin
@@ -15407,7 +15405,7 @@ begin
       SdrProc[3];
     end;
 end; {$endregion}
-procedure TSelPts.MinimizeCircleSelection;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.MinimizeCircleSelection;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with crc_sel_var do
     begin
@@ -15419,10 +15417,10 @@ begin
       FilSelPtsObj(crc_sel_rct.left,crc_sel_rct.top); //CircleSelectionModeDraw(x,y,srf_var);
     end;
 end; {$endregion}
-procedure TSelPts.SelectAllPts(const pts_cnt,eds_cnt:TColor);                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelectAllPts(const pts_cnt,eds_cnt:TColor);                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TSelPts.SelectedPtsRectDraw(cnv_dst:TCanvas; b_rct:TRect; color1,color2:TColor);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelectedPtsRectDraw(cnv_dst:TCanvas; b_rct:TRect; color1,color2:TColor);                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   {PtsRectDraw2(cnv_dst,b_rct,color1,color2);}
 end; {$endregion}
@@ -15435,7 +15433,6 @@ var
   sl_pt_subgraph__ptr        : PSlPt;
   obj_ind_ptr                : PInteger;
   sel_pts_inds_ptr           : PInteger;
-  has_edge_ptr               : PShortInt;
   is_point_selected_ptr      : PByteBool;
   out_or_inn_subgraph_pts_ptr: PByte;
   fst_lst_sln_obj_pts_ptr    : PByte;
@@ -15469,7 +15466,6 @@ begin
   is_point_selected_ptr      :=Unaligned(@is_point_selected      [0]);
   has_sel_pts_ptr            :=Unaligned(@has_sel_pts            [0]);
   sel_pts_inds_ptr           :=Unaligned(@sel_pts_inds           [0]);
-  has_edge_ptr               :=Unaligned(@sln_var.has_edge       [0]);
   outer_subgraph1_ptr        :=Unaligned(@outer_subgraph1        [0]);
   outer_subgraph2_ptr        :=Unaligned(@outer_subgraph2        [0]);
   outer_subgraph3_ptr        :=Unaligned(@outer_subgraph3        [0]);
@@ -15553,7 +15549,6 @@ begin
                     Inc(outer_subgraph2_ptr);
                   end;
               end;
-            //Inc(sel_pts_inds_ptr);
           end; {$endregion}
         1: {First  Spline Object Point} {$region -fold}
           begin
@@ -15578,8 +15573,8 @@ begin
                 {Inner Subgraph Calc.}
                 {--------------------}(out_or_inn_subgraph_pts_ptr+sel_pts_inds_ptr^+1)^:= 2;
                 {--------------------}(out_or_inn_subgraph_pts_ptr+sel_pts_inds_ptr^+0)^:= 2;
-                {--------------------}inner_subgraph__ptr^.first_point                  := 00000000000+sel_pts_inds_ptr^+1;
-                {--------------------}inner_subgraph__ptr^.last_point                   := 00000000000+sel_pts_inds_ptr^+0;
+                {--------------------}inner_subgraph__ptr^.first_point                  := 00000000000+sel_pts_inds_ptr^+0;
+                {--------------------}inner_subgraph__ptr^.last_point                   := 00000000000+sel_pts_inds_ptr^+1;
                 {--------------------}inner_subgraph__ptr^.obj_ind                      :=(obj_ind_ptr+sel_pts_inds_ptr^+0)^;
                 case (has_sel_pts_ptr+inner_subgraph__ptr^.obj_ind)^ of
                   0: (has_sel_pts_ptr+inner_subgraph__ptr^.obj_ind)^:=2;
@@ -15589,7 +15584,6 @@ begin
                 end;
                 Inc(inner_subgraph__ptr);
               end;
-            //Inc(sel_pts_inds_ptr);
           end; {$endregion}
         2: {Last   Spline Object Point} {$region -fold}
           begin
@@ -15625,7 +15619,6 @@ begin
                 end;
                 Inc(outer_subgraph3_ptr);
               end;
-            //Inc(sel_pts_inds_ptr);
           end; {$endregion}
         3: {Single Spline Object Point} {$region -fold}
           begin
@@ -15634,7 +15627,6 @@ begin
              {--------------}sl_pt_subgraph__ptr^.obj_ind                      :=(obj_ind_ptr+sel_pts_inds_ptr^)^;
             (has_sel_pts_ptr+sl_pt_subgraph__ptr^.obj_ind)^:=4;
             Inc(sl_pt_subgraph__ptr);
-            //Inc(sel_pts_inds_ptr);
           end; {$endregion}
       end;
       Inc(sel_pts_inds_ptr);
@@ -15659,13 +15651,13 @@ begin
   );
   with sel_pts_rct do
     begin
-      left  :=sel_pts_rct.left  -{32}50+srf_var.world_axis_shift.x;
-      top   :=sel_pts_rct.top   -{32}50+srf_var.world_axis_shift.y;
-      right :=sel_pts_rct.right +{32}50+srf_var.world_axis_shift.x;
-      bottom:=sel_pts_rct.bottom+{32}50+srf_var.world_axis_shift.y;
+      left  :=sel_pts_rct.left  -sel_pts_rct_mrgn+srf_var.world_axis_shift.x;
+      top   :=sel_pts_rct.top   -sel_pts_rct_mrgn+srf_var.world_axis_shift.y;
+      right :=sel_pts_rct.right +sel_pts_rct_mrgn+srf_var.world_axis_shift.x;
+      bottom:=sel_pts_rct.bottom+sel_pts_rct_mrgn+srf_var.world_axis_shift.y;
       width :=right-left;
       height:=bottom-top;
-    end;{$endregion}
+    end; {$endregion}
 
   {Minimal Index of Selected Spline-----} {$region -fold}
   f_arr:=Nil;
@@ -15680,7 +15672,7 @@ begin
   sel_obj_min_ind:=Min5(f_arr,obj_var.obj_cnt-1,5); {$endregion}
 
 end; {$endregion}
-procedure TSelPts.UnselectedPtsCalc0(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.UnselectedPtsCalc0(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF);    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                : PPtPosF;
   selected_pts_inds_ptr  : PInteger;
@@ -15694,79 +15686,84 @@ begin
   n2:=Trunc(pvt_pos_curr.y)-Trunc(pvt_pos_prev.y); {$endregion}
 
   {Calculation Of Inner Subgraph Points On Unselect Pivot} {$region -fold}
-  {2 alternative records of the same code block}
-  {1.} {$region -fold}
-  {for i:=0 to sel_pts_cnt-1 do
-    case fst_lst_sln_obj_pts[sel_pts_inds[i]] of
-      0: {Inner  Spline Object Point} {$region -fold}
-        if is_point_selected[sel_pts_inds[i]-1] and
-           is_point_selected[sel_pts_inds[i]+1] then
-          begin
-            pts[sel_pts_inds[i]].x+=n1;
-            pts[sel_pts_inds[i]].y+=n2;
-          end; {$endregion}
-      1: {First  Spline Object Point} {$region -fold}
-        if is_point_selected[sel_pts_inds[i]+1] then
-          begin
-            pts[sel_pts_inds[i]].x+=n1;
-            pts[sel_pts_inds[i]].y+=n2;
-          end; {$endregion}
-      2: {Last   Spline Object Point} {$region -fold}
-        if is_point_selected[sel_pts_inds[i]-1] then
-          begin
-            pts[sel_pts_inds[i]].x+=n1;
-            pts[sel_pts_inds[i]].y+=n2;
-          end; {$endregion}
-      3: {Single Spline Object Point} {$region -fold}
-        begin
-          pts[sel_pts_inds[i]].x+=n1;
-          pts[sel_pts_inds[i]].y+=n2;
-        end; {$endregion}
-    end;} {$endregion}
-  {2.} {$region -fold}
   pts_ptr                :=Unaligned(@pts                [0]);
   fst_lst_sln_obj_pts_ptr:=Unaligned(@fst_lst_sln_obj_pts[0]);
   is_pt_selected_ptr     :=Unaligned(@is_point_selected  [0]);
   selected_pts_inds_ptr  :=Unaligned(@sel_pts_inds       [0]);
-  for i:=0 to sel_pts_cnt-1 do
-    begin
-      case (fst_lst_sln_obj_pts_ptr+selected_pts_inds_ptr^)^ of
-        0: {Inner  Spline Object Point} {$region -fold}
-          if (is_pt_selected_ptr+selected_pts_inds_ptr^-1)^ and
-             (is_pt_selected_ptr+selected_pts_inds_ptr^+1)^ then
+  {if {inner_subgraph_img.local_prop.eds_show or}
+    (inner_subgraph_img.local_prop.eds_show and (not outer_subgraph_img.local_prop.eds_show)) then}
+    for i:=0 to sel_pts_cnt-1 do
+      begin
+        case (fst_lst_sln_obj_pts_ptr+selected_pts_inds_ptr^)^ of
+         {0: {Inner  Spline Object Point} {$region -fold}
+            if (is_pt_selected_ptr+selected_pts_inds_ptr^-1)^ and
+               (is_pt_selected_ptr+selected_pts_inds_ptr^+1)^ then
+              begin
+                (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
+                (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
+              end; {$endregion}
+          1: {First  Spline Object Point} {$region -fold}
+            if (is_pt_selected_ptr+selected_pts_inds_ptr^+1)^ then
+              begin
+                (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
+                (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
+              end; {$endregion}
+          2: {Last   Spline Object Point} {$region -fold}
+            if (is_pt_selected_ptr+selected_pts_inds_ptr^-1)^ then
+              begin
+                (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
+                (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
+              end; {$endregion}
+         }3: {Single Spline Object Point} {$region -fold}
             begin
               (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
               (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
             end; {$endregion}
-        1: {First  Spline Object Point} {$region -fold}
-          if (is_pt_selected_ptr+selected_pts_inds_ptr^+1)^ then
+        end;
+        Inc(selected_pts_inds_ptr);
+      end
+  {else
+    for i:=0 to sel_pts_cnt-1 do
+      begin
+        case (fst_lst_sln_obj_pts_ptr+selected_pts_inds_ptr^)^ of
+          0: {Inner  Spline Object Point} {$region -fold}
+            if (is_pt_selected_ptr+selected_pts_inds_ptr^-1)^ and
+               (is_pt_selected_ptr+selected_pts_inds_ptr^+1)^ then
+              begin
+                (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
+                (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
+              end; {$endregion}
+          1: {First  Spline Object Point} {$region -fold}
+            if (is_pt_selected_ptr+selected_pts_inds_ptr^+1)^ then
+              begin
+                (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
+                (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
+              end; {$endregion}
+          2: {Last   Spline Object Point} {$region -fold}
+            if (is_pt_selected_ptr+selected_pts_inds_ptr^-1)^ then
+              begin
+                (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
+                (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
+              end; {$endregion}
+          3: {Single Spline Object Point} {$region -fold}
             begin
               (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
               (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
             end; {$endregion}
-        2: {Last   Spline Object Point} {$region -fold}
-          if (is_pt_selected_ptr+selected_pts_inds_ptr^-1)^ then
-            begin
-              (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
-              (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
-            end; {$endregion}
-        3: {Single Spline Object Point} {$region -fold}
-          begin
-            (pts_ptr+selected_pts_inds_ptr^)^.x+=n1;
-            (pts_ptr+selected_pts_inds_ptr^)^.y+=n2;
-          end; {$endregion}
-      end;
-      Inc(selected_pts_inds_ptr);
-    end; {$endregion} {$endregion}
+        end;
+        Inc(selected_pts_inds_ptr);
+      end}; {$endregion}
 
 end; {$endregion}
-procedure TSelPts.UnselectedPtsCalc1(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.UnselectedPtsCalc1(constref fst_lst_sln_obj_pts:TEnum0Arr; var pts:TPtPosFArr; constref pvt_pos_curr,pvt_pos_prev:TPtPosF);    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  outer_subgraph1_ptr: PEdge;
-  outer_subgraph2_ptr: PEdge;
-  outer_subgraph3_ptr: PEdge;
-  pts_ptr            : PPtPosF;
-  i,n1,n2            : integer;
+  outer_subgraph1_ptr        : PEdge;
+  outer_subgraph3_ptr        : PEdge;
+  inner_subgraph__ptr        : PEdge;
+  out_or_inn_subgraph_pts_ptr: PByte;
+  pts_f3,pts_l3              : TPtPosF;
+  pts_ptr                    : PPtPosF;
+  i,n1,n2                    : integer;
 begin
 
   {Misc. Precalc.----------------------------------------} {$region -fold}
@@ -15775,54 +15772,123 @@ begin
 
   {Calculation Of Inner Subgraph Points On Unselect Pivot} {$region -fold}
   pts_ptr:=Unaligned(@pts[0]);
-  if (outer_subgraph1_eds_cnt>0) then
+  if (not (outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show))) then
     begin
-      outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
-      for i:=0 to  outer_subgraph1_eds_cnt-1 do
+      if (outer_subgraph1_eds_cnt>0) then
         begin
-          (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
-          (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
-          Inc     (outer_subgraph1_ptr);
+          outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
+          for i:=0 to  outer_subgraph1_eds_cnt-1 do
+            begin
+              is_point_pos_calc[outer_subgraph1_ptr^.last_point]:=True;
+              (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
+              (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
+              Inc     (outer_subgraph1_ptr);
+            end;
+        end;
+      if (outer_subgraph3_eds_cnt>0) then
+        begin
+          outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
+          for i:=0 to  outer_subgraph3_eds_cnt-1 do
+            begin
+              is_point_pos_calc[outer_subgraph3_ptr^.last_point]:=True;
+              (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
+              (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
+              Inc     (outer_subgraph3_ptr);
+            end;
+        end;
+    end
+  else
+    begin
+      if (outer_subgraph1_eds_cnt>0) then
+        begin
+          outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
+          for i:=0 to  outer_subgraph1_eds_cnt-1 do
+            begin
+              is_point_pos_calc[outer_subgraph1_ptr^.last_point]:=True;
+              Inc              (outer_subgraph1_ptr);
+            end;
+        end;
+      if (outer_subgraph3_eds_cnt>0) then
+        begin
+          outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
+          for i:=0 to  outer_subgraph3_eds_cnt-1 do
+            begin
+              is_point_pos_calc[outer_subgraph3_ptr^.last_point]:=True;
+              Inc              (outer_subgraph3_ptr);
+            end;
         end;
     end;
+  {if (outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show)) then
+    begin
+      n1:=Trunc(pvt_pos_curr.x)-Trunc(pvt_var.pvt_origin.x);
+      n2:=Trunc(pvt_pos_curr.y)-Trunc(pvt_var.pvt_origin.y);
+    end;}
   if (outer_subgraph3_eds_cnt>0) then
     begin
-      outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
-      for i:=0 to  outer_subgraph3_eds_cnt-1 do
+      out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
+      inner_subgraph__ptr        :=Unaligned(@inner_subgraph_        [0]);
+      for i:=0 to  inner_subgraph__eds_cnt-1 do
         begin
-          (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
-          (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
-          Inc     (outer_subgraph3_ptr);
+          pts_f3:=(pts_ptr+inner_subgraph__ptr^.first_point)^;
+          pts_l3:=(pts_ptr+inner_subgraph__ptr^.last_point )^;
+          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph__ptr^.first_point)^=2) then
+            if (not is_point_pos_calc[inner_subgraph__ptr^.first_point]) then
+              begin
+                pts_f3.x+=n1;
+                pts_f3.y+=n2;
+                is_point_pos_calc[inner_subgraph__ptr^.first_point]:=True;
+              end;
+          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph__ptr^.last_point )^=2) then
+            if (not is_point_pos_calc[inner_subgraph__ptr^.last_point]) then
+              begin
+                pts_l3.x+=n1;
+                pts_l3.y+=n2;
+                is_point_pos_calc[inner_subgraph__ptr^.last_point]:=True;
+              end;
+          (pts_ptr+inner_subgraph__ptr^.first_point)^:=pts_f3;
+          (pts_ptr+inner_subgraph__ptr^.last_point )^:=pts_l3;
+          Inc(inner_subgraph__ptr);
         end;
-    end; {$endregion}
+     end; {$endregion}
+
+  SelPtsIndsToFalse2;
 
 end; {$endregion}
-procedure TSelPts.SelPtsIndsToFalse;                                                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelPtsIndsToFalse1;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   selected_pts_inds_ptr      : PInteger;
   is_point_selected_ptr      : PByteBool;
+  is_point_pos_calc_ptr      : PByteBool;
   out_or_inn_subgraph_pts_ptr: PByte;
   i                          : integer;
 begin
-  {2 alternative records of the same code block}
-  {1.} {$region -fold}
-  {for i:=0 to sel_pts_cnt-1 do
-    begin
-      out_or_inn_subgraph_pts[sel_pts_inds[i]]:=0
-      is_point_selected      [sel_pts_inds[i]]:=False;
-    end;} {$endregion}
-  {2.} {$region -fold}
   is_point_selected_ptr:=Unaligned(@is_point_selected[0]);
+  is_point_pos_calc_ptr:=Unaligned(@is_point_pos_calc[0]);
   selected_pts_inds_ptr:=Unaligned(@sel_pts_inds     [0]);
   out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
   for i:=0 to sel_pts_cnt-1 do
     begin
       (out_or_inn_subgraph_pts_ptr+selected_pts_inds_ptr^)^:=0;
       (is_point_selected_ptr      +selected_pts_inds_ptr^)^:=False;
+      (is_point_pos_calc_ptr      +selected_pts_inds_ptr^)^:=False;
       Inc(selected_pts_inds_ptr);
-    end; {$endregion}
+    end;
 end; {$endregion}
-procedure TSelPts.DuplicatedPtsCalc;                                                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelPtsIndsToFalse2;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  selected_pts_inds_ptr: PInteger;
+  is_point_pos_calc_ptr: PByteBool;
+  i                    : integer;
+begin
+  is_point_pos_calc_ptr:=Unaligned(@is_point_pos_calc[0]);
+  selected_pts_inds_ptr:=Unaligned(@sel_pts_inds     [0]);
+  for i:=0 to sel_pts_cnt-1 do
+    begin
+      (is_point_pos_calc_ptr+selected_pts_inds_ptr^)^:=False;
+      Inc(selected_pts_inds_ptr);
+    end;
+end; {$endregion}
+procedure TSelPts.DuplicatedPtsCalc;                                                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 {var
   i,j,k,v,m1,m2: integer;}
 begin
@@ -15867,7 +15933,7 @@ begin
             end;
   }
 end; {$endregion}
-procedure TSelPts.AdvancedClipCalc(pts:TPtPosFArr; pts_cnt:TColor; is_pt_marked:TBool1Arr);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.AdvancedClipCalc(pts:TPtPosFArr; pts_cnt:TColor; is_pt_marked:TBool1Arr);                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 {var
   i,m,clip_rad: integer;}
 begin
@@ -15879,7 +15945,7 @@ begin
 
       end;}
 end; {$endregion}
-procedure TSelPts.DuplicatedPtsToBmp;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.DuplicatedPtsToBmp;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 {var
   i: integer;}
 begin
@@ -15897,8 +15963,60 @@ begin
     end;
   }
 end; {$endregion}
-procedure TSelPts.OuterSubgraphToBmp(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp:TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.OuterSubgraphCalc  (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
+  pts_ptr            : PPtPosF;
+  outer_subgraph1_ptr: PEdge;
+  outer_subgraph2_ptr: PEdge;
+  outer_subgraph3_ptr: PEdge;
+  i                  : integer;
+  n1,n2              : double;
+begin
+
+  if (outer_subgraph1_eds_cnt=0) and
+     (outer_subgraph3_eds_cnt=0) then
+    Exit;
+
+  outer_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
+
+  if fill_bmp_only then
+    Exit;
+
+  {Misc. Precalc.-----------------} {$region -fold}
+  n1:=x-Trunc(pvt.x);
+  n2:=y-Trunc(pvt.y); {$endregion}
+
+  {Drawing Of Outer Subgraph Lines} {$region -fold}
+  if (outer_subgraph1_eds_cnt>0) then
+    begin
+      pts_ptr            :=Unaligned(@pts            [0]);
+      outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
+      for i:=0 to outer_subgraph1_eds_cnt-1 do
+        begin
+          is_point_pos_calc[outer_subgraph1_ptr^.last_point]:=True;
+          (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
+          (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
+          Inc(outer_subgraph1_ptr);
+        end;
+    end;
+  if (outer_subgraph3_eds_cnt>0) then
+    begin
+      pts_ptr            :=Unaligned(@pts            [0]);
+      outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
+      for i:=0 to outer_subgraph3_eds_cnt-1 do
+        begin
+          is_point_pos_calc[outer_subgraph3_ptr^.last_point]:=True;
+          (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
+          (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
+          Inc(outer_subgraph3_ptr);
+        end;
+    end; {$endregion}
+
+end; {$endregion}
+procedure TSelPts.OuterSubgraphDraw  (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr1       : PObjInfo;
+  obj_arr_ptr2       : PObjInfo;
   rct                : TPtRect;
   pts_ptr            : PPtPosF;
   pts_f1,pts_l1      : TPtPosF;
@@ -15907,7 +16025,7 @@ var
   outer_subgraph1_ptr: PEdge;
   outer_subgraph2_ptr: PEdge;
   outer_subgraph3_ptr: PEdge;
-  n1,n2,i,m1,m2,m3,m4: integer;
+  i,m1,m2,m3,m4      : integer;
 label
   lbl_flood_fill_only;
 begin
@@ -15920,10 +16038,6 @@ begin
 
   if fill_bmp_only then
     goto lbl_flood_fill_only;
-
-  {Misc. Precalc.------------------} {$region -fold}
-  n1:=x-Trunc(pvt.x);
-  n2:=y-Trunc(pvt.y); {$endregion}
 
   {Set Drawing Bounds(Inner Window)} {$region -fold}
   with rct_clp do
@@ -15950,113 +16064,72 @@ begin
           {Drawing Of Outer Subgraph 1,2} {$region -fold}
           if (outer_subgraph1_eds_cnt>0) then
             begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph1_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph1[i].last_point].x+=n1;
-                  pts[outer_subgraph1[i].last_point].y+=n2;
-                  ClippedLine1
-                  (
-                    Trunc(pts[outer_subgraph1[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph1[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph1[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph1[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-                  ClippedLine1
-                  (
-                    Trunc(pts[outer_subgraph2[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph2[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph2[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph2[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-                end;} {$endregion}
-              {2.} {$region -fold}
               pts_ptr            :=Unaligned(@pts            [0]);
               outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
               outer_subgraph2_ptr:=Unaligned(@outer_subgraph2[0]);
               for i:=0 to outer_subgraph1_eds_cnt-1 do
                 begin
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
                   if (sln_var.has_edge[Min(outer_subgraph1_ptr^.first_point,outer_subgraph1_ptr^.last_point)]=0) then
-                    ClippedLine1
-                    (
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                      rct,
-                      Unaligned(@LineSME),
-                      Nil,
-                      Nil
-                    );
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.last_point ]]]);
+                      ClippedLine1
+                      (
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct,
+                        Unaligned(@LineSME),
+                        Nil,
+                        Nil
+                      );
+                    end;
                   if (sln_var.has_edge[Min(outer_subgraph2_ptr^.first_point,outer_subgraph2_ptr^.last_point)]=0) then
-                    ClippedLine1
-                    (
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                      rct,
-                      Unaligned(@LineSME),
-                      Nil,
-                      Nil
-                    );
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.last_point ]]]);
+                      ClippedLine1
+                      (
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct,
+                        Unaligned(@LineSME),
+                        Nil,
+                        Nil
+                      );
+                    end;
                   Inc(outer_subgraph1_ptr);
                   Inc(outer_subgraph2_ptr);
-                end; {$endregion}
+                end;
             end; {$endregion}
           {Drawing Of Outer Subgraph 3  } {$region -fold}
           if (outer_subgraph3_eds_cnt>0) then
             begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph3_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph3[i].last_point].x+=n1;
-                  pts[outer_subgraph3[i].last_point].y+=n2;
-                  ClippedLine1
-                  (
-                    Trunc(pts[outer_subgraph3[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph3[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph3[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph3[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-                end;} {$endregion}
-              {2.} {$region -fold}
               pts_ptr            :=Unaligned(@pts            [0]);
               outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
               for i:=0 to outer_subgraph3_eds_cnt-1 do
                 begin
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
                   if (sln_var.has_edge[Min(outer_subgraph3_ptr^.first_point,outer_subgraph3_ptr^.last_point)]=0) then
-                    ClippedLine1
-                    (
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                      rct,
-                      Unaligned(@LineSME),
-                      Nil,
-                      Nil
-                    );
-                Inc(outer_subgraph3_ptr);
-              end; {$endregion}
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.last_point ]]]);
+                      ClippedLine1
+                      (
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct,
+                        Unaligned(@LineSME),
+                        Nil,
+                        Nil
+                      );
+                    end;
+                  Inc(outer_subgraph3_ptr);
+                end;
             end; {$endregion}
         end; {$endregion}
       (csClippedEdges2 ): {Clipped Edges 2(Slow  )} {$region -fold}
@@ -16064,113 +16137,72 @@ begin
           {Drawing Of Outer Subgraph 1,2} {$region -fold}
           if (outer_subgraph1_eds_cnt>0) then
             begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph1_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph1[i].last_point].x+=n1;
-                  pts[outer_subgraph1[i].last_point].y+=n2;
-                  ClippedLine2
-                  (
-                    Trunc(pts[outer_subgraph1[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph1[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph1[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph1[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-                  ClippedLine2
-                  (
-                    Trunc(pts[outer_subgraph2[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph2[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph2[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph2[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-                end;} {$endregion}
-              {2.} {$region -fold}
               pts_ptr            :=Unaligned(@pts            [0]);
               outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
               outer_subgraph2_ptr:=Unaligned(@outer_subgraph2[0]);
               for i:=0 to outer_subgraph1_eds_cnt-1 do
                 begin
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
                   if (sln_var.has_edge[Min(outer_subgraph1_ptr^.first_point,outer_subgraph1_ptr^.last_point)]=0) then
-                    ClippedLine2
-                    (
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                      rct,
-                      Unaligned(@LineSME),
-                      Nil,
-                      Nil
-                    );
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.last_point ]]]);
+                      ClippedLine2
+                      (
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct,
+                        Unaligned(@LineSME),
+                        Nil,
+                        Nil
+                      );
+                    end;
                   if (sln_var.has_edge[Min(outer_subgraph2_ptr^.first_point,outer_subgraph2_ptr^.last_point)]=0) then
-                    ClippedLine2
-                    (
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                      rct,
-                      Unaligned(@LineSME),
-                      Nil,
-                      Nil
-                    );
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.last_point ]]]);
+                      ClippedLine2
+                      (
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct,
+                        Unaligned(@LineSME),
+                        Nil,
+                        Nil
+                      );
+                    end;
                   Inc(outer_subgraph1_ptr);
                   Inc(outer_subgraph2_ptr);
-                end; {$endregion}
+                end;
             end; {$endregion}
           {Drawing Of Outer Subgraph 3  } {$region -fold}
           if (outer_subgraph3_eds_cnt>0) then
             begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph3_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph3[i].last_point].x+=n1;
-                  pts[outer_subgraph3[i].last_point].y+=n2;
-                  ClippedLine2
-                  (
-                    Trunc(pts[outer_subgraph3[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph3[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph3[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph3[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-                end;} {$endregion}
-              {2.} {$region -fold}
               pts_ptr            :=Unaligned(@pts            [0]);
               outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
               for i:=0 to outer_subgraph3_eds_cnt-1 do
                 begin
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
                   if (sln_var.has_edge[Min(outer_subgraph3_ptr^.first_point,outer_subgraph3_ptr^.last_point)]=0) then
-                    ClippedLine2
-                    (
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                      Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                      rct,
-                      Unaligned(@LineSME),
-                      Nil,
-                      Nil
-                    );
-                Inc(outer_subgraph3_ptr);
-              end; {$endregion}
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.last_point ]]]);
+                      ClippedLine2
+                      (
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct,
+                        Unaligned(@LineSME),
+                        Nil,
+                        Nil
+                      );
+                    end;
+                  Inc(outer_subgraph3_ptr);
+                end;
             end; {$endregion}
         end; {$endregion}
       (csRemoveEdges   ): {Remove Edges---(Fast  )} {$region -fold}
@@ -16178,114 +16210,165 @@ begin
           {Drawing Of Outer Subgraph 1,2} {$region -fold}
           if (outer_subgraph1_eds_cnt>0) then
             begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph1_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph1[i].last_point].x+=n1;
-                  pts[outer_subgraph1[i].last_point].y+=n2;
-                  pts_f1:=pts[outer_subgraph1[i].first_point];
-                  pts_l1:=pts[outer_subgraph1[i].last_point ];
-                  if IsPtInRct(PtPosF(pts_f1.x+srf_var.world_axis_shift.x,pts_f3.y+srf_var.world_axis_shift.y),rct) and
-                     IsPtInRct(PtPosF(pts_l1.x+srf_var.world_axis_shift.x,pts_l3.y+srf_var.world_axis_shift.y),rct) then
-                    LineSMN
-                    (
-                      Trunc(pts_f1.first_point].x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_f1.first_point].y)+srf_var.world_axis_shift.y,
-                      Trunc(pts_l1.last_point ].x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_l1.last_point ].y)+srf_var.world_axis_shift.y
-                    );
-                  pts_f2:=pts[outer_subgraph2[i].first_point];
-                  pts_l2:=pts[outer_subgraph2[i].last_point ];
-                  if IsPtInRct(PtPosF(pts_f2.x+srf_var.world_axis_shift.x,pts_f3.y+srf_var.world_axis_shift.y),rct) and
-                     IsPtInRct(PtPosF(pts_l2.x+srf_var.world_axis_shift.x,pts_l3.y+srf_var.world_axis_shift.y),rct) then
-                    LineSMN
-                    (
-                      Trunc(pts_f2.first_point].x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_f2.first_point].y)+srf_var.world_axis_shift.y,
-                      Trunc(pts_l2.last_point ].x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_l2.last_point ].y)+srf_var.world_axis_shift.y
-                    );
-                end;} {$endregion}
-              {2.} {$region -fold}
               pts_ptr            :=Unaligned(@pts            [0]);
               outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
               outer_subgraph2_ptr:=Unaligned(@outer_subgraph2[0]);
               for i:=0 to outer_subgraph1_eds_cnt-1 do
                 begin
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
-                  pts_f1:=(pts_ptr+outer_subgraph1_ptr^.first_point)^;
-                  pts_l1:=(pts_ptr+outer_subgraph1_ptr^.last_point )^;
-                  if IsPtInRct(PtPosF(pts_f1.x+srf_var.world_axis_shift.x,pts_f1.y+srf_var.world_axis_shift.y),rct) and
-                     IsPtInRct(PtPosF(pts_l1.x+srf_var.world_axis_shift.x,pts_l1.y+srf_var.world_axis_shift.y),rct) and
-                     (sln_var.has_edge[Min(outer_subgraph1_ptr^.first_point,outer_subgraph1_ptr^.last_point)]=0)   then
+                  pts_f1      :=(pts_ptr+outer_subgraph1_ptr^.first_point)^;
+                  pts_l1      :=(pts_ptr+outer_subgraph1_ptr^.last_point )^;
+                  obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.first_point]]]);
+                  obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.last_point ]]]);
+                  if IsPtInRct(PtPosF(pts_f1.x+obj_arr_ptr1^.world_axis_shift.x,pts_f1.y+obj_arr_ptr1^.world_axis_shift.y),rct) and
+                     IsPtInRct(PtPosF(pts_l1.x+obj_arr_ptr2^.world_axis_shift.x,pts_l1.y+obj_arr_ptr2^.world_axis_shift.y),rct) and
+                     (sln_var.has_edge[Min(outer_subgraph1_ptr^.first_point,outer_subgraph1_ptr^.last_point)]=0)               then
                     LineSMN
                     (
-                      Trunc(pts_f1.x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_f1.y)+srf_var.world_axis_shift.y,
-                      Trunc(pts_l1.x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_l1.y)+srf_var.world_axis_shift.y
+                      Trunc(pts_f1.x)+obj_arr_ptr1^.world_axis_shift.x,
+                      Trunc(pts_f1.y)+obj_arr_ptr1^.world_axis_shift.y,
+                      Trunc(pts_l1.x)+obj_arr_ptr2^.world_axis_shift.x,
+                      Trunc(pts_l1.y)+obj_arr_ptr2^.world_axis_shift.y
                     );
-                  pts_f2:=(pts_ptr+outer_subgraph2_ptr^.first_point)^;
-                  pts_l2:=(pts_ptr+outer_subgraph2_ptr^.last_point )^;
-                  if IsPtInRct(PtPosF(pts_f2.x+srf_var.world_axis_shift.x,pts_f2.y+srf_var.world_axis_shift.y),rct) and
-                     IsPtInRct(PtPosF(pts_l2.x+srf_var.world_axis_shift.x,pts_l2.y+srf_var.world_axis_shift.y),rct) and
-                     (sln_var.has_edge[Min(outer_subgraph2_ptr^.first_point,outer_subgraph2_ptr^.last_point)]=0)   then
+                  pts_f2      :=(pts_ptr+outer_subgraph2_ptr^.first_point)^;
+                  pts_l2      :=(pts_ptr+outer_subgraph2_ptr^.last_point )^;
+                  obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.first_point]]]);
+                  obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.last_point ]]]);
+                  if IsPtInRct(PtPosF(pts_f2.x+obj_arr_ptr1^.world_axis_shift.x,pts_f2.y+obj_arr_ptr1^.world_axis_shift.y),rct) and
+                     IsPtInRct(PtPosF(pts_l2.x+obj_arr_ptr2^.world_axis_shift.x,pts_l2.y+obj_arr_ptr2^.world_axis_shift.y),rct) and
+                     (sln_var.has_edge[Min(outer_subgraph2_ptr^.first_point,outer_subgraph2_ptr^.last_point)]=0)               then
                     LineSMN
                     (
-                      Trunc(pts_f2.x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_f2.y)+srf_var.world_axis_shift.y,
-                      Trunc(pts_l2.x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_l2.y)+srf_var.world_axis_shift.y
+                      Trunc(pts_f2.x)+obj_arr_ptr1^.world_axis_shift.x,
+                      Trunc(pts_f2.y)+obj_arr_ptr1^.world_axis_shift.y,
+                      Trunc(pts_l2.x)+obj_arr_ptr2^.world_axis_shift.x,
+                      Trunc(pts_l2.y)+obj_arr_ptr2^.world_axis_shift.y
                     );
                   Inc(outer_subgraph1_ptr);
                   Inc(outer_subgraph2_ptr);
-                end; {$endregion}
+                end;
             end; {$endregion}
           {Drawing Of Outer Subgraph 3  } {$region -fold}
           if (outer_subgraph3_eds_cnt>0) then
             begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph3_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph3[i].last_point].x+=n1;
-                  pts[outer_subgraph3[i].last_point].y+=n2;
-                  pts_f3:=pts[outer_subgraph3[i].first_point];
-                  pts_l3:=pts[outer_subgraph3[i].last_point ];
-                  if IsPtInRct(PtPosF(pts_f3.x+srf_var.world_axis_shift.x,pts_f3.y+srf_var.world_axis_shift.y),rct) and
-                     IsPtInRct(PtPosF(pts_l3.x+srf_var.world_axis_shift.x,pts_l3.y+srf_var.world_axis_shift.y),rct) then
-                    LineSMN
-                    (
-                      Trunc(pts[outer_subgraph3[i].first_point].x)+srf_var.world_axis_shift.x,
-                      Trunc(pts[outer_subgraph3[i].first_point].y)+srf_var.world_axis_shift.y,
-                      Trunc(pts[outer_subgraph3[i].last_point ].x)+srf_var.world_axis_shift.x,
-                      Trunc(pts[outer_subgraph3[i].last_point ].y)+srf_var.world_axis_shift.y
-                    );
-                end;} {$endregion}
-              {2.} {$region -fold}
               pts_ptr            :=Unaligned(@pts            [0]);
               outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
               for i:=0 to outer_subgraph3_eds_cnt-1 do
                 begin
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
-                  pts_f3:=(pts_ptr+outer_subgraph3_ptr^.first_point)^;
-                  pts_l3:=(pts_ptr+outer_subgraph3_ptr^.last_point )^;
-                  if IsPtInRct(PtPosF(pts_f3.x+srf_var.world_axis_shift.x,pts_f3.y+srf_var.world_axis_shift.y),rct) and
-                     IsPtInRct(PtPosF(pts_l3.x+srf_var.world_axis_shift.x,pts_l3.y+srf_var.world_axis_shift.y),rct) and
+                  pts_f3      :=(pts_ptr+outer_subgraph3_ptr^.first_point)^;
+                  pts_l3      :=(pts_ptr+outer_subgraph3_ptr^.last_point )^;
+                  obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.first_point]]]);
+                  obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.last_point ]]]);
+                  if IsPtInRct(PtPosF(pts_f3.x+obj_arr_ptr1^.world_axis_shift.x,pts_f3.y+obj_arr_ptr1^.world_axis_shift.y),rct) and
+                     IsPtInRct(PtPosF(pts_l3.x+obj_arr_ptr2^.world_axis_shift.x,pts_l3.y+obj_arr_ptr2^.world_axis_shift.y),rct) and
                      (sln_var.has_edge[Min(outer_subgraph3_ptr^.first_point,outer_subgraph3_ptr^.last_point)]=0)   then
                     LineSMN
                     (
-                      Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                      Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                      Trunc(pts_l3.y)+srf_var.world_axis_shift.y
+                      Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
+                      Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
+                      Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
+                      Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y
                     );
                 Inc(outer_subgraph3_ptr);
-              end; {$endregion}
+              end;
             end; {$endregion}
+        end; {$endregion}
+      (csResilientEdges): {Resilient Edges(Unreal)} {$region -fold}
+        begin
+          {Drawing Of Outer Subgraph 1,2} {$region -fold}
+          if (outer_subgraph1_eds_cnt>0) then
+            begin
+              pts_ptr            :=Unaligned(@pts            [0]);
+              outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
+              outer_subgraph2_ptr:=Unaligned(@outer_subgraph2[0]);
+              for i:=0 to outer_subgraph1_eds_cnt-1 do
+                begin
+                  if (sln_var.has_edge[Min(outer_subgraph1_ptr^.first_point,outer_subgraph1_ptr^.last_point)]=0) then
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.last_point ]]]);
+                      ClippedLine2
+                      (
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct
+                      );
+                      LineR
+                      (
+                        ln_pos.x0,
+                        ln_pos.y0,
+                        ln_pos.x1,
+                        ln_pos.y1,
+                        bmp_dst_ptr,
+                        ln_arr_width,
+                        color_info,
+                        16
+                      );
+                    end;
+                  if (sln_var.has_edge[Min(outer_subgraph2_ptr^.first_point,outer_subgraph2_ptr^.last_point)]=0) then
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.last_point ]]]);
+                      ClippedLine2
+                      (
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct
+                      );
+                      LineR
+                      (
+                        ln_pos.x0,
+                        ln_pos.y0,
+                        ln_pos.x1,
+                        ln_pos.y1,
+                        bmp_dst_ptr,
+                        ln_arr_width,
+                        color_info,
+                        16
+                      );
+                    end;
+                  Inc(outer_subgraph1_ptr);
+                  Inc(outer_subgraph2_ptr);
+                end;
+            end; {$endregion}
+          {Drawing Of Outer Subgraph 3  } {$region -fold}
+          if (outer_subgraph3_eds_cnt>0) then
+            begin
+              pts_ptr            :=Unaligned(@pts            [0]);
+              outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
+              for i:=0 to outer_subgraph3_eds_cnt-1 do
+                begin
+                  if (sln_var.has_edge[Min(outer_subgraph3_ptr^.first_point,outer_subgraph3_ptr^.last_point)]=0) then
+                    begin
+                      obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.first_point]]]);
+                      obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.last_point ]]]);
+                      ClippedLine2
+                      (
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        rct
+                      );
+                      LineR
+                      (
+                        ln_pos.x0,
+                        ln_pos.y0,
+                        ln_pos.x1,
+                        ln_pos.y1,
+                        bmp_dst_ptr,
+                        ln_arr_width,
+                        color_info,
+                        16
+                      );
+                    end;
+                  Inc(outer_subgraph3_ptr);
+                end;
+            end; {$endregion}
+          Exit;
         end; {$endregion}
       (csAdvancedClip  ): {Advanced Clip--(Turbo )} {$region -fold}
         begin
@@ -16295,169 +16378,6 @@ begin
                             rect_clp.Width,
                             rect_clp.Height);}
         end; {$endregion}
-      (csResilientEdges): {Resilient Edges(Unreal)} {$region -fold}
-        begin
-          {Drawing Of Outer Subgraph 1,2} {$region -fold}
-          if (outer_subgraph1_eds_cnt>0) then
-            begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph1_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph1[i].last_point].x+=n1;
-                  pts[outer_subgraph1[i].last_point].y+=n2;
-                  ClippedLine2
-                  (
-                    Trunc(pts[outer_subgraph1[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph1[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph1[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph1[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct
-                  );
-                  LineR
-                  (
-                    ln_pos.x0,
-                    ln_pos.y0,
-                    ln_pos.x1,
-                    ln_pos.y1,
-                    16
-                  );
-                  ClippedLine2
-                  (
-                    Trunc(pts[outer_subgraph2[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph2[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph2[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph2[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct
-                  );
-                  LineR
-                  (
-                    ln_pos.x0,
-                    ln_pos.y0,
-                    ln_pos.x1,
-                    ln_pos.y1,
-                    16
-                  );
-                end;} {$endregion}
-              {2.} {$region -fold}
-              pts_ptr            :=Unaligned(@pts            [0]);
-              outer_subgraph1_ptr:=Unaligned(@outer_subgraph1[0]);
-              outer_subgraph2_ptr:=Unaligned(@outer_subgraph2[0]);
-              for i:=0 to outer_subgraph1_eds_cnt-1 do
-                begin
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
-                  if (sln_var.has_edge[Min(outer_subgraph1_ptr^.first_point,outer_subgraph1_ptr^.last_point)]=0) then
-                    begin
-                      ClippedLine2
-                      (
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                        rct
-                      );
-                      LineR
-                      (
-                        ln_pos.x0,
-                        ln_pos.y0,
-                        ln_pos.x1,
-                        ln_pos.y1,
-                        bmp_dst_ptr,
-                        ln_arr_width,
-                        color_info,
-                        16
-                      );
-                    end;
-                  if (sln_var.has_edge[Min(outer_subgraph2_ptr^.first_point,outer_subgraph2_ptr^.last_point)]=0) then
-                    begin
-                      ClippedLine2
-                      (
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                        rct
-                      );
-                      LineR
-                      (
-                        ln_pos.x0,
-                        ln_pos.y0,
-                        ln_pos.x1,
-                        ln_pos.y1,
-                        bmp_dst_ptr,
-                        ln_arr_width,
-                        color_info,
-                        16
-                      );
-                    end;
-                  Inc(outer_subgraph1_ptr);
-                  Inc(outer_subgraph2_ptr);
-                end; {$endregion}
-            end; {$endregion}
-          {Drawing Of Outer Subgraph 3  } {$region -fold}
-          if (outer_subgraph3_eds_cnt>0) then
-            begin
-              {2 alternative records of the same code block}
-              {1.} {$region -fold}
-              {for i:=0 to outer_subgraph3_eds_cnt-1 do
-                begin
-                  pts[outer_subgraph3[i].last_point].x+=n1;
-                  pts[outer_subgraph3[i].last_point].y+=n2;
-                  ClippedLine2
-                  (
-                    Trunc(pts[outer_subgraph3[i].first_point].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph3[i].first_point].y)+srf_var.world_axis_shift.y,
-                    Trunc(pts[outer_subgraph3[i].last_point ].x)+srf_var.world_axis_shift.x,
-                    Trunc(pts[outer_subgraph3[i].last_point ].y)+srf_var.world_axis_shift.y,
-                    rct
-                  );
-                  LineR
-                  (
-                    ln_pos.x0,
-                    ln_pos.y0,
-                    ln_pos.x1,
-                    ln_pos.y1,
-                    bmp_dst_ptr,
-                    ln_arr_width,
-                    color_info,
-                    16
-                  );
-                end;} {$endregion}
-              {2.} {$region -fold}
-              pts_ptr            :=Unaligned(@pts            [0]);
-              outer_subgraph3_ptr:=Unaligned(@outer_subgraph3[0]);
-              for i:=0 to outer_subgraph3_eds_cnt-1 do
-                begin
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
-                  (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
-                  if (sln_var.has_edge[Min(outer_subgraph3_ptr^.first_point,outer_subgraph3_ptr^.last_point)]=0) then
-                    begin
-                      ClippedLine2
-                      (
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+srf_var.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+srf_var.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+srf_var.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+srf_var.world_axis_shift.y,
-                        rct
-                      );
-                      LineR
-                      (
-                        ln_pos.x0,
-                        ln_pos.y0,
-                        ln_pos.x1,
-                        ln_pos.y1,
-                        bmp_dst_ptr,
-                        ln_arr_width,
-                        color_info,
-                        16
-                      );
-                    end;
-                Inc(outer_subgraph3_ptr);
-              end; {$endregion}
-            end; {$endregion}
-          Exit;
-        end; {$endregion}
     end; {$endregion}
 
   lbl_flood_fill_only:
@@ -16466,14 +16386,69 @@ begin
   outer_subgraph_img.FillBuffer(rct_clp); {$endregion}
 
 end; {$endregion}
-procedure TSelPts.InnerSubgraphToBmp(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp:TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.InnerSubgraphCalc  (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
+  pts_ptr                    : PPtPosF;
+  pts_f3,pts_l3              : TPtPosF;
+  inner_subgraph_ptr         : PEdge;
+  out_or_inn_subgraph_pts_ptr: PByte;
+  i                          : integer;
+  n1,n2                      : double;
+begin
+
+  if (inner_subgraph__eds_cnt=0) then
+    Exit;
+
+  inner_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
+
+  if fill_bmp_only then
+    Exit;
+
+  {Misc. Precalc.-----------------} {$region -fold}
+  n1:=x-Trunc(pvt.x);
+  n2:=y-Trunc(pvt.y); {$endregion}
+
+  {Drawing Of Inner Subgraph Lines} {$region -fold}
+  if (inner_subgraph__eds_cnt>0) then
+    begin
+      pts_ptr                    :=Unaligned(@pts                    [0]);
+      inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
+      out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
+      for i:=0 to inner_subgraph__eds_cnt-1 do
+        begin
+          pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+          pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
+            if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
+              begin
+                pts_f3.x+=n1;
+                pts_f3.y+=n2;
+                is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
+              end;
+          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
+            if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
+              begin
+                pts_l3.x+=n1;
+                pts_l3.y+=n2;
+                is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
+              end;
+          (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
+          (pts_ptr+inner_subgraph_ptr^.last_point )^:=pts_l3;
+          Inc(inner_subgraph_ptr);
+        end;
+    end; {$endregion}
+
+end; {$endregion}
+procedure TSelPts.InnerSubgraphDraw  (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr1               : PObjInfo;
+  obj_arr_ptr2               : PObjInfo;
   rct                        : TPtRect;
   pts_ptr                    : PPtPosF;
   pts_f3,pts_l3              : TPtPosF;
   inner_subgraph_ptr         : PEdge;
   out_or_inn_subgraph_pts_ptr: PByte;
-  n1,n2,i,m1,m2,m3,m4        : integer;
+  i,m1,m2,m3,m4              : integer;
 label
   lbl_flood_fill_only;
 begin
@@ -16485,12 +16460,6 @@ begin
 
   if fill_bmp_only then
     goto lbl_flood_fill_only;
-
-  {Misc. Precalc.------------------} {$region -fold}
-  n1:=Trunc(pvt.x)-Trunc(pvt_var.pvt_origin.x);
-  n2:=Trunc(pvt.y)-Trunc(pvt_var.pvt_origin.y);
-  {n1:=x-Trunc(pvt.x);
-  n2:=y-Trunc(pvt.y);} {$endregion}
 
   {Set Drawing Bounds(Inner Window)} {$region -fold}
   with rct_clp do
@@ -16515,287 +16484,116 @@ begin
       (csClippedEdges1 ): {Clipped Edges 1(Slow  )} {$region -fold}
         if (inner_subgraph__eds_cnt>0) then
           begin
-            {2 alternative records of the same code block}
-            {1.} {$region -fold}
-            {for i:=0 to inner_subgraph__eds_cnt-1 do
-              begin
-                pts_f3:=(pts[inner_subgraph_[i].first_point]);
-                pts_l3:=(pts[inner_subgraph_[i].last_point ]);
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].first_point])=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].last_point ])=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
-                ClippedLine1
-                (
-                  Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                  Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_l3.y)+srf_var.world_axis_shift.y,
-                  rct,
-                  Unaligned(@LineSME),
-                  Nil,
-                  Nil
-                );
-              end;} {$endregion}
-            {2.} {$region -fold}
             pts_ptr                    :=Unaligned(@pts                    [0]);
             inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
             out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
             for i:=0 to inner_subgraph__eds_cnt-1 do
               begin
-                pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
-                pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
                 if (sln_var.has_edge[Min(inner_subgraph_ptr^.first_point,inner_subgraph_ptr^.last_point)]=0) then
-                  ClippedLine1
-                  (
-                    Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                    Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                    Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                    Trunc(pts_l3.y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-              Inc(inner_subgraph_ptr);
-            end; {$endregion}
+                  begin
+                    pts_f3      :=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+                    pts_l3      :=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+                    obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.first_point]]]);
+                    obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.last_point ]]]);
+                    ClippedLine1
+                    (
+                      Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
+                      Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
+                      Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
+                      Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y,
+                      rct,
+                      Unaligned(@LineSME),
+                      Nil,
+                      Nil
+                    );
+                  end;
+                Inc(inner_subgraph_ptr);
+              end;
           end; {$endregion}
       (csClippedEdges2 ): {Clipped Edges 2(Slow  )} {$region -fold}
         if (inner_subgraph__eds_cnt>0) then
           begin
-            {2 alternative records of the same code block}
-            {1.} {$region -fold}
-            {for i:=0 to inner_subgraph__eds_cnt-1 do
-              begin
-                pts_f3:=(pts[inner_subgraph_[i].first_point]);
-                pts_l3:=(pts[inner_subgraph_[i].last_point ]);
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].first_point])=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].last_point ])=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
-                ClippedLine2
-                (
-                  Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                  Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_l3.y)+srf_var.world_axis_shift.y,
-                  rct,
-                  Unaligned(@LineSME),
-                  Nil,
-                  Nil
-                );
-              end;} {$endregion}
-            {2.} {$region -fold}
             pts_ptr                    :=Unaligned(@pts                    [0]);
             inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
             out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
             for i:=0 to inner_subgraph__eds_cnt-1 do
               begin
-                pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
-                pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
                 if (sln_var.has_edge[Min(inner_subgraph_ptr^.first_point,inner_subgraph_ptr^.last_point)]=0) then
-                  ClippedLine2
-                  (
-                    Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                    Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                    Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                    Trunc(pts_l3.y)+srf_var.world_axis_shift.y,
-                    rct,
-                    Unaligned(@LineSME),
-                    Nil,
-                    Nil
-                  );
-              Inc(inner_subgraph_ptr);
-            end; {$endregion}
+                  begin
+                    pts_f3      :=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+                    pts_l3      :=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+                    obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.first_point]]]);
+                    obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.last_point ]]]);
+                    ClippedLine2
+                    (
+                      Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
+                      Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
+                      Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
+                      Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y,
+                      rct,
+                      Unaligned(@LineSME),
+                      Nil,
+                      Nil
+                    );
+                  end;
+                Inc(inner_subgraph_ptr);
+              end;
           end; {$endregion}
       (csRemoveEdges   ): {Remove Edges---(Fast  )} {$region -fold}
         if (inner_subgraph__eds_cnt>0) then
           begin
-            {2 alternative records of the same code block}
-            {1.} {$region -fold}
-            {for i:=0 to inner_subgraph__eds_cnt-1 do
-              begin
-                pts_f3:=(pts[inner_subgraph_[i].first_point]);
-                pts_l3:=(pts[inner_subgraph_[i].last_point ]);
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].first_point])=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].last_point ])=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
-                if (
-                   (pts_f3.x+srf_var.world_axis_shift.x>m1) and
-                   (pts_f3.x+srf_var.world_axis_shift.x<m3) and
-                   (pts_f3.y+srf_var.world_axis_shift.y>m2) and
-                   (pts_f3.y+srf_var.world_axis_shift.y<m4)
-                   )
-                  then
-                    if (
-                       (pts_l3.x+srf_var.world_axis_shift.x>m1) and
-                       (pts_l3.x+srf_var.world_axis_shift.x<m3) and
-                       (pts_l3.y+srf_var.world_axis_shift.y>m2) and
-                       (pts_l3.y+srf_var.world_axis_shift.y<m4)
-                       )
-                      then
-                        LineSMN
-                        (
-                          Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                          Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                          Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                          Trunc(pts_l3.y)+srf_var.world_axis_shift.y
-                        );
-              end;} {$endregion}
-            {2.} {$region -fold}
             pts_ptr                    :=Unaligned(@pts                    [0]);
             inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
             out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
             for i:=0 to inner_subgraph__eds_cnt-1 do
               begin
-                pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
-                pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
+                pts_f3      :=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+                pts_l3      :=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+                obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.first_point]]]);
+                obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.last_point ]]]);
                 if (
-                   (pts_f3.x+srf_var.world_axis_shift.x>m1) and
-                   (pts_f3.x+srf_var.world_axis_shift.x<m3) and
-                   (pts_f3.y+srf_var.world_axis_shift.y>m2) and
-                   (pts_f3.y+srf_var.world_axis_shift.y<m4)
+                   (pts_f3.x+obj_arr_ptr1^.world_axis_shift.x>m1) and
+                   (pts_f3.x+obj_arr_ptr1^.world_axis_shift.x<m3) and
+                   (pts_f3.y+obj_arr_ptr1^.world_axis_shift.y>m2) and
+                   (pts_f3.y+obj_arr_ptr1^.world_axis_shift.y<m4)
                    )
                   then
                     if (
-                       (pts_l3.x+srf_var.world_axis_shift.x>m1) and
-                       (pts_l3.x+srf_var.world_axis_shift.x<m3) and
-                       (pts_l3.y+srf_var.world_axis_shift.y>m2) and
-                       (pts_l3.y+srf_var.world_axis_shift.y<m4)
+                       (pts_l3.x+obj_arr_ptr2^.world_axis_shift.x>m1) and
+                       (pts_l3.x+obj_arr_ptr2^.world_axis_shift.x<m3) and
+                       (pts_l3.y+obj_arr_ptr2^.world_axis_shift.y>m2) and
+                       (pts_l3.y+obj_arr_ptr2^.world_axis_shift.y<m4)
                        )
                       then
                         if (sln_var.has_edge[Min(inner_subgraph_ptr^.first_point,inner_subgraph_ptr^.last_point)]=0) then
                           LineSMN
                           (
-                            Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                            Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                            Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                            Trunc(pts_l3.y)+srf_var.world_axis_shift.y
+                            Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
+                            Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
+                            Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
+                            Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y
                           );
-              Inc(inner_subgraph_ptr);
-            end; {$endregion}
+                Inc(inner_subgraph_ptr);
+              end;
           end; {$endregion}
-      (csAdvancedClip  ): {Advanced Clip--(Turbo )} {$region -fold}
-        begin
-          {n:=CheckDensity1(outer_subgraph_f_ln_var.f_ln_arr0,
-                            outer_subgraph_f_ln_var.f_ln_arr2,
-                            rect_clp.Width,
-                            rect_clp.Height);}
-        end; {$endregion}
       (csResilientEdges): {Resilient Edges(Unreal)} {$region -fold}
         if (inner_subgraph__eds_cnt>0) then
           begin
-            {2 alternative records of the same code block}
-            {1.} {$region -fold}
-            {for i:=0 to inner_subgraph__eds_cnt-1 do
-              begin
-                pts_f3:=(pts[inner_subgraph_[i].first_point]);
-                pts_l3:=(pts[inner_subgraph_[i].last_point ]);
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].first_point])=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts[inner_subgraph_[i].last_point ])=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
-                ClippedLine2
-                (
-                  Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                  Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_l3.y)+srf_var.world_axis_shift.y,
-                  rct
-                );
-                if not((not IsPtInRct(PtPos(ln_pos.x0,ln_pos.y0),rct))  and
-                       (not IsPtInRct(PtPos(ln_pos.x1,ln_pos.y1),rct))) then
-                  LineR
-                  (
-                    ln_pos.x0,
-                    ln_pos.y0,
-                    ln_pos.x1,
-                    ln_pos.y1,
-                    bmp_dst_ptr,
-                    ln_arr_width,
-                    color_info,
-                    16
-                  );
-              end;} {$endregion}
-            {2.} {$region -fold}
             pts_ptr                    :=Unaligned(@pts                    [0]);
             inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
             out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
             for i:=0 to inner_subgraph__eds_cnt-1 do
               begin
-                pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
-                pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
-                  begin
-                    pts_f3.x+=n1;
-                    pts_f3.y+=n2;
-                  end;
-                if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
-                  begin
-                    pts_l3.x+=n1;
-                    pts_l3.y+=n2;
-                  end;
+                pts_f3      :=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+                pts_l3      :=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+                obj_arr_ptr1:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.first_point]]]);
+                obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.last_point ]]]);
                 ClippedLine2
                 (
-                  Trunc(pts_f3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_f3.y)+srf_var.world_axis_shift.y,
-                  Trunc(pts_l3.x)+srf_var.world_axis_shift.x,
-                  Trunc(pts_l3.y)+srf_var.world_axis_shift.y,
+                  Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
+                  Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
+                  Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
+                  Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y,
                   rct
                 );
                 if not((not IsPtInRct(PtPos(ln_pos.x0,ln_pos.y0),rct))  and
@@ -16812,9 +16610,16 @@ begin
                       color_info,
                       16
                     );
-              Inc(inner_subgraph_ptr);
-            end; {$endregion}
+                Inc(inner_subgraph_ptr);
+              end;
           end; {$endregion}
+      (csAdvancedClip  ): {Advanced Clip--(Turbo )} {$region -fold}
+        begin
+          {n:=CheckDensity1(outer_subgraph_f_ln_var.f_ln_arr0,
+                            outer_subgraph_f_ln_var.f_ln_arr2,
+                            rect_clp.Width,
+                            rect_clp.Height);}
+        end; {$endregion}
     end; {$endregion}
 
   lbl_flood_fill_only:
@@ -16823,13 +16628,71 @@ begin
   inner_subgraph_img.FillBuffer(rct_clp); {$endregion}
 
 end; {$endregion}
-procedure TSelPts.SelectdPointsToBmp(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp:TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelectdPointsCalc  (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TSelPts.SelPvtAndSplineEdsToBmp;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelectdPointsDraw  (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TSelPts.SelPtsIndsToBmp(var pts:TPtPosFArr);                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelPts.SelectdPointsBounds(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  n1,n2: double;
+begin
+
+  {Misc. Precalc.-----------------} {$region -fold}
+  n1:=x-{Trunc(}pvt.x{)};
+  n2:=y-{Trunc(}pvt.y{)}; {$endregion}
+
+  with sel_bounds_prop do
+    begin
+      pts_rct_inn_width :=sel_pts_rct.width ;
+      pts_rct_inn_height:=sel_pts_rct.height;
+      SetRctWidth (sel_bounds_prop);
+      SetRctHeight(sel_bounds_prop);
+      SetRctValues(sel_bounds_prop);
+      Fast_Primitives.Rectangle
+      (
+        Trunc(sel_pts_rct.left+n1)+(sel_pts_rct.width )>>1-pts_rct_width__odd,
+        Trunc(sel_pts_rct.top +n2)+(sel_pts_rct.height)>>1-pts_rct_height_odd,
+        bmp_dst_ptr,
+        sel_pts_big_img.bmp_dst_width,
+        sel_pts_big_img.bmp_dst_height,
+        rct_clp,
+        sel_bounds_prop
+      );
+    end;
+
+end; {$endregion}
+procedure TSelPts.WholeSubgraphDraw  (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct1,rct2:TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  {Drawing of Outer Subgraph }
+  if (     outer_subgraph_img.local_prop.eds_show  and      inner_subgraph_img.local_prop.eds_show)  or
+     ((not outer_subgraph_img.local_prop.eds_show) and      inner_subgraph_img.local_prop.eds_show)  or
+     (     outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show)) then
+    OuterSubgraphCalc(x,y,pvt,pts,bmp_dst_ptr,rct1);
+  if outer_subgraph_img.local_prop.eds_show then
+    OuterSubgraphDraw  (x,y,pvt,pts,bmp_dst_ptr,rct1);
+  {Drawing of Inner Subgraph }
+  if (     outer_subgraph_img.local_prop.eds_show  and inner_subgraph_img.local_prop.eds_show) or
+     ((not outer_subgraph_img.local_prop.eds_show) and inner_subgraph_img.local_prop.eds_show) then
+    InnerSubgraphCalc(x,y,pvt,pts,bmp_dst_ptr,rct2);
+  if inner_subgraph_img.local_prop.eds_show then
+    InnerSubgraphDraw(x,y,pvt,pts,bmp_dst_ptr,rct2);
+  {Drawing of Selected Points}
+  if sel_pts_big_img.local_prop.eds_show then
+    begin
+      SelectdPointsCalc(x,y,pvt,pts,bmp_dst_ptr,rct1);
+      SelectdPointsDraw(x,y,pvt,pts,bmp_dst_ptr,rct1);
+    end;
+  {Drawing of Selected Points Bounds}
+  if sel_bounds_prop.rct_eds_show then
+    SelectdPointsBounds(x,y,pvt,pts,bmp_dst_ptr,rct1);
+  SelPtsIndsToFalse2;
+end; {$endregion}
+procedure TSelPts.SelPvtAndSplineEdsToBmp;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+end; {$endregion}
+procedure TSelPts.SelPtsIndsToBmp(var pts:TPtPosFArr);                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
 {$endregion}
@@ -16867,12 +16730,18 @@ begin
             begin
               if (pvt_draw_sel_eds_off<>pvt_draw_sel_eds_on)  then
                 begin
-                  OuterSubgraphToBmp(Trunc(pvt.x)+Trunc(pvt_shift.x),
-                                     Trunc(pvt.y)+Trunc(pvt_shift.y),
-                                     pvt_var.pvt,
-                                     sln_var.sln_pts,
-                                     srf_var.srf_bmp_ptr,
-                                     srf_var.inn_wnd_rct);
+                  OuterSubgraphCalc(Trunc(pvt.x)+Trunc(pvt_shift.x),
+                                    Trunc(pvt.y)+Trunc(pvt_shift.y),
+                                    pvt_var.pvt,
+                                    sln_var.sln_pts,
+                                    srf_var.srf_bmp_ptr,
+                                    srf_var.inn_wnd_rct);
+                  OuterSubgraphDraw(Trunc(pvt.x)+Trunc(pvt_shift.x),
+                                    Trunc(pvt.y)+Trunc(pvt_shift.y),
+                                    pvt_var.pvt,
+                                    sln_var.sln_pts,
+                                    srf_var.srf_bmp_ptr,
+                                    srf_var.inn_wnd_rct);
                   InvalidateInnerWindow;
                 end
               else
@@ -17014,12 +16883,18 @@ begin
             begin
               if (pvt_draw_sel_eds_off<>pvt_draw_sel_eds_on)  then
                 begin
-                  InnerSubgraphToBmp(Trunc(pvt.x)+Trunc(pvt_shift.x),
-                                     Trunc(pvt.y)+Trunc(pvt_shift.y),
-                                     pvt_var.pvt,
-                                     sln_var.sln_pts,
-                                     srf_var.srf_bmp_ptr,
-                                     srf_var.inn_wnd_rct);
+                  InnerSubgraphCalc(Trunc(pvt.x)+Trunc(pvt_shift.x),
+                                    Trunc(pvt.y)+Trunc(pvt_shift.y),
+                                    pvt_var.pvt,
+                                    sln_var.sln_pts,
+                                    srf_var.srf_bmp_ptr,
+                                    ClippedRct(inn_wnd_rct,sel_pts_rct));
+                  InnerSubgraphDraw(Trunc(pvt.x)+Trunc(pvt_shift.x),
+                                    Trunc(pvt.y)+Trunc(pvt_shift.y),
+                                    pvt_var.pvt,
+                                    sln_var.sln_pts,
+                                    srf_var.srf_bmp_ptr,
+                                    ClippedRct(inn_wnd_rct,sel_pts_rct));
                   InvalidateInnerWindow;
                 end
               else
@@ -17131,7 +17006,13 @@ begin
 end; {$endregion}
 procedure TF_MainForm.CB_Select_Items_Inner_Subgraph_Show_BoundsChange(sender:TObject); {$region -fold}
 begin
-
+  with sel_var do
+    begin
+      sel_bounds_prop.rct_eds_show:=not sel_bounds_prop.rct_eds_show;
+      fill_bmp_only:=True;
+      FillSelectedBmpAndSelectedPtsBRectDraw;
+      fill_bmp_only:=False;
+    end;
 end; {$endregion}
 {Selection-----}
 procedure TF_MainForm.P_Select_Items_Selection_PropMouseEnter         (sender:TObject); {$region -fold}
@@ -17392,10 +17273,12 @@ procedure TPivot.PivotCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColor
 var
   sel_pts_inds_ptr: PInteger;
   p               : TPtPosF;
-  i               : integer;
+  shift           : TPtPos;
+  i,j,sel_obj_ind : integer;
+  sel_obj_pts_cnt : integer;
 begin
-  p  :=Default(TPtPosF);
-  pvt:=Default(TPtPosF);
+  p               :=Default(TPtPosF);
+  pvt             :=Default(TPtPosF);
   sel_pts_inds_ptr:=Unaligned(@sel_pts_inds[0]);
   for i:=0 to sel_pts_cnt-1 do
     begin
@@ -17403,8 +17286,27 @@ begin
       p.y+=pts[sel_pts_inds_ptr^].y;
       Inc(sel_pts_inds_ptr);
     end;
-  pvt.x:=p.x/sel_pts_cnt+srf_var.world_axis_shift.x;
-  pvt.y:=p.y/sel_pts_cnt+srf_var.world_axis_shift.y;
+  j    :=0;
+  shift:=Default(TPtPos);
+  while (j<sel_pts_cnt) do
+    begin
+      sel_obj_pts_cnt:=0;
+      sel_obj_ind    :=sln_var.sln_obj_ind[sel_pts_inds[j]];
+      while (j<sel_pts_cnt) do
+        begin
+          if (sln_var.sln_obj_ind[sel_pts_inds[j]]=sel_obj_ind) then
+            begin
+              Inc(j);
+              Inc(sel_obj_pts_cnt);
+            end
+          else
+            Break;
+        end;
+      shift.x+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.x;
+      shift.y+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.y;
+    end;
+  pvt.x:=(p.x+shift.x)/sel_pts_cnt;
+  pvt.y:=(p.y+shift.y)/sel_pts_cnt;
   pvt_origin:=pvt;
 end; {$endregion}
 procedure TPivot.AlignPivotOnX         (var x,y:integer; shift:TShiftState);                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -18867,16 +18769,36 @@ begin
 
 end; {$endregion}
 procedure TF_MainForm.KeysEnable;                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
 begin
+  for i:=0 to P_Drawing_Buttons.ControlCount-1 do
+    begin
+      (P_Drawing_Buttons.Controls[i] as TSpeedButton).OnClick:=P_Drawing_Buttons_ClickArr[i];
+      (P_Drawing_Buttons.Controls[i] as TSpeedButton).Enabled:=True;
+    end;
   OnKeyPress:=@FormKeyPress;
   OnKeyDown :=@FormKeyDown;
   OnKeyUp   :=@FormKeyUp;
 end; {$endregion}
 procedure TF_MainForm.KeysDisable;                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
 begin
-  OnKeyPress:=Nil;
-  OnKeyDown :=Nil;
-  OnKeyUp   :=Nil;
+  if (sel_var.sel_pts_cnt>0) then
+    begin
+      for i:=0 to P_Drawing_Buttons.ControlCount-1 do
+        begin
+          (P_Drawing_Buttons.Controls[i] as TSpeedButton).OnClick:=Nil;
+          (P_Drawing_Buttons.Controls[i] as TSpeedButton).Enabled:=False;
+        end;
+    end
+  else
+    begin
+      OnKeyPress:=Nil;
+      OnKeyDown :=Nil;
+      OnKeyUp   :=Nil;
+    end;
 end; {$endregion}
 procedure TF_MainForm.FormResize        (sender:TObject);                                                          {$region -fold}
 begin
@@ -18885,6 +18807,8 @@ end; {$endregion}
 procedure TF_MainForm.FormMouseMove     (sender:TObject; shift:TShiftState; x,y:integer);                          {$region -fold}
 var
   color_info: TColorInfo;
+  rct_prop  : TCurveProp;
+  rct       : TPtRect;
 begin
 
   if down_play_anim_ptr^ then
@@ -18911,15 +18835,7 @@ begin
                 AlignPivotOnY             (x,y,shift);
                 {Align Pivot on Points}
                 AlignPivotOnP             (x,y,shift);
-                {Drawing of Outer Subgraph }
-                if outer_subgraph_img.local_prop.eds_show then
-                  OuterSubgraphToBmp      (x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct);
-                {Drawing of Inner Subgraph }
-                if inner_subgraph_img.local_prop.eds_show and  (not IsRct1OutOfRct2(sel_var.sel_pts_rct,inn_wnd_rct)) then
-                  InnerSubgraphToBmp      (x,y,pvt,sln_pts,srf_bmp_ptr,ClippedRct(inn_wnd_rct,sel_pts_rct));
-                {Drawing of Selected Points}
-                if sel_pts_big_img.local_prop.eds_show then
-                  SelectdPointsToBmp      (x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct);
+                WholeSubgraphDraw         (x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
                 {--------------------------}
                 SelectedPtsBmpPositionCalc(x,y,sel_pts_rct);
                 pvt:=PtPosF               (x,y);
@@ -19012,7 +18928,10 @@ begin
             need_repaint:=True;
             LowerBmp2ToMainBmp;
             if sel_pts_big_img.local_prop.eds_show then
-              SelectdPointsToBmp(x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct);
+              begin
+                SelectdPointsCalc(x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct);
+                SelectdPointsDraw(x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct);
+              end;
           //PivotToPoint(x,y,sln_pts,sln_pts_cnt,                  crc_rad_sqr);
             PivotToPoint(x,y,dup_pts_arr,inn_wnd_rct,srf_bmp.width,crc_rad);
             PivotModeDraw(srf_bmp.Canvas);
@@ -19222,7 +19141,8 @@ begin
                               CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                               need_repaint:=False;
                             end;
-                          pvt_origin    :=pvt;
+                          if (outer_subgraph_img.local_prop.eds_show and inner_subgraph_img.local_prop.eds_show) then
+                            pvt_origin  :=pvt;
                           pvt_to_pt     :=False;
                           draw_crc_sel  :=False;
                           resize_crc_sel:=False;
@@ -19236,11 +19156,12 @@ begin
                                 begin
                                   need_repaint:=True;
                                   LowerBmpToMainBmp;
-                                  SelectedSubgrtaphDraw;
+                                  WholeSubgraphDraw(x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
                                   PivotDraw(PtPos(0,0));
                                   MainBmpToLowerBmp2;
                                   CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                                   need_repaint:=False;
+                                  Memo1.Lines.Text:=IntToStr(sel_pts_cnt);
                                 end;
                               UnselectedPtsCalc0(fst_lst_sln_obj_pts,sln_pts,pvt,pvt_origin);
                             end;
@@ -19256,6 +19177,10 @@ begin
                         srf_var.EventGroupsCalc(calc_arr,[16,27,30,31,32]);
                       sel_var.sel_pts:=True;
                       ChangeSelectionMode(CB_Select_Items_Selection_Drawing_Mode.ItemIndex);
+                      Memo1.Lines.Text:=IntToStr(sel_pts_cnt);
+                      KeysEnable;
+                      TV_Scene_Tree.Items.ClearMultiSelection(True);
+                      UnsPnlsCalc;
                     end;
 
                   L_Object_Info.Visible:=(not move_pvt) and show_obj_info;
@@ -19358,6 +19283,8 @@ begin
         sel_pts             :=False;
         need_align_pivot_p2 :=True;
         SpeedButtonRepaint;
+        if (sel_pts_cnt>0) then
+          KeysDisable;
       end; {$endregion}
 
 end; {$endregion}
@@ -19382,10 +19309,10 @@ procedure TF_MainForm.FormPaint         (sender:TObject);                       
 begin
   with srf_var do
     if (not need_repaint) then
-          CnvToCnv(srf_bmp_rct,      // Main Layer Bitmap Drawing
-                   F_MainForm.Canvas,// .....
-                   srf_bmp.Canvas,   // .....
-                   SRCCOPY);         // .....
+      CnvToCnv(srf_bmp_rct,
+               F_MainForm.Canvas,
+               srf_bmp.Canvas,
+               SRCCOPY);
 end; {$endregion}
 procedure TF_MainForm.FormMouseWheelDown(sender:TObject; shift:TShiftState; mousePos:TPoint; var handled:boolean); {$region -fold}
 begin
@@ -19394,14 +19321,9 @@ begin
       {Check Exit-----} {$region -fold}
       if (srf_var.inn_wnd_rct.width <=0) or
          (srf_var.inn_wnd_rct.height<=0) or
-        ((sel_var.sel_pts_cnt       <>0) and
+        ((sel_var.sel_pts_cnt        >0) and
          (Shift<>[ssCtrl]))              then
         Exit; {$endregion}
-      {if down_play_anim_ptr^ then
-        begin
-          ////
-          Exit;
-        end;}
       if (Shift<>[ssCtrl]) then
         begin
           with srf_var,rgr_var,sgr_var,crc_sel_var do
@@ -19446,12 +19368,7 @@ begin
                       AddCircleSelection;
                       CrtCircleSelection;
                       with crc_sel_rct do
-                        begin
-                         {CircleSelectionModeDraw(left+width >>1,
-                                                  top +height>>1,
-                                                  srf_var);}
-                          FilSelPtsObj(left,top);
-                        end;
+                        FilSelPtsObj(left,top);
                       CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                       need_repaint      :=False;
                       crc_rad_invalidate:=crc_rad;
@@ -19472,14 +19389,9 @@ begin
       {Check Exit-----} {$region -fold}
       if (srf_var.inn_wnd_rct.width <=0) or
          (srf_var.inn_wnd_rct.height<=0) or
-        ((sel_var.sel_pts_cnt       <>0) and
+        ((sel_var.sel_pts_cnt        >0) and
          (Shift<>[ssCtrl]))              then
         Exit; {$endregion}
-      {if down_play_anim_ptr^ then
-        begin
-          ////
-          Exit;
-        end;}
       if (Shift<>[ssCtrl]) then
         begin
           with srf_var,tex_var,rgr_var,sgr_var,crc_sel_var do
@@ -19507,15 +19419,8 @@ begin
         if down_select_points_ptr^ then
           with sel_var,srf_var,crc_sel_var,brs_sel_var do
             begin
-              {max_sqr:=Max(srf_bmp.width,srf_bmp.height);
-              max_sqr*=max_sqr;
-              min_sqr:=Min(srf_bmp.width,srf_bmp.height);
-              min_sqr*=min_sqr;
-              if ((crc_rad*crc_rad)<<2+0>=min_sqr+max_sqr) or
-                 ( crc_rad         <<1+3>=000000000004096) then
-                Exit;}
               if (crc_rad<<1+20>=Min(inn_wnd_rct.width,inn_wnd_rct.height)) or
-                 (crc_rad<<1+20>=000000000000000000000000000004096) then
+                 (crc_rad<<1+20>=00000000000000000000000000000000000004096) then
                 Exit;
               crc_rad       +=10;
               crc_rad_sqr   :=crc_rad*crc_rad;
@@ -19531,12 +19436,7 @@ begin
                     AddCircleSelection;
                     CrtCircleSelection;
                     with crc_sel_rct do
-                      begin
-                       {CircleSelectionModeDraw(left+width >>1,
-                                                top +height>>1,
-                                                srf_var);}
-                        FilSelPtsObj(left,top);
-                      end;
+                      FilSelPtsObj(left,top);
                     CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                     need_repaint      :=False;
                     crc_rad_invalidate:=crc_rad;
@@ -19625,7 +19525,7 @@ begin
      ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
    // button 'Select Points':
    if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
-     ButtonKeyPress(SB_Select_Items        ,P_Select_Items        ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
+     ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
    // button 'Select Texture Region':
    if (key=Char(key_arr[09]{#54})) or (key=Char(key_alt_arr[09]{' '})) then
      ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
@@ -19668,7 +19568,7 @@ begin
       {Check Exit-----} {$region -fold}
       if (inn_wnd_rct.width <=0) or
          (inn_wnd_rct.height<=0) or
-         (sel_pts_cnt       <>0) then
+         (sel_var.sel_pts_cnt>0) then
         Exit; {$endregion}
 
       if T_Menu.Enabled then
@@ -19973,7 +19873,8 @@ begin
     OnMouseMove:=Nil;}
   drawing_area_enter_calc:=True;
   DefocusControl(ActiveControl,True);
-  KeysEnable;
+  if (sel_var.sel_pts_cnt=0) then
+    KeysEnable;
   {Play Anim} {$region -fold}
   if down_play_anim_ptr^ then
     begin
@@ -20095,6 +19996,9 @@ begin
       SB_Image_List.Controls[i].Anchors:=[akLeft,akTop,akRight,akBottom]; {$endregion}
 
     {Buttons:Draw----} {$region -fold}
+    SetLength(P_Drawing_Buttons_ClickArr,P_Drawing_Buttons.ControlCount);
+    for i:=0 to P_Drawing_Buttons.ControlCount-1 do
+      P_Drawing_Buttons_ClickArr[i]:=(P_Drawing_Buttons.Controls[i] as TSpeedButton).OnClick;
     for i:=0 to SB_Drawing.ControlCount-1 do
       SB_Drawing.Controls[i].Anchors:=[akLeft,akTop,akRight,akBottom];
     prev_panel_draw                 :=P_Draw_Custom_Panel;
@@ -20536,6 +20440,11 @@ begin
         obj_var.obj_inds_arr[i]:=PNodeData(Items[i].Data)^.g_ind;
         obj_var.obj_arr[obj_var.obj_inds_arr[i]].t_ind:=i;
       end;
+  with obj_var do
+    begin
+      low_lr_obj_cnt:=        LowLrObjCntCalc;
+      upp_lr_obj_cnt:=obj_cnt-LowLrObjCntCalc;
+    end;
 end; {$endregion}
 procedure ScTIndsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -20959,7 +20868,7 @@ procedure TF_MainForm.TV_Scene_TreeDragOver                    (sender,source:TO
 begin
   SelPnlsCalc;
   AreAllObjKindEqual;
-  accept:=True; // If TRUE then accept the draged item
+  accept:=True and (sel_var.sel_pts_cnt=0); // If TRUE then accept the draged item
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeMouseDown                   (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);      {$region -fold}
 var
@@ -21045,7 +20954,7 @@ begin
                   Dec(single_selected_node_ind);
                   (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[single_selected_node_ind+1]] as TPanel).Color:=$00ABAFA3;
                   (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[single_selected_node_ind+0]] as TPanel).Color:=$0082804D;
-                  F_MainForm.Memo1.Lines.Text:=IntToStr(single_selected_node_ind);
+                  //F_MainForm.Memo1.Lines.Text:=IntToStr(single_selected_node_ind);
                 end
               else
                 begin
