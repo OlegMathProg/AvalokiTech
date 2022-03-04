@@ -13,7 +13,6 @@ uses
 {$R *.res}
 
 begin
-  Application.Title:='MorphoEngine';
   Application.Scaled:=True;
   RequireDerivedFormResource:=True;
   Application.Initialize;

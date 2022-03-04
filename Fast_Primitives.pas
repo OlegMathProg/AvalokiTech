@@ -2295,13 +2295,13 @@ type
     procedure CrtNTCntIndArr; {$ifdef Linux}[local];{$endif}
     procedure CrtPTCntIndArr; {$ifdef Linux}[local];{$endif}
 
-    // Mask Template Drawing:
-    // Fill Mask With Random Color:
-    procedure FilMaskTemplate0; {$ifdef Linux}[local];{$endif}
-    // Fill Mask With Specified Sprite:
-    procedure FilMaskTemplate1; {$ifdef Linux}[local];{$endif}
-    // Fill Mask With Rectangles:
-    procedure FilMaskTemplate2; {$ifdef Linux}[local];{$endif}
+    // Tile Map Drawing:
+    // Fill Tile Map With Random Color:
+    procedure FilTileMap0; {$ifdef Linux}[local];{$endif}
+    // Fill Tile Map With Specified Sprite:
+    procedure FilTileMap1; {$ifdef Linux}[local];{$endif}
+    // Fill Tile Map With Rectangles:
+    procedure FilTileMap2; {$ifdef Linux}[local];{$endif}
 
     // Full Image Drawing:
     procedure ShaderInfo;  inline; {$ifdef Linux}[local];{$endif}
@@ -2444,7 +2444,7 @@ type
 
 
 
-  {Fast Spline ****************************************************************}
+  {Fast Line ******************************************************************}
   TFastLine         =class {$region -fold}
 
     {Misc. Types------------------------------------} {$region -fold}
@@ -2562,7 +2562,7 @@ type
       destructor  Destroy; override;                                                {$ifdef Linux}[local];{$endif}
       procedure GCCArrInit;                                                 inline; {$ifdef Linux}[local];{$endif}
       procedure GCCArrRepl        (         dst_fl_var     :TFastLine);     inline; {$ifdef Linux}[local];{$endif}
-      procedure SplineInit        (         w,h            :TColor;
+      procedure BuffersInit       (         w,h            :TColor;
                                             ln_arr0_init   :boolean;
                                             ln_arr1_init   :boolean;
                                             ln_arr2_init   :boolean;
@@ -25179,9 +25179,9 @@ begin
 
 end; {$endregion}
 
-// Mask Template Drawing:
-// Fill Mask With Random Color:
-procedure TFastImage.FilMaskTemplate0; {$ifdef Linux}[local];{$endif} {$region -fold}
+// Tile Map Drawing:
+// Fill Tile Map With Random Color:
+procedure TFastImage.FilTileMap0; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_dst_0,rct_dst_1,rct_dst_2: TPtRect;
   bmp_bckgd_ptr2               : PInteger;
@@ -25218,8 +25218,8 @@ begin
       Inc(rct_dst_0.bottom ,tilemap_sprite_w_h .y);
     end;
 end; {$endregion}
-// Fill Mask With Specified Sprite:
-procedure TFastImage.FilMaskTemplate1; {$ifdef Linux}[local];{$endif} {$region -fold}
+// Fill Tile Map With Specified Sprite:
+procedure TFastImage.FilTileMap1; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_dst_0,rct_dst_1,rct_dst_2: TPtRect;
   bmp_bckgd_ptr2               : PInteger;
@@ -25262,8 +25262,8 @@ begin
         end;
     end;
 end; {$endregion}
-// Fill Mask With Rectangles:
-procedure TFastImage.FilMaskTemplate2; {$ifdef Linux}[local];{$endif} {$region -fold}
+// Fill Tile Map With Rectangles:
+procedure TFastImage.FilTileMap2; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_dst_0,rct_dst_1,rct_dst_2: TPtRect;
   bmp_bckgd_ptr2               : PInteger;
@@ -27732,29 +27732,29 @@ end; {$endregion}
 (***************************** Fast Line Routines *****************************) {$region -fold}
 
 {Init. Part--} {$region -fold}
-constructor TFastLine.Create;                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TFastLine.Create;                                                                                                                        {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   LineSInit;
 end; {$endregion}
-destructor TFastLine.Destroy;                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor TFastLine.Destroy;                                                                                                                        {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   self.Free;
   inherited Destroy;
 end; {$endregion}
-procedure TFastLine.GCCArrInit;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.GCCArrInit;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   gcd_arr:=Nil;
   SetLength  (gcd_arr,ln_arr_width*ln_arr_height);
   LinePrecalc(        ln_arr_width,ln_arr_height);
 end; {$endregion}
 // Replace Lookup Table(Precalculated Array):
-procedure TFastLine.GCCArrRepl(dst_fl_var:TFastLine);                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.GCCArrRepl(dst_fl_var:TFastLine);                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   {gcd_arr:=Nil;
   SetLength(gcd_arr,ln_arr_width*ln_arr_height);
   gcd_arr:=dst_fl_var.gcd_arr;}
 end; {$endregion}
-procedure TFastLine.SplineInit(w,h:TColor; ln_arr0_init:boolean; ln_arr1_init:boolean; ln_arr2_init:boolean; aa_buff_init:boolean);     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.BuffersInit(w,h:TColor; ln_arr0_init:boolean; ln_arr1_init:boolean; ln_arr2_init:boolean; aa_buff_init:boolean);         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -27791,7 +27791,7 @@ begin
   bmp_dst_height:=bmp_dst_height_;
   rct_clp_ptr   :=rct_clp_ptr_;
 end; {$endregion}
-procedure TFastLine.MinimizeArrs(aa_buff_clear:boolean);                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFastLine.MinimizeArrs(aa_buff_clear:boolean);                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Setlength(ln_arr0,0);
   Setlength(ln_arr1,0);
@@ -31011,6 +31011,8 @@ procedure MDCalc (var rct:TRect; constref mov_dir:TMovingDirection; constref par
 begin
   with rct do
     case mov_dir of
+      mdNone:
+        Exit;
       mdLeft:
         begin
           left +=parallax_shift.x;
