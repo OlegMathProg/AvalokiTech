@@ -3807,10 +3807,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter6
-    Left = 901
+    Left = 764
     Height = 399
     Top = 5
-    Width = 124
+    Width = 261
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoExpand = True
     BackgroundColor = 11251619
@@ -3821,11 +3821,10 @@ object F_MainForm: TF_MainForm
     ExpandSignSize = 9
     ExpandSignType = tvestPlusMinus
     Font.CharSet = ANSI_CHARSET
-    Font.Color = clBlack
+    Font.Color = 5320514
     Font.Height = -13
-    Font.Name = 'Ebrima'
     Font.Pitch = fpVariable
-    Font.Quality = fqDraft
+    Font.Quality = fqAntialiased
     Font.Style = [fsBold]
     HotTrack = True
     Images = IL_Drawing_Buttons
@@ -3858,6 +3857,7 @@ object F_MainForm: TF_MainForm
     OnKeyDown = TV_Scene_TreeKeyDown
     OnKeyPress = TV_Scene_TreeKeyPress
     OnMouseDown = TV_Scene_TreeMouseDown
+    OnMouseEnter = TV_Scene_TreeMouseEnter
     OnMouseLeave = TV_Scene_TreeMouseLeave
     OnMouseMove = TV_Scene_TreeMouseMove
     Options = [tvoAllowMultiselect, tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoRightClickSelect, tvoRowSelect, tvoShowButtons, tvoShowLines, tvoShowSeparators]
@@ -3870,13 +3870,13 @@ object F_MainForm: TF_MainForm
     Left = 4
     Height = 4
     Top = 0
-    Width = 893
+    Width = 756
     Anchors = [akTop, akLeft, akRight]
     BevelColor = 8026460
     BevelOuter = bvNone
     BorderWidth = 1
     ClientHeight = 4
-    ClientWidth = 893
+    ClientWidth = 756
     Color = 5731167
     Font.Height = -9
     FullRepaint = False
@@ -3903,10 +3903,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 901
+    Left = 764
     Height = 4
     Top = 1
-    Width = 124
+    Width = 261
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -3918,7 +3918,7 @@ object F_MainForm: TF_MainForm
   object S_Splitter3: TSplitter
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = SB_StatusBar1
-    Left = 897
+    Left = 760
     Height = 664
     Top = 0
     Width = 4
@@ -3941,7 +3941,7 @@ object F_MainForm: TF_MainForm
     Left = 4
     Height = 4
     Top = 168
-    Width = 893
+    Width = 756
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -4341,12 +4341,12 @@ object F_MainForm: TF_MainForm
     Left = 126
     Height = 492
     Top = 172
-    Width = 771
+    Width = 634
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
     ClientHeight = 492
-    ClientWidth = 771
+    ClientWidth = 634
     Color = 13290949
     ParentColor = False
     TabOrder = 3
@@ -4360,7 +4360,7 @@ object F_MainForm: TF_MainForm
       Left = 0
       Height = 492
       Top = 0
-      Width = 771
+      Width = 634
       ActivePage = TS_Draw
       Anchors = [akTop, akLeft, akRight, akBottom]
       MultiLine = True
@@ -4374,14 +4374,14 @@ object F_MainForm: TF_MainForm
       object TS_File: TTabSheet
         Caption = 'File'
         ClientHeight = 484
-        ClientWidth = 740
+        ClientWidth = 603
         object SB_Image_List: TScrollBox
           AnchorSideRight.Control = TS_Draw
           AnchorSideRight.Side = asrBottom
           Left = 32
           Height = 480
           Top = 0
-          Width = 706
+          Width = 569
           HorzScrollBar.Increment = 1
           HorzScrollBar.Page = 1
           HorzScrollBar.Smooth = True
@@ -4392,7 +4392,7 @@ object F_MainForm: TF_MainForm
           VertScrollBar.Tracking = True
           Anchors = [akTop, akLeft, akRight, akBottom]
           ClientHeight = 476
-          ClientWidth = 702
+          ClientWidth = 565
           Color = 13881769
           ParentBiDiMode = False
           ParentColor = False
@@ -4409,7 +4409,7 @@ object F_MainForm: TF_MainForm
             Left = 0
             Height = 476
             Top = 0
-            Width = 702
+            Width = 565
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
             Caption = 'Texture List is Empty'
@@ -4434,7 +4434,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
-            Left = 321
+            Left = 192
             Height = 180
             Top = 103
             Width = 680
@@ -4893,7 +4893,7 @@ object F_MainForm: TF_MainForm
       object TS_Draw: TTabSheet
         Caption = 'Draw'
         ClientHeight = 484
-        ClientWidth = 740
+        ClientWidth = 603
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
         ParentBiDiMode = False
@@ -4909,7 +4909,7 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 449
           Top = 35
-          Width = 738
+          Width = 601
           HorzScrollBar.Increment = 1
           HorzScrollBar.Page = 1
           HorzScrollBar.Smooth = True
@@ -4922,7 +4922,7 @@ object F_MainForm: TF_MainForm
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
           ClientHeight = 445
-          ClientWidth = 734
+          ClientWidth = 597
           Color = 15921635
           ParentBiDiMode = False
           ParentColor = False
@@ -4937,9 +4937,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -168
+            Left = -360
             Height = 488
-            Top = 32
+            Top = 24
             Width = 1040
             Anchors = []
             BevelColor = 7958609
@@ -4987,10 +4987,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Spline_Edges_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 59
+                Left = 73
                 Height = 2
                 Top = 14
-                Width = 91
+                Width = 77
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -5006,12 +5006,15 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object Image18: TImage
+                AnchorSideLeft.Control = L_Spline_Edges_Style
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 53
+                Left = 67
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 20
                 OnMouseEnter = P_Spline_Edges_PropMouseEnter
                 OnMouseLeave = P_Spline_Edges_PropMouseLeave
                 Picture.Data = {
@@ -5176,16 +5179,15 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
               end
               object L_Spline_Edges: TLabel
-                Left = 24
+                Left = 26
                 Height = 16
                 Top = 5
-                Width = 27
-                Alignment = taRightJustify
+                Width = 40
                 AutoSize = False
                 Caption = 'Edges'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -5194,12 +5196,13 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Spline_Edges_PropMouseEnter
                 OnMouseLeave = P_Spline_Edges_PropMouseLeave
+                OptimalFill = True
               end
               object SB_Spline_Edges_Show: TSpeedButton
                 Cursor = crHandPoint
-                Left = 7
+                Left = 5
                 Height = 16
-                Top = 7
+                Top = 5
                 Width = 16
                 AllowAllUp = True
                 BorderSpacing.Top = 8
@@ -5671,10 +5674,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Spline_Points_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 63
+                Left = 73
                 Height = 2
                 Top = 14
-                Width = 87
+                Width = 77
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -5690,12 +5693,15 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object Image19: TImage
+                AnchorSideLeft.Control = L_Spline_Points_Style
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 57
+                Left = 67
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 20
                 OnMouseEnter = P_Spline_Points_PropMouseEnter
                 OnMouseLeave = P_Spline_Points_PropMouseLeave
                 Picture.Data = {
@@ -5855,16 +5861,15 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
               end
               object L_Spline_Points: TLabel
-                Left = 24
+                Left = 26
                 Height = 16
                 Top = 5
-                Width = 31
-                Alignment = taRightJustify
+                Width = 40
                 AutoSize = False
                 Caption = 'Points'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -5873,12 +5878,13 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Spline_Points_PropMouseEnter
                 OnMouseLeave = P_Spline_Points_PropMouseLeave
+                OptimalFill = True
               end
               object SB_Spline_Points_Show: TSpeedButton
                 Cursor = crHandPoint
-                Left = 7
+                Left = 5
                 Height = 16
-                Top = 7
+                Top = 5
                 Width = 16
                 AllowAllUp = True
                 BorderSpacing.Top = 8
@@ -6557,13 +6563,12 @@ object F_MainForm: TF_MainForm
                 Left = 8
                 Height = 16
                 Top = 5
-                Width = 58
-                Alignment = taRightJustify
+                Width = 73
                 AutoSize = False
                 Caption = 'Optimization'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -6572,14 +6577,18 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Spline_Optimization_PropMouseEnter
                 OnMouseLeave = P_Spline_Optimization_PropMouseLeave
+                OptimalFill = True
               end
               object Image20: TImage
+                AnchorSideLeft.Control = L_Spline_Optimization
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 69
+                Left = 85
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 4
                 OnMouseEnter = P_Spline_Optimization_PropMouseEnter
                 OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 Picture.Data = {
@@ -6599,10 +6608,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Spline_Optimization_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 75
+                Left = 91
                 Height = 2
                 Top = 14
-                Width = 82
+                Width = 66
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -8490,13 +8499,12 @@ object F_MainForm: TF_MainForm
                 Left = 8
                 Height = 16
                 Top = 5
-                Width = 40
-                Alignment = taRightJustify
+                Width = 48
                 AutoSize = False
                 Caption = 'Drawing'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -8505,14 +8513,18 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Spline_Drawing_PropMouseEnter
                 OnMouseLeave = P_Spline_Drawing_PropMouseLeave
+                OptimalFill = True
               end
               object Image21: TImage
+                AnchorSideLeft.Control = L_Spline_Drawing
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 51
+                Left = 60
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 4
                 OnMouseEnter = P_Spline_Drawing_PropMouseEnter
                 OnMouseLeave = P_Spline_Drawing_PropMouseLeave
                 Picture.Data = {
@@ -8532,10 +8544,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Spline_Drawing_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 57
+                Left = 66
                 Height = 2
                 Top = 14
-                Width = 116
+                Width = 107
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -8821,10 +8833,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Spline_Dynamics_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 58
+                Left = 76
                 Height = 2
                 Top = 14
-                Width = 92
+                Width = 74
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -8840,12 +8852,15 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object Image22: TImage
+                AnchorSideLeft.Control = L_Spline_Dynamics
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 52
+                Left = 70
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 4
                 OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
                 OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
                 Picture.Data = {
@@ -8919,13 +8934,12 @@ object F_MainForm: TF_MainForm
                 Left = 8
                 Height = 16
                 Top = 5
-                Width = 41
-                Alignment = taRightJustify
+                Width = 58
                 AutoSize = False
                 Caption = 'Dynamics'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -8934,6 +8948,7 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Spline_Dynamics_PropMouseEnter
                 OnMouseLeave = P_Spline_Dynamics_PropMouseLeave
+                OptimalFill = True
               end
               object CB_Spline_Dynamics_Collider: TCheckBox
                 Left = 10
@@ -8999,10 +9014,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Spline_Save_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 39
+                Left = 46
                 Height = 2
                 Top = 14
-                Width = 131
+                Width = 124
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -9022,11 +9037,11 @@ object F_MainForm: TF_MainForm
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 33
+                Left = 40
                 Height = 8
                 Top = 11
                 Width = 8
-                BorderSpacing.Left = 3
+                BorderSpacing.Left = 4
                 OnMouseEnter = P_Spline_Save_PropMouseEnter
                 OnMouseLeave = P_Spline_Save_PropMouseLeave
                 Picture.Data = {
@@ -9045,13 +9060,12 @@ object F_MainForm: TF_MainForm
                 Left = 8
                 Height = 16
                 Top = 5
-                Width = 22
-                Alignment = taRightJustify
+                Width = 28
                 AutoSize = False
                 Caption = 'Save'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -9060,6 +9074,7 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Spline_Save_PropMouseEnter
                 OnMouseLeave = P_Spline_Save_PropMouseLeave
+                OptimalFill = True
               end
             end
           end
@@ -9070,7 +9085,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 560
+            Left = 360
             Height = 176
             Top = 16
             Width = 912
@@ -9849,16 +9864,18 @@ object F_MainForm: TF_MainForm
               end
             end
             object P_Select_Items_Outer_Subgraph_Prop: TPanel
-              AnchorSideLeft.Control = P_Select_Items
+              AnchorSideLeft.Control = P_Select_Items_Selection_Prop
+              AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = P_Select_Items
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = P_Select_Items
               AnchorSideBottom.Side = asrBottom
-              Left = 4
+              Left = 218
               Height = 168
               Top = 4
               Width = 212
               Anchors = [akTop, akLeft, akBottom]
+              BorderSpacing.Left = 2
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
@@ -9883,10 +9900,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Select_Items_Outer_Subgraph_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 109
+                Left = 127
                 Height = 2
                 Top = 14
-                Width = 91
+                Width = 73
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -9902,12 +9919,15 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object Image25: TImage
+                AnchorSideLeft.Control = L_Select_Items_Outer_Subgraph
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 103
+                Left = 121
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 4
                 OnMouseEnter = P_Select_Items_Outer_Subgraph_PropMouseEnter
                 OnMouseLeave = P_Select_Items_Outer_Subgraph_PropMouseLeave
                 Picture.Data = {
@@ -9965,16 +9985,15 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
               end
               object L_Select_Items_Outer_Subgraph: TLabel
-                Left = 24
+                Left = 26
                 Height = 16
                 Top = 5
-                Width = 76
-                Alignment = taRightJustify
+                Width = 91
                 AutoSize = False
                 Caption = 'Outer Subgraph'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -9983,12 +10002,13 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Select_Items_Outer_Subgraph_PropMouseEnter
                 OnMouseLeave = P_Select_Items_Outer_Subgraph_PropMouseLeave
+                OptimalFill = True
               end
               object SB_Select_Items_Outer_Subgraph_Show: TSpeedButton
                 Cursor = crHandPoint
-                Left = 7
+                Left = 5
                 Height = 16
-                Top = 7
+                Top = 5
                 Width = 16
                 AllowAllUp = True
                 BorderSpacing.Top = 8
@@ -10190,7 +10210,7 @@ object F_MainForm: TF_MainForm
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = P_Select_Items
               AnchorSideBottom.Side = asrBottom
-              Left = 218
+              Left = 432
               Height = 168
               Top = 4
               Width = 212
@@ -10220,10 +10240,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Select_Items_Inner_Subgraph_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 109
+                Left = 124
                 Height = 2
                 Top = 14
-                Width = 91
+                Width = 76
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -10239,12 +10259,15 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object Image26: TImage
+                AnchorSideLeft.Control = L_Select_Items_Inner_Subgraph
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 103
+                Left = 118
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 4
                 OnMouseEnter = P_Select_Items_Inner_Subgraph_PropMouseEnter
                 OnMouseLeave = P_Select_Items_Inner_Subgraph_PropMouseLeave
                 Picture.Data = {
@@ -10302,16 +10325,15 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
               end
               object L_Select_Items_Inner_Subgraph: TLabel
-                Left = 24
+                Left = 26
                 Height = 16
                 Top = 5
-                Width = 75
-                Alignment = taRightJustify
+                Width = 88
                 AutoSize = False
                 Caption = 'Inner Subgraph'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -10320,12 +10342,13 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Select_Items_Inner_Subgraph_PropMouseEnter
                 OnMouseLeave = P_Select_Items_Inner_Subgraph_PropMouseLeave
+                OptimalFill = True
               end
               object SB_Select_Items_Inner_Subgraph_Show: TSpeedButton
                 Cursor = crHandPoint
-                Left = 7
+                Left = 5
                 Height = 16
-                Top = 7
+                Top = 5
                 Width = 16
                 AllowAllUp = True
                 BorderSpacing.Top = 8
@@ -10520,24 +10543,22 @@ object F_MainForm: TF_MainForm
               end
             end
             object P_Select_Items_Selection_Prop: TPanel
-              AnchorSideLeft.Control = P_Select_Items_Inner_Subgraph_Prop
-              AnchorSideLeft.Side = asrBottom
+              AnchorSideLeft.Control = P_Select_Items
               AnchorSideTop.Control = P_Select_Items
               AnchorSideRight.Control = P_Select_Items
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = P_Select_Items
               AnchorSideBottom.Side = asrBottom
-              Left = 432
+              Left = 4
               Height = 168
               Top = 4
-              Width = 476
-              Anchors = [akTop, akLeft, akRight, akBottom]
-              BorderSpacing.Left = 2
+              Width = 212
+              Anchors = [akTop, akLeft, akBottom]
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
               ClientHeight = 168
-              ClientWidth = 476
+              ClientWidth = 212
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
               Font.Color = 7107914
@@ -10557,10 +10578,10 @@ object F_MainForm: TF_MainForm
                 AnchorSideRight.Control = P_Select_Items_Selection_Prop
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 64
+                Left = 74
                 Height = 2
                 Top = 14
-                Width = 400
+                Width = 126
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Left = 6
                 BorderSpacing.Right = 10
@@ -10576,12 +10597,15 @@ object F_MainForm: TF_MainForm
                 Transparent = True
               end
               object Image27: TImage
+                AnchorSideLeft.Control = L_Select_Items_Selection
+                AnchorSideLeft.Side = asrBottom
                 AnchorSideRight.Side = asrBottom
                 AnchorSideBottom.Side = asrBottom
-                Left = 58
+                Left = 68
                 Height = 8
                 Top = 11
                 Width = 8
+                BorderSpacing.Left = 4
                 OnMouseEnter = P_Select_Items_Selection_PropMouseEnter
                 OnMouseLeave = P_Select_Items_Selection_PropMouseLeave
                 Picture.Data = {
@@ -10642,13 +10666,12 @@ object F_MainForm: TF_MainForm
                 Left = 8
                 Height = 16
                 Top = 5
-                Width = 46
-                Alignment = taRightJustify
+                Width = 56
                 AutoSize = False
                 Caption = 'Selection'
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = 5130019
-                Font.Height = 13
+                Font.Height = 16
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
                 Layout = tlBottom
@@ -10657,6 +10680,7 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 OnMouseEnter = P_Select_Items_Selection_PropMouseEnter
                 OnMouseLeave = P_Select_Items_Selection_PropMouseLeave
+                OptimalFill = True
               end
               object Label4: TLabel
                 AnchorSideRight.Side = asrBottom
@@ -10805,9 +10829,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 679
+            Left = 389
             Height = 206
-            Top = 249
+            Top = 232
             Width = 529
             Anchors = []
             BevelColor = 9665894
@@ -11644,7 +11668,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 620
+            Left = 457
             Height = 63
             Top = 39
             Width = 506
@@ -11829,7 +11853,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 573
+            Left = 417
             Height = 110
             Top = 44
             Width = 530
@@ -11850,7 +11874,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 564
+            Left = 412
             Height = 63
             Top = 56
             Width = 506
@@ -12034,7 +12058,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 803
+            Left = 606
             Height = 63
             Top = -27
             Width = 506
@@ -12218,7 +12242,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 599
+            Left = 438
             Height = 110
             Top = 55
             Width = 530
@@ -12279,7 +12303,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 638
+            Left = 469
             Height = 110
             Top = 55
             Width = 530
@@ -12301,13 +12325,13 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 32
           Top = 0
-          Width = 738
+          Width = 601
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 2
           BevelColor = 13815453
           BevelOuter = bvLowered
           ClientHeight = 32
-          ClientWidth = 738
+          ClientWidth = 601
           Color = 15921635
           FullRepaint = False
           ParentColor = False
@@ -12535,7 +12559,7 @@ object F_MainForm: TF_MainForm
       object TS_AnimK: TTabSheet
         Caption = 'AnimK'
         ClientHeight = 484
-        ClientWidth = 740
+        ClientWidth = 603
         object P_Animation_Buttons: TPanel
           AnchorSideRight.Control = TS_AnimK
           AnchorSideRight.Side = asrBottom
@@ -12543,13 +12567,13 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 32
           Top = 0
-          Width = 738
+          Width = 601
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 2
           BevelColor = 13815453
           BevelOuter = bvLowered
           ClientHeight = 32
-          ClientWidth = 738
+          ClientWidth = 601
           Color = 15921635
           FullRepaint = False
           ParentColor = False
@@ -12647,14 +12671,14 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 449
           Top = 35
-          Width = 738
+          Width = 601
           HorzScrollBar.Page = 1
           VertScrollBar.Page = 1
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
           ClientHeight = 445
-          ClientWidth = 734
+          ClientWidth = 597
           TabOrder = 1
           object P_Add_Actor: TPanel
             AnchorSideLeft.Control = SB_AnimK
@@ -12663,7 +12687,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 73
+            Left = 2
             Height = 176
             Top = -74
             Width = 617
@@ -13145,7 +13169,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 254
+            Left = 149
             Height = 200
             Top = 201
             Width = 617
@@ -13234,7 +13258,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 286
+            Left = 183
             Height = 40
             Top = -17
             Width = 530
@@ -13255,7 +13279,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 209
+            Left = 113
             Height = 40
             Top = -17
             Width = 617
@@ -13382,7 +13406,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = P_Splitter5
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = S_Splitter3
-    Left = 857
+    Left = 720
     Height = 247
     Top = 4
     Width = 40
@@ -13437,7 +13461,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 861
+    Left = 724
     Height = 32
     Top = 34
     Width = 32
@@ -13464,7 +13488,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 861
+    Left = 724
     Height = 32
     Top = 70
     Width = 32
@@ -13491,7 +13515,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 861
+    Left = 724
     Height = 32
     Top = 142
     Width = 32
@@ -13518,7 +13542,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 861
+    Left = 724
     Height = 32
     Top = 214
     Width = 32
@@ -13545,7 +13569,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 861
+    Left = 724
     Height = 32
     Top = 178
     Width = 32
@@ -13572,7 +13596,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 861
+    Left = 724
     Height = 32
     Top = 106
     Width = 32
@@ -13599,7 +13623,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = I_Visibility_Panel
     AnchorSideRight.Control = S_Splitter3
     Cursor = crHandPoint
-    Left = 861
+    Left = 724
     Height = 21
     Top = 9
     Width = 32
@@ -13623,7 +13647,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter4
-    Left = 901
+    Left = 764
     Height = 1
     Top = 0
     Width = 83
@@ -13672,7 +13696,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = S_Splitter2
     AnchorSideTop.Side = asrCenter
     AnchorSideBottom.Side = asrBottom
-    Left = 892
+    Left = 755
     Height = 17
     Top = 162
     Width = 15
@@ -13731,10 +13755,10 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Control = TV_Scene_Tree
     AnchorSideRight.Control = S_TreeView_Splitter
     AnchorSideRight.Side = asrBottom
-    Left = 905
+    Left = 768
     Height = 25
     Top = 9
-    Width = 71
+    Width = 208
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 4
     BorderSpacing.Top = 4
@@ -13825,19 +13849,19 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter7
-    Left = 901
+    Left = 764
     Height = 178
     Top = 408
-    Width = 124
-    HorzScrollBar.Increment = 12
-    HorzScrollBar.Page = 120
+    Width = 261
+    HorzScrollBar.Increment = 16
+    HorzScrollBar.Page = 162
     HorzScrollBar.Smooth = True
     HorzScrollBar.Tracking = True
     VertScrollBar.Increment = 26
-    VertScrollBar.Page = 28
+    VertScrollBar.Page = 78
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 157
-    ClientWidth = 120
+    ClientHeight = 174
+    ClientWidth = 257
     Color = 11117709
     ParentColor = False
     TabOrder = 19
@@ -13870,24 +13894,24 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_Object_Properties
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 135
+      Height = 152
       Top = 22
-      Width = 148
+      Width = 257
       Anchors = [akTop, akLeft, akRight, akBottom]
       BevelColor = 7895160
       BevelOuter = bvNone
-      ClientHeight = 135
-      ClientWidth = 148
+      ClientHeight = 152
+      ClientWidth = 257
       Color = 10063735
       ParentColor = False
       TabOrder = 0
       OnMouseEnter = SB_Object_PropertiesMouseEnter
       OnMouseLeave = SB_Object_PropertiesMouseLeave
       object L_Object_Properties_Parallax_Shift: TLabel
-        Left = 12
+        Left = 0
         Height = 16
         Top = 9
-        Width = 83
+        Width = 91
         Alignment = taRightJustify
         AutoSize = False
         Caption = 'Parallax Shift:'
@@ -13907,31 +13931,76 @@ object F_MainForm: TF_MainForm
       object SE_Object_Properties_Parallax_Shift: TSpinEdit
         AnchorSideLeft.Control = L_Object_Properties_Parallax_Shift
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Side = asrBottom
-        Left = 101
+        Left = 97
         Height = 20
         Top = 8
-        Width = 47
+        Width = 44
         AutoSelect = False
         AutoSize = False
         BorderSpacing.Left = 6
         Color = 15791340
-        Constraints.MaxHeight = 20
-        Constraints.MinHeight = 20
         Font.CharSet = RUSSIAN_CHARSET
         Font.Color = 5512455
         Font.Height = -11
         Font.Name = 'Euphemia'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
-        MaxValue = 1000
         OnChange = SE_Object_Properties_Parallax_ShiftChange
+        OnMouseDown = SE_Spline_Pts_FreqMouseDown
         OnMouseEnter = SB_Object_PropertiesMouseEnter
         OnMouseLeave = SB_Object_PropertiesMouseLeave
         ParentFont = False
         ParentShowHint = False
         TabOrder = 0
         Value = 16
+      end
+      object CB_SObject_Properties_Show_In_Editor: TCheckBox
+        Left = 10
+        Height = 19
+        Top = 34
+        Width = 152
+        HelpType = htKeyword
+        AutoSize = False
+        Caption = 'Show in Editor'
+        Checked = True
+        Color = 12236195
+        Enabled = False
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clCaptionText
+        Font.Height = -12
+        Font.Name = 'AR JULIAN'
+        OnMouseEnter = SB_Object_PropertiesMouseEnter
+        OnMouseLeave = SB_Object_PropertiesMouseLeave
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        ParentBidiMode = False
+        State = cbChecked
+        TabOrder = 1
+      end
+      object CB_SObject_Properties_Show_In_Game: TCheckBox
+        Left = 10
+        Height = 19
+        Top = 59
+        Width = 152
+        HelpType = htKeyword
+        AutoSize = False
+        Caption = 'Show in Game'
+        Checked = True
+        Color = 12236195
+        Enabled = False
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clCaptionText
+        Font.Height = -12
+        Font.Name = 'AR JULIAN'
+        OnMouseEnter = SB_Object_PropertiesMouseEnter
+        OnMouseLeave = SB_Object_PropertiesMouseLeave
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        ParentBidiMode = False
+        State = cbChecked
+        TabOrder = 2
       end
     end
     object L_Object_Name: TLabel
@@ -13959,10 +14028,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 901
+    Left = 764
     Height = 4
     Top = 404
-    Width = 124
+    Width = 261
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False
@@ -13984,9 +14053,11 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Left = 64
     BorderSpacing.Top = 6
     Caption = 'Speed:'
+    Enabled = False
     Font.Color = clNavy
     Font.Height = 16
     ParentFont = False
+    Visible = False
     OptimalFill = True
   end
   object TB_Speed: TTrackBar
@@ -13998,8 +14069,7 @@ object F_MainForm: TF_MainForm
     Height = 25
     Top = 9
     Width = 136
-    Max = 256
-    Min = 1
+    Max = 100
     OnChange = TB_SpeedChange
     PageSize = 8
     Position = 16
@@ -14012,6 +14082,7 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     ParentShowHint = False
     TabOrder = 21
+    Visible = False
   end
   object L_Exec_Time_Info: TLabel
     AnchorSideLeft.Control = S_Splitter1
@@ -14049,7 +14120,7 @@ object F_MainForm: TF_MainForm
     Font.CharSet = ANSI_CHARSET
     Font.Color = 11645361
     Font.Height = -16
-    Font.Name = 'Arial'
+    Font.Name = 'Javanese Text'
     Font.Quality = fqAntialiased
     Font.Style = [fsBold]
     Lines.Strings = (
@@ -14070,16 +14141,16 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter3
     AnchorSideBottom.Side = asrBottom
-    Left = 901
+    Left = 764
     Height = 74
     Top = 590
-    Width = 124
-    HorzScrollBar.Page = 120
+    Width = 261
+    HorzScrollBar.Page = 144
     VertScrollBar.Increment = 26
     VertScrollBar.Page = 18
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 53
-    ClientWidth = 120
+    ClientHeight = 70
+    ClientWidth = 257
     Color = 11117709
     ParentColor = False
     TabOrder = 24
@@ -14113,9 +14184,9 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_Tag_Properties
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 31
+      Height = 48
       Top = 22
-      Width = 144
+      Width = 257
       Anchors = [akTop, akLeft, akRight, akBottom]
       BevelColor = 7895160
       BevelOuter = bvNone
@@ -14133,10 +14204,10 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 901
+    Left = 764
     Height = 4
     Top = 586
-    Width = 124
+    Width = 261
     Align = alNone
     Anchors = [akLeft, akRight]
     AutoSnap = False

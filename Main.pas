@@ -22,8 +22,9 @@ uses
 
 const
 
-  NAV_SEL_COL_0=$009DD7E6;
-  NAV_SEL_COL_1=$00C8CFA9;
+  DEFAULT_MISCELLANEOUS_VALUES_COLOR=$00F0F4EC;
+  NAV_SEL_COL_0                     =$009DD7E6;
+  NAV_SEL_COL_1                     =$00C8CFA9;
 
   {Resources Paths}
   SELECTION_TOOLS_MARKER_ICON      ='Pics\Selection_Tools\Selection_Tools_Marker.png';
@@ -63,8 +64,8 @@ type
   PControl           =^TControl;
 
   TSavedUpPts        =class;
-  TSurf              =class;
-  TSurfInst          =class;
+  TSurface           =class;
+  TCamera            =class;
   TTex               =class;
   TRGrid             =class;
   TSGrid             =class;
@@ -128,6 +129,7 @@ type
     CB_Select_Items_Inner_Subgraph_Line_Style        : TComboBox;
     CB_Select_Items_Inner_Subgraph_Show_Bounds       : TCheckBox;
     CB_Select_Items_Selection_Highlight              : TCheckBox;
+    CB_SObject_Properties_Show_In_Game: TCheckBox;
     CB_Spline_Cycloid_Direction_Y                    : TComboBox;
     CB_Physics_Deletion                              : TCheckBox;
     CB_Select_Points_Show_Bounds                     : TCheckBox;
@@ -142,6 +144,7 @@ type
     CB_Spline_Dynamics_Style                         : TComboBox;
     CB_Spline_Dynamics_Collider                      : TCheckBox;
     CB_Spline_Best_Precision                         : TCheckBox;
+    CB_SObject_Properties_Show_In_Editor: TCheckBox;
     CB_Text_Background                               : TCheckBox;
     CB_Spline_Lazy_Repaint                           : TCheckBox;
     CB_Spline_Epicycloid_Hypocycloid                 : TCheckBox;
@@ -313,7 +316,7 @@ type
     L_Object_Info                                    : TLabel;
     L_Spline_Mode                                    : TLabel;
     L_Tag_Properties                                 : TLabel;
-    M_Description                                            : TMemo;
+    M_Description                                    : TMemo;
     MenuItem3                                        : TMenuItem;
     MI_Unselect_All                                  : TMenuItem;
     MI_Unfold_All                                    : TMenuItem;
@@ -545,8 +548,8 @@ type
     SB_Spline_Template_Epicycloid                    : TSpeedButton;
     SB_Spline_Template_Rose                          : TSpeedButton;
     SB_Spline_Template_Spiral                        : TSpeedButton;
-    SE_Object_Properties_Parallax_Shift              : TSpinEdit;
     SE_Spline_Spray_Radius                           : TSpinEdit;
+    SE_Object_Properties_Parallax_Shift: TSpinEdit;
     S_Splitter0                                      : TSplitter;
     S_Splitter1                                      : TSplitter;
     S_Splitter2                                      : TSplitter;
@@ -793,7 +796,6 @@ type
     procedure SE_Spline_Epicycloid_Points_CountChange                (      sender           :TObject);
     procedure SE_Spline_Epicycloid_RadiusChange                      (      sender           :TObject);
     procedure SE_Spline_Epicycloid_RotationChange                    (      sender           :TObject);
-    procedure SE_Object_Properties_Parallax_ShiftChange              (      sender           :TObject);
     procedure SE_Spline_Pts_FreqMouseDown                            (      sender           :TObject;
                                                                             button           :TMouseButton;
                                                                             shift            :TShiftState;
@@ -818,6 +820,7 @@ type
                                                                       var   key              :word;
                                                                             shift            :TShiftState);
     procedure SE_Spline_Spray_RadiusChange                           (      sender           :TObject);
+    procedure SE_Object_Properties_Parallax_ShiftChange(Sender: TObject);
 
     {Buttons}
     procedure S_Splitter0ChangeBounds                                (      sender           :TObject);
@@ -934,6 +937,7 @@ type
                                                                             shift            :TShiftState);
     procedure TV_Scene_TreeKeyPress                                  (      sender           :TObject;
                                                                       var   key              :char);
+    procedure TV_Scene_TreeMouseEnter(Sender: TObject);
     procedure TV_Scene_TreeMouseLeave                                (      sender           :TObject);
     procedure TV_Scene_TreeMouseMove                                 (      sender           :TObject;
                                                                             shift            :TShiftState;
@@ -1021,7 +1025,7 @@ type
   PSavedUpPts        =^TSavedUpPts;
 
   {Surface Drawing----}
-  TSurf              =class {$region -fold}
+  TSurface           =class {$region -fold}
     public
       need_repaint           : boolean;
       {Main  Layer------------------} {$region -fold}
@@ -1064,20 +1068,8 @@ type
       world_axis_bmp         : TFastImage;
       world_axis             : TPtPos;
       world_axis_shift       : TPtPos;
-      {Speed Multiplier}
-      parallax_shift         : TPtPos;
-      mov_dir                : TMovingDirection;
-      {TODO}
-      scl_dif                : integer;
-      {scale direction}
-      scl_dir                : TSclDir;
       {UI}
       inner_window_ui_visible: boolean;
-      {TODO}
-      dir_a                  : boolean;
-      dir_d                  : boolean;
-      dir_w                  : boolean;
-      dir_s                  : boolean;
       {create class instance}
       constructor Create           (         w,h           :TColor);                      {$ifdef Linux}[local];{$endif}
       {destroy class instance}
@@ -1188,11 +1180,23 @@ type
       procedure EventGroupsCalc    (var      arr           :TBool2Arr;
                                              event_group   :TEventGroupEnum);     inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
-  PSurf              =^TSurf;
+  PSurface           =^TSurface;
 
   {Main Layer Instance}
-  TSurfInst          =class {$region -fold}
+  TCamera            =class {$region -fold}
     public
+      {Speed Multiplier}
+      parallax_shift         : TPtPos;
+      mov_dir                : TMovingDirection;
+      {TODO}
+      scl_dif                : integer;
+      {scale direction}
+      scl_dir                : TSclDir;
+      {TODO}
+      dir_a                  : boolean;
+      dir_d                  : boolean;
+      dir_w                  : boolean;
+      dir_s                  : boolean;
       {TODO}
       bmp_rect: TPtRect;
       {create class instance}
@@ -1200,7 +1204,7 @@ type
       {destroy class instance}
       destructor  Destroy; override;  {$ifdef Linux}[local];{$endif}
   end; {$endregion}
-  PSurfInst          =^TSurfInst;
+  PCamera            =^TCamera;
 
   {Texture------------}
   TTex               =class {$region -fold}
@@ -1953,21 +1957,21 @@ type
       {TODO}
       only_fill         : boolean;
       {create class instance}
-      constructor Create;                                                                      {$ifdef Linux}[local];{$endif}
+      constructor Create;                                                                       {$ifdef Linux}[local];{$endif}
       {destroy class instance}
-      destructor  Destroy;                                                           override; {$ifdef Linux}[local];{$endif}
+      destructor  Destroy;                                                            override; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure CircleSelection              (x,y                           :integer;
-                                              constref m_c_var              :TSurf;
+                                              constref m_c_var              :TSurface;
                                               constref s_c_var              :TSelPts;
                                               constref pts                  :TPtPosFArr;
                                               constref pts_cnt              :TColor;
-                                              constref sel_draw             :boolean=True);    {$ifdef Linux}[local];{$endif}
+                                              constref sel_draw             :boolean=True);     {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure CircleSelectionModeDraw      (         x,y                  :integer;
-                                              constref m_c_var              :TSurf);   inline; {$ifdef Linux}[local];{$endif}
+                                              constref m_c_var              :TSurface); inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure ResizeCircleSelectionModeDraw;                                         inline; {$ifdef Linux}[local];{$endif}
+      procedure ResizeCircleSelectionModeDraw;                                          inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PCircSel           =^TCircSel;
 
@@ -2015,6 +2019,8 @@ type
       procedure  AddTileMapPreview;                                          inline; {$ifdef Linux}[local];{$endif}
       {}
       procedure  FilTileMapObj                 (constref tlmap_ind:TColor);  inline; {$ifdef Linux}[local];{$endif}
+      {}
+      procedure  MovTileMapObj                 (constref tlmap_ind:TColor);  inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PTlMap             =^TTlMap;
 (******************************************************************************)
@@ -2226,8 +2232,11 @@ var
   prev_panel_animk           : TPanel;
   curr_panel_animk           : TPanel; {$endregion}
 
+  {Camera}
+  cmr_var                    : TCamera;
+
   {Main Layer}
-  srf_var                    : TSurf;
+  srf_var                    : TSurface;
 
   {Background Texture(single instance, not tiled)}
   tex_var                    : TTex;
@@ -2269,7 +2278,6 @@ var
   tlm_var                    : TTlMap;
 
   {Actors}
-  add_actor_var              : TSurfInst;
   fast_actor_set_var         : TFastActorSet;
   img_lst_bmp                : Graphics.TBitmap;
   img_lst_bmp_ptr            : PInteger;
@@ -2284,6 +2292,7 @@ var
   obj_var                    : TSceneTree;
   single_selected_node_ind   : integer;
   source_node_x,source_node_y: integer;
+  is_mouse_in_scene_tree     : boolean;
 
   {Color Picker}
   pixel_color                : TColor;
@@ -2401,10 +2410,16 @@ procedure SelPnlsCalc;                                                inline; {$
 procedure UnsPnlsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
 // (Check Equality Of All Objects By Kind) Проверка на равенство всех обьектов по виду:
 function  AreAllObjKindEqual: TKindOfObject;                          inline; {$ifdef Linux}[local];{$endif}
+// (Check Equality Of All Objects By Parallax Shift) Проверка на равенство всех обьектов по параллаксу:
+function  AreAllObjPrlxEqual: TPtPos;                                 inline; {$ifdef Linux}[local];{$endif}
 
-procedure CreateNodeData     (         node_with_data:TTreeNode;
+procedure CrtNodeData        (         node_with_data:TTreeNode;
                                        g_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
-procedure ClearNodeData      (         node_with_data:TTreeNode);     inline; {$ifdef Linux}[local];{$endif}
+procedure WrtNodeData        (         data_start_ptr:PPtPos;
+                                       data_write    :TPtPos);        inline; {$ifdef Linux}[local];{$endif}
+procedure WrtNodeData        (         data_start_ptr:PBoolean;
+                                       data_write    :boolean);       inline; {$ifdef Linux}[local];{$endif}
+procedure ClrNodeData        (         node_with_data:TTreeNode);     inline; {$ifdef Linux}[local];{$endif}
 procedure DeleteSelectedNodes(         TV            :TTreeView);     inline; {$ifdef Linux}[local];{$endif}
 procedure AddTagPanel        (constref ind           :integer);       inline; {$ifdef Linux}[local];{$endif}
 procedure CreateNode         (         item_text1,
@@ -3128,7 +3143,7 @@ begin
       world_axis_shift:=PtPos((left+right )>>1-world_axis.x,
                               (top +bottom)>>1-world_axis.y);
       obj_var.SetWorldAxisShift(world_axis_shift);
-      EventGroupsCalc(calc_arr,[8,9,18,30,31,32,42]);
+      EventGroupsCalc(calc_arr,[8,9,18,30,31,32,41,48]);
       SpeedButtonRepaint;
       SB_Original_Texture_Size.down:=False;
     end;
@@ -3268,7 +3283,7 @@ begin
 
   with srf_var,sel_var,crc_sel_var do
     begin
-      EventGroupsCalc(calc_arr,[0,1,2,3,4,6,8,9,16,17,18,20,21,22,28,30,31,32,37,42]);
+      EventGroupsCalc(calc_arr,[0,1,2,3,4,6,8,9,16,17,18,20,21,22,28,30,31,32,37,44,48]);
       if down_select_points_ptr^ then
         begin
           ResizeCircleSelectionModeDraw;
@@ -3484,7 +3499,7 @@ begin
   repaint_spline_calc:=True;
   rectangles_calc    :=True;
   spline_scale_calc  :=True;
-  srf_var.scl_dir    :=sdNone;
+  cmr_var.scl_dir    :=sdNone;
   SetVisibility(SB_Visibility_Spline,show_spline);
   repaint_spline_calc:=False;
   rectangles_calc    :=False;
@@ -3519,7 +3534,7 @@ begin
   for i:=0 to High(show_obj_arr) do
     show_obj_arr[i]:=show_all;
   SB_Visibility_Show_All.Down:=False;
-  srf_var.scl_dir            :=sdNone;
+  cmr_var.scl_dir            :=sdNone;
   srf_var.EventGroupsCalc(calc_arr,[18,19,30,31,32]);
   SpeedButtonRepaint;
   srf_var.low_bmp_draw:=show_grid or show_snap_grid {or (show_spline and (sln_var.sln_pts_cnt<>0))};
@@ -3588,7 +3603,7 @@ begin
           Items[0].DeleteChildren;
           if Items.Count>1 then
             for i:=1 to Items.Count-1 do
-              ClearNodeData(Items[i]);
+              ClrNodeData(Items[i]);
         end;
 
       {Reset Layer Bounding Rectangles}
@@ -3781,12 +3796,12 @@ begin
   if down_select_points_ptr^ then
     begin
       crc_sel_var.only_fill:=False;
-      with obj_var do
-        FilScene(0,obj_cnt-1);
-      if show_world_axis then
+      {with obj_var do
+        FilScene(0,obj_cnt-1);}
+      {if show_world_axis then
         with srf_var do
           WorldAxisBmp(world_axis.x-world_axis_bmp.bmp_ftimg_width_origin >>1,
-                       world_axis.y-world_axis_bmp.bmp_ftimg_height_origin>>1);
+                       world_axis.y-world_axis_bmp.bmp_ftimg_height_origin>>1);}
     end;
   if sln_var.has_hid_ln_elim_sln or sln_var.has_byte_mode_sln then
     begin
@@ -3794,30 +3809,28 @@ begin
         begin
           if (not repaint_spline_hid_ln_calc1) {and (down_spline_ptr^)} then
             begin
-              srf_var.EventGroupsCalc(calc_arr,[18,23,24,27,30,31,32,34]);
+              srf_var.EventGroupsCalc(calc_arr,[18,23,24,{27,}30,31,32,34,41,48]);
               repaint_spline_hid_ln_calc1:=True;
               repaint_spline_hid_ln_calc2:=False;
             end;
         end
       else
         begin
-          if (not repaint_spline_hid_ln_calc2) then
-            begin
-              srf_var.EventGroupsCalc(calc_arr,[18,23,24,30,31,32{,34},41,48]);
-              repaint_spline_hid_ln_calc1:=False;
-              repaint_spline_hid_ln_calc2:=True;
-            end;
+          //if (not repaint_spline_hid_ln_calc2) then
+          srf_var.EventGroupsCalc(calc_arr,[18,23,24,30,31,32{,34},41,48]);
+          repaint_spline_hid_ln_calc1:=False;
+          repaint_spline_hid_ln_calc2:=True;
         end;
     end
   else
-  if (not down_select_points_ptr^) {and (sel_var.sel_pts_cnt<>0)} then
-    srf_var.EventGroupsCalc(calc_arr,[18,23,24,27,30,31,32]);
+  //if (not down_select_points_ptr^) {and (sel_var.sel_pts_cnt<>0)} then
+    srf_var.EventGroupsCalc(calc_arr,[18,23,24,{27,}30,31,32,41,48]);
 end; {$endregion}
 {$endregion}
 
 // (Main Layer) Основной слой:
 {LI} {$region -fold}
-constructor TSurf.Create(w,h:TColor);                                                                                                       {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TSurface.Create(w,h:TColor);                                                                                                       {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   obj_var.Add(kooBkgnd,world_axis_shift);
   CreateNode('Background','');
@@ -3846,7 +3859,7 @@ begin
   {$endif}
   low_bmp2_draw:=False;
 
-  parallax_shift            :=obj_default_prop.parallax_shift;
+  cmr_var.parallax_shift    :=obj_default_prop.parallax_shift;
   show_all                  :=True;
   inner_window_ui_visible   :=True;
   bg_color                  :={clBlack}clDkGray{clLtGray};
@@ -3855,11 +3868,11 @@ begin
 
   SetTextInfo(srf_bmp.Canvas,32,$00E6F9EB,'AR DESTINE');
 end; {$endregion}
-destructor  TSurf.Destroy;                                                                                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TSurface.Destroy;                                                                                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-procedure InvalidateInnerWindow;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure InvalidateInnerWindow;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   {$ifdef Windows}
   InvalidateRect(F_MainForm.Handle,
@@ -3872,7 +3885,7 @@ begin
   Invalidate;
   {$endif}
 end; {$endregion}
-procedure InvalidateRegion(rct_dst:TRect);                                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure InvalidateRegion(rct_dst:TRect);                                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   {$ifdef Windows}
   InvalidateRect(F_MainForm.Handle,
@@ -3885,7 +3898,7 @@ begin
   Invalidate;
   {$endif}
 end; {$endregion}
-procedure TSurf.MainBmpRectCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MainBmpRectCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   srf_bmp_rct:=PtBounds(0,0,{1024}F_MainForm.Width,{640}F_MainForm.Height);
   inn_wnd_rct:=PtRct({0000}splitters_arr[1]^+splitter_thickness+inn_wnd_mrg,
@@ -3894,7 +3907,7 @@ begin
                      {0638}splitters_arr[2]^                   -inn_wnd_mrg);
   pvt_var.SetPivotAxisRect(inn_wnd_rct);
 end; {$endregion}
-procedure TSurf.MainBmpSizeCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MainBmpSizeCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   srf_bmp .width :=srf_bmp_rct.width ;
   srf_bmp .height:=srf_bmp_rct.height;
@@ -3913,7 +3926,7 @@ begin
         tex_bmp.height:=Trunc(tex_bmp_rct_pts[1].y-tex_bmp_rct_pts[0].y);
       end;
 end; {$endregion}
-procedure TSurf.MainBmpArrsCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MainBmpArrsCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
   {Spline--------} {$region -fold}
@@ -3998,7 +4011,7 @@ begin
   rot_arr_ptr:=Unaligned(@rot_arr[0]); {$endregion}
 
 end; {$endregion}
-procedure TSurf.InnerWindowDraw(color:TColor);                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.InnerWindowDraw(color:TColor);                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_prop: TCurveProp;
   a,b     : integer;
@@ -4052,7 +4065,7 @@ begin
       );
     end;
 end; {$endregion}
-procedure TSurf.BmpSettings(bmp_dst:Graphics.TBitmap; pen_color:TColor; pen_mode:TPenMode=pmCopy; brush_style:TBrushStyle=bsSolid); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.BmpSettings(bmp_dst:Graphics.TBitmap; pen_color:TColor; pen_mode:TPenMode=pmCopy; brush_style:TBrushStyle=bsSolid); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with bmp_dst.Canvas do
     begin
@@ -4061,39 +4074,39 @@ begin
       Brush.Style:=brush_style;
     end;
 end; {$endregion}
-procedure TSurf.MainBmpToLowerBmp;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MainBmpToLowerBmp;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   BmpToBmp2(srf_bmp_ptr,low_bmp_ptr,srf_bmp.width,low_bmp.width,inn_wnd_rct,inn_wnd_mrg);
 end; {$endregion}
-procedure TSurf.MainBmpToLowerBmp2;                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MainBmpToLowerBmp2;                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   BmpToBmp2(srf_bmp_ptr,low_bmp2_ptr,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
 end; {$endregion}
-procedure TSurf.LowerBmpToMainBmp;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.LowerBmpToMainBmp;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   BmpToBmp2(low_bmp_ptr,srf_bmp_ptr,low_bmp.width,srf_bmp.width,inn_wnd_rct,inn_wnd_mrg);
 end; {$endregion}
-procedure TSurf.LowerBmp2ToMainBmp;                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.LowerBmp2ToMainBmp;                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   BmpToBmp2(low_bmp2_ptr,srf_bmp_ptr,low_bmp2.width,srf_bmp.width,inn_wnd_rct,inn_wnd_mrg);
 end; {$endregion}
-procedure TSurf.FilBkgndObj(constref bkgnd_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.FilBkgndObj(constref bkgnd_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with obj_var.obj_arr[obj_var.bkgnd_inds_obj_arr[bkgnd_ind]] do
     PPFloodFill(bkgnd_ptr,rct_clp_ptr^,bkgnd_width,bg_color);
 end; {$endregion}
-procedure TSurf.MovBkgndObj(constref bkgnd_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MovBkgndObj(constref bkgnd_ind:TColor);                                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with obj_var.obj_arr[obj_var.bkgnd_inds_obj_arr[bkgnd_ind]] do
     PPFloodFill(bkgnd_ptr,rct_dst_ptr^,bkgnd_width,bg_color);
 end; {$endregion}
-procedure TSurf.MovRight;                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MovRight;                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  mov_dir           :=mdRight;
-  world_axis_shift.x-=parallax_shift.x;
+  cmr_var.mov_dir   :=mdRight;
+  world_axis_shift.x-=cmr_var.parallax_shift.x;
   obj_var.MovWorldAxisShiftRight;
 end; {$endregion}
-procedure TSurf.FilRight(constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.FilRight(constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
 begin
@@ -4101,7 +4114,7 @@ begin
     begin
       rct:=PtRct
       (
-        rct_dst.right-parallax_shift.x,
+        rct_dst.right-cmr_var.parallax_shift.x,
         rct_dst.top,
         rct_dst.right,
         rct_dst.bottom
@@ -4110,9 +4123,9 @@ begin
       (
         bmp_dst_ptr,
         bmp_dst_ptr,
-        rct_dst.left +parallax_shift.x,
+        rct_dst.left +cmr_var.parallax_shift.x,
         rct_dst.top,
-        rct_dst.width-parallax_shift.x,
+        rct_dst.width-cmr_var.parallax_shift.x,
         rct_dst.height,
         rct_dst.left,
         rct_dst.top,
@@ -4120,16 +4133,15 @@ begin
         bmp_dst_width
       );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
-      MovScene    (     0,low_lr_obj_cnt-1);
     end;
 end; {$endregion}
-procedure TSurf.MovLeft;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MovLeft;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  mov_dir:=mdLeft;
-  world_axis_shift.x+=parallax_shift.x;
+  cmr_var.mov_dir:=mdLeft;
+  world_axis_shift.x+=cmr_var.parallax_shift.x;
   obj_var.MovWorldAxisShiftLeft;
 end; {$endregion}
-procedure TSurf.FilLeft (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.FilLeft (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
 begin
@@ -4139,7 +4151,7 @@ begin
       (
         rct_dst.left,
         rct_dst.top,
-        rct_dst.left+parallax_shift.x,
+        rct_dst.left+cmr_var.parallax_shift.x,
         rct_dst.bottom
       );
       BitBlt2
@@ -4148,24 +4160,23 @@ begin
         bmp_dst_ptr,
         rct_dst.left,
         rct_dst.top,
-        rct_dst.width-parallax_shift.x,
+        rct_dst.width-cmr_var.parallax_shift.x,
         rct_dst.height,
-        rct_dst.left +parallax_shift.x,
+        rct_dst.left +cmr_var.parallax_shift.x,
         rct_dst.top,
         bmp_dst_width,
         bmp_dst_width
       );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
-      MovScene    (     0,low_lr_obj_cnt-1);
     end;
 end; {$endregion}
-procedure TSurf.MovDown;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MovDown;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  mov_dir           :=mdDown;
-  world_axis_shift.y-=parallax_shift.y;
+  cmr_var.mov_dir   :=mdDown;
+  world_axis_shift.y-=cmr_var.parallax_shift.y;
   obj_var.MovWorldAxisShiftDown;
 end; {$endregion}
-procedure TSurf.FilDown (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.FilDown (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
 begin
@@ -4174,7 +4185,7 @@ begin
       rct:=PtRct
       (
         rct_dst.left,
-        rct_dst.bottom-parallax_shift.y,
+        rct_dst.bottom-cmr_var.parallax_shift.y,
         rct_dst.right,
         rct_dst.bottom
       );
@@ -4183,25 +4194,24 @@ begin
         bmp_dst_ptr,
         bmp_dst_ptr,
         rct_dst.left,
-        rct_dst.top   +parallax_shift.y,
+        rct_dst.top   +cmr_var.parallax_shift.y,
         rct_dst.width,
-        rct_dst.height-parallax_shift.y,
+        rct_dst.height-cmr_var.parallax_shift.y,
         rct_dst.left,
         rct_dst.top,
         bmp_dst_width,
         bmp_dst_width
       );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
-      MovScene    (     0,low_lr_obj_cnt-1);
     end;
 end; {$endregion}
-procedure TSurf.MovUp;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MovUp;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  mov_dir           :=mdUp;
-  world_axis_shift.y+=parallax_shift.y;
+  cmr_var.mov_dir   :=mdUp;
+  world_axis_shift.y+=cmr_var.parallax_shift.y;
   obj_var.MovWorldAxisShiftUp;
 end; {$endregion}
-procedure TSurf.FilUp   (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.FilUp   (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
 begin
@@ -4212,7 +4222,7 @@ begin
         rct_dst.left,
         rct_dst.top,
         rct_dst.right,
-        rct_dst.top+parallax_shift.y
+        rct_dst.top+cmr_var.parallax_shift.y
       );
       BitBlt2
       (
@@ -4221,20 +4231,19 @@ begin
         rct_dst.left,
         rct_dst.top,
         rct_dst.width,
-        rct_dst.height-parallax_shift.y,
+        rct_dst.height-cmr_var.parallax_shift.y,
         rct_dst.left,
-        rct_dst.top   +parallax_shift.y,
+        rct_dst.top   +cmr_var.parallax_shift.y,
         bmp_dst_width,
         bmp_dst_width
       );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
-      MovScene    (     0,low_lr_obj_cnt-1);
     end;
 end; {$endregion}
 
 {Events Queue}
 {Get Handles---------------------------------}
-procedure TSurf.GetHandles;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.GetHandles;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with obj_var,rgr_var,sgr_var,sln_var,tex_var do
     begin
@@ -4256,13 +4265,13 @@ begin
   GetObject(srf_bmp.Handle,SizeOf(buffer),@buffer);
 end; {$endregion}
 {World Axis: Drawing-------------------------}
-procedure TSurf.WorldAxisDraw;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.WorldAxisDraw;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   WorldAxisBmp(world_axis.x-world_axis_bmp.bmp_ftimg_width_origin >>1,
                world_axis.y-world_axis_bmp.bmp_ftimg_height_origin>>1);
 end; {$endregion}
 {Align Spline: Calculation-------------------}
-procedure TSurf.AlnSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.AlnSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var,sel_var,sgr_var do
     AlignPts
@@ -4274,7 +4283,7 @@ begin
     );
 end; {$endregion}
 {Select Pivot: Calculation-------------------}
-procedure TSurf.SelectPivotCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.SelectPivotCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
     Exit;
@@ -4308,7 +4317,7 @@ begin
     end;
 end; {$endregion}
 {Select Pivot: Drawing-----------------------}
-procedure TSurf.SelectPivotDraw;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.SelectPivotDraw;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -4357,7 +4366,7 @@ begin
     end;
 end; {$endregion}
 {Unselect Pivot: Drawing---------------------}
-procedure TSurf.UnselectPivotDraw;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.UnselectPivotDraw;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -4443,7 +4452,7 @@ begin
     end;
 end; {$endregion}
 {Add Spline: Calculation---------------------}
-procedure TSurf.AddSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.AddSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
     Exit;
@@ -4465,7 +4474,7 @@ begin
     end;
 end; {$endregion}
 {Add Spline: Hidden Lines Calc.--------------}
-procedure TSurf.AddSplineHdLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.AddSplineHdLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
     Exit;
@@ -4502,12 +4511,12 @@ begin
     end;
 end; {$endregion}
 {Add Spline: Has Edge(Lines) Calc.-----------}
-procedure TSurf.AddSplineHsLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.AddSplineHsLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   sln_var.HasSplineEds(sln_var.sln_obj_cnt-1);
 end; {$endregion}
 {Add Spline: Drawing-------------------------}
-procedure TSurf.AddSplineDraw;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.AddSplineDraw;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
     Exit;
@@ -4627,7 +4636,7 @@ begin
     end;
 end; {$endregion}
 {Add Tile Map: Calculation-------------------}
-procedure TSurf.AddTileMapCalc;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.AddTileMapCalc;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_tile_map) then
     Exit;
@@ -4650,7 +4659,7 @@ begin
     end;
 end; {$endregion}
 {Scale Background: Calculation---------------}
-procedure TSurf.SclBckgdCalc;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.SclBckgdCalc;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with srf_var do
     PtsScl
@@ -4660,13 +4669,13 @@ begin
       tex_var.tex_bmp_rct_pts,
       PtPosF(DEFAULT_SCL_MUL,
              DEFAULT_SCL_MUL),
-      scl_dir,
+      cmr_var.scl_dir,
       0,
       1
     );
 end; {$endregion}
 {Scale Spline: Calculation-------------------}
-procedure TSurf.SclSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.SclSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var do
     PtsScl
@@ -4676,13 +4685,13 @@ begin
       sln_pts,
       PtPosF(DEFAULT_SCL_MUL,
              DEFAULT_SCL_MUL),
-      scl_dir,
+      cmr_var.scl_dir,
       0,
       sln_pts_cnt-1
     );
 end; {$endregion}
 {Repaint Splines with Hidden Lines-----------}
-procedure TSurf.RepSplineHdLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.RepSplineHdLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   eds_img_arr_ptr        : PFastLine;
   eds_useless_fld_arr_ptr: PInteger;
@@ -4725,7 +4734,7 @@ begin
     end;
 end; {$endregion}
 {Repaint Spline: Drawing---------------------}
-procedure TSurf.RepSplineDraw0;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.RepSplineDraw0;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_eds_var_ptr: PFastLine;
   rct_pts_var_ptr: PFastLine;
@@ -4927,7 +4936,7 @@ begin
     end;
 
 end; {$endregion}
-procedure TSurf.RepSplineDraw1;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.RepSplineDraw1;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_eds_var_ptr: PFastLine;
   rct_pts_var_ptr: PFastLine;
@@ -5069,34 +5078,34 @@ begin
 
 end; {$endregion}
 {Duplicated Points: Drawing------------------}
-procedure TSurf.DupPtsDraw;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.DupPtsDraw;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var do
     ArrFill(dup_pts_arr,srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct,clGreen);
 end; {$endregion}
 {World Axis: Reset Background Settings-------}
-procedure TSurf.WAxSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.WAxSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   world_axis_bmp.SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
 end; {$endregion}
 {Selected Subgraph: Drawing------------------}
-procedure TSurf.SelectedSubgrtaphDraw;                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.SelectedSubgrtaphDraw;                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var,sel_var,pvt_var do
     WholeSubgraphDraw(Trunc(pvt.x),Trunc(pvt.y),pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
 end; {$endregion}
 {Sel. Tools Marker: Reset Background Settings}
-procedure TSurf.STMSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.STMSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   pvt_var.sel_tls_mrk.SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
 end; {$endregion}
 {Actors: Reset Background Settings-----------}
-procedure TSurf.ActSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.ActSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   fast_actor_set_var.d_icon.SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
 end; {$endregion}
 {TimeLine: Reset Background Settings---------}
-procedure TSurf.TLnSetBkgnd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.TLnSetBkgnd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -5106,12 +5115,12 @@ begin
     tmln_btn_arr[i].SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
 end; {$endregion}
 {Cursors: Reset Background Settings----------}
-procedure TSurf.CurSetBkgnd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.CurSetBkgnd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   cur_arr[0].SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
 end; {$endregion}
 {Background Post-Processing------------------}
-procedure TSurf.BkgPP;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.BkgPP;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i:integer;
 begin
@@ -5122,7 +5131,7 @@ begin
       PPBlur(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width);
 end; {$endregion}
 {Grid Post-Processing------------------------}
-procedure TSurf.GrdPP;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.GrdPP;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -5133,7 +5142,7 @@ begin
            11);
 end; {$endregion}
 {Main Render Procedure}
-procedure TSurf.MainDraw;                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.MainDraw;                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   execution_time: double;
 begin
@@ -5259,7 +5268,12 @@ begin
   {Scene Drawing(Lower Layer)-----------------------} {$region -fold}
   if exp3 then
     with obj_var do
-      FilScene(0,low_lr_obj_cnt-1); {$endregion}
+      begin
+        if (not down_play_anim_ptr^) then
+          FilScene1(0,low_lr_obj_cnt-1)
+        else
+          FilScene2(0,low_lr_obj_cnt-1);
+      end; {$endregion}
 
   {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
   if copy1_calc then
@@ -5268,7 +5282,12 @@ begin
   {Scene Drawing(Upper Layer)-----------------------} {$region -fold}
   if exp3 and (not down_play_anim_ptr^) then
     with obj_var do
-      FilScene(low_lr_obj_cnt,obj_cnt-1); {$endregion}
+      begin
+        if (not down_play_anim_ptr^) then
+          FilScene1(low_lr_obj_cnt,obj_cnt-1)
+        else
+          FilScene2(low_lr_obj_cnt,obj_cnt-1);
+      end; {$endregion}
 
   {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
   if copy2_calc then
@@ -5340,7 +5359,7 @@ begin
   );
 
 end; {$endregion}
-procedure TSurf.EventGroupsCalc(var arr:TBool2Arr; event_group:TEventGroupEnum);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSurface.EventGroupsCalc(var arr:TBool2Arr; event_group:TEventGroupEnum);                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   b: byte;
 begin
@@ -5350,13 +5369,15 @@ begin
   for b in event_group do
     arr[b]:=False;
 end; {$endregion}
+{$endregion}
 
-// (Main Layer Instance) Копия основного слоя:
-constructor TSurfInst.Create(w,h:TColor); {$ifdef Linux}[local];{$endif} {$region -fold}
+// (Camera) Камера:
+{LI} {$region -fold}
+constructor TCamera.Create(w,h:TColor); {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   bmp_rect:=PtBounds(0,0,w,h);
 end; {$endregion}
-destructor  TSurfInst.Destroy;            {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TCamera.Destroy;            {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
@@ -5583,7 +5604,7 @@ var
 begin
   with rct_clp_ptr^ do
     begin
-      sht_pow_mul:=rgrid_dnt*Power(DEFAULT_SCL_MUL,srf_var.scl_dif);
+      sht_pow_mul:=rgrid_dnt*Power(DEFAULT_SCL_MUL,cmr_var.scl_dif);
 
       // Horizontal Lines:
       x0   :=left;
@@ -5703,7 +5724,7 @@ var
 begin
   with rct_clp_ptr^ do
     begin
-      sht_pow_mul:=sgrid_dnt*Power(DEFAULT_SCL_MUL,srf_var.scl_dif);
+      sht_pow_mul:=sgrid_dnt*Power(DEFAULT_SCL_MUL,cmr_var.scl_dif);
 
       // Horizontal Lines:
       x0   :=left;
@@ -12583,7 +12604,7 @@ begin
   with rct_eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,srf_var.mov_dir,obj_arr_ptr^.parallax_shift);
+      MDCalc(rct_ent,cmr_var.mov_dir,obj_arr_ptr^.parallax_shift);
       if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -12618,7 +12639,7 @@ begin
   with rct_pts_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,srf_var.mov_dir,obj_arr_ptr^.parallax_shift);
+      MDCalc(rct_ent,cmr_var.mov_dir,obj_arr_ptr^.parallax_shift);
       if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -12656,7 +12677,7 @@ begin
   with eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,srf_var.mov_dir,obj_arr_ptr^.parallax_shift);
+      MDCalc(rct_ent,cmr_var.mov_dir,obj_arr_ptr^.parallax_shift);
       if (eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -12967,7 +12988,7 @@ begin
   with eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,srf_var.mov_dir,obj_arr_ptr^.parallax_shift);
+      MDCalc(rct_ent,cmr_var.mov_dir,obj_arr_ptr^.parallax_shift);
       if (eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -13295,7 +13316,7 @@ begin
   with eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,srf_var.mov_dir,obj_arr_ptr^.parallax_shift);
+      MDCalc(rct_ent,cmr_var.mov_dir,obj_arr_ptr^.parallax_shift);
       if (eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -13618,7 +13639,7 @@ begin
   with pts_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,srf_var.mov_dir,obj_arr_ptr^.parallax_shift);
+      MDCalc(rct_ent,cmr_var.mov_dir,obj_arr_ptr^.parallax_shift);
       if (pts_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -13661,7 +13682,7 @@ begin
   with pts_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,srf_var.mov_dir,obj_arr_ptr^.parallax_shift);
+      MDCalc(rct_ent,cmr_var.mov_dir,obj_arr_ptr^.parallax_shift);
       if (pts_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -14403,14 +14424,14 @@ begin
             FmlSplineObj[cur_tlt_dwn_btn_ind](world_axis.x,world_axis.y);
             Inc(sln_pts_cnt,sln_pts_cnt_add);
             sln_pts_add:=fml_pts;
-            EventGroupsCalc(calc_arr,[12,16,30,33]);
+            EventGroupsCalc(calc_arr,[12,16,30,33,41]);
           end;
         2:
           begin
             if (pts_cnt_val=0) then
               Exit;
             RndSplineObj(world_axis,512{256},512{256});
-            EventGroupsCalc(calc_arr,[12,16,30,33,40]);
+            EventGroupsCalc(calc_arr,[12,16,30,33,40,41]);
           end;
       end;
     end;
@@ -14725,7 +14746,6 @@ begin
 end; {$endregion}
 procedure TF_MainForm.FSE_Spline_Simplification_AngleEditingDone             (sender:TObject); {$region -fold}
 begin
-
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_Hidden_Line_EliminationChange                (sender:TObject); {$region -fold}
 begin
@@ -14982,7 +15002,7 @@ destructor  TCircSel.Destroy;                                                   
 begin
   inherited Destroy;
 end; {$endregion}
-procedure TCircSel.CircleSelection        (x,y:integer; constref m_c_var:TSurf; constref s_c_var:TSelPts; constref pts:TPtPosFArr; constref pts_cnt:TColor; constref sel_draw:boolean=True); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCircSel.CircleSelection        (x,y:integer; constref m_c_var:TSurface; constref s_c_var:TSelPts; constref pts:TPtPosFArr; constref pts_cnt:TColor; constref sel_draw:boolean=True); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   color_info     : TColorInfo;
   obj_arr_ptr    : PObjInfo;
@@ -15140,7 +15160,7 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TCircSel.CircleSelectionModeDraw(x,y:integer; constref m_c_var:TSurf);                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCircSel.CircleSelectionModeDraw(x,y:integer; constref m_c_var:TSurface);                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with srf_var do
     if IsPtInRct(x,y,PtRct(inn_wnd_rct.left  +crc_rad,
@@ -18297,7 +18317,7 @@ begin
 
   if down_play_anim_ptr^ then
     begin
-      srf_var.mov_dir   :=mdNone;
+      cmr_var.mov_dir   :=mdNone;
       F_Hot_Keys.Visible:=False;
       F_Hot_Keys.Enabled:=False;
       //srf_var.bg_color:=clBlack;
@@ -18507,7 +18527,7 @@ begin
 end; {$endregion}
 procedure TF_MainForm.I_Frame_ListMouseEnter(sender:TObject); {$region -fold}
 begin
-  with fast_actor_set_var.d_icon,add_actor_var do
+  with fast_actor_set_var.d_icon,cmr_var do
     SetBkgnd (img_lst_bmp_ptr,img_lst_bmp.width,img_lst_bmp.height,bmp_rect);
 end; {$endregion}
 procedure TF_MainForm.I_Frame_ListMouseDown (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer); {$region -fold}
@@ -18619,23 +18639,53 @@ begin
                   world_axis.y-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+obj_arr_ptr^.world_axis_shift.y);
         SetBkgnd
         (
-          srf_bmp_ptr,
-          srf_bmp.width,
-          srf_bmp.height,
-          inn_wnd_rct
+          obj_arr_ptr^.bkgnd_ptr,
+          obj_arr_ptr^.bkgnd_width,
+          obj_arr_ptr^.bkgnd_height,
+          obj_arr_ptr^.rct_clp_ptr^
         );
         with tilemap_sprite_ptr^ do
           SetBkgnd
           (
-            srf_bmp_ptr,
-            srf_bmp.width,
-            srf_bmp.height,
-            inn_wnd_rct
+            obj_arr_ptr^.bkgnd_ptr,
+            obj_arr_ptr^.bkgnd_width,
+            obj_arr_ptr^.bkgnd_height,
+            obj_arr_ptr^.rct_clp_ptr^
           );
         FilTileMap1;
         bmp_bkgnd_ptr:=@coll_arr[0];
       end;
 end; {$endregion}
+procedure  TTlMap.MovTileMapObj(constref tlmap_ind:TColor); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr: PObjInfo;
+begin
+  if show_tile_map then
+    with srf_var,tilemap_arr2[tlmap_ind] do
+      begin
+        obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.tlmap_inds_obj_arr[tlmap_ind]]);
+        SetRctPos(world_axis.x-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+obj_arr_ptr^.world_axis_shift.x,
+                  world_axis.y-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+obj_arr_ptr^.world_axis_shift.y);
+        SetBkgnd
+        (
+          obj_arr_ptr^.bkgnd_ptr,
+          obj_arr_ptr^.bkgnd_width,
+          obj_arr_ptr^.bkgnd_height,
+          obj_arr_ptr^.rct_dst_ptr^
+        );
+        with tilemap_sprite_ptr^ do
+          SetBkgnd
+          (
+            obj_arr_ptr^.bkgnd_ptr,
+            obj_arr_ptr^.bkgnd_width,
+            obj_arr_ptr^.bkgnd_height,
+            obj_arr_ptr^.rct_dst_ptr^
+          );
+        FilTileMap1;
+        bmp_bkgnd_ptr:=@coll_arr[0];
+      end;
+end; {$endregion}
+
 {$endregion}
 {UI} {$region -fold}
 procedure TF_MainForm.SB_Map_EditorClick (sender:TObject); {$region -fold}
@@ -18708,14 +18758,13 @@ end; {$endregion}
 {UI} {$region -fold}
 procedure TF_MainForm.TB_SpeedChange    (sender:TObject);                                                          {$region -fold}
 begin
-  srf_var.parallax_shift.x:=TB_Speed.Position;
-  srf_var.parallax_shift.y:=TB_Speed.Position;
+  cmr_var.parallax_shift.x:=TB_Speed.Position;
+  cmr_var.parallax_shift.y:=TB_Speed.Position;
   main_char_speed         :=TB_Speed.Position;
-  obj_var.SetParallaxShift(srf_var.parallax_shift);
+  obj_var.SetParallaxShift(cmr_var.parallax_shift);
 end; {$endregion}
 procedure TF_MainForm.TB_SpeedClick     (sender:TObject);                                                          {$region -fold}
 begin
-
 end; {$endregion}
 procedure TF_MainForm.KeysEnable;                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -19259,14 +19308,15 @@ begin
   if drawing_area_enter_calc then
     begin
       {Check Exit-----} {$region -fold}
-      if (srf_var.inn_wnd_rct.width <=0) or
+      if  sln_var.draw_spline            or
+         (srf_var.inn_wnd_rct.width <=0) or
          (srf_var.inn_wnd_rct.height<=0) or
         ((sel_var.sel_pts_cnt        >0) and
          (Shift<>[ssCtrl]))              then
         Exit; {$endregion}
       if (Shift<>[ssCtrl]) then
         begin
-          with obj_var,srf_var,rgr_var,sgr_var,crc_sel_var do
+          with obj_var,cmr_var,srf_var,rgr_var,sgr_var,crc_sel_var do
             begin
               if (scl_dif<-17{20}) then
                 Exit;
@@ -19320,14 +19370,15 @@ begin
   if drawing_area_enter_calc then
     begin
       {Check Exit-----} {$region -fold}
-      if (srf_var.inn_wnd_rct.width <=0) or
+      if  sln_var.draw_spline            or
+         (srf_var.inn_wnd_rct.width <=0) or
          (srf_var.inn_wnd_rct.height<=0) or
         ((sel_var.sel_pts_cnt        >0) and
          (Shift<>[ssCtrl]))              then
         Exit; {$endregion}
       if (Shift<>[ssCtrl]) then
         begin
-          with obj_var,srf_var,tex_var,rgr_var,sgr_var,crc_sel_var do
+          with obj_var,cmr_var,srf_var,tex_var,rgr_var,sgr_var,crc_sel_var do
             begin
               if (Trunc(Math.Max(tex_bmp_rct_pts[1].x-tex_bmp_rct_pts[0].x,tex_bmp_rct_pts[1].y-tex_bmp_rct_pts[0].y)/50)>Math.Min(inn_wnd_rct.width,inn_wnd_rct.height)) then
                 Exit;
@@ -19424,7 +19475,8 @@ begin
       end; {$endregion}
 
   {Check Exit-------} {$region -fold}
-  if (srf_var.inn_wnd_rct.width <=0) or
+  if  sln_var.draw_spline            or
+     (srf_var.inn_wnd_rct.width <=0) or
      (srf_var.inn_wnd_rct.height<=0) or
      (sel_var.sel_pts_cnt       <>0) then
     Exit;
@@ -19483,9 +19535,10 @@ begin
       end;
 
       {Check Exit-----} {$region -fold}
-      if (inn_wnd_rct.width <=0) or
+      if  draw_spline            or
+         (inn_wnd_rct.width <=0) or
          (inn_wnd_rct.height<=0) or
-         (sel_var.sel_pts_cnt>0) then
+         (sel_pts_cnt        >0) then
         Exit; {$endregion}
 
       if T_Menu.Enabled then
@@ -19529,13 +19582,13 @@ begin
         begin
           case Key of
             {'a'}65:
-              dir_a:=True;
+              cmr_var.dir_a:=True;
             {'d'}68:
-              dir_d:=True;
+              cmr_var.dir_d:=True;
             {'w'}87:
-              dir_w:=True;
+              cmr_var.dir_w:=True;
             {'s'}83:
-              dir_s:=True;
+              cmr_var.dir_s:=True;
           end;
           Exit;
         end;
@@ -19588,6 +19641,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
+            MovScene1(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
         {#100}{'d'} 68: {$region -fold}
@@ -19600,6 +19654,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
+            MovScene1(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
         {#119}{'w'} 87: {$region -fold}
@@ -19612,6 +19667,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
+            MovScene1(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
         {#115}{'s'} 83: {$region -fold}
@@ -19624,6 +19680,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
+            MovScene1(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
       end;
@@ -19648,7 +19705,7 @@ begin
                     obj_cnt-1
                   );
                   SetRctDstPtr(@inn_wnd_rct,low_lr_obj_cnt,obj_cnt-1);
-                  MovScene    (             low_lr_obj_cnt,obj_cnt-1);
+                  MovScene1   (             low_lr_obj_cnt,obj_cnt-1);
               end; {$endregion}
               {Hide Panels----------------} {$region -fold}
               VisibilityChange(False);
@@ -19701,7 +19758,8 @@ begin
   end;
 
   {Check Exit-----} {$region -fold}
-  if (srf_var.inn_wnd_rct.width <=0) or
+  if  sln_var.draw_spline            or
+     (srf_var.inn_wnd_rct.width <=0) or
      (srf_var.inn_wnd_rct.height<=0) or
      (sel_var.sel_pts_cnt       <>0) then
     Exit; {$endregion}
@@ -19712,17 +19770,17 @@ begin
   if T_Game.Enabled or T_Game_Loop.Enabled then
     begin
       case Key of
-        65,68,87,83: srf_var.mov_dir:=mdNone;
+        65,68,87,83: cmr_var.mov_dir:=mdNone;
       end;
       case Key of
         {'a'}65:
-          srf_var.dir_a:=False;
+          cmr_var.dir_a:=False;
         {'d'}68:
-          srf_var.dir_d:=False;
+          cmr_var.dir_d:=False;
         {'w'}87:
-          srf_var.dir_w:=False;
+          cmr_var.dir_w:=False;
         {'s'}83:
-          srf_var.dir_s:=False;
+          cmr_var.dir_s:=False;
       end;
       //Exit;
     end;
@@ -19954,7 +20012,11 @@ begin
   SB_Visibility_Show_All.Glyph:=SB_Spline_Points_Show .Glyph; {$endregion}
 
   {Main Layer-----------} {$region -fold}
-  srf_var:=TSurf.Create(width,height); {$endregion}
+  cmr_var:=TCamera.Create(I_Frame_List.width,
+                          I_Frame_List.height); {$endregion}
+
+  {Main Layer-----------} {$region -fold}
+  srf_var:=TSurface.Create(width,height); {$endregion}
 
   {Texture--------------} {$region -fold}
   tex_var:=TTex.Create(512,512); {$endregion}
@@ -20084,8 +20146,6 @@ begin
            I_Frame_List.Canvas,
            img_lst_bmp .Canvas,
            SRCCOPY);
-  add_actor_var     :=TSurfInst.Create(I_Frame_List.width,
-                                       I_Frame_List.height);
   down_add_actor_ptr:=@SB_Add_Actor.Down;
   show_actor        :=True; {$endregion}
 
@@ -20366,12 +20426,7 @@ begin
         obj_var.obj_inds_arr[i]:=PNodeData(Items[i].Data)^.g_ind;
         obj_var.obj_arr[obj_var.obj_inds_arr[i]].t_ind:=i;
       end;
-  with obj_var do
-    begin
-      low_lr_obj_cnt:=LowLrObjCntCalc1;
-      upp_lr_obj_cnt:=obj_cnt-low_lr_obj_cnt;
-      LowLrObjCntCalc2;
-    end;
+  obj_var.LowLrObjCntCalc3;
 end; {$endregion}
 procedure ScTIndsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -20471,13 +20526,13 @@ function  AreAllObjKindEqual: TKindOfObject;                                    
 var
   next_selected_node: TTreeNode;
   curr_selected_node: TTreeNode;
-  i,ind             : integer;
+  i                 : integer;
   s                 : string;
 begin
   with F_MainForm.TV_Scene_Tree do
     begin
-      Result:=TKindOfObject(11);
-      ind   :=0;
+      Result                    :=TKindOfObject(11);
+      obj_var.first_sel_node_ind:=0;
       if (SelectionCount=0) then
         begin
           F_MainForm.L_Object_Name.Caption:='';
@@ -20486,19 +20541,19 @@ begin
       for i:=0 to Items.Count-1 do
         if Items[i].Selected then
           begin
-            Result                  :=obj_var.obj_arr[PNodeData(Items[i].Data)^.g_ind].koo;
-            ind                     :=i;
-            single_selected_node_ind:=ind;
+            Result                    :=obj_var.obj_arr[PNodeData(Items[i].Data)^.g_ind].koo;
+            obj_var.first_sel_node_ind:=i;
+            single_selected_node_ind  :=obj_var.first_sel_node_ind;
             Break;
           end;
       if (SelectionCount=1) then
         begin
-          s:=GetEnumName(TypeInfo(TKindOfObject),Ord(obj_var.obj_arr[PNodeData(Items[ind].Data)^.g_ind].koo));
+          s:=GetEnumName(TypeInfo(TKindOfObject),Ord(Result));
           Delete(s,1,3);
           F_MainForm.L_Object_Name.Caption:=s;
           Exit;
         end;
-      next_selected_node:=Items[ind];
+      next_selected_node:=Items[obj_var.first_sel_node_ind];
       curr_selected_node:=next_selected_node;
       while (next_selected_node<>Nil) do
         begin
@@ -20515,7 +20570,45 @@ begin
       F_MainForm.L_Object_Name.Caption:=s;
     end;
 end; {$endregion}
-procedure CreateNodeData(node_with_data:TTreeNode; g_ind:TColor);                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  AreAllObjPrlxEqual: TPtPos;                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  next_selected_node: TTreeNode;
+  curr_selected_node: TTreeNode;
+begin
+  with F_MainForm.TV_Scene_Tree do
+    begin
+      Result:=Default(TPtPos);
+      if (SelectionCount=0) then
+        begin
+          F_MainForm.SE_Object_Properties_Parallax_Shift.Color:=DEFAULT_MISCELLANEOUS_VALUES_COLOR;
+          Exit;
+        end;
+      Result:=obj_var.obj_arr[PNodeData(Items[obj_var.first_sel_node_ind].Data)^.g_ind].parallax_shift;
+      if (SelectionCount=1) then
+        begin
+          F_MainForm.SE_Object_Properties_Parallax_Shift.Color:=DEFAULT_MISCELLANEOUS_VALUES_COLOR;
+          Exit;
+        end;
+      next_selected_node:=Items[obj_var.first_sel_node_ind];
+      curr_selected_node:=next_selected_node;
+      while (next_selected_node<>Nil) do
+        begin
+          curr_selected_node:=next_selected_node;
+          if (obj_var.obj_arr[PNodeData(next_selected_node.Data)^.g_ind].parallax_shift=Result) then
+            next_selected_node:=next_selected_node.GetNextMultiSelected
+          else
+            Break;
+        end;
+      if (SelectionCount>1) then
+        begin
+          if (obj_var.obj_arr[PNodeData(curr_selected_node.Data)^.g_ind].parallax_shift<>Result) then
+            F_MainForm.SE_Object_Properties_Parallax_Shift.Color:=clGray
+          else
+            F_MainForm.SE_Object_Properties_Parallax_Shift.Color:=DEFAULT_MISCELLANEOUS_VALUES_COLOR;
+        end;
+    end;
+end; {$endregion}
+procedure CrtNodeData(node_with_data:TTreeNode; g_ind:TColor);                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   node_data_pointer: PNodeData;
 begin
@@ -20535,7 +20628,38 @@ begin
   end;
   node_with_data.Data:=PNodeData(node_data_pointer);
 end; {$endregion}
-procedure ClearNodeData (node_with_data:TTreeNode);                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure WrtNodeData(data_start_ptr:PPtPos  ; data_write:TPtPos);                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i,size_of_data: integer;
+begin
+  if (F_MainForm.TV_Scene_Tree.SelectionCount=0) then
+    Exit;
+  size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
+  with F_MainForm.TV_Scene_Tree do
+    for i:=0 to Items.Count-1 do
+      if Items[i].Selected then
+        (data_start_ptr+i*size_of_data)^:=data_write;
+  {with obj_var,F_MainForm do
+    begin
+      M_Description.Lines.Text:={IntToStr(single_selected_node_ind)}{IntToStr(F_MainForm.TV_Scene_Tree.Items.Count)}'';
+      for i:=0 to obj_cnt-1 do
+        begin
+          M_Description.Lines.Add('obj_arr['+IntToStr(i)+'].parallax_shift.x='+IntToStr(obj_arr[i].parallax_shift.x)+#13+
+                                  'obj_arr['+IntToStr(i)+'].parallax_shift.y='+IntToStr(obj_arr[i].parallax_shift.y)+#13);
+        end;
+    end;}
+end; {$endregion}
+procedure WrtNodeData(data_start_ptr:PBoolean; data_write:boolean);                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i,size_of_data: integer;
+begin
+  size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
+  with F_MainForm.TV_Scene_Tree do
+    for i:=0 to Items.Count-1 do
+      if Items[i].Selected then
+        (data_start_ptr+i*size_of_data)^:=data_write;
+end; {$endregion}
+procedure ClrNodeData(node_with_data:TTreeNode);                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (node_with_data.data<>Nil) then
     Dispose(PNodeData(node_with_data.data));
@@ -20623,26 +20747,26 @@ begin
           ind                                   :=0;
         end;
       with obj_var do
-        CreateNodeData(Items[ind],obj_cnt-1);
+        CrtNodeData(Items[ind],obj_cnt-1);
       AddTagPanel(ind);
       Items.EndUpdate;
     end;
 end; {$endregion}
 {$endregion}
 {UI} {$region -fold}
-constructor TF_MainForm.Create                                 (TheOwner:TComponent);                                                      {$region -fold}
+constructor TF_MainForm.Create                                      (TheOwner:TComponent);                                                      {$region -fold}
 begin
   inherited Create(TheOwner);
 end; {$endregion}
-procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelDown    (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
+procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelDown         (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
 begin
   TV_Scene_Tree.Perform(WM_VSCROLL,MakeWParam(SB_LINEDOWN,0),0);
 end; {$endregion}
-procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelUp      (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
+procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelUp           (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
 begin
   TV_Scene_Tree.Perform(WM_VSCROLL,MakeWParam(SB_LINEUP,0),0);
 end; {$endregion}
-procedure TF_MainForm.MI_Add_GroupClick                        (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Add_GroupClick                             (sender:TObject);                                                           {$region -fold}
 var
   world_axis_shift: TPtPos;
   //items_text      : ansistring;
@@ -20661,7 +20785,7 @@ begin
     end;
   DrawObjectInfo0;
 end; {$endregion}
-procedure TF_MainForm.MI_Remove_ObjectClick                    (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Remove_ObjectClick                         (sender:TObject);                                                           {$region -fold}
 begin
   if (TV_Scene_Tree.Selected=Nil) then
     begin
@@ -20675,7 +20799,7 @@ begin
     end;
   DeleteSelectedNodes(TV_Scene_Tree);
 end; {$endregion}
-procedure TF_MainForm.MI_Group_ObjectsClick                    (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Group_ObjectsClick                         (sender:TObject);                                                           {$region -fold}
 var
   j,m: integer;
 
@@ -20709,20 +20833,20 @@ begin
         Items.ClearMultiSelection(True);
       obj_var.Add(kooGroup,srf_var.world_axis_shift);
       with obj_var do
-        CreateNodeData(Items[m+1],obj_cnt-1);
+        CrtNodeData(Items[m+1],obj_cnt-1);
       ObjIndsCalc;
       ScTIndsCalc;
       Items.EndUpdate;
     end;
 end; {$endregion}
-procedure TF_MainForm.MI_Delete_Without_ChildrenClick          (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Delete_Without_ChildrenClick               (sender:TObject);                                                           {$region -fold}
 begin
 
 end; {$endregion}
-procedure TF_MainForm.MI_Delete_All_GroupsClick                (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Delete_All_GroupsClick                     (sender:TObject);                                                           {$region -fold}
 begin
 end; {$endregion}
-procedure TF_MainForm.MI_Select_AllClick                       (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Select_AllClick                            (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -20731,16 +20855,18 @@ begin
       Items[i].Selected:=True;
   SelPnlsCalc;
   AreAllObjKindEqual;
+  AreAllObjPrlxEqual;
 end; {$endregion}
-procedure TF_MainForm.MI_Unselect_AllClick                     (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Unselect_AllClick                          (sender:TObject);                                                           {$region -fold}
 begin
   with TV_Scene_Tree do
     if (SelectionCount<>0) then
       Items.ClearMultiSelection(True);
   UnsPnlsCalc;
   AreAllObjKindEqual;
+  AreAllObjPrlxEqual;
 end; {$endregion}
-procedure TF_MainForm.MI_Fold_AllClick                         (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Fold_AllClick                              (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -20748,12 +20874,12 @@ begin
     TV_Scene_Tree.Items[i].Expanded:=False;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Unfold_AllClick                       (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Unfold_AllClick                            (sender:TObject);                                                           {$region -fold}
 begin
   TV_Scene_Tree.FullExpand;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Fold_SelectedClick                    (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Fold_SelectedClick                         (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -20762,7 +20888,7 @@ begin
       TV_Scene_Tree.Items[i].Expanded:=False;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Unfold_SelectedClick                  (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Unfold_SelectedClick                       (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -20771,33 +20897,36 @@ begin
       TV_Scene_Tree.Items[i].Expanded:=True;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeExpanded                    (sender:TObject; node:TTreeNode);                                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeExpanded                         (sender:TObject; node:TTreeNode);                                           {$region -fold}
 begin
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeExpanding                   (sender:TObject; node:TTreeNode; var allowexpansion:boolean);               {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeExpanding                        (sender:TObject; node:TTreeNode; var allowexpansion:boolean);               {$region -fold}
 begin
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Goto_First_ObjectClick                (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Goto_First_ObjectClick                     (sender:TObject);                                                           {$region -fold}
 begin
   TV_Scene_Tree.Items[1].Selected:=True;
   SelPnlsCalc;
   AreAllObjKindEqual;
+  AreAllObjPrlxEqual;
 end; {$endregion}
-procedure TF_MainForm.MI_Goto_Last_ObjectClick                 (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Goto_Last_ObjectClick                      (sender:TObject);                                                           {$region -fold}
 begin
   TV_Scene_Tree.Items[TV_Scene_Tree.Items.Count-1].Selected:=True;
   SelPnlsCalc;
   AreAllObjKindEqual;
+  AreAllObjPrlxEqual;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeDragOver                    (sender,source:TObject; x,y:integer; state:TDragState; var accept:boolean); {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeDragOver                         (sender,source:TObject; x,y:integer; state:TDragState; var accept:boolean); {$region -fold}
 begin
   SelPnlsCalc;
   AreAllObjKindEqual;
+  AreAllObjPrlxEqual;
   accept:=True and (sel_var.sel_pts_cnt=0); // If TRUE then accept the draged item
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeMouseDown                   (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);      {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeMouseDown                        (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);      {$region -fold}
 var
   target_node: TTreeNode;
 begin
@@ -20810,22 +20939,26 @@ begin
         target_node  :=GetNodeAt(x,y);
         if (target_node<>Nil) then
           begin
-            single_selected_node_ind:=target_node.AbsoluteIndex;
-            target_node.Selected    :=False;
+            SE_Object_Properties_Parallax_Shift.Value:=obj_var.obj_arr[PNodeData(target_node.Data)^.g_ind].parallax_shift.x;
+            obj_var.global_prop.parallax_shift.x     :=SE_Object_Properties_Parallax_Shift.Value;
+            obj_var.global_prop.parallax_shift.y     :=SE_Object_Properties_Parallax_Shift.Value;
+            single_selected_node_ind                 :=target_node.AbsoluteIndex;
+            target_node.Selected                     :=False;
             BeginDrag(True);
           end
         else
         if (SelectionCount<>0) then
           begin
             Items.ClearMultiSelection(True);
-            F_MainForm.L_Object_Name.Caption:='';
+            L_Object_Name                      .Caption:='';
+            SE_Object_Properties_Parallax_Shift.Color  :=DEFAULT_MISCELLANEOUS_VALUES_COLOR;
+            EndDrag(False);
           end;
         ReadOnly:=True;
         UnsPnlsCalc;
-        //AreAllObjKindEqual;
       end;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeMouseMove                   (sender:TObject; shift:TShiftState; x,y:integer);                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeMouseMove                        (sender:TObject; shift:TShiftState; x,y:integer);                           {$region -fold}
 var
   target_node: TTreeNode;
   i          : integer;
@@ -20846,27 +20979,32 @@ begin
           Items[i].NodeEffect:=gdeNormal;
     end;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeMouseLeave                  (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeMouseEnter                       (sender:TObject);                                                           {$region -fold}
+begin
+  is_mouse_in_scene_tree:=True;
+end; {$endregion}
+procedure TF_MainForm.TV_Scene_TreeMouseLeave                       (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
   with TV_Scene_Tree do
     for i:=0 to Items.Count-1 do
       Items[i].NodeEffect:=gdeNormal;
+  is_mouse_in_scene_tree:=False;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeDblClick                    (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeDblClick                         (sender:TObject);                                                           {$region -fold}
 begin
 
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeEditing                     (sender:TObject; node:TTreeNode; var allowedit:boolean);                    {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeEditing                          (sender:TObject; node:TTreeNode; var allowedit:boolean);                    {$region -fold}
 begin
   KeysDisable;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeEditingEnd                  (sender:TObject; node:TTreeNode; cancel:boolean);                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeEditingEnd                       (sender:TObject; node:TTreeNode; cancel:boolean);                           {$region -fold}
 begin
   KeysEnable;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeKeyDown                     (sender:TObject; var key:word; shift:TShiftState);                          {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeKeyDown                          (sender:TObject; var key:word; shift:TShiftState);                          {$region -fold}
 var
   s: string;
 begin
@@ -20881,7 +21019,6 @@ begin
                   Dec(single_selected_node_ind);
                   (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[single_selected_node_ind+1]] as TPanel).Color:=$00ABAFA3;
                   (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[single_selected_node_ind+0]] as TPanel).Color:=$0082804D;
-                  //F_MainForm.Memo1.Lines.Text:=IntToStr(single_selected_node_ind);
                 end
               else
                 begin
@@ -20911,17 +21048,18 @@ begin
         38,40:
           if (SelectionCount=1) then
             begin
+              SE_Object_Properties_Parallax_Shift.Value:=obj_var.obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].parallax_shift.x;
               s:=GetEnumName(TypeInfo(TKindOfObject),Ord(obj_var.obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].koo));
               Delete(s,1,3);
               if (s='Empty') then
-                F_MainForm.L_Object_Name.Caption:=''
+                L_Object_Name.Caption:=''
               else
-                F_MainForm.L_Object_Name.Caption:=s;
+                L_Object_Name.Caption:=s;
             end;
       end;
     end;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeKeyPress                    (sender:TObject; var key:char);                                             {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeKeyPress                         (sender:TObject; var key:char);                                             {$region -fold}
 begin
   with TV_Scene_Tree do
     case key of
@@ -20939,7 +21077,7 @@ begin
     end;
   //Mouse_Event
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeDragDrop                    (sender,source:TObject; x,y:integer);                                       {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeDragDrop                         (sender,source:TObject; x,y:integer);                                       {$region -fold}
 var
   source_node,target_node: TTreeNode;
 begin
@@ -20959,10 +21097,11 @@ begin
   ObjIndsCalc;
   ScTIndsCalc;
   CngPnVsCalc;
-  AreAllObjKindEqual;
-  srf_var.EventGroupsCalc(calc_arr,[30]);
+  {AreAllObjKindEqual;
+  AreAllObjPrlxEqual;}
+  srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
-procedure TF_MainForm.S_TreeView_SplitterChangeBounds          (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.S_TreeView_SplitterChangeBounds               (sender:TObject);                                                           {$region -fold}
 begin
   {$ifdef Windows}
   Application.ProcessMessages;
@@ -20974,28 +21113,33 @@ begin
   treeview_splitter_shift:=S_TreeView_Splitter.left-S_Splitter3.left;
 end; {$endregion}
 // (Object Properties) Свойства обьекта:
-procedure TF_MainForm.SB_Object_PropertiesMouseEnter           (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Object_PropertiesMouseEnter                (sender:TObject);                                                           {$region -fold}
 begin
   SB_Object_Properties.Color:=HighLight(SB_Object_Properties.Color,0,0,0,0,0,16);
   P_Object_Properties .Color:=HighLight(P_Object_Properties .Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.SB_Object_PropertiesMouseLeave           (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Object_PropertiesMouseLeave                (sender:TObject);                                                           {$region -fold}
 begin
   SB_Object_Properties.Color:=Darken(SB_Object_Properties.Color,0,0,0,0,0,16);
   P_Object_Properties .Color:=Darken(P_Object_Properties .Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.SE_Object_Properties_Parallax_ShiftChange(sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SE_Object_Properties_Parallax_ShiftChange     (sender:TObject);                                                           {$region -fold}
 begin
-  obj_var.global_prop.parallax_shift.x:=SE_Object_Properties_Parallax_Shift.value;
-  obj_var.global_prop.parallax_shift.y:=SE_Object_Properties_Parallax_Shift.value;
+  obj_var.global_prop.parallax_shift.x:=SE_Object_Properties_Parallax_Shift.Value;
+  obj_var.global_prop.parallax_shift.y:=SE_Object_Properties_Parallax_Shift.Value;
+  if (TV_Scene_Tree.SelectionCount=0) or (is_mouse_in_scene_tree) then
+    Exit;
+  obj_var.LowLrObjCntCalc3;
+  WrtNodeData(PPtPos(@obj_var.obj_arr[PNodeData(F_MainForm.TV_Scene_Tree.Items[0].Data)^.g_ind].parallax_shift),PtPos(SE_Object_Properties_Parallax_Shift.Value,SE_Object_Properties_Parallax_Shift.Value));
+  srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
 // (Tag    Properties) Свойства тега:
-procedure TF_MainForm.SB_Tag_PropertiesMouseEnter              (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Tag_PropertiesMouseEnter                   (sender:TObject);                                                           {$region -fold}
 begin
   SB_Tag_Properties.Color:=HighLight(SB_Tag_Properties.Color,0,0,0,0,0,16);
   P_Tag_Properties .Color:=HighLight(P_Tag_Properties .Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.SB_Tag_PropertiesMouseLeave              (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Tag_PropertiesMouseLeave                   (sender:TObject);                                                           {$region -fold}
 begin
   SB_Tag_Properties.Color:=Darken(SB_Tag_Properties.Color,0,0,0,0,0,16);
   P_Tag_Properties .Color:=Darken(P_Tag_Properties .Color,0,0,0,0,0,16);
@@ -21341,7 +21485,7 @@ begin
 
   exec_timer.Start;
 
-  with obj_var,srf_var,sln_var,tex_var,srf_var,tex_var,sln_var,sel_var,crc_sel_var,pvt_var,fast_physics_var,fast_fluid_var do
+  with obj_var,cmr_var,srf_var,sln_var,tex_var,srf_var,tex_var,sln_var,sel_var,crc_sel_var,pvt_var,fast_physics_var,fast_fluid_var do
     begin
 
       Randomize;
@@ -21379,13 +21523,16 @@ begin
           main_char_pos.x+=main_char_speed;
           MovLeft;
           if low_bmp_draw then
-            FilLeft
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
+            begin
+              FilLeft
+              (
+                low_bmp_ptr,
+                low_bmp.width,
+                low_bmp.height,
+                inn_wnd_rct
+              );
+              MovScene2(0,low_lr_obj_cnt-1);
+            end;
         end;
       if dir_d then
         begin
@@ -21393,13 +21540,16 @@ begin
           main_char_pos.x-=main_char_speed;
           MovRight;
           if low_bmp_draw then
-            FilRight
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
+            begin
+              FilRight
+              (
+                low_bmp_ptr,
+                low_bmp.width,
+                low_bmp.height,
+                inn_wnd_rct
+              );
+              MovScene2(0,low_lr_obj_cnt-1);
+            end;
         end;
       if dir_w then
         begin
@@ -21407,13 +21557,16 @@ begin
           main_char_pos.y+=main_char_speed;
           MovUp;
           if low_bmp_draw then
-            FilUp
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
+            begin
+              FilUp
+              (
+                low_bmp_ptr,
+                low_bmp.width,
+                low_bmp.height,
+                inn_wnd_rct
+              );
+              MovScene2(0,low_lr_obj_cnt-1);
+            end;
         end;
       if dir_s then
         begin
@@ -21421,13 +21574,16 @@ begin
           main_char_pos.y-=main_char_speed;
           MovDown;
           if low_bmp_draw then
-            FilDown
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
+            begin
+              FilDown
+              (
+                low_bmp_ptr,
+                low_bmp.width,
+                low_bmp.height,
+                inn_wnd_rct
+              );
+              MovScene2(0,low_lr_obj_cnt-1);
+            end;
         end;
 
       if low_bmp_draw then
@@ -21449,79 +21605,8 @@ begin
             obj_cnt-1
           );}
           SetRctDstPtr(@inn_wnd_rct,low_lr_obj_cnt,obj_cnt-1);
-          MovScene    (             low_lr_obj_cnt,obj_cnt-1);
+          MovScene2   (             low_lr_obj_cnt,obj_cnt-1);
       end; {$endregion}
-
-      {Mask Template Sprites Drawing}
-      with tlm_var do
-        begin
-
-          {with mask_template_arr2[0] do
-              begin
-                SetRctPos(world_axis.x-(bmp_ftimg_width_origin *mask_tpl_sprite_w_h.x)>>1+srf_var.world_axis_shift.x,
-                          world_axis.y-(bmp_ftimg_height_origin*mask_tpl_sprite_w_h.y)>>1+srf_var.world_axis_shift.y);
-                SetBckgd
-                (
-                  srf_bmp_ptr,
-                  srf_bmp.width,
-                  srf_bmp.height
-                );
-                with mask_tpl_sprite_ptr^ do
-                  SetBckgd
-                  (
-                    srf_bmp_ptr,
-                    srf_bmp.width,
-                    srf_bmp.height
-                  );
-                FilMaskTemplate0;
-              end;}
-
-          //for i:=0 to SE_Spline_Pts_Freq.Value-1 do
-          {with mask_template_arr2[High(mask_template_arr2)] do
-            begin
-              SetRctPos(world_axis.x-(bmp_ftimg_width_origin *mask_tpl_sprite_w_h.x)>>1+srf_var.world_axis_shift.x,
-                        world_axis.y-(bmp_ftimg_height_origin*mask_tpl_sprite_w_h.y)>>1+srf_var.world_axis_shift.y);
-              SetBckgd
-              (
-                srf_bmp_ptr,
-                srf_bmp.width,
-                srf_bmp.height
-              );
-              with mask_tpl_sprite_ptr^ do
-                SetBckgd
-                (
-                  srf_bmp_ptr,
-                  srf_bmp.width,
-                  srf_bmp.height
-                );
-              FilMaskTemplate1;
-            end;}
-          {if show_tile_map then
-            for i:=0 to High(tilemap_arr2) do
-              with tilemap_arr2[i{High(mask_template_arr2)}] do
-                begin
-                  SetRctPos(world_axis.x-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+srf_var.world_axis_shift.x,
-                            world_axis.y-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+srf_var.world_axis_shift.y);
-                  SetBckgd
-                  (
-                    srf_bmp_ptr,
-                    srf_bmp.width,
-                    srf_bmp.height
-                  );
-                  with tilemap_sprite_ptr^ do
-                    SetBckgd
-                    (
-                      srf_bmp_ptr,
-                      srf_bmp.width,
-                      srf_bmp.height
-                    );
-                  //FilMaskTemplate0;
-                  FilMaskTemplate1;
-                  //FilMaskTemplate2;
-                  bmp_bckgd_ptr:=@coll_arr[0];
-                end;}
-
-        end;
 
       with fast_actor_set_var.d_icon do
         begin
