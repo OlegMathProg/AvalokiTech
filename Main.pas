@@ -2408,6 +2408,8 @@ procedure CngPnVsCalc;                                                inline; {$
 procedure SelPnlsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
 // unselect panels after clearing selection in scene tree :
 procedure UnsPnlsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
+// calculate selected objects indices in scene tree:
+procedure SelIndsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
 // (Check Equality Of All Objects By Kind) Проверка на равенство всех обьектов по виду:
 function  AreAllObjKindEqual: TKindOfObject;                          inline; {$ifdef Linux}[local];{$endif}
 // (Check Equality Of All Objects By Parallax Shift) Проверка на равенство всех обьектов по параллаксу:
@@ -5301,17 +5303,17 @@ begin
   if copy3_calc then
     MainBmpToLowerBmp; {$endregion}
 
-  {Inner Window Rectangle---------------------------} {$region -fold}
-  if (inn_wnd_mrg>0) then
-    InnerWindowDraw($00FF9F66); {$endregion}
+  {World Axis---------------------------------------} {$region -fold}
+  if show_world_axis and (not exp0) then
+    WorldAxisDraw; {$endregion}
 
   {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
   if copy4_calc then
     MainBmpToLowerBmp; {$endregion}
 
-  {World Axis---------------------------------------} {$region -fold}
-  if show_world_axis and (not exp0) then
-    WorldAxisDraw; {$endregion}
+  {Inner Window Rectangle---------------------------} {$region -fold}
+  if (inn_wnd_mrg>0) then
+    InnerWindowDraw($00FF9F66); {$endregion}
 
   {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
   if copy5_calc then
@@ -18421,11 +18423,17 @@ begin
       VisibilityChange(True);
       show_visibility_panel:=True;
     end;
-  {with sln_var,fast_fluid_var do
-    if (sln_pts_cnt<>0) then
-      WaterWaveInit(sln_pts,
-                    sln_pts_cnt-sln_obj_pts_cnt[sln_obj_cnt-1],
-                    sln_pts_cnt);}
+  with srf_var,sln_var,fast_fluid_var do
+    begin
+      WaterWaveInit1;
+      {if (sln_pts_cnt<>0) then
+        WaterWaveInit(sln_pts,
+                      sln_pts_cnt-sln_obj_pts_cnt[sln_obj_cnt-1],
+                      sln_pts_cnt);}
+      {WaterWaveInit(PtPosF(world_axis.x,
+                           world_axis.y));}
+    end;
+
 end; {$endregion}
 procedure TF_MainForm.BB_Load_FrameClick    (sender:TObject); {$region -fold}
 var
@@ -18685,7 +18693,6 @@ begin
         bmp_bkgnd_ptr:=@coll_arr[0];
       end;
 end; {$endregion}
-
 {$endregion}
 {UI} {$region -fold}
 procedure TF_MainForm.SB_Map_EditorClick (sender:TObject); {$region -fold}
@@ -18700,7 +18707,7 @@ begin
       if (not OPD_Add_Mask_Template.Execute) then
         Exit;
       try
-        srf_var.EventGroupsCalc(calc_arr,[30,39]);
+        srf_var.EventGroupsCalc(calc_arr,[30,39,41,48]);
       except
         on E: Exception do
           MessageDlg('Error','Error: '+E.Message,mtError,[mbOk],0);
@@ -19719,13 +19726,12 @@ begin
               {World Axis Drawing---------} {$region -fold}
               if show_world_axis then
                 WorldAxisDraw; {$endregion}
+              {Inner Window Rectangle-----} {$region -fold}
+              if (inn_wnd_mrg>0) then
+                InnerWindowDraw($00FF9F66); {$endregion}
               {Reset Some Var.------------} {$region -fold}
               srf_bmp.Canvas.CopyMode:=cmSrcCopy;
               crc_sel_var.crc_sel_rct:=Default(TRect); {$endregion}
-              {Post-Process---------------} {$region -fold}
-              {PPBlur(srf_bmp_ptr,
-                     inn_wnd_rct,
-                     srf_bmp.width);} {$endregion}
               {Background Drawing2--------} {$region -fold}
               CnvToCnv
               (
@@ -20420,13 +20426,15 @@ procedure ObjIndsCalc;                                                          
 var
   i: integer;
 begin
-  with F_MainForm.TV_Scene_Tree do
-    for i:=0 to Items.Count-1 do
-      begin
-        obj_var.obj_inds_arr[i]:=PNodeData(Items[i].Data)^.g_ind;
-        obj_var.obj_arr[obj_var.obj_inds_arr[i]].t_ind:=i;
-      end;
-  obj_var.LowLrObjCntCalc3;
+  with F_MainForm.TV_Scene_Tree,obj_var do
+    begin
+      for i:=0 to Items.Count-1 do
+        begin
+          obj_inds_arr[i]:=PNodeData(Items[i].Data)^.g_ind;
+          obj_arr[obj_inds_arr[i]].t_ind:=i;
+        end;
+      LowLrObjCntCalc3;
+    end;
 end; {$endregion}
 procedure ScTIndsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -20509,10 +20517,10 @@ procedure SelPnlsCalc;                                                          
 var
   i: integer;
 begin
-  with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
+  with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags,obj_var do
     for i:=0 to ControlCount-1 do
-      if (Controls[obj_var.obj_inds_arr[i]] as TPanel).Visible and Items[i].Selected then
-         (Controls[obj_var.obj_inds_arr[i]] as TPanel).Color:=$0082804D;
+      if (Controls[obj_inds_arr[i]] as TPanel).Visible and Items[i].Selected then
+         (Controls[obj_inds_arr[i]] as TPanel).Color:=$0082804D;
 end; {$endregion}
 procedure UnsPnlsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -20521,6 +20529,24 @@ begin
   with F_MainForm,TV_Scene_Tree,SB_TreeView_Object_Tags do
     for i:=0 to ControlCount-1 do
       (Controls[obj_var.obj_inds_arr[i]] as TPanel).Color:=$00ABAFA3;
+end; {$endregion}
+procedure SelIndsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i,j: integer;
+begin
+  with F_MainForm,TV_Scene_Tree,obj_var do
+    begin
+      if (SelectionCount=0) then
+        Exit;
+      j:=-1;
+      for i:=0 to Items.Count-1 do
+        if Items[i].Selected then
+          begin
+            Inc(j);
+            sel_inds_arr[j]:=i;
+          end;
+      sel_cnt:=SelectionCount;
+    end;
 end; {$endregion}
 function  AreAllObjKindEqual: TKindOfObject;                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -20635,10 +20661,9 @@ begin
   if (F_MainForm.TV_Scene_Tree.SelectionCount=0) then
     Exit;
   size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
-  with F_MainForm.TV_Scene_Tree do
-    for i:=0 to Items.Count-1 do
-      if Items[i].Selected then
-        (data_start_ptr+i*size_of_data)^:=data_write;
+  with F_MainForm.TV_Scene_Tree,obj_var do
+    for i:=0 to SelectionCount-1 do
+      (data_start_ptr+sel_inds_arr[i]*size_of_data)^:=data_write;
   {with obj_var,F_MainForm do
     begin
       M_Description.Lines.Text:={IntToStr(single_selected_node_ind)}{IntToStr(F_MainForm.TV_Scene_Tree.Items.Count)}'';
@@ -20654,10 +20679,9 @@ var
   i,size_of_data: integer;
 begin
   size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
-  with F_MainForm.TV_Scene_Tree do
-    for i:=0 to Items.Count-1 do
-      if Items[i].Selected then
-        (data_start_ptr+i*size_of_data)^:=data_write;
+  with F_MainForm.TV_Scene_Tree,obj_var do
+    for i:=0 to SelectionCount-1 do
+      (data_start_ptr+sel_inds_arr[i]*size_of_data)^:=data_write;
 end; {$endregion}
 procedure ClrNodeData(node_with_data:TTreeNode);                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -20854,6 +20878,7 @@ begin
     for i:=1 to Items.Count-1 do
       Items[i].Selected:=True;
   SelPnlsCalc;
+  SelIndsCalc;
   AreAllObjKindEqual;
   AreAllObjPrlxEqual;
 end; {$endregion}
@@ -20909,6 +20934,7 @@ procedure TF_MainForm.MI_Goto_First_ObjectClick                     (sender:TObj
 begin
   TV_Scene_Tree.Items[1].Selected:=True;
   SelPnlsCalc;
+  SelIndsCalc;
   AreAllObjKindEqual;
   AreAllObjPrlxEqual;
 end; {$endregion}
@@ -20916,12 +20942,14 @@ procedure TF_MainForm.MI_Goto_Last_ObjectClick                      (sender:TObj
 begin
   TV_Scene_Tree.Items[TV_Scene_Tree.Items.Count-1].Selected:=True;
   SelPnlsCalc;
+  SelIndsCalc;
   AreAllObjKindEqual;
   AreAllObjPrlxEqual;
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeDragOver                         (sender,source:TObject; x,y:integer; state:TDragState; var accept:boolean); {$region -fold}
 begin
   SelPnlsCalc;
+  SelIndsCalc;
   AreAllObjKindEqual;
   AreAllObjPrlxEqual;
   accept:=True and (sel_var.sel_pts_cnt=0); // If TRUE then accept the draged item
@@ -20929,8 +20957,9 @@ end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeMouseDown                        (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);      {$region -fold}
 var
   target_node: TTreeNode;
+  shift_name : string;
 begin
-  with TV_Scene_Tree do
+  with TV_Scene_Tree,obj_var do
     if (button=mbLeft) then
       begin
         ReadOnly     :=False;
@@ -20939,11 +20968,19 @@ begin
         target_node  :=GetNodeAt(x,y);
         if (target_node<>Nil) then
           begin
-            SE_Object_Properties_Parallax_Shift.Value:=obj_var.obj_arr[PNodeData(target_node.Data)^.g_ind].parallax_shift.x;
-            obj_var.global_prop.parallax_shift.x     :=SE_Object_Properties_Parallax_Shift.Value;
-            obj_var.global_prop.parallax_shift.y     :=SE_Object_Properties_Parallax_Shift.Value;
+            SE_Object_Properties_Parallax_Shift.Value:=obj_arr[PNodeData(target_node.Data)^.g_ind].parallax_shift.x;
+            global_prop.parallax_shift.x             :=SE_Object_Properties_Parallax_Shift.Value;
+            global_prop.parallax_shift.y             :=SE_Object_Properties_Parallax_Shift.Value;
             single_selected_node_ind                 :=target_node.AbsoluteIndex;
-            target_node.Selected                     :=False;
+            shift_name                               :=GetEnumName(TypeInfo(TShiftStateEnum),Ord(TShiftStateEnum(shift)));
+            if (shift_name='ssSuper') then
+              begin
+                Items.ClearMultiSelection(True);
+                target_node.Selected:=True;
+              end
+            else
+            if (shift_name='ssNum') then
+              target_node.Selected:=False;
             BeginDrag(True);
           end
         else
@@ -21097,8 +21134,8 @@ begin
   ObjIndsCalc;
   ScTIndsCalc;
   CngPnVsCalc;
-  {AreAllObjKindEqual;
-  AreAllObjPrlxEqual;}
+  SelPnlsCalc;
+  SelIndsCalc;
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
 procedure TF_MainForm.S_TreeView_SplitterChangeBounds               (sender:TObject);                                                           {$region -fold}
@@ -21130,7 +21167,7 @@ begin
   if (TV_Scene_Tree.SelectionCount=0) or (is_mouse_in_scene_tree) then
     Exit;
   obj_var.LowLrObjCntCalc3;
-  WrtNodeData(PPtPos(@obj_var.obj_arr[PNodeData(F_MainForm.TV_Scene_Tree.Items[0].Data)^.g_ind].parallax_shift),PtPos(SE_Object_Properties_Parallax_Shift.Value,SE_Object_Properties_Parallax_Shift.Value));
+  WrtNodeData(PPtPos(@obj_var.obj_arr[0].parallax_shift),PtPos(SE_Object_Properties_Parallax_Shift.Value,SE_Object_Properties_Parallax_Shift.Value));
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
 // (Tag    Properties) Свойства тега:
@@ -21764,7 +21801,7 @@ begin
       {GrayscaleR } // ----- 085;    128;    135;
       ////////////////
 
-      {Points Cloud------} {$region -fold}
+      {Points Cloud----------} {$region -fold}
       {SetColorInfo(clGreen,color_info);
       for i:=0 to 1000 do
         Point(Trunc(tex_bmp_rct_pts[0].x)+Random(Trunc(tex_bmp_rct_pts[1].x-tex_bmp_rct_pts[0].x)-1)+1,
@@ -21774,7 +21811,7 @@ begin
               color_info,
               inn_wnd_rct);} {$endregion}
 
-      {Actor Blur--------} {$region -fold}
+      {Actor Blur------------} {$region -fold}
       {clip_mrg:=1;
       SetRectDst;
       SetRectSrc;
@@ -21790,7 +21827,7 @@ begin
                bmp_ftimg_width,
                surf_bmp_handle);} {$endregion}
 
-      {Actor Colorize----} {$region -fold}
+      {Actor Colorize--------} {$region -fold}
       {clip_mrg:=0;
       SetRectDst;
       SetRectSrc;
@@ -21808,7 +21845,7 @@ begin
                          surf_bmp_handle,
                          col_trans_var.grayscale_r_val);} {$endregion}
 
-      {Bullets-----------} {$region -fold}
+      {Bullets---------------} {$region -fold}
       {begin
         SetColorInfo(clBlue,color_info);
         for i:=0 to 10 do
@@ -21838,7 +21875,41 @@ begin
         ArrClear(coll_box_arr,inn_wnd_rct,width);
       end;} {$endregion}
 
-      {Fluid Simul.------} {$region -fold}
+      {Fluid Simul.----------} {$region -fold}
+      {SetColorInfo(clBlack,color_info);
+      if (sln_pts_cnt>0) then
+        begin
+          for i:=0 to sln_obj_pts_cnt[0]-1 do
+            begin
+              WaterWaveInit3(PtPosF(sln_pts[i].x,
+                                    sln_pts[i].y));
+              WaterWave(PtPosF(sln_pts[i].x,
+                               sln_pts[i].y),
+                        PtPosF(obj_var.obj_arr[5].world_axis_shift.x,
+                               obj_var.obj_arr[5].world_axis_shift.y),
+                        4,
+                        -90,
+                        12,
+                        srf_bmp_ptr,
+                        srf_bmp.width,
+                        color_info,
+                        inn_wnd_rct);
+            end;
+          WaterWaveParamChg(a0,001,000,000);
+          WaterWaveParamChg(a3,001,000,080);
+        end;}
+
+      {WaterWave(PtPosF(world_axis.x,
+                       world_axis.y),
+                PtPosF(world_axis_shift.x,
+                       world_axis_shift.y),
+                4,
+                -90,
+                64,
+                srf_bmp_ptr,
+                srf_bmp.width,
+                color_info,
+                inn_wnd_rct);}
       {if (sln_pts_cnt>0) then
         begin
           WaterWaveArea(sln_pts,
@@ -21864,7 +21935,7 @@ begin
                   inn_wnd_rct);
         end;} {$endregion}
 
-      {Fluid Colorize----} {$region -fold}
+      {Fluid Colorize--------} {$region -fold}
       {PPColorCorrectionP0(@ColorizeBP,
                           srf_bmp_ptr,
                           ClippedRect(inn_wnd_rct,
@@ -21872,7 +21943,7 @@ begin
                           srf_bmp.width,
                           SE_Count_X.Value-1);} {$endregion}
 
-      {Fluid Blur--------} {$region -fold}
+      {Fluid Blur------------} {$region -fold}
       {for i:=0 to 0 do
         PPBlur(srf_bmp_ptr,
                inn_wnd_rct,
@@ -21882,7 +21953,7 @@ begin
                     srf_bmp.width,
                     clBlue);} {$endregion}
 
-      {Select Sprites----} {$region -fold}
+      {Select Sprites--------} {$region -fold}
           (*if IsPointInRect(cur_pos.x,cur_pos.y,inn_wnd_rct) then // if (cur_pos.x>0) and (cur_pos.y>0) then
             begin
               SetRctPos(sprite_rect_arr[useless_fld_arr_[cur_pos.x+cur_pos.y*srf_var.srf_bmp.width]].x,
@@ -21923,10 +21994,10 @@ begin
 
         end; {$endregion}
 
-      {TimeLine Buttons--} {$region -fold}
+      {TimeLine Buttons------} {$region -fold}
       {TimeLineButtonsDraw(F_MainForm.S_Splitter2.Top-40,F_MainForm.S_Splitter2.Width>>1-16+4);} {$endregion}
 
-      {Equidistant Curves} {$region -fold}
+      {Equidistant Curves----} {$region -fold}
       {with inn_wnd_rct do
         begin
           //ArrClear(coll_arr,PtRct(left,top,right-1,bottom-1),srf_bmp.width);
@@ -21963,7 +22034,7 @@ begin
           ); //
         end;} {$endregion}
 
-      {Projectile--------} {$region -fold}
+      {Projectile------------} {$region -fold}
       {projectile_arr_ptr:=Unaligned(@projectile_arr[0]);
       for i:=0 to 0{9999} do
         with projectile_arr_ptr^ do
@@ -22038,7 +22109,7 @@ begin
       with inn_wnd_rct do
         ArrClear(coll_arr,PtRct(left,top,right-1,bottom-1),srf_bmp.width);} {$endregion}
 
-      {World Axis--------} {$region -fold}
+      {World Axis------------} {$region -fold}
       {Inc(drs);
       with world_axis_bmp do
         begin
@@ -22055,6 +22126,10 @@ begin
         end;}
 
       WorldAxisDraw; {$endregion}
+
+      {Inner Window Rectangle} {$region -fold}
+      if (inn_wnd_mrg>0) then
+        InnerWindowDraw($00FF9F66); {$endregion}
 
       //if (sln_pts_cnt<>0) and IsRct1InRct2(pts_img_arr[sln_obj_cnt-1].rct_ent,inn_wnd_rct) then
         {begin
@@ -22131,7 +22206,7 @@ begin
             color_info,
             inn_wnd_rct);}
 
-      {Cursor------------} {$region -fold}
+      {Cursor----------------} {$region -fold}
       //CircleC(cur_pos.x,cur_pos.y,crc_rad,srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,clBlue);
       CursorDraw(cur_pos.x,cur_pos.y);
       CircleHighlight(cur_pos.x,
@@ -22143,10 +22218,10 @@ begin
                       128,
                       045); {$endregion}
 
-      {Minimap-----------} {$region -fold}
+      {Minimap---------------} {$region -fold}
       {ImgScl(srf_bmp_ptr,srf_bmp_ptr,low_bmp.width,low_bmp.height,8,8);} {$endregion}
 
-      {Full Scene Drawing} {$region -fold}
+      {Full Scene Drawing----} {$region -fold}
 
       exec_timer.Stop;
       execution_time:=Trunc(exec_timer.Delay*1000);

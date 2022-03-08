@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="12"/>
     <BuildModes Active="Release"/>
-    <Units Count="24">
+    <Units Count="29">
       <Unit0>
         <Filename Value="MorphoEngine.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -19,9 +19,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="6030"/>
-        <CursorPos X="21" Y="21148"/>
-        <FoldState Value=" TL ho=611 p0i&apos;4C6 T3q\M0{N]Hj+12^2l"/>
+        <CursorPos Y="20780"/>
+        <FoldState Value=" TL ho=811 p0i&apos;4C6]8jsVI-82222@4 TKs$f67 T3q\O0{N[W4;V2^2 T2s_YCI091\"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -76,8 +75,8 @@
         <Filename Value="Fast_Primitives.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="4698"/>
-        <CursorPos Y="12383"/>
+        <CursorPos Y="1016"/>
+        <FoldState Value=" TL-uE0=8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit7>
@@ -90,16 +89,15 @@
       <Unit9>
         <Filename Value="Scene_Tree.pas"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="306"/>
-        <CursorPos X="8" Y="347"/>
+        <TopLine Value="322"/>
+        <CursorPos Y="425"/>
         <UsageCount Value="104"/>
         <Loaded Value="True"/>
       </Unit9>
       <Unit10>
         <Filename Value="Fast_AnimK.pas"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="202"/>
-        <CursorPos Y="238"/>
+        <CursorPos Y="756"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit10>
@@ -115,29 +113,29 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="90"/>
         <CursorPos X="3" Y="118"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit12>
       <Unit13>
         <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\inc\mathh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="99"/>
         <CursorPos X="14" Y="107"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit13>
       <Unit14>
         <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\inc\genmath.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="130"/>
         <CursorPos X="10" Y="157"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit14>
       <Unit15>
         <Filename Value="C:\lazarus\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="1689"/>
-        <CursorPos X="14" Y="1715"/>
-        <UsageCount Value="5"/>
+        <TopLine Value="170"/>
+        <CursorPos X="3" Y="196"/>
+        <UsageCount Value="9"/>
       </Unit15>
       <Unit16>
         <Filename Value="Performance_Time.pas"/>
@@ -152,14 +150,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1063"/>
         <CursorPos X="3" Y="1091"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="10"/>
       </Unit17>
       <Unit18>
         <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\objpas\sysutils\sysstrh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="146"/>
         <CursorPos X="10" Y="173"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit18>
       <Unit19>
         <Filename Value="C:\lazarus\fpc\3.2.0\source\rtl\objpas\math.pp"/>
@@ -167,7 +165,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="322"/>
         <CursorPos X="10" Y="350"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit19>
       <Unit20>
         <Filename Value="C:\lazarus\components\lazutils\graphtype.pp"/>
@@ -175,7 +173,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="14" Y="50"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit20>
       <Unit21>
         <Filename Value="C:\lazarus\lcl\buttons.pp"/>
@@ -183,143 +181,181 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="410"/>
         <CursorPos X="14" Y="438"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit21>
       <Unit22>
         <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\win\wininc\redef.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="985"/>
         <CursorPos X="10" Y="1011"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="6"/>
       </Unit22>
       <Unit23>
         <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\inc\systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="490"/>
         <CursorPos X="3" Y="516"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit23>
+      <Unit24>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="82"/>
+        <CursorPos X="13" Y="104"/>
+        <UsageCount Value="10"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="C:\lazarus\lcl\comctrls.pp"/>
+        <UnitName Value="ComCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3217"/>
+        <CursorPos X="29" Y="3241"/>
+        <UsageCount Value="9"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="C:\lazarus\lcl\include\treeview.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2144"/>
+        <CursorPos X="3" Y="2151"/>
+        <UsageCount Value="9"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\objpas\typinfo.pp"/>
+        <UnitName Value="TypInfo"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="853"/>
+        <CursorPos X="10" Y="879"/>
+        <UsageCount Value="9"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="C:\lazarus\lcl\graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="227"/>
+        <CursorPos X="3" Y="260"/>
+        <UsageCount Value="10"/>
+      </Unit28>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="Main.pas"/>
-        <Caret Line="20593" Column="102" TopLine="20587"/>
+        <Caret Line="21893" Column="38" TopLine="21787"/>
       </Position1>
       <Position2>
-        <Filename Value="Main.pas"/>
-        <Caret Line="20970" TopLine="20923"/>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3980" Column="14" TopLine="3954"/>
       </Position2>
       <Position3>
-        <Filename Value="Main.pas"/>
-        <Caret Line="21117" Column="83" TopLine="20910"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="759" Column="118" TopLine="497"/>
       </Position3>
       <Position4>
-        <Filename Value="Main.pas"/>
-        <Caret Line="22745" Column="7" TopLine="5152"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="714" Column="100" TopLine="665"/>
       </Position4>
       <Position5>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="425" Column="45" TopLine="293"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="102" Column="61" TopLine="70"/>
       </Position5>
       <Position6>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="323" Column="39" TopLine="297"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="740" Column="36" TopLine="665"/>
       </Position6>
       <Position7>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="321" Column="46" TopLine="295"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="92" Column="22" TopLine="61"/>
       </Position7>
       <Position8>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="412" Column="46" TopLine="347"/>
+        <Filename Value="Main.pas"/>
+        <Caret Line="18432" Column="60" TopLine="18407"/>
       </Position8>
       <Position9>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="210" Column="22" TopLine="194"/>
+        <Filename Value="Main.pas"/>
+        <Caret Line="21877" Column="33" TopLine="21780"/>
       </Position9>
       <Position10>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="487" Column="44" TopLine="342"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="740" Column="89" TopLine="501"/>
       </Position10>
       <Position11>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="321" Column="40" TopLine="295"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="98" Column="50" TopLine="70"/>
       </Position11>
       <Position12>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="315" Column="60" TopLine="269"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="778" Column="31" TopLine="716"/>
       </Position12>
       <Position13>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="320" Column="47" TopLine="256"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="763" Column="69" TopLine="723"/>
       </Position13>
       <Position14>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="309" TopLine="277"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="96" Column="23" TopLine="70"/>
       </Position14>
       <Position15>
-        <Filename Value="Main.pas"/>
-        <Caret Line="4134" Column="19" TopLine="3908"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="781" Column="43" TopLine="719"/>
       </Position15>
       <Position16>
         <Filename Value="Main.pas"/>
-        <Caret Line="4170" Column="19" TopLine="4133"/>
+        <Caret Line="21877" Column="20" TopLine="21823"/>
       </Position16>
       <Position17>
-        <Filename Value="Main.pas"/>
-        <Caret Line="4206" Column="19" TopLine="4181"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="764" Column="44" TopLine="719"/>
       </Position17>
       <Position18>
-        <Filename Value="Main.pas"/>
-        <Caret Line="4242" Column="19" TopLine="4217"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="96" Column="24" TopLine="70"/>
       </Position18>
       <Position19>
         <Filename Value="Main.pas"/>
-        <Caret Line="5273" Column="16" TopLine="5245"/>
+        <Caret Line="21875" Column="46" TopLine="21781"/>
       </Position19>
       <Position20>
         <Filename Value="Main.pas"/>
-        <Caret Line="5282" Column="56" TopLine="5234"/>
+        <Caret Line="21880" Column="20" TopLine="21796"/>
       </Position20>
       <Position21>
-        <Filename Value="Main.pas"/>
-        <Caret Line="19696" Column="31" TopLine="19617"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="748" Column="12" TopLine="716"/>
       </Position21>
       <Position22>
-        <Filename Value="Main.pas"/>
-        <Caret Line="21584" Column="23" TopLine="21495"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="730" Column="11" TopLine="504"/>
       </Position22>
       <Position23>
-        <Filename Value="Main.pas"/>
-        <Caret Line="45" Column="35" TopLine="3869"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="718" Column="112" TopLine="507"/>
       </Position23>
       <Position24>
         <Filename Value="Main.pas"/>
-        <Caret Line="21566" Column="22" TopLine="21545"/>
+        <Caret Line="21883" Column="52" TopLine="21800"/>
       </Position24>
       <Position25>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="210" Column="22" TopLine="190"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="724" Column="21" TopLine="510"/>
       </Position25>
       <Position26>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="467" Column="37" TopLine="347"/>
+        <Filename Value="Main.pas"/>
+        <Caret Line="18434" Column="50" TopLine="18393"/>
       </Position26>
       <Position27>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="119" TopLine="350"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="97" Column="106" TopLine="72"/>
       </Position27>
       <Position28>
-        <Filename Value="Scene_Tree.pas"/>
-        <Caret Line="341" Column="10" TopLine="297"/>
+        <Filename Value="Fast_AnimK.pas"/>
+        <Caret Line="97" Column="17" TopLine="71"/>
       </Position28>
       <Position29>
         <Filename Value="Main.pas"/>
-        <Caret Line="45" Column="35" TopLine="19"/>
+        <Caret Line="21623" Column="8" TopLine="17079"/>
       </Position29>
       <Position30>
         <Filename Value="Main.pas"/>
-        <Caret Line="14427" Column="53" TopLine="14381"/>
+        <Caret Line="21876" Column="26" TopLine="21742"/>
       </Position30>
     </JumpHistory>
     <RunParams>

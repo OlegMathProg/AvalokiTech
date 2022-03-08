@@ -10,7 +10,7 @@ interface
 
 uses
 
-  Classes, Fast_Primitives, Math;
+  Classes, Math, Fast_Primitives;
 
 const
 
@@ -59,7 +59,7 @@ type
 
   {Collision Detection System *************************************************}
   TCollider  =class {$region -fold}
-    coll_box_arr: T1ByteArr;
+    coll_box_arr: T1Byte1Arr;
     width,height: integer;
     max_coll_pix: integer;
     constructor Create(w,h:integer); {$ifdef Linux}[local];{$endif}
@@ -84,14 +84,29 @@ type
     pts_dist    : longword;
     // accumulator or partial sums of pts_dens;
     pts_dist_acc: longword;
-    constructor Create     (         w,h      :integer); {$ifdef Linux}[local];{$endif}
-    destructor  Destroy;                       override; {$ifdef Linux}[local];{$endif}
-    procedure WaterWaveInit(var      pts      :T1PtPosFArr;
-                            constref start_ind,
-                                     end_ind  :integer); {$ifdef Linux}[local];{$endif}
-    procedure WaterWaveArea(var      pts      :T1PtPosFArr;
-                            constref start_ind,
-                                     end_ind  :integer); {$ifdef Linux}[local];{$endif}
+    constructor Create           (         w,h          :integer);         {$ifdef Linux}[local];{$endif}
+    destructor  Destroy;                                 override;         {$ifdef Linux}[local];{$endif}
+    procedure   WaterWaveParamChg(var      param        :integer;
+                                           val1,
+                                           val2,
+                                           val3         :integer); inline; {$ifdef Linux}[local];{$endif}
+    procedure   WaterWaveInit1;                                            {$ifdef Linux}[local];{$endif}
+    procedure   WaterWaveInit2   (var      pts          :TPtPosFArr;
+                                  constref start_ind,
+                                           end_ind      :integer);         {$ifdef Linux}[local];{$endif}
+    procedure   WaterWaveInit3   (         pt_pos       :TPtPosF);         {$ifdef Linux}[local];{$endif}
+    procedure   WaterWave        (var      pts          :TPtPosFArr;
+                                  constref start_ind,
+                                           end_ind      :integer);         {$ifdef Linux}[local];{$endif}
+    procedure   WaterWave        (         pt_pos,
+                                           shift        :TPtPosF;
+                                  constref step_x,
+                                           angle        :double;
+                                  constref cnt          :integer;
+                                  constref bmp_dst_ptr  :PInteger;
+                                  constref bmp_dst_width:TColor;
+                                  constref color_info   :TColorInfo;
+                                  constref rct_clp      :TPtRect);         {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PFluid     =^TFluid;
 
@@ -99,23 +114,23 @@ type
 
   {Screen Space Collision}
   // Find Collision Point:
-  function SetCollPt  (         x0,y0,x1,y1  :integer;
-                       constref bmp_dst_ptr  :PInteger;
-                       constref bmp_dst_width:integer;
-                       constref val          :integer): TPtPos;     inline; {$ifdef Linux}[local];{$endif}
-  function SetCollPt  (         x0,y0,x1,y1  :integer;
-                       constref bmp_dst_ptr  :PByte;
-                       constref bmp_dst_width:integer;
-                       constref val          :byte   ): TPtPos;     inline; {$ifdef Linux}[local];{$endif}
+  function SetCollPt     (         x0,y0,x1,y1      :integer;
+                          constref bmp_dst_ptr      :PInteger;
+                          constref bmp_dst_width    :integer;
+                          constref val              :integer): TPtPos;    inline; {$ifdef Linux}[local];{$endif}
+  function SetCollPt     (         x0,y0,x1,y1      :integer;
+                          constref bmp_dst_ptr      :PByte;
+                          constref bmp_dst_width    :integer;
+                          constref val              :byte   ): TPtPos;    inline; {$ifdef Linux}[local];{$endif}
   // Get Line Segment Index:
-  procedure GetPtInd  (         x_coll,y_coll:integer;
-                       constref bmp_dst_ptr  :PInteger;
-                       constref bmp_dst_width:integer;
-                       var      projectile_  :TProjectile);         inline; {$ifdef Linux}[local];{$endif}
+  procedure GetPtInd     (         x_coll,y_coll    :integer;
+                          constref bmp_dst_ptr      :PInteger;
+                          constref bmp_dst_width    :integer;
+                          var      projectile_      :TProjectile);        inline; {$ifdef Linux}[local];{$endif}
   // Get Collision Angle:
-  function GetAngle   (constref x0,y0,x1,y1  :double;
-                       constref projectile_  :TProjectile;
-                       constref pts          :T1PtPosFArr): double; inline; {$ifdef Linux}[local];{$endif}
+  function GetAngle      (constref x0,y0,x1,y1      :double;
+                          constref projectile_      :TProjectile;
+                          constref pts              :TPtPosFArr): double; inline; {$ifdef Linux}[local];{$endif}
 
   {****************************************************************************}
 
@@ -127,27 +142,41 @@ type
 
 
 
+  (******************************* Fading Effects *******************************)
+  procedure FadeTemplate0(constref time_interval1,
+                                   time_interval2,
+                                   time_interval3   :integer;
+                          var      col_trans_arr_val:byte;
+                          var      time_interval    :integer);          inline; {$ifdef Linux}[local];{$endif}
+  procedure FadeTemplate1(constref time_interval1,
+                                   time_interval2,
+                                   time_interval3   :integer;
+                          var      col_trans_arr_val:byte;
+                          var      time_interval    :integer);          inline; {$ifdef Linux}[local];{$endif}
+
+
+
   (***************************** Projectile Motion ****************************)
 
-  procedure GetNextPos(constref v_0,
-                                angle,
-                                time         :double;
-                       constref pt_0         :TPtPosF;
-                       var      pt_n         :TPtPosF);          inline; {$ifdef Linux}[local];{$endif}
-  function  GetNextPos(constref v_0,
-                                angle,
-                                time         :double;
-                       constref pt_0         :TPtPosF): TPtPosF; inline; {$ifdef Linux}[local];{$endif}
-  procedure GetNextPos(var      projectile   :TProjectile);      inline; {$ifdef Linux}[local];{$endif}
-  procedure TimeChange(var      projectile   :TProjectile);      inline; {$ifdef Linux}[local];{$endif}
-  procedure CRadChange(var      projectile   :TProjectile;
-                       constref c_rad_delta  :integer=1);        inline; {$ifdef Linux}[local];{$endif}
+  procedure GetNextPos   (constref v_0,
+                                   angle,
+                                   time             :double;
+                          constref pt_0             :TPtPosF;
+                          var      pt_n             :TPtPosF);          inline; {$ifdef Linux}[local];{$endif}
+  function  GetNextPos   (constref v_0,
+                                   angle,
+                                   time             :double;
+                          constref pt_0             :TPtPosF): TPtPosF; inline; {$ifdef Linux}[local];{$endif}
+  procedure GetNextPos   (var      projectile       :TProjectile);      inline; {$ifdef Linux}[local];{$endif}
+  procedure TimeChange   (var      projectile       :TProjectile);      inline; {$ifdef Linux}[local];{$endif}
+  procedure CRadChange   (var      projectile       :TProjectile;
+                          constref c_rad_delta      :integer=1);        inline; {$ifdef Linux}[local];{$endif}
   // Full Projectile Calc.:
-  procedure Projectile(var      projectile_  :TProjectile;
-                       constref arr_dst_ptr  :PInteger;
-                       constref arr_dst_width:integer;
-                       constref rct_dst      :TPtRect;
-                       constref pts          :T1PtPosFArr);              {$ifdef Linux}[local];{$endif}
+  procedure Projectile   (var      projectile_      :TProjectile;
+                          constref arr_dst_ptr      :PInteger;
+                          constref arr_dst_width    :integer;
+                          constref rct_dst          :TPtRect;
+                          constref pts              :TPtPosFArr);               {$ifdef Linux}[local];{$endif}
 
 var
 
@@ -190,7 +219,7 @@ var
   sin_,cos_: double;
 begin
   SinCos(angle,sin_,cos_);
-  pt_n.x:=pt_0.x                        +v_0*cos_ *time;
+  pt_n.x:=pt_0.x                           +v_0*cos_ *time;
   pt_n.y:=pt_0.y{+}-(-GRAVITY_DIV_BY_2*time+v_0*sin_)*time;
 end; {$endregion}
 function  GetNextPos(constref v_0,angle,time:double; constref pt_0:TPtPosF                  ): TPtPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -198,7 +227,7 @@ var
   sin_,cos_: double;
 begin
   SinCos(angle,sin_,cos_);
-  Result.x:=pt_0.x                        +v_0*cos_ *time;
+  Result.x:=pt_0.x                           +v_0*cos_ *time;
   Result.y:=pt_0.y{+}-(-GRAVITY_DIV_BY_2*time+v_0*sin_)*time;
 end; {$endregion}
 procedure GetNextPos(var projectile:TProjectile                                             );          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -208,7 +237,7 @@ begin
   with projectile do
     begin
       SinCos(angle,sin_,cos_);
-      pt_n.x:=pt_0.x                        +v_0*cos_ *time;
+      pt_n.x:=pt_0.x                           +v_0*cos_ *time;
       pt_n.y:=pt_0.y{+}-(-GRAVITY_DIV_BY_2*time+v_0*sin_)*time;
     end;
 end; {$endregion}
@@ -221,7 +250,7 @@ begin
   projectile.c_rad+=c_rad_delta;
 end; {$endregion}
 // Full Projectile Calc.:
-procedure Projectile(var projectile_:TProjectile; constref arr_dst_ptr:PInteger; constref arr_dst_width:integer; constref rct_dst:TPtRect; constref pts:T1PtPosFArr); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure Projectile(var projectile_:TProjectile; constref arr_dst_ptr:PInteger; constref arr_dst_width:integer; constref rct_dst:TPtRect; constref pts:TPtPosFArr); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pt_c_pix: TPtPos  ;
   pts_ptr : PPtPosF ;
@@ -269,21 +298,21 @@ begin
                 if (pt_ind<>-1) then
                   begin
                     pts_ptr:=Unaligned(@pts[pt_ind]);
-                    cr0    :=crPosF
+                    cr0    :=crcPosF
                     (
                       (pts_ptr+0)^.x,
                       (pts_ptr+0)^.y,
                       c_rad
                     );
-                    cr1    :=crPosF
+                    cr1    :=crcPosF
                     (
                       (pts_ptr+1)^.x,
                       (pts_ptr+1)^.y,
                       c_rad
                     );
-                    if IsPtInCrc(pt_c.x,pt_c.y,1,cr0) then
+                    if IsPtInCrc(pt_c.x,pt_c.y,cr0,1) then
                       begin
-                        cr_pt:=LineCircIntPt
+                        cr_pt:=LineCrcIntPt
                         (
                           pt_p.x,
                           pt_p.y,
@@ -318,9 +347,9 @@ begin
                           end;
                       end
                     else
-                    if IsPtInCrc(pt_c.x,pt_c.y,1,cr1) then
+                    if IsPtInCrc(pt_c.x,pt_c.y,cr1,1) then
                       begin
-                        cr_pt:=LineCircIntPt
+                        cr_pt:=LineCrcIntPt
                         (
                           pt_p.x,
                           pt_p.y,
@@ -645,7 +674,7 @@ begin
   projectile_.pt_ind:=(bmp_dst_ptr+x_coll+y_coll*bmp_dst_width)^-1;
 end; {$endregion}
 // Get Collision Angle:
-function GetAngle (constref x0,y0,x1,y1:double; constref projectile_:TProjectile; constref pts:T1PtPosFArr): double;                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function GetAngle (constref x0,y0,x1,y1:double; constref projectile_:TProjectile; constref pts:TPtPosFArr): double;                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr: PPtPosF;
 begin
@@ -693,41 +722,76 @@ end; {$endregion}
 
 (******************************* Fluid Physics ********************************)
 
-constructor TFluid.Create(w,h:integer); {$region -fold}
+constructor TFluid.Create(w,h:integer);                                                                                    {$region -fold}
 begin
   pts_dist:=4;
   //
 end; {$endregion}
-destructor  TFluid.Destroy;             {$region -fold}
+destructor  TFluid.Destroy;                                                                                                {$region -fold}
 begin
   self.Free;
   inherited Destroy;
 end; {$endregion}
-procedure TFluid.WaterWaveInit(var pts:T1PtPosFArr; constref start_ind,end_ind:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFluid.WaterWaveParamChg(var param:integer; val1,val2,val3:integer);      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  a0      :=256;
-  a1      :=064;
-  a2      :=128;
-  a3      :=001;
-  a4      :=008;
+  Dec(param, val1);
+  if (param<=val2) then
+      param:=val3;
+end; {$endregion}
+procedure TFluid.WaterWaveInit1;                                                            {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  a0 :=256;
+  a1 :=064;
+  a2 :=128;
+  a3 :=001;
+  a4 :=008;
+end; {$endregion}
+procedure TFluid.WaterWaveInit2   (var pts:TPtPosFArr; constref start_ind,end_ind:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
   r_x     :=Trunc(pts[start_ind].x);
   r_y     :=Trunc(pts[start_ind].y);
   pts_dist:=Trunc((pts[end_ind-1].x-pts[start_ind].x)/(end_ind-1-start_ind));
   PtsRawH(pts,start_ind,end_ind,pts_dist);
 end; {$endregion}
-procedure TFluid.WaterWaveArea(var pts:T1PtPosFArr; constref start_ind,end_ind:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TFluid.WaterWaveInit3   (pt_pos:TPtPosF);                                         {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  r_x:=Trunc(pt_pos.x);
+  r_y:=Trunc(pt_pos.y);
+end; {$endregion}
+procedure TFluid.WaterWave        (var pts:TPtPosFArr; constref start_ind,end_ind:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
   for i:=start_ind to end_ind-1 do
     pts[i].y:=(a0/a1)*exp((r_x-pts[i].x)/a2)*sin(a3-a4*(r_x-pts[i].x))+r_y;
-  Dec(a3,001);
-  if (a3<=00) then
-      a3:=80;
-  Dec(a0,001);
-  if (a0<=00) then
-      a0:=00;
 end; {$endregion}
+procedure TFluid.WaterWave        (pt_pos,shift:TPtPosF; constref step_x,angle:double; constref cnt:integer; constref bmp_dst_ptr:PInteger; constref bmp_dst_width:TColor; constref color_info:TColorInfo; constref rct_clp:TPtRect); {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  pt_inc: TPtPosF;
+  pt_rot: TPtPosF;
+  c     : double =0.0;
+  s     : double =0.0;
+  v     : double =0.0;
+  w     : double =0.0;
+  i     : integer;
+begin
+  GetRot(pt_pos,angle,c,s,v,w);
+  pt_inc:=pt_pos;
+  for i:=0 to cnt-1 do
+    begin
+      pt_inc.x +=step_x;
+      pt_inc.y :=(a0/a1)*exp((r_x-pt_inc.x)/a2)*sin(a3-a4*(r_x-pt_inc.x))+r_y;
+      pt_rot.x :=-pt_inc.x*c+pt_inc.y*s+v;
+      pt_rot.y :=-pt_inc.y*c-pt_inc.x*s+w;
+      Point(Trunc(pt_rot.x)+Trunc(shift.x),
+            Trunc(pt_rot.y)+Trunc(shift.y),
+            bmp_dst_ptr,
+            bmp_dst_width,
+            color_info,
+            rct_clp);
+    end;
+end; {$endregion}
+
 
 
 
@@ -739,7 +803,7 @@ end; {$endregion}
 (********************************** Particles *********************************)
 
 // Simple Particle Spline Emitter:
-procedure PtlEmitterSln(constref pt_cnt:integer; constref pt_pos:TPtPos; constref pos_shift_rad:integer; constref sln_pts_:T1PtPosFArr; var ind:integer; constref start_ind,end_ind:integer; constref bckgd_stngs:TBckgdStngs; constref color_info:TColorInfo; constref start_rad,start_pow:integer); {$region -fold}
+procedure PtlEmitterSln(constref pt_cnt:integer; constref pt_pos:TPtPos; constref pos_shift_rad:integer; constref sln_pts_:TPtPosFArr; var ind:integer; constref start_ind,end_ind:integer; constref bckgd_stngs:TBckgdStngs; constref color_info:TColorInfo; constref start_rad,start_pow:integer); {$region -fold}
 var
   i: integer;
 begin
@@ -758,6 +822,56 @@ begin
     Inc(ind);
 end; {$endregion}
 
+
+
+(******************************* Fading Effects *******************************)
+procedure FadeTemplate0(constref time_interval1,time_interval2,time_interval3:integer; var col_trans_arr_val:byte; var time_interval:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  time_interval+=1;
+  if (time_interval< time_interval1                   )                                                                      then
+    col_trans_arr_val:=255
+  else
+  if (time_interval>=time_interval1                   ) and (time_interval<time_interval1+127                              ) then
+    col_trans_arr_val-=2
+  else
+  if (time_interval>=time_interval1+127               ) and (time_interval<time_interval1+127+time_interval2               ) then
+    col_trans_arr_val:=0
+  else
+  if (time_interval>=time_interval1+127+time_interval2) and (time_interval<time_interval1+254+time_interval2               ) then
+    col_trans_arr_val+=2
+  else
+  if (time_interval>=time_interval1+254+time_interval2) and (time_interval<time_interval1+254+time_interval2+time_interval3) then
+    col_trans_arr_val:=255
+  else
+    time_interval:=0;
+end; {$endregion}
+procedure FadeTemplate1(constref time_interval1,time_interval2,time_interval3:integer; var col_trans_arr_val:byte; var time_interval:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  time_interval+=1;
+  if (time_interval< time_interval1                   )                                                                      then
+    col_trans_arr_val:=0
+  else
+  if (time_interval>=time_interval1                   ) and (time_interval<time_interval1+127                              ) then
+    col_trans_arr_val+=2
+  else
+  if (time_interval>=time_interval1+127               ) and (time_interval<time_interval1+127+time_interval2               ) then
+    col_trans_arr_val:=255
+  else
+  if (time_interval>=time_interval1+127+time_interval2) and (time_interval<time_interval1+254+time_interval2               ) then
+    col_trans_arr_val-=2
+  else
+  if (time_interval>=time_interval1+254+time_interval2) and (time_interval<time_interval1+254+time_interval2+time_interval3) then
+    col_trans_arr_val:=0
+  else
+    time_interval:=0;
+end; {$endregion}
+
 end.
+
+
+
+
+
+
 
 
