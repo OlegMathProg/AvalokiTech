@@ -14118,7 +14118,7 @@ object F_MainForm: TF_MainForm
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = 6780768
     Font.CharSet = ANSI_CHARSET
-    Font.Color = 11645361
+    Font.Color = 1935614
     Font.Height = -16
     Font.Name = 'Javanese Text'
     Font.Quality = fqAntialiased

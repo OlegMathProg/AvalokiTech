@@ -17111,7 +17111,7 @@ begin
       pt_pix_cfx_type          :=02{00};
       fx_cnt                   :=00{01}; //must be in range of [0..255]
 
-      fx_arr[0].rep_cnt        :=01; //must be in range of [0..255]
+      fx_arr[0].rep_cnt        :=01{02}; //must be in range of [0..255]
 
       fx_arr[0].nt_pix_srf_type:=01; //must be in range of [0..001]
       fx_arr[0].nt_pix_cfx_type:=17; //must be in range of [0..255]
@@ -20662,17 +20662,11 @@ begin
     Exit;
   size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
   with F_MainForm.TV_Scene_Tree,obj_var do
-    for i:=0 to SelectionCount-1 do
-      (data_start_ptr+sel_inds_arr[i]*size_of_data)^:=data_write;
-  {with obj_var,F_MainForm do
     begin
-      M_Description.Lines.Text:={IntToStr(single_selected_node_ind)}{IntToStr(F_MainForm.TV_Scene_Tree.Items.Count)}'';
-      for i:=0 to obj_cnt-1 do
-        begin
-          M_Description.Lines.Add('obj_arr['+IntToStr(i)+'].parallax_shift.x='+IntToStr(obj_arr[i].parallax_shift.x)+#13+
-                                  'obj_arr['+IntToStr(i)+'].parallax_shift.y='+IntToStr(obj_arr[i].parallax_shift.y)+#13);
-        end;
-    end;}
+      for i:=0 to SelectionCount-1 do
+        (data_start_ptr+obj_inds_arr[sel_inds_arr[i]]*size_of_data)^:=data_write;
+      (data_start_ptr+0*size_of_data)^:=(data_start_ptr+obj_inds_arr[1]*size_of_data)^;
+    end;
 end; {$endregion}
 procedure WrtNodeData(data_start_ptr:PBoolean; data_write:boolean);                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -20680,8 +20674,11 @@ var
 begin
   size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
   with F_MainForm.TV_Scene_Tree,obj_var do
-    for i:=0 to SelectionCount-1 do
-      (data_start_ptr+sel_inds_arr[i]*size_of_data)^:=data_write;
+    begin
+      for i:=0 to SelectionCount-1 do
+        (data_start_ptr+obj_inds_arr[sel_inds_arr[i]]*size_of_data)^:=data_write;
+      (data_start_ptr+0*size_of_data)^:=(data_start_ptr+obj_inds_arr[1]*size_of_data)^;
+    end;
 end; {$endregion}
 procedure ClrNodeData(node_with_data:TTreeNode);                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -21136,6 +21133,7 @@ begin
   CngPnVsCalc;
   SelPnlsCalc;
   SelIndsCalc;
+  cmr_var.parallax_shift:=obj_var.obj_arr[0].parallax_shift;
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
 procedure TF_MainForm.S_TreeView_SplitterChangeBounds               (sender:TObject);                                                           {$region -fold}
@@ -21168,6 +21166,7 @@ begin
     Exit;
   obj_var.LowLrObjCntCalc3;
   WrtNodeData(PPtPos(@obj_var.obj_arr[0].parallax_shift),PtPos(SE_Object_Properties_Parallax_Shift.Value,SE_Object_Properties_Parallax_Shift.Value));
+  cmr_var.parallax_shift:=obj_var.obj_arr[0].parallax_shift;
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
 // (Tag    Properties) Свойства тега:
@@ -21512,13 +21511,13 @@ var
   execution_time       : double;
 begin
 
-  if (frame_skip<>frame_step) then
+  {if (frame_skip<>frame_step) then
     begin
       Inc(frame_skip);
       Exit;
     end
   else
-    frame_skip:=0;
+    frame_skip:=0;}
 
   exec_timer.Start;
 
@@ -21876,40 +21875,62 @@ begin
       end;} {$endregion}
 
       {Fluid Simul.----------} {$region -fold}
-      {SetColorInfo(clBlack,color_info);
+      SetColorInfo(clRed,color_info);
       if (sln_pts_cnt>0) then
         begin
           for i:=0 to sln_obj_pts_cnt[0]-1 do
             begin
               WaterWaveInit3(PtPosF(sln_pts[i].x,
                                     sln_pts[i].y));
-              WaterWave(PtPosF(sln_pts[i].x,
-                               sln_pts[i].y),
-                        PtPosF(obj_var.obj_arr[5].world_axis_shift.x,
-                               obj_var.obj_arr[5].world_axis_shift.y),
-                        4,
-                        -90,
-                        12,
-                        srf_bmp_ptr,
-                        srf_bmp.width,
-                        color_info,
-                        inn_wnd_rct);
+              WaterWave3(PtPosF(sln_pts[i].x,
+                                sln_pts[i].y),
+                         PtPosF(obj_var.obj_arr[5].world_axis_shift.x,
+                                obj_var.obj_arr[5].world_axis_shift.y),
+                         3,
+                         90,
+                         8,
+                         srf_bmp_ptr,
+                         srf_bmp.width,
+                         color_info,
+                         inn_wnd_rct);
             end;
-          WaterWaveParamChg(a0,001,000,000);
+          //WaterWaveParamChg(a0,001,000,000);
+          //WaterWaveParamChg(a3,001,000,080);
+        end;
+      SetColorInfo(clYellow,color_info);
+      if (sln_pts_cnt>0) then
+        begin
+          for i:=0 to sln_obj_pts_cnt[0]-1 do
+            begin
+              WaterWaveInit3(PtPosF(sln_pts[i].x,
+                                    sln_pts[i].y));
+              WaterWave3(PtPosF(sln_pts[i].x,
+                                sln_pts[i].y),
+                         PtPosF(obj_var.obj_arr[5].world_axis_shift.x,
+                                obj_var.obj_arr[5].world_axis_shift.y),
+                         3,
+                         90,
+                         8,
+                         srf_bmp_ptr,
+                         srf_bmp.width,
+                         color_info,
+                         inn_wnd_rct);
+            end;
+          //WaterWaveParamChg(a0,001,000,000);
           WaterWaveParamChg(a3,001,000,080);
-        end;}
+        end;
 
-      {WaterWave(PtPosF(world_axis.x,
-                       world_axis.y),
-                PtPosF(world_axis_shift.x,
-                       world_axis_shift.y),
-                4,
-                -90,
-                64,
-                srf_bmp_ptr,
-                srf_bmp.width,
-                color_info,
-                inn_wnd_rct);}
+      {WaterWave2(PtPosF(world_axis.x,
+                         world_axis.y),
+                  PtPosF(world_axis_shift.x,
+                         world_axis_shift.y),
+                  4,
+                  -90,
+                  64,
+                  srf_bmp_ptr,
+                  srf_bmp.width,
+                  color_info,
+                  inn_wnd_rct);}
       {if (sln_pts_cnt>0) then
         begin
           WaterWaveArea(sln_pts,
@@ -22205,6 +22226,29 @@ begin
             srf_bmp.width,
             color_info,
             inn_wnd_rct);}
+
+      {SetColorInfo($001D88FE,color_info);
+      if (sln_pts_cnt>0) then
+        begin
+          for i:=0 to sln_obj_pts_cnt[0]-1 do
+            begin
+              WaterWaveInit3(PtPosF(sln_pts[i].x,
+                                    sln_pts[i].y));
+              WaterWave2(PtPosF(sln_pts[i].x,
+                                sln_pts[i].y),
+                         PtPosF(obj_var.obj_arr[5].world_axis_shift.x,
+                                obj_var.obj_arr[5].world_axis_shift.y),
+                         3,
+                         {9}0,
+                         81,
+                         srf_bmp_ptr,
+                         srf_bmp.width,
+                         color_info,
+                         inn_wnd_rct);
+            end;
+          //WaterWaveParamChg(a0,001,000,000);
+          WaterWaveParamChg(a3,001,000,080);
+        end;}
 
       {Cursor----------------} {$region -fold}
       //CircleC(cur_pos.x,cur_pos.y,crc_rad,srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,clBlue);
