@@ -67,7 +67,7 @@ type
   end; {$endregion}
   PPrtclProp    =^TPrtclProp;
 
-  TObjInfo      ={packed} record {$region -fold}
+  TObjInfo      =       record {$region -fold} {must be unpacked - its important!!!}
     // background (bitmap destination) handle:
     bkgnd_ptr                : PInteger;
     // background (bitmap destination) width:
@@ -179,6 +179,8 @@ type
       curr_obj_ind      : TColor;
       // count of all objects in scene:
       obj_cnt           : TColor;
+      // kind of selected objects:
+      sel_koo           : TKindOfObject;
       // count of selected objects in scene:
       sel_cnt           : TColor;
       // lower layer objects count:
@@ -348,7 +350,7 @@ var
 
 implementation
 
-uses
+uses  //
 
   Main;
 

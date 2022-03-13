@@ -2849,6 +2849,10 @@ function AdditiveDec2           (         pixel              :TColor;
                                  constref alpha_fade         :byte;
                                  constref pow                :byte;
                                  constref d                  :smallint): TColor;       inline; {$ifdef Linux}[local];{$endif}
+procedure AlphaBlendDec         (         pixel_ptr          :PInteger;
+                                 constref r,g,b              :byte;
+                                          alpha              :byte;
+                                 constref alpha_fade         :byte);                   inline; {$ifdef Linux}[local];{$endif}
 function AlphaBlendDec          (         pixel              :TColor;
                                  constref r,g,b              :byte;
                                           alpha,
@@ -3982,6 +3986,12 @@ procedure Point                 (constref x,y                :integer;
                                  constref bmp_dst_width      :TColor;
                                  constref color_info         :TColorInfo;
                                  constref clip_rect          :TPtRect);                inline; {$ifdef Linux}[local];{$endif}
+procedure Point                 (constref x,y                :integer;
+                                 constref bmp_dst_ptr        :PInteger;
+                                 constref bmp_dst_width      :TColor;
+                                 constref color_info         :TColorInfo;
+                                 constref clip_rect          :TPtRect;
+                                 constref alpha_fade         :byte);                   inline; {$ifdef Linux}[local];{$endif}
 
 // Point Collisin Drawing on Array
 function PointCollDraw          (constref x,y                :integer;
@@ -5499,7 +5509,7 @@ begin
                   Limit(b+Trunc((Blue (pixel_ptr^)-b)*contrast_pow2)));
 end; {$endregion}
 // Decrease Effect:
-function AdditiveDec   (pixel:TColor; constref r,g,b:byte;                     constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function AdditiveDec   (pixel    :TColor;   constref r,g,b:byte;                     constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5522,7 +5532,7 @@ begin
   Result:=RGB{ToColor}(r_,g_,b_);
 
 end; {$endregion}
-function AdditiveDec2  (pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function AdditiveDec2  (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5545,7 +5555,16 @@ begin
   Result:=RGB{ToColor}(r_,g_,b_);
 
 end; {$endregion}
-function AlphaBlendDec (pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure AlphaBlendDec(pixel_ptr:PInteger; constref r,g,b:byte; alpha        :byte; constref alpha_fade:byte                                        );         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  d_alpha:byte;
+begin
+  d_alpha:=255-Max2(alpha-alpha_fade,0);
+  pixel_ptr^:=(((Blue (pixel_ptr^)-r)*d_alpha)>>8+r)<<16+
+              (((Green(pixel_ptr^)-g)*d_alpha)>>8+g)<<08+
+              (((Red  (pixel_ptr^)-b)*d_alpha)>>8+b)<<00;
+end; {$endregion}
+function AlphaBlendDec (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   alpha  :=Max2(alpha-alpha_fade,0);
   d_alpha:=255-alpha;
@@ -5556,7 +5575,7 @@ begin
             (g*alpha+d_alpha*Green(pixel))>>8,
             (r*alpha+d_alpha*Blue (pixel))>>8);}
 end; {$endregion}
-function AlphaBlendDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function AlphaBlendDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   alpha  :=Max2(alpha-Byte(d){alpha_fade},0);
   d_alpha:=255-alpha;
@@ -5567,7 +5586,7 @@ begin
             (g*alpha+d_alpha*Green(pixel))>>8,
             (r*alpha+d_alpha*Blue (pixel))>>8);}
 end; {$endregion}
-function InverseDec    (pixel:TColor;                                          constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function InverseDec    (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r,g,b: byte;
 begin
@@ -5590,7 +5609,7 @@ begin
   Result:=RGB(r,g,b);
 
 end; {$endregion}
-function InverseDec2   (pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function InverseDec2   (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5613,7 +5632,7 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
-function HighlightDec  (pixel:TColor;                                          constref alpha_fade:byte; constref pow:byte=64                  ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function HighlightDec  (pixel    :TColor;                                            constref alpha_fade:byte; constref pow:byte=64                  ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r,g,b: byte;
 begin
@@ -5636,7 +5655,7 @@ begin
   Result:=RGB(r,g,b);
 
 end; {$endregion}
-function HighlightDec2 (pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function HighlightDec2 (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5659,7 +5678,7 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
-function DarkenDec     (pixel:TColor;                                          constref alpha_fade:byte; constref pow:byte=64                  ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function DarkenDec     (pixel    :TColor;                                            constref alpha_fade:byte; constref pow:byte=64                  ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r,g,b: byte;
 begin
@@ -5682,7 +5701,7 @@ begin
   Result:=RGB(r,g,b);
 
 end; {$endregion}
-function DarkenDec2    (pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function DarkenDec2    (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5705,7 +5724,7 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
-function GrayscaleRDec (pixel:TColor;                                          constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function GrayscaleRDec (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r,g,b: byte;
 begin
@@ -5725,7 +5744,7 @@ begin
   Result:=RGB(r,g,b);
 
 end; {$endregion}
-function GrayscaleRDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function GrayscaleRDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5745,7 +5764,7 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
-function GrayscaleGDec (pixel:TColor;                                          constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function GrayscaleGDec (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r,g,b: byte;
 begin
@@ -5765,7 +5784,7 @@ begin
   Result:=RGB(r,g,b);
 
 end; {$endregion}
-function GrayscaleGDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function GrayscaleGDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5785,7 +5804,7 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
-function GrayscaleBDec (pixel:TColor;                                          constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function GrayscaleBDec (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r,g,b: byte;
 begin
@@ -5805,7 +5824,7 @@ begin
   Result:=RGB(r,g,b);
 
 end; {$endregion}
-function GrayscaleBDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function GrayscaleBDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
@@ -5825,7 +5844,7 @@ begin
   Result:=RGB(r_,g_,b_);
 
 end; {$endregion}
-function ColorizeRMDec (pixel:TColor;                                          constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeRMDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   b: byte;
@@ -5842,7 +5861,7 @@ begin
     end;
   Result:=pixel-Blue(pixel)<<16+b<<16;
 end; {$endregion}
-function ColorizeRMDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeRMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   b_: byte;
@@ -5859,7 +5878,7 @@ begin
     end;
   Result:=pixel-Blue(pixel)<<16+b_<<16;
 end; {$endregion}
-function ColorizeRPDec (pixel:TColor;                                          constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeRPDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   b: byte;
@@ -5881,7 +5900,7 @@ begin
     end;
   Result:=pixel-Blue(pixel)<<16+b<<16;
 end; {$endregion}
-function ColorizeRPDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeRPDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   b_: byte;
@@ -5903,7 +5922,7 @@ begin
     end;
   Result:=pixel-Blue(pixel)<<16+b_<<16;
 end; {$endregion}
-function ColorizeGMDec (pixel:TColor;                                          constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeGMDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   g: byte;
@@ -5920,7 +5939,7 @@ begin
     end;
   Result:=pixel-Green(pixel)<<08+g<<08;
 end; {$endregion}
-function ColorizeGMDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeGMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   g_: byte;
@@ -5937,7 +5956,7 @@ begin
     end;
   Result:=pixel-Green(pixel)<<08+g_<<08;
 end; {$endregion}
-function ColorizeGPDec (pixel:TColor;                                          constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeGPDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   g: byte;
@@ -5959,7 +5978,7 @@ begin
     end;
   Result:=pixel-Green(pixel)<<08+g<<08;
 end; {$endregion}
-function ColorizeGPDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeGPDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   g_: byte;
@@ -5981,7 +6000,7 @@ begin
     end;
   Result:=pixel-Green(pixel)<<08+g_<<08;
 end; {$endregion}
-function ColorizeBMDec (pixel:TColor;                                          constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeBMDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   r: byte;
@@ -5998,7 +6017,7 @@ begin
     end;
   Result:=pixel-Red(pixel)<<00+r<<00;
 end; {$endregion}
-function ColorizeBMDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeBMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   r_: byte;
@@ -6015,7 +6034,7 @@ begin
     end;
   Result:=pixel-Red(pixel)<<00+r_<<00;
 end; {$endregion}
-function ColorizeBPDec (pixel:TColor;                                          constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeBPDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   r: byte;
@@ -6037,7 +6056,7 @@ begin
     end;
   Result:=pixel-Red(pixel)<<00+r<<00;
 end; {$endregion}
-function ColorizeBPDec2(pixel:TColor; constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function ColorizeBPDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   v: integer;
   r_: byte;
@@ -25319,11 +25338,11 @@ begin
 
   fx_arr[0].rep_cnt        :=1; //must be in range of [0..255]
 
-  fx_arr[0].nt_pix_srf_type:=1{1}; //must be in range of [0..001]
+  fx_arr[0].nt_pix_srf_type:=1; //must be in range of [0..001]
   fx_arr[0].nt_pix_cfx_type:=0; //must be in range of [0..255]
   fx_arr[0].nt_pix_cng_type:=1; //must be in range of [0..001]
 
-  fx_arr[0].pt_pix_srf_type:=1{1}; //must be in range of [0..001]
+  fx_arr[0].pt_pix_srf_type:=1; //must be in range of [0..001]
   fx_arr[0].pt_pix_cfx_type:=0; //must be in range of [0..255]
   fx_arr[0].pt_pix_cng_type:=1; //must be in range of [0..001]
 
@@ -34273,7 +34292,7 @@ begin
 end; {$endregion}
 
 // Point:
-procedure Point        (constref x,y:integer; constref bmp_dst_ptr  :PInteger; constref bmp_dst_width:TColor    ; constref color_info:TColorInfo);                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure Point        (constref x,y:integer; constref bmp_dst_ptr  :PInteger; constref bmp_dst_width:TColor    ; constref color_info:TColorInfo);                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pixel_ptr: PInteger;
 begin
@@ -34299,7 +34318,7 @@ begin
       AlphaBlend(pixel_ptr,r,g,b,alpha1);
     end;
 end; {$endregion}
-procedure Point        (constref x,y:integer; constref bmp_dst_ptr  :PInteger; constref bmp_dst_width:TColor    ; constref color_info:TColorInfo; constref clip_rect:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure Point        (constref x,y:integer; constref bmp_dst_ptr  :PInteger; constref bmp_dst_width:TColor    ; constref color_info:TColorInfo; constref clip_rect:TPtRect);                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pixel_ptr: PInteger;
 begin
@@ -34329,7 +34348,37 @@ begin
         AlphaBlend(pixel_ptr,r,g,b,alpha1);
     end;
 end; {$endregion}
-function  PointCollDraw(constref x,y:integer; constref arr_src_width:TColor  ; var      arr_src      :T1Byte1Arr; constref clip_rect :TPtRect): boolean;                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure Point        (constref x,y:integer; constref bmp_dst_ptr  :PInteger; constref bmp_dst_width:TColor    ; constref color_info:TColorInfo; constref clip_rect:TPtRect; constref alpha_fade:byte); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  pixel_ptr: PInteger;
+begin
+  with clip_rect,color_info do
+    if (x-1>left  ) and
+       (x+1<right ) and
+       (y-1>top   ) and
+       (y+1<bottom) then
+      begin
+        pixel_ptr:=bmp_dst_ptr+(x-1)+bmp_dst_width*(y-1);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha2,alpha_fade);
+        Inc(pixel_ptr);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha1,alpha_fade);
+        Inc(pixel_ptr);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha2,alpha_fade);
+        Inc(pixel_ptr,bmp_dst_width-2);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha1,alpha_fade);
+        Inc(pixel_ptr);
+        AlphaBlendDec(pixel_ptr,r,g,b,255   ,alpha_fade);
+        Inc(pixel_ptr);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha1,alpha_fade);
+        Inc(pixel_ptr,bmp_dst_width-2);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha2,alpha_fade);
+        Inc(pixel_ptr);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha1,alpha_fade);
+        Inc(pixel_ptr);
+        AlphaBlendDec(pixel_ptr,r,g,b,alpha2,alpha_fade);
+    end;
+end; {$endregion}
+function  PointCollDraw(constref x,y:integer; constref arr_src_width:TColor  ; var      arr_src      :T1Byte1Arr; constref clip_rect :TPtRect): boolean;                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with clip_rect do
     if (x>left  ) and
@@ -34346,7 +34395,7 @@ begin
           Result:=True;
       end;
 end; {$endregion}
-function  PointCollDraw(constref x,y:integer; constref arr_src_width:TColor  ; constref arr_src      :T1Byte1Arr; constref clip_rect :TPtRect; constref b:byte): boolean;      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  PointCollDraw(constref x,y:integer; constref arr_src_width:TColor  ; constref arr_src      :T1Byte1Arr; constref clip_rect :TPtRect; constref b:byte): boolean;                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with clip_rect do
     if (x>clip_rect.left  ) and
