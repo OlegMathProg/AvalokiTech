@@ -129,7 +129,7 @@ type
     CB_Select_Items_Inner_Subgraph_Line_Style        : TComboBox;
     CB_Select_Items_Inner_Subgraph_Show_Bounds       : TCheckBox;
     CB_Select_Items_Selection_Highlight              : TCheckBox;
-    CB_SObject_Properties_Show_In_Game: TCheckBox;
+    CB_SObject_Properties_Show_In_Game               : TCheckBox;
     CB_Spline_Cycloid_Direction_Y                    : TComboBox;
     CB_Physics_Deletion                              : TCheckBox;
     CB_Select_Points_Show_Bounds                     : TCheckBox;
@@ -144,7 +144,7 @@ type
     CB_Spline_Dynamics_Style                         : TComboBox;
     CB_Spline_Dynamics_Collider                      : TCheckBox;
     CB_Spline_Best_Precision                         : TCheckBox;
-    CB_SObject_Properties_Show_In_Editor: TCheckBox;
+    CB_SObject_Properties_Show_In_Editor             : TCheckBox;
     CB_Text_Background                               : TCheckBox;
     CB_Spline_Lazy_Repaint                           : TCheckBox;
     CB_Spline_Epicycloid_Hypocycloid                 : TCheckBox;
@@ -220,6 +220,7 @@ type
     Label3                                           : TLabel;
     Label4                                           : TLabel;
     LCLVLCPlayer_Intro                               : TLCLVLCPlayer;
+    L_Edit_Mode                                      : TLabel;
     L_Object_Name                                    : TLabel;
     L_Select_Items_Inner_Subgraph                    : TLabel;
     L_Select_Items_Selection                         : TLabel;
@@ -413,9 +414,13 @@ type
     P_Align_Hot_Keys                                 : TPanel;
     P_UV_Operations                                  : TPanel;
     P_UV_Attributes                                  : TPanel;
+    RB_Edges                                         : TRadioButton;
+    RB_Points                                        : TRadioButton;
+    RB_Polygons                                      : TRadioButton;
     RB_Spline_Adaptive                               : TRadioButton;
     RB_Spline_Constant                               : TRadioButton;
     RB_Spline_None                                   : TRadioButton;
+    RG_Edit_Mode                                     : TGroupBox;
     SB_Select_Items_Selection_Color                  : TSpeedButton;
     SB_Select_Items_Outer_Subgraph_Color             : TSpeedButton;
     SB_Select_Items_Inner_Subgraph_Color             : TSpeedButton;
@@ -476,7 +481,6 @@ type
     L_Axis_U                                         : TLabel;
     L_Axis_V                                         : TLabel;
     L_Angle                                          : TLabel;
-    L_Edit_Mode                                      : TLabel;
     L_Width                                          : TLabel;
     L_Height                                         : TLabel;
     MI_Add_Group                                     : TMenuItem;
@@ -490,10 +494,6 @@ type
     PC_PageControl3                                  : TPageControl;
     P_Splitter5                                      : TPanel;
     PM_Scene_Tree                                    : TPopupMenu;
-    RB_Points                                        : TRadioButton;
-    RB_Polygons                                      : TRadioButton;
-    RB_Edges                                         : TRadioButton;
-    RG_Edit_Mode                                     : TRadioGroup;
     SB_2D_Operations                                 : TScrollBox;
     SB_Original_Texture_Size                         : TSpeedButton;
     SB_Drawing                                       : TScrollBox;
@@ -549,7 +549,7 @@ type
     SB_Spline_Template_Rose                          : TSpeedButton;
     SB_Spline_Template_Spiral                        : TSpeedButton;
     SE_Spline_Spray_Radius                           : TSpinEdit;
-    SE_Object_Properties_Parallax_Shift: TSpinEdit;
+    SE_Object_Properties_Parallax_Shift              : TSpinEdit;
     S_Splitter0                                      : TSplitter;
     S_Splitter1                                      : TSplitter;
     S_Splitter2                                      : TSplitter;
@@ -619,6 +619,7 @@ type
     procedure CB_Select_Items_Inner_Subgraph_Show_BoundsChange       (      sender           :TObject);
     procedure CB_Select_Items_Selection_Background_StyleSelect       (      sender           :TObject);
     procedure CB_Select_Items_Selection_HighlightChange              (      sender           :TObject);
+    procedure CB_SObject_Properties_Show_In_EditorChange             (      sender           :TObject);
     procedure CB_Spline_Cycloid_Direction_XSelect                    (      sender           :TObject);
     procedure CB_Spline_Cycloid_Direction_YSelect                    (      sender           :TObject);
     procedure CB_Spline_Dynamics_StyleSelect                         (      sender           :TObject);
@@ -820,7 +821,7 @@ type
                                                                       var   key              :word;
                                                                             shift            :TShiftState);
     procedure SE_Spline_Spray_RadiusChange                           (      sender           :TObject);
-    procedure SE_Object_Properties_Parallax_ShiftChange(Sender: TObject);
+    procedure SE_Object_Properties_Parallax_ShiftChange              (      sender           :TObject);
 
     {Buttons}
     procedure S_Splitter0ChangeBounds                                (      sender           :TObject);
@@ -937,7 +938,7 @@ type
                                                                             shift            :TShiftState);
     procedure TV_Scene_TreeKeyPress                                  (      sender           :TObject;
                                                                       var   key              :char);
-    procedure TV_Scene_TreeMouseEnter(Sender: TObject);
+    procedure TV_Scene_TreeMouseEnter                                (      sender           :TObject);
     procedure TV_Scene_TreeMouseLeave                                (      sender           :TObject);
     procedure TV_Scene_TreeMouseMove                                 (      sender           :TObject;
                                                                             shift            :TShiftState;
@@ -2293,6 +2294,7 @@ var
   single_selected_node_ind   : integer;
   source_node_x,source_node_y: integer;
   is_mouse_in_scene_tree     : boolean;
+  scene_tree_mouse_down      : boolean;
 
   {Color Picker}
   pixel_color                : TColor;
@@ -2410,17 +2412,27 @@ procedure SelPnlsCalc;                                                inline; {$
 procedure UnsPnlsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
 // calculate selected objects indices in scene tree:
 procedure SelIndsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
-// (Check Equality Of All Objects By Kind) Проверка на равенство всех обьектов по виду:
+// (Check Equality Of All Objects By Kind          ) Проверка на равенство всех обьектов по виду:
 function  AreAllObjKindEqual: TKindOfObject;                          inline; {$ifdef Linux}[local];{$endif}
 // (Check Equality Of All Objects By Parallax Shift) Проверка на равенство всех обьектов по параллаксу:
 function  AreAllObjPrlxEqual: TPtPos;                                 inline; {$ifdef Linux}[local];{$endif}
+// (Check Equality Of All Objects By Visibility    ) Проверка на равенство всех обьектов по видимости:
+function  AreAllObjShowEqual: TByte;                                  inline; {$ifdef Linux}[local];{$endif}
+// (Check Equality Of All Objects By Properties    ) Проверка на равенство всех обьектов по свойствам:
+procedure AreAllObjPropEqual;                                         inline; {$ifdef Linux}[local];{$endif}
+//
+procedure ParallaxShiftChange;                                        inline; {$ifdef Linux}[local];{$endif}
+//
+procedure ObjectShowChange;                                           inline; {$ifdef Linux}[local];{$endif}
 
 procedure CrtNodeData        (         node_with_data:TTreeNode;
                                        g_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
 procedure WrtNodeData        (         data_start_ptr:PPtPos;
-                                       data_write    :TPtPos);        inline; {$ifdef Linux}[local];{$endif}
-procedure WrtNodeData        (         data_start_ptr:PBoolean;
-                                       data_write    :boolean);       inline; {$ifdef Linux}[local];{$endif}
+                                       data_write    :TPtPos;
+                                       size_of_data  :integer);       inline; {$ifdef Linux}[local];{$endif}
+procedure WrtNodeData        (         data_start_ptr:PByte;
+                                       data_write    :byte;
+                                       size_of_data  :integer);       inline; {$ifdef Linux}[local];{$endif}
 procedure ClrNodeData        (         node_with_data:TTreeNode);     inline; {$ifdef Linux}[local];{$endif}
 procedure DeleteSelectedNodes(         TV            :TTreeView);     inline; {$ifdef Linux}[local];{$endif}
 procedure AddTagPanel        (constref ind           :integer);       inline; {$ifdef Linux}[local];{$endif}
@@ -18750,6 +18762,28 @@ begin
   if down_select_points_ptr^ then
     sel_var.MinimizeCircleSelection;
 end; {$endregion}
+procedure ButtonKeyPress(sp_btn:TSpeedButton; btn_pnl1,btn_pnl2,btn_pnl3:TPanel; down_btn_ptr:PByteBool; b:byte; cur1:integer; cur2:integer=crDefault); {$region -fold}
+begin
+  sp_btn.Down:=not sp_btn.Down;
+  case b of
+    0:
+      begin
+        DrawingPanelsSetVisibility1(down_btn_ptr,btn_pnl1,btn_pnl2,prev_panel_draw,curr_panel_draw);
+        DrawingPanelsSetVisibility2;
+      end;
+    1:
+      begin
+        DrawingPanelsSetVisibility1(down_btn_ptr,btn_pnl1,btn_pnl2,prev_panel_animk,curr_panel_animk);
+      //DrawingPanelsSetVisibility2;
+      end;
+  end;
+  btn_pnl3.Repaint;
+  InvalidateInnerWindow;
+  if down_btn_ptr^ then
+    Screen.Cursor:=cur1
+  else
+    Screen.Cursor:=cur2;
+end; {$endregion}
 {$ifdef Windows}
 procedure TF_MainForm.OnMove(var message:TWMMove);                                                                                                                 {$region -fold}
 begin
@@ -19433,30 +19467,6 @@ begin
   SpeedButtonRepaint;
 end; {$endregion}
 procedure TF_MainForm.FormKeyPress      (sender:TObject; var key:char);                                            {$region -fold}
-
-  procedure ButtonKeyPress(sp_btn:TSpeedButton; btn_pnl1,btn_pnl2,btn_pnl3:TPanel; down_btn_ptr:PByteBool; b:byte; cur1:integer; cur2:integer=crDefault); {$region -fold}
-   begin
-     sp_btn.Down:=not sp_btn.Down;
-     case b of
-       0:
-         begin
-           DrawingPanelsSetVisibility1(down_btn_ptr,btn_pnl1,btn_pnl2,prev_panel_draw,curr_panel_draw);
-           DrawingPanelsSetVisibility2;
-         end;
-       1:
-         begin
-           DrawingPanelsSetVisibility1(down_btn_ptr,btn_pnl1,btn_pnl2,prev_panel_animk,curr_panel_animk);
-         //DrawingPanelsSetVisibility2;
-         end;
-     end;
-     btn_pnl3.Repaint;
-     InvalidateInnerWindow;
-     if down_btn_ptr^ then
-       Screen.Cursor:=cur1
-     else
-       Screen.Cursor:=cur2;
-   end; {$endregion}
-
 begin
 
   {Change Pivot Mode} {$region -fold}
@@ -19495,31 +19505,94 @@ begin
      end; {$endregion}
 
   {Switch Buttons---} {$region -fold}
+  if (key='_') then
+    begin
+      prev_key:='_';
+      Exit;
+    end;
+  // button 'Text':
+  if (key=Char(key_arr[04]{#49})) or (key=Char(key_alt_arr[04]{' '})) then
+    begin
+      ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
+      if down_text_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end;
+  // button 'Brush':
+  if (key=Char(key_arr[05]{#50})) or (key=Char(key_alt_arr[05]{' '})) then
+    begin
+      ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
+      if down_brush_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end;
+  // button 'Spray':
+  if (key=Char(key_arr[06]{#51})) or (key=Char(key_alt_arr[06]{' '})) then
+    begin
+      ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
+      if down_spray_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end;
+  // button 'Spline':
+  if (key=Char(key_arr[07]{#52})) or (key=Char(key_alt_arr[07]{'q'})) then
+    begin
+      ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
+      if down_spline_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end;
+  // button 'Select Points':
+  if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
+    begin
+      ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
+      if down_select_points_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end;
+  // button 'Select Texture Region':
+  if (key=Char(key_arr[09]{#54})) or (key=Char(key_alt_arr[09]{' '})) then
+    begin
+      ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
+      if down_select_texture_region_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end;
+  // button 'Regular Grid':
+  if (key=Char(key_arr[10]{#54})) or (key=Char(key_alt_arr[10]{' '})) then
+    begin
+      ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
+      if down_rgrid_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end;
+  // button 'Snap Grid':
+  if (key=Char(key_arr[11]{#54})) or (key=Char(key_alt_arr[11]{' '})) then
+    begin
+      ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008);
+      if down_sgrid_ptr^ then
+        prev_key:=key
+      else
+        prev_key:='_';
+    end; {$endregion}
 
-   // button 'Text':
-   if (key=Char(key_arr[04]{#49})) or (key=Char(key_alt_arr[04]{' '})) then
-     ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
-   // button 'Brush':
-   if (key=Char(key_arr[05]{#50})) or (key=Char(key_alt_arr[05]{' '})) then
-     ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
-   // button 'Spray':
-   if (key=Char(key_arr[06]{#51})) or (key=Char(key_alt_arr[06]{' '})) then
-     ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
-   // button 'Spline':
-   if (key=Char(key_arr[07]{#52})) or (key=Char(key_alt_arr[07]{'q'})) then
-     ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
-   // button 'Select Points':
-   if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
-     ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
-   // button 'Select Texture Region':
-   if (key=Char(key_arr[09]{#54})) or (key=Char(key_alt_arr[09]{' '})) then
-     ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
-   // button 'Regular Grid':
-   if (key=Char(key_arr[10]{#54})) or (key=Char(key_alt_arr[10]{' '})) then
-     ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
-   // button 'Snap Grid':
-   if (key=Char(key_arr[11]{#54})) or (key=Char(key_alt_arr[11]{' '})) then
-     ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008); {$endregion}
+  if scene_tree_mouse_down then
+    Exit;
+  with TV_Scene_Tree do
+    if (SelectionCount<>0) then
+      begin
+        Items.ClearMultiSelection(True);
+        L_Object_Name                      .Caption:='';
+        SE_Object_Properties_Parallax_Shift.Color  :=DEFAULT_MISCELLANEOUS_VALUES_COLOR;
+        UnsPnlsCalc;
+      end;
 
 end; {$endregion}
 procedure TF_MainForm.FormKeyDown       (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
@@ -20017,7 +20090,7 @@ begin
   BB_Reset_Pivot        .Glyph:=SB_Move_Pivot_To_Point.Glyph;
   SB_Visibility_Show_All.Glyph:=SB_Spline_Points_Show .Glyph; {$endregion}
 
-  {Main Layer-----------} {$region -fold}
+  {Camera---------------} {$region -fold}
   cmr_var:=TCamera.Create(I_Frame_List.width,
                           I_Frame_List.height); {$endregion}
 
@@ -20051,8 +20124,8 @@ begin
 
   {Spline---------------} {$region -fold}
   CB_Spline_Mode.ItemIndex:=0;
-  SB_Spline     .Down     :=True;
-  P_Spline      .Visible  :=True;
+  {SB_Spline     .Down     :=True;
+  P_Spline      .Visible  :=True;}
   down_spline_ptr         :=Unaligned(@SB_Spline.Down);
   sln_var                 :=TCurve.Create
   (
@@ -20310,7 +20383,8 @@ begin
 end; {$endregion}
 procedure TF_MainForm.FormActivate      (sender:TObject);                                                          {$region -fold}
 var
-  i: integer;
+  i  : integer;
+  key: char;
 begin
   {AlphaBlend:=True;
   for i:=0 to 63 do
@@ -20332,6 +20406,8 @@ begin
   with srf_var,inn_wnd_rct do
     world_axis:=PtPos((left+right )>>1,
                       (top +bottom)>>1);
+  key:=Char(key_arr[07]);
+  FormKeyPress(Self,key);
   SB_Spline_Edges_ShowClick               (Self);
   SB_Spline_Points_ShowClick              (Self);
   SB_Select_Items_Outer_Subgraph_ShowClick(Self);
@@ -20422,7 +20498,7 @@ end; {$endregion}
 
 // (Scene Tree) Иерархия обьектов:
 {LI} {$region -fold}
-procedure ObjIndsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure ObjIndsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -20436,7 +20512,7 @@ begin
       LowLrObjCntCalc3;
     end;
 end; {$endregion}
-procedure ScTIndsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure ScTIndsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i  : integer;
   i00: integer=-1;
@@ -20475,7 +20551,7 @@ begin
           TKindOfObject(10){kooFtext}: SetIndsSctArrVal(ftext_inds_sct_arr,i10,i);
         end;
 end; {$endregion}
-procedure CngPnVsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure CngPnVsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,v: integer;
 
@@ -20513,7 +20589,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure SelPnlsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure SelPnlsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -20522,7 +20598,7 @@ begin
       if (Controls[obj_inds_arr[i]] as TPanel).Visible and Items[i].Selected then
          (Controls[obj_inds_arr[i]] as TPanel).Color:=$0082804D;
 end; {$endregion}
-procedure UnsPnlsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure UnsPnlsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -20530,7 +20606,7 @@ begin
     for i:=0 to ControlCount-1 do
       (Controls[obj_var.obj_inds_arr[i]] as TPanel).Color:=$00ABAFA3;
 end; {$endregion}
-procedure SelIndsCalc;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure SelIndsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -20548,7 +20624,7 @@ begin
       sel_cnt:=SelectionCount;
     end;
 end; {$endregion}
-function  AreAllObjKindEqual: TKindOfObject;                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  AreAllObjKindEqual: TKindOfObject;                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   next_selected_node: TTreeNode;
   curr_selected_node: TTreeNode;
@@ -20562,6 +20638,7 @@ begin
       if (SelectionCount=0) then
         begin
           F_MainForm.L_Object_Name.Caption:='';
+          Result                          :=kooEmpty;
           Exit;
         end;
       for i:=0 to Items.Count-1 do
@@ -20596,7 +20673,7 @@ begin
       F_MainForm.L_Object_Name.Caption:=s;
     end;
 end; {$endregion}
-function  AreAllObjPrlxEqual: TPtPos;                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  AreAllObjPrlxEqual: TPtPos;                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   next_selected_node: TTreeNode;
   curr_selected_node: TTreeNode;
@@ -20634,7 +20711,83 @@ begin
         end;
     end;
 end; {$endregion}
-procedure CrtNodeData(node_with_data:TTreeNode; g_ind:TColor);                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  AreAllObjShowEqual: TByte;                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  next_selected_node: TTreeNode;
+  curr_selected_node: TTreeNode;
+begin
+  with F_MainForm,TV_Scene_Tree do
+    begin
+      Result:=Default(TByte);
+      if (SelectionCount=0) then
+        begin
+          CB_SObject_Properties_Show_In_Editor.State:=cbChecked;
+          CB_SObject_Properties_Show_In_Game  .State:=cbChecked;
+          Exit;
+        end;
+      Result:=obj_var.obj_arr[PNodeData(Items[obj_var.first_sel_node_ind].Data)^.g_ind].obj_show;
+      if (SelectionCount=1) then
+        Exit;
+      next_selected_node:=Items[obj_var.first_sel_node_ind];
+      curr_selected_node:=next_selected_node;
+      while (next_selected_node<>Nil) do
+        begin
+          curr_selected_node:=next_selected_node;
+          if (obj_var.obj_arr[PNodeData(next_selected_node.Data)^.g_ind].obj_show=Result) then
+            next_selected_node:=next_selected_node.GetNextMultiSelected
+          else
+            Break;
+        end;
+      if (SelectionCount>1) then
+        begin
+          if (obj_var.obj_arr[PNodeData(curr_selected_node.Data)^.g_ind].obj_show<>Result) then
+            begin
+              CB_SObject_Properties_Show_In_Editor.State:=cbGrayed;
+              CB_SObject_Properties_Show_In_Game  .State:=cbGrayed;
+            end
+          else
+            begin
+
+            end;
+        end;
+    end;
+end; {$endregion}
+procedure AreAllObjPropEqual;                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  koo: TKindOfObject;
+  key: char;
+begin
+  obj_var.sel_koo:=AreAllObjKindEqual;
+  AreAllObjPrlxEqual;
+  AreAllObjShowEqual;
+end; {$endregion}
+procedure ParallaxShiftChange;                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  with F_MainForm,obj_var do
+    begin
+      global_prop.parallax_shift.x:=SE_Object_Properties_Parallax_Shift.Value;
+      global_prop.parallax_shift.y:=SE_Object_Properties_Parallax_Shift.Value;
+    end;
+end; {$endregion}
+procedure ObjectShowChange;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  with F_MainForm,obj_var do
+    if CB_SObject_Properties_Show_In_Editor.Checked then
+      begin
+        if CB_SObject_Properties_Show_In_Game.Checked then
+          global_prop.obj_show:=0
+        else
+          global_prop.obj_show:=1;
+      end
+    else
+      begin
+        if CB_SObject_Properties_Show_In_Game.Checked then
+          global_prop.obj_show:=2
+        else
+          global_prop.obj_show:=3;
+      end;
+end; {$endregion}
+procedure CrtNodeData(node_with_data:TTreeNode; g_ind:TColor);                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   node_data_pointer: PNodeData;
 begin
@@ -20654,13 +20807,13 @@ begin
   end;
   node_with_data.Data:=PNodeData(node_data_pointer);
 end; {$endregion}
-procedure WrtNodeData(data_start_ptr:PPtPos  ; data_write:TPtPos);                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure WrtNodeData(data_start_ptr:PPtPos; data_write:TPtPos; size_of_data:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i,size_of_data: integer;
+  i: integer;
 begin
   if (F_MainForm.TV_Scene_Tree.SelectionCount=0) then
     Exit;
-  size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
+  //size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
   with F_MainForm.TV_Scene_Tree,obj_var do
     begin
       for i:=0 to SelectionCount-1 do
@@ -20668,11 +20821,13 @@ begin
       (data_start_ptr+0*size_of_data)^:=(data_start_ptr+obj_inds_arr[1]*size_of_data)^;
     end;
 end; {$endregion}
-procedure WrtNodeData(data_start_ptr:PBoolean; data_write:boolean);                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure WrtNodeData(data_start_ptr:PByte;  data_write:byte;   size_of_data:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i,size_of_data: integer;
+  i: integer;
 begin
-  size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
+  if (F_MainForm.TV_Scene_Tree.SelectionCount=0) then
+    Exit;
+  //size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
   with F_MainForm.TV_Scene_Tree,obj_var do
     begin
       for i:=0 to SelectionCount-1 do
@@ -20680,12 +20835,12 @@ begin
       (data_start_ptr+0*size_of_data)^:=(data_start_ptr+obj_inds_arr[1]*size_of_data)^;
     end;
 end; {$endregion}
-procedure ClrNodeData(node_with_data:TTreeNode);                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure ClrNodeData(node_with_data:TTreeNode);                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (node_with_data.data<>Nil) then
     Dispose(PNodeData(node_with_data.data));
 end; {$endregion}
-procedure DeleteSelectedNodes(TV:TTreeView);                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure DeleteSelectedNodes(TV:TTreeView);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   List: TList;
   i,j : integer;
@@ -20728,7 +20883,7 @@ begin
     List.Free;
   end;
 end; {$endregion}
-procedure AddTagPanel(constref ind:integer);                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure AddTagPanel(constref ind:integer);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   P_TreeView_Attributes_Cells:=TPanel.Create(Nil);
   with F_MainForm,TV_Scene_Tree,P_TreeView_Attributes_Cells do
@@ -20746,7 +20901,7 @@ begin
       //Tag       :=ind;
     end;
 end; {$endregion}
-procedure CreateNode(item_text1,item_text2:ansistring; is_first_node:boolean=False); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure CreateNode(item_text1,item_text2:ansistring; is_first_node:boolean=False);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   item_text: ansistring;
   ind       : integer;
@@ -20876,8 +21031,7 @@ begin
       Items[i].Selected:=True;
   SelPnlsCalc;
   SelIndsCalc;
-  AreAllObjKindEqual;
-  AreAllObjPrlxEqual;
+  AreAllObjPropEqual;
 end; {$endregion}
 procedure TF_MainForm.MI_Unselect_AllClick                          (sender:TObject);                                                           {$region -fold}
 begin
@@ -20885,8 +21039,7 @@ begin
     if (SelectionCount<>0) then
       Items.ClearMultiSelection(True);
   UnsPnlsCalc;
-  AreAllObjKindEqual;
-  AreAllObjPrlxEqual;
+  AreAllObjPropEqual;
 end; {$endregion}
 procedure TF_MainForm.MI_Fold_AllClick                              (sender:TObject);                                                           {$region -fold}
 var
@@ -20932,44 +21085,68 @@ begin
   TV_Scene_Tree.Items[1].Selected:=True;
   SelPnlsCalc;
   SelIndsCalc;
-  AreAllObjKindEqual;
-  AreAllObjPrlxEqual;
+  AreAllObjPropEqual;
 end; {$endregion}
 procedure TF_MainForm.MI_Goto_Last_ObjectClick                      (sender:TObject);                                                           {$region -fold}
 begin
   TV_Scene_Tree.Items[TV_Scene_Tree.Items.Count-1].Selected:=True;
   SelPnlsCalc;
   SelIndsCalc;
-  AreAllObjKindEqual;
-  AreAllObjPrlxEqual;
+  AreAllObjPropEqual;
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeDragOver                         (sender,source:TObject; x,y:integer; state:TDragState; var accept:boolean); {$region -fold}
 begin
   SelPnlsCalc;
   SelIndsCalc;
-  AreAllObjKindEqual;
-  AreAllObjPrlxEqual;
+  AreAllObjPropEqual;
   accept:=True and (sel_var.sel_pts_cnt=0); // If TRUE then accept the draged item
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeMouseDown                        (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);      {$region -fold}
 var
   target_node: TTreeNode;
   shift_name : string;
+label
+  label_skip_keypress;
 begin
   with TV_Scene_Tree,obj_var do
     if (button=mbLeft) then
       begin
-        ReadOnly     :=False;
-        source_node_x:=x;
-        source_node_y:=y;
-        target_node  :=GetNodeAt(x,y);
+        ReadOnly             :=False;
+        scene_tree_mouse_down:=True;
+        source_node_x        :=x;
+        source_node_y        :=y;
+        target_node          :=GetNodeAt(x,y);
         if (target_node<>Nil) then
           begin
-            SE_Object_Properties_Parallax_Shift.Value:=obj_arr[PNodeData(target_node.Data)^.g_ind].parallax_shift.x;
-            global_prop.parallax_shift.x             :=SE_Object_Properties_Parallax_Shift.Value;
-            global_prop.parallax_shift.y             :=SE_Object_Properties_Parallax_Shift.Value;
-            single_selected_node_ind                 :=target_node.AbsoluteIndex;
-            shift_name                               :=GetEnumName(TypeInfo(TShiftStateEnum),Ord(TShiftStateEnum(shift)));
+            SE_Object_Properties_Parallax_Shift .Value  := obj_arr[PNodeData(target_node.Data)^.g_ind].parallax_shift.x;
+            ParallaxShiftChange;
+            CB_SObject_Properties_Show_In_Editor.Checked:=(obj_arr[PNodeData(target_node.Data)^.g_ind].obj_show=0) or
+                                                          (obj_arr[PNodeData(target_node.Data)^.g_ind].obj_show=1);
+            CB_SObject_Properties_Show_In_Game  .Checked:=(obj_arr[PNodeData(target_node.Data)^.g_ind].obj_show=0) or
+                                                          (obj_arr[PNodeData(target_node.Data)^.g_ind].obj_show=2);
+            ObjectShowChange;
+            single_selected_node_ind                    :=target_node.AbsoluteIndex;
+            shift_name                                  :=GetEnumName(TypeInfo(TShiftStateEnum),Ord(TShiftStateEnum(shift)));
+
+            if not down_select_points_ptr^ then
+              begin
+                //M_Description.Lines.Text:=prev_key;
+                //if (SelectionCount=1) then
+                case obj_var.sel_koo of
+                  kooEmpty: prev_key:='_';
+                  kooCurve:
+                    begin
+                      if prev_key='_' then
+                        prev_key:=Char(key_arr[07])
+                      else
+                        goto label_skip_keypress
+                    end;
+                end;
+                FormKeyPress(F_MainForm,prev_key);
+              end;
+
+            label_skip_keypress:
+
             if (shift_name='ssSuper') then
               begin
                 Items.ClearMultiSelection(True);
@@ -20984,11 +21161,13 @@ begin
         if (SelectionCount<>0) then
           begin
             Items.ClearMultiSelection(True);
+            FormKeyPress(F_MainForm,prev_key);
             L_Object_Name                      .Caption:='';
             SE_Object_Properties_Parallax_Shift.Color  :=DEFAULT_MISCELLANEOUS_VALUES_COLOR;
             EndDrag(False);
           end;
-        ReadOnly:=True;
+        ReadOnly             :=True;
+        scene_tree_mouse_down:=False;
         UnsPnlsCalc;
       end;
 end; {$endregion}
@@ -21082,8 +21261,15 @@ begin
         38,40:
           if (SelectionCount=1) then
             begin
-              SE_Object_Properties_Parallax_Shift.Value:=obj_var.obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].parallax_shift.x;
-              s:=GetEnumName(TypeInfo(TKindOfObject),Ord(obj_var.obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].koo));
+              with obj_var do
+                begin
+                  SE_Object_Properties_Parallax_Shift .Value  := obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].parallax_shift.x;
+                  CB_SObject_Properties_Show_In_Editor.Checked:=(obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].obj_show=0) or
+                                                                (obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].obj_show=1);
+                  CB_SObject_Properties_Show_In_Game  .Checked:=(obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].obj_show=0) or
+                                                                (obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].obj_show=2);
+                  s:=GetEnumName(TypeInfo(TKindOfObject),Ord    (obj_arr[PNodeData(Items[single_selected_node_ind].Data)^.g_ind].koo));
+                end;
               Delete(s,1,3);
               if (s='Empty') then
                 L_Object_Name.Caption:=''
@@ -21133,6 +21319,7 @@ begin
   CngPnVsCalc;
   SelPnlsCalc;
   SelIndsCalc;
+  //obj_var.LowLrObjCntCalc3;
   cmr_var.parallax_shift:=obj_var.obj_arr[0].parallax_shift;
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
@@ -21160,13 +21347,23 @@ begin
 end; {$endregion}
 procedure TF_MainForm.SE_Object_Properties_Parallax_ShiftChange     (sender:TObject);                                                           {$region -fold}
 begin
-  obj_var.global_prop.parallax_shift.x:=SE_Object_Properties_Parallax_Shift.Value;
-  obj_var.global_prop.parallax_shift.y:=SE_Object_Properties_Parallax_Shift.Value;
+  ParallaxShiftChange;
   if (TV_Scene_Tree.SelectionCount=0) or (is_mouse_in_scene_tree) then
     Exit;
   obj_var.LowLrObjCntCalc3;
-  WrtNodeData(PPtPos(@obj_var.obj_arr[0].parallax_shift),PtPos(SE_Object_Properties_Parallax_Shift.Value,SE_Object_Properties_Parallax_Shift.Value));
+  WrtNodeData(PPtPos(@obj_var.obj_arr[0].parallax_shift),
+              PtPos(SE_Object_Properties_Parallax_Shift.Value,SE_Object_Properties_Parallax_Shift.Value),
+              PPtPos(@obj_var.obj_arr[1].parallax_shift)-PPtPos(@obj_var.obj_arr[0].parallax_shift));
   cmr_var.parallax_shift:=obj_var.obj_arr[0].parallax_shift;
+  srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
+end; {$endregion}
+procedure TF_MainForm.CB_SObject_Properties_Show_In_EditorChange    (sender:TObject);                                                           {$region -fold}
+begin
+  ObjectShowChange;
+  if (TV_Scene_Tree.SelectionCount=0) or (is_mouse_in_scene_tree) then
+    Exit;
+  obj_var.LowLrObjCntCalc3;
+  WrtNodeData(PByte(@obj_var.obj_arr[0].obj_show),obj_var.global_prop.obj_show,PByte(@obj_var.obj_arr[1].obj_show)-PByte(@obj_var.obj_arr[0].obj_show));
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
 // (Tag    Properties) Свойства тега:
@@ -21875,7 +22072,7 @@ begin
       end;} {$endregion}
 
       {Fluid Simul.----------} {$region -fold}
-      SetColorInfo(clRed,color_info);
+      SetColorInfo(clDkGray{Red},color_info);
       if (sln_pts_cnt>0) then
         begin
           for i:=0 to sln_obj_pts_cnt[0]-1 do
@@ -21894,10 +22091,10 @@ begin
                          color_info,
                          inn_wnd_rct);
             end;
-          //WaterWaveParamChg(a0,001,000,000);
-          //WaterWaveParamChg(a3,001,000,080);
+          //WaterWaveParamChg(a0,001,00,00);
+          //WaterWaveParamChg(a3,0.5,00,80);
         end;
-      SetColorInfo(clYellow,color_info);
+      SetColorInfo(clBlack{Aqua}{Yellow},color_info);
       if (sln_pts_cnt>0) then
         begin
           for i:=0 to sln_obj_pts_cnt[0]-1 do
@@ -21916,8 +22113,8 @@ begin
                          color_info,
                          inn_wnd_rct);
             end;
-          //WaterWaveParamChg(a0,001,000,000);
-          WaterWaveParamChg(a3,001,000,080);
+          //WaterWaveParamChg(a0,001,00,00);
+          WaterWaveParamChg(a3,0.5,00,80);
         end;
 
       {WaterWave2(PtPosF(world_axis.x,

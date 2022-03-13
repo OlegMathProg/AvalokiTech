@@ -2363,116 +2363,6 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     ParentShowHint = False
     TabOrder = 0
-    object RG_Edit_Mode: TRadioGroup
-      AnchorSideRight.Control = SB_2D_Operations
-      AnchorSideRight.Side = asrBottom
-      Left = 2
-      Height = 30
-      Top = 0
-      Width = 263
-      Anchors = [akTop, akLeft, akRight]
-      AutoFill = True
-      ChildSizing.LeftRightSpacing = 6
-      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-      ChildSizing.EnlargeVertical = crsHomogenousChildResize
-      ChildSizing.ShrinkHorizontal = crsScaleChilds
-      ChildSizing.ShrinkVertical = crsScaleChilds
-      ChildSizing.Layout = cclLeftToRightThenTopToBottom
-      ChildSizing.ControlsPerLine = 1
-      ClientHeight = 22
-      ClientWidth = 259
-      Color = 15921635
-      Font.Color = clActiveCaption
-      Font.Height = -1
-      Font.Quality = fqDraft
-      ParentBackground = False
-      ParentFont = False
-      ParentColor = False
-      TabOrder = 1
-      object RB_Points: TRadioButton
-        Left = 70
-        Height = 21
-        Top = 1
-        Width = 55
-        Anchors = [akLeft]
-        AutoSize = False
-        Caption = 'Points'
-        Checked = True
-        Color = 15921635
-        Font.CharSet = ANSI_CHARSET
-        Font.Color = 4724742
-        Font.Height = -18
-        Font.Name = 'Gabriola'
-        Font.Quality = fqDraft
-        ParentBidiMode = False
-        ParentColor = False
-        ParentFont = False
-        ParentShowHint = False
-        TabOrder = 0
-        TabStop = True
-      end
-      object RB_Polygons: TRadioButton
-        Left = 186
-        Height = 21
-        Top = 1
-        Width = 73
-        Anchors = [akLeft]
-        AutoSize = False
-        Caption = 'Polygons'
-        Color = 15921635
-        Enabled = False
-        Font.CharSet = ANSI_CHARSET
-        Font.Color = 4724742
-        Font.Height = -18
-        Font.Name = 'Gabriola'
-        Font.Quality = fqDraft
-        ParentBidiMode = False
-        ParentColor = False
-        ParentFont = False
-        ParentShowHint = False
-        TabOrder = 2
-        TabStop = True
-      end
-      object RB_Edges: TRadioButton
-        Left = 128
-        Height = 21
-        Top = 1
-        Width = 56
-        Anchors = [akLeft]
-        AutoSize = False
-        Caption = 'Edges'
-        Color = 15921635
-        Enabled = False
-        Font.CharSet = ANSI_CHARSET
-        Font.Color = 4724742
-        Font.Height = -18
-        Font.Name = 'Gabriola'
-        Font.Quality = fqDraft
-        ParentBidiMode = False
-        ParentColor = False
-        ParentFont = False
-        ParentShowHint = False
-        TabOrder = 1
-        TabStop = True
-      end
-      object L_Edit_Mode: TLabel
-        Left = 1
-        Height = 16
-        Top = 1
-        Width = 65
-        Anchors = [akLeft]
-        AutoSize = False
-        Caption = 'Edit Mode:'
-        Font.CharSet = ANSI_CHARSET
-        Font.Color = 2569769
-        Font.Height = -15
-        Font.Name = 'AR CENA'
-        Font.Quality = fqDraft
-        ParentBidiMode = False
-        ParentFont = False
-        ParentShowHint = False
-      end
-    end
     object CCB_2D_Operations_Automatic: TCheckComboBox
       AnchorSideLeft.Control = SB_2D_Operations
       AnchorSideRight.Control = SB_2D_Operations
@@ -2511,7 +2401,7 @@ object F_MainForm: TF_MainForm
       ParentBidiMode = False
       ParentFont = False
       ParentShowHint = False
-      TabOrder = 2
+      TabOrder = 1
       Text = 'Align 2D Points'
     end
     object FP_UV_Operations: TFlowPanel
@@ -2612,7 +2502,7 @@ object F_MainForm: TF_MainForm
       ParentDoubleBuffered = False
       ParentFont = False
       ParentShowHint = False
-      TabOrder = 3
+      TabOrder = 2
       object BB_Maximize_UV: TBitBtn
         Cursor = crHandPoint
         Left = 6
@@ -2965,7 +2855,7 @@ object F_MainForm: TF_MainForm
       Color = 11251619
       FullRepaint = False
       ParentColor = False
-      TabOrder = 4
+      TabOrder = 3
       OnMouseEnter = P_2D_Operations_AutomaticMouseEnter
       OnMouseLeave = P_2D_Operations_AutomaticMouseLeave
       object P_UV_Attributes: TPanel
@@ -3795,8 +3685,117 @@ object F_MainForm: TF_MainForm
       Anchors = [akTop, akLeft, akRight, akBottom]
       Caption = 'P_UV_Operations'
       Enabled = False
-      TabOrder = 5
+      TabOrder = 4
       Visible = False
+    end
+    object RG_Edit_Mode: TGroupBox
+      AnchorSideRight.Control = SB_2D_Operations
+      AnchorSideRight.Side = asrBottom
+      Left = 2
+      Height = 30
+      Top = 0
+      Width = 263
+      Anchors = [akTop, akLeft, akRight]
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 22
+      ClientWidth = 259
+      Color = 15921635
+      Font.Color = clActiveCaption
+      Font.Height = -1
+      Font.Quality = fqDraft
+      ParentBackground = False
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 5
+      object RB_Points: TRadioButton
+        Left = 70
+        Height = 21
+        Top = 1
+        Width = 55
+        Anchors = [akLeft]
+        AutoSize = False
+        Caption = 'Points'
+        Checked = True
+        Color = 15921635
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = 4724742
+        Font.Height = -18
+        Font.Name = 'Gabriola'
+        Font.Quality = fqDraft
+        ParentBidiMode = False
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        TabOrder = 0
+        TabStop = True
+      end
+      object RB_Polygons: TRadioButton
+        Left = 186
+        Height = 21
+        Top = 1
+        Width = 73
+        Anchors = [akLeft]
+        AutoSize = False
+        Caption = 'Polygons'
+        Color = 15921635
+        Enabled = False
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = 4724742
+        Font.Height = -18
+        Font.Name = 'Gabriola'
+        Font.Quality = fqDraft
+        ParentBidiMode = False
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        TabOrder = 2
+        TabStop = True
+      end
+      object RB_Edges: TRadioButton
+        Left = 128
+        Height = 21
+        Top = 1
+        Width = 56
+        Anchors = [akLeft]
+        AutoSize = False
+        Caption = 'Edges'
+        Color = 15921635
+        Enabled = False
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = 4724742
+        Font.Height = -18
+        Font.Name = 'Gabriola'
+        Font.Quality = fqDraft
+        ParentBidiMode = False
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        TabOrder = 1
+        TabStop = True
+      end
+      object L_Edit_Mode: TLabel
+        Left = 1
+        Height = 16
+        Top = 1
+        Width = 65
+        Anchors = [akLeft]
+        AutoSize = False
+        Caption = 'Edit Mode:'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = 2569769
+        Font.Height = -15
+        Font.Name = 'AR CENA'
+        Font.Quality = fqDraft
+        ParentBidiMode = False
+        ParentFont = False
+        ParentShowHint = False
+      end
     end
   end
   object TV_Scene_Tree: TTreeView
@@ -4338,15 +4337,15 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
-    Left = 126
+    Left = 164
     Height = 492
     Top = 172
-    Width = 634
+    Width = 596
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
     ClientHeight = 492
-    ClientWidth = 634
+    ClientWidth = 596
     Color = 13290949
     ParentColor = False
     TabOrder = 3
@@ -4360,7 +4359,7 @@ object F_MainForm: TF_MainForm
       Left = 0
       Height = 492
       Top = 0
-      Width = 634
+      Width = 596
       ActivePage = TS_Draw
       Anchors = [akTop, akLeft, akRight, akBottom]
       MultiLine = True
@@ -4374,14 +4373,14 @@ object F_MainForm: TF_MainForm
       object TS_File: TTabSheet
         Caption = 'File'
         ClientHeight = 484
-        ClientWidth = 603
+        ClientWidth = 565
         object SB_Image_List: TScrollBox
           AnchorSideRight.Control = TS_Draw
           AnchorSideRight.Side = asrBottom
           Left = 32
           Height = 480
           Top = 0
-          Width = 569
+          Width = 531
           HorzScrollBar.Increment = 1
           HorzScrollBar.Page = 1
           HorzScrollBar.Smooth = True
@@ -4392,7 +4391,7 @@ object F_MainForm: TF_MainForm
           VertScrollBar.Tracking = True
           Anchors = [akTop, akLeft, akRight, akBottom]
           ClientHeight = 476
-          ClientWidth = 565
+          ClientWidth = 527
           Color = 13881769
           ParentBiDiMode = False
           ParentColor = False
@@ -4409,7 +4408,7 @@ object F_MainForm: TF_MainForm
             Left = 0
             Height = 476
             Top = 0
-            Width = 565
+            Width = 527
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
             Caption = 'Texture List is Empty'
@@ -4434,7 +4433,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
-            Left = 192
+            Left = 156
             Height = 180
             Top = 103
             Width = 680
@@ -4893,7 +4892,7 @@ object F_MainForm: TF_MainForm
       object TS_Draw: TTabSheet
         Caption = 'Draw'
         ClientHeight = 484
-        ClientWidth = 603
+        ClientWidth = 565
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
         ParentBiDiMode = False
@@ -4909,7 +4908,7 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 449
           Top = 35
-          Width = 601
+          Width = 563
           HorzScrollBar.Increment = 1
           HorzScrollBar.Page = 1
           HorzScrollBar.Smooth = True
@@ -4922,7 +4921,7 @@ object F_MainForm: TF_MainForm
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
           ClientHeight = 445
-          ClientWidth = 597
+          ClientWidth = 559
           Color = 15921635
           ParentBiDiMode = False
           ParentColor = False
@@ -4937,7 +4936,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -360
+            Left = 0
             Height = 488
             Top = 24
             Width = 1040
@@ -9085,7 +9084,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 360
+            Left = 308
             Height = 176
             Top = 16
             Width = 912
@@ -10829,7 +10828,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 389
+            Left = 8
             Height = 206
             Top = 232
             Width = 529
@@ -11668,7 +11667,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 457
+            Left = 412
             Height = 63
             Top = 39
             Width = 506
@@ -11853,7 +11852,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 417
+            Left = 374
             Height = 110
             Top = 44
             Width = 530
@@ -11874,7 +11873,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 412
+            Left = 370
             Height = 63
             Top = 56
             Width = 506
@@ -12058,7 +12057,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 606
+            Left = 551
             Height = 63
             Top = -27
             Width = 506
@@ -12242,7 +12241,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 438
+            Left = 393
             Height = 110
             Top = 55
             Width = 530
@@ -12303,7 +12302,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 469
+            Left = 422
             Height = 110
             Top = 55
             Width = 530
@@ -12325,13 +12324,13 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 32
           Top = 0
-          Width = 601
+          Width = 563
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 2
           BevelColor = 13815453
           BevelOuter = bvLowered
           ClientHeight = 32
-          ClientWidth = 601
+          ClientWidth = 563
           Color = 15921635
           FullRepaint = False
           ParentColor = False
@@ -12559,7 +12558,7 @@ object F_MainForm: TF_MainForm
       object TS_AnimK: TTabSheet
         Caption = 'AnimK'
         ClientHeight = 484
-        ClientWidth = 603
+        ClientWidth = 565
         object P_Animation_Buttons: TPanel
           AnchorSideRight.Control = TS_AnimK
           AnchorSideRight.Side = asrBottom
@@ -12567,13 +12566,13 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 32
           Top = 0
-          Width = 601
+          Width = 563
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 2
           BevelColor = 13815453
           BevelOuter = bvLowered
           ClientHeight = 32
-          ClientWidth = 601
+          ClientWidth = 563
           Color = 15921635
           FullRepaint = False
           ParentColor = False
@@ -12671,14 +12670,14 @@ object F_MainForm: TF_MainForm
           Left = 0
           Height = 449
           Top = 35
-          Width = 601
+          Width = 563
           HorzScrollBar.Page = 1
           VertScrollBar.Page = 1
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
           ClientHeight = 445
-          ClientWidth = 597
+          ClientWidth = 559
           TabOrder = 1
           object P_Add_Actor: TPanel
             AnchorSideLeft.Control = SB_AnimK
@@ -12687,9 +12686,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 2
+            Left = 8
             Height = 176
-            Top = -74
+            Top = 56
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13130,10 +13129,10 @@ object F_MainForm: TF_MainForm
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Control = P_Add_Actor
               AnchorSideBottom.Side = asrBottom
-              Left = 216
+              Left = 208
               Height = 158
               Top = 9
-              Width = 392
+              Width = 400
               AntialiasingMode = amOn
               Anchors = [akTop, akLeft, akRight, akBottom]
               BorderSpacing.Top = 5
@@ -13169,7 +13168,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 149
+            Left = 120
             Height = 200
             Top = 201
             Width = 617
@@ -13258,7 +13257,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 183
+            Left = 154
             Height = 40
             Top = -17
             Width = 530
@@ -13279,7 +13278,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_AnimK
             AnchorSideBottom.Side = asrBottom
-            Left = 113
+            Left = 86
             Height = 40
             Top = -17
             Width = 617
@@ -13964,11 +13963,11 @@ object F_MainForm: TF_MainForm
         Caption = 'Show in Editor'
         Checked = True
         Color = 12236195
-        Enabled = False
         Font.CharSet = ANSI_CHARSET
         Font.Color = clCaptionText
         Font.Height = -12
         Font.Name = 'AR JULIAN'
+        OnChange = CB_SObject_Properties_Show_In_EditorChange
         OnMouseEnter = SB_Object_PropertiesMouseEnter
         OnMouseLeave = SB_Object_PropertiesMouseLeave
         ParentColor = False
@@ -13988,11 +13987,11 @@ object F_MainForm: TF_MainForm
         Caption = 'Show in Game'
         Checked = True
         Color = 12236195
-        Enabled = False
         Font.CharSet = ANSI_CHARSET
         Font.Color = clCaptionText
         Font.Height = -12
         Font.Name = 'AR JULIAN'
+        OnChange = CB_SObject_Properties_Show_In_EditorChange
         OnMouseEnter = SB_Object_PropertiesMouseEnter
         OnMouseLeave = SB_Object_PropertiesMouseLeave
         ParentColor = False
@@ -14114,7 +14113,7 @@ object F_MainForm: TF_MainForm
     Left = 4
     Height = 492
     Top = 172
-    Width = 118
+    Width = 156
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = 6780768
     Font.CharSet = ANSI_CHARSET
@@ -14269,7 +14268,7 @@ object F_MainForm: TF_MainForm
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
-    Left = 122
+    Left = 160
     Height = 492
     Top = 172
     Width = 4

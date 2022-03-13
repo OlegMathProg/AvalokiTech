@@ -31,6 +31,7 @@ var
   F_Hot_Keys : TF_Hot_Keys;
   key_arr    : array of integer;
   key_alt_arr: array of integer;
+  prev_key   : char='_';
 
 implementation
 
