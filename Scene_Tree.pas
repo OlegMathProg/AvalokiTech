@@ -276,7 +276,7 @@ type
       function  LowLrObjCntCalc1: TColor;                                             inline; {$ifdef Linux}[local];{$endif}
       procedure LowLrObjCntCalc2;                                                     inline; {$ifdef Linux}[local];{$endif}
       procedure LowLrObjCntCalc3;                                                     inline; {$ifdef Linux}[local];{$endif}
-      // check equality of two objects by kind:
+      // (Check Equality Of Two Objects By Kind) Проверка на равенство двух обьектов по виду:
       function  AreTwoObjKindEqual    (constref obj_ind1,
                                                 obj_ind2         :TColor): boolean;   inline; {$ifdef Linux}[local];{$endif}
       //
@@ -288,6 +288,10 @@ type
                                        constref arr              :TSlPtArr;
                                        constref max_item_val     :TColor;
                                        constref item_cnt         :TColor): TColor;    inline; {$ifdef Linux}[local];{$endif}
+      // (Bounding Rectangle of Points Set) Ограничиваюший прямоугольник множества точек:
+      function  PtsRngIndsRctCalc     (constref pts              :TPtPosFArr;
+                                       constref sel_pts_inds     :TColorArr;
+                                       constref pts_cnt          :TColor): TRect;     inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PSceneTree    =^TSceneTree;
 
@@ -350,7 +354,7 @@ var
 
 implementation
 
-uses  //
+uses
 
   Main;
 
@@ -825,6 +829,71 @@ begin
   for i:=0 to item_cnt-1 do
     if (obj_arr[obj_inds_arr_[arr[i].obj_ind]].t_ind<=Result) then
       Result:=obj_arr[obj_inds_arr_[arr[i].obj_ind]].t_ind;
+end; {$endregion}
+// (Bounding Rectangle of Points Set) Ограничиваюший прямоугольник множества точек:
+function    TSceneTree.PtsRngIndsRctCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColorArr; constref pts_cnt:TColor): TRect;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  pts_ptr                                : PPtPosF;
+  sel_pts_inds_ptr                       : PInteger;
+  min_x,min_y,max_x,max_y                : double;
+  ind_min_x,ind_min_y,ind_max_x,ind_max_y: integer;
+  i                                      : integer;
+begin
+
+  {Misc. Precalc.----} {$region -fold}
+  pts_ptr         :=Unaligned(@pts         [0]);
+  sel_pts_inds_ptr:=Unaligned(@sel_pts_inds[0]);
+  Result          :=Default(TRect);
+  ind_min_x       :=0;
+  ind_min_y       :=0;
+  ind_max_x       :=0;
+  ind_max_y       :=0;
+
+  with pts[sel_pts_inds[0]] do
+    begin
+      min_x:=x+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.x;
+      min_y:=y+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.y;
+      max_x:=x+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.x;
+      max_y:=y+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.y;
+    end; {$endregion}
+
+  {Calc. of Rectangle} {$region -fold}
+  for i:=0 to pts_cnt-1 do
+    begin
+      if ((pts_ptr+sel_pts_inds_ptr^)^.x+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.x<=min_x) then
+        begin
+          min_x    :=(pts_ptr+sel_pts_inds_ptr^)^.x+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.x;
+          ind_min_x:=sel_pts_inds_ptr^;
+        end;
+      if ((pts_ptr+sel_pts_inds_ptr^)^.y+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.y<=min_y) then
+        begin
+          min_y    :=(pts_ptr+sel_pts_inds_ptr^)^.y+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.y;
+          ind_min_y:=sel_pts_inds_ptr^;
+        end;
+      if ((pts_ptr+sel_pts_inds_ptr^)^.x+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.x>=max_x) then
+        begin
+          max_x    :=(pts_ptr+sel_pts_inds_ptr^)^.x+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.x;
+          ind_max_x:=sel_pts_inds_ptr^;
+        end;
+      if ((pts_ptr+sel_pts_inds_ptr^)^.y+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.y>=max_y) then
+        begin
+          max_y    :=(pts_ptr+sel_pts_inds_ptr^)^.y+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[sel_pts_inds_ptr^]]].world_axis_shift.y;
+          ind_max_y:=sel_pts_inds_ptr^;
+        end;
+      Inc(sel_pts_inds_ptr);
+    end; {$endregion}
+
+  {Set Rectangle-----} {$region -fold}
+  with Result do
+    begin
+      left  :=Trunc(pts[ind_min_x].x)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_min_x]]].world_axis_shift.x+0;
+      top   :=Trunc(pts[ind_min_y].y)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_min_y]]].world_axis_shift.y+0;
+      right :=Trunc(pts[ind_max_x].x)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_max_x]]].world_axis_shift.x+1;
+      bottom:=Trunc(pts[ind_max_y].y)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_max_y]]].world_axis_shift.y+1;
+      width :=right-left;
+      height:=bottom-top;
+    end; {$endregion}
+
 end; {$endregion}
 
 end.

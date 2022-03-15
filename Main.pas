@@ -9,6 +9,7 @@ uses
   {ZLib,}
   Graphics, Classes, SysUtils, Forms, ComCtrls, GraphType, LResources, Dialogs, FileUtil,
   Math, Menus, StdCtrls, ExtCtrls, Buttons, Controls, Spin, ExtDlgs, ComboEx, MMSystem,
+  OpenGLContext, lclvlc, GL, GLU,
   {$ifdef Windows}
   Windows, WinInet, ImgList,
   {$endif}
@@ -17,8 +18,7 @@ uses
   {$endif}
   IniFiles, Types, TypInfo, Mouse,
   {Own Units}
-  Fast_AnimK, Fast_Primitives, Scene_Tree, Performance_Time, OpenGLContext,
-  lclvlc, GL, GLU, Game;
+  Fast_AnimK, Fast_Primitives, Scene_Tree, Performance_Time{, Game};
 
 const
 
@@ -464,7 +464,7 @@ type
     SB_Select_Items                                  : TSpeedButton;
     SB_Play_Anim                                     : TSpeedButton;
     SB_Object_Properties                             : TScrollBox;
-    SB_Unfold_Image_Window                           : TSpeedButton;
+    SB_Change_Layout                                 : TSpeedButton;
     CB_Brush_Mode                                    : TComboBox;
     CCB_2D_Operations_Automatic                      : TCheckComboBox;
     FSE_Brush_Fall_Off                               : TFloatSpinEdit;
@@ -495,7 +495,7 @@ type
     P_Splitter5                                      : TPanel;
     PM_Scene_Tree                                    : TPopupMenu;
     SB_2D_Operations                                 : TScrollBox;
-    SB_Original_Texture_Size                         : TSpeedButton;
+    SB_Centrify_Picture                              : TSpeedButton;
     SB_Drawing                                       : TScrollBox;
     SB_Visibility_Grid                               : TSpeedButton;
     SB_Visibility_Collider                           : TSpeedButton;
@@ -869,10 +869,10 @@ type
     procedure SB_Clear_SceneClick                                    (      sender           :TObject);
     procedure BB_Delete_SelectedClick                                (      sender           :TObject);
     procedure BB_Delete_AllClick                                     (      sender           :TObject);
-    procedure SB_Unfold_Image_WindowClick                            (      sender           :TObject);
-    procedure SB_Unfold_Image_WindowMouseLeave                       (      sender           :TObject);
-    procedure SB_Original_Texture_SizeClick                          (      sender           :TObject);
-    procedure SB_Original_Texture_SizeMouseLeave                     (      sender           :TObject);
+    procedure SB_Change_LayoutClick                                  (      sender           :TObject);
+    procedure SB_Change_LayoutMouseLeave                             (      sender           :TObject);
+    procedure SB_Centrify_PictureClick                               (      sender           :TObject);
+    procedure SB_Centrify_PictureMouseLeave                          (      sender           :TObject);
     procedure SB_Background_ColorClick                               (      sender           :TObject);
     procedure SB_Grid_ColorClick                                     (      sender           :TObject);
     procedure SB_Spline_ColorClick                                   (      sender           :TObject);
@@ -2534,20 +2534,20 @@ begin
   info_arr[02]:=#13+'Objects of upper layer: '                                            +IntToStr(obj_var.upp_lr_obj_cnt        )+';';
   info_arr[03]:=#13+'Groups: '                                                            +IntToStr(obj_var.group_cnt             )+';';
   info_arr[04]:=#13+'Actors: '                                                            +IntToStr(obj_var.actor_cnt             )+';';
-  info_arr[05]:=#13+'  • Static: '                                                                                                 +';';
-  info_arr[06]:=#13+'  • Dynamic: '                                                                                                +';';
-  info_arr[07]:=#13+'  • Physical: '                                                                                               +';';
+  info_arr[05]:=#13+'  • Static: 0'                                                                                                +';';
+  info_arr[06]:=#13+'  • Dynamic: 0'                                                                                               +';';
+  info_arr[07]:=#13+'  • Physical: 0'                                                                                              +';';
   info_arr[08]:=#13+'Particles: '                                                         +IntToStr(obj_var.prtcl_cnt             )+';';
   info_arr[09]:=#13+'Curves: '                                                            +IntToStr(obj_var.curve_cnt             )+';';
   if (sln_var<>Nil) then
     info_arr[10]:=#13+'  • Points: '                                                      +InttoStr(sln_var.sln_pts_cnt           )+';';
   if (sel_var<>Nil) then
     begin
-      info_arr[11]:=#13+'    • Count of curve'+#13+'      with selected points: '         +InttoStr(sel_var.sln_with_sel_pts_cnt  )+';';
+      info_arr[11]:=#13+'    • Count of curves'+#13+'      with selected points: '        +InttoStr(sel_var.sln_with_sel_pts_cnt  )+';';
       info_arr[12]:=#13+'    • Minimal index of curve'+#13+'      with selected points: ' +InttoStr(sel_var.sel_obj_min_ind       )+';';
       info_arr[13]:=#13+'    • Selected: '                                                +InttoStr(sel_var.sel_pts_cnt           )+';';
       if (sel_var.sel_pts_cnt=0) then
-        info_arr[14]:=#13+'      • Is not abstract object'+#13+'        kind after: ;'
+        info_arr[14]:=#13+'      • Is not abstract object'+#13+'        kind after: No;'
       else
         begin
           if sel_var.is_not_abst_obj_kind_after then
@@ -3064,7 +3064,7 @@ begin
 end; {$endregion}
 {$endregion}
 {UI} {$region -fold}
-procedure TF_MainForm.SB_Unfold_Image_WindowClick     (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.SB_Change_LayoutClick     (sender:TObject); {$region -fold}
 
   procedure UnfoldWindow; {$ifdef Linux}[local]{$endif} {$region -fold}
 
@@ -3110,9 +3110,13 @@ procedure TF_MainForm.SB_Unfold_Image_WindowClick     (sender:TObject);         
           1{3}:
             begin
               SetSplittersAnchors(0,F_MainForm);
-              S_Splitter2.top         :=F_MainForm.height-67;
-              S_Splitter3.left        :=F_MainForm.width-210;
-              S_TreeView_Splitter.left:=F_MainForm.width-50;
+              if (PC_Image_Editor.TabPosition=tpBottom) or (PC_Image_Editor.TabPosition=tpTop) then
+                S_Splitter2.top       :=F_MainForm.height-067
+              else
+              if (PC_Image_Editor.TabPosition=tpLeft) or (PC_Image_Editor.TabPosition=tpRight) then
+                S_Splitter2.top       :=F_MainForm.height-045;
+              S_Splitter3.left        :=F_MainForm.width -210;
+              S_TreeView_Splitter.left:=F_MainForm.width -050;
               tag                     :=0{4};
             end;
           {4:
@@ -3127,7 +3131,7 @@ procedure TF_MainForm.SB_Unfold_Image_WindowClick     (sender:TObject);         
             end;}
         end;
         SplittersPosCalc;
-        SB_Unfold_Image_Window.down:=False;
+        SB_Change_Layout.down:=False;
       end;
   end; {$endregion}
 
@@ -3135,9 +3139,9 @@ begin
   UnfoldWindow;
   MoveBorders;
 end; {$endregion}
-procedure TF_MainForm.SB_Unfold_Image_WindowMouseLeave(sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.SB_Change_LayoutMouseLeave(sender:TObject); {$region -fold}
 begin
-  SB_Unfold_Image_Window.Repaint;
+  SB_Change_Layout.Repaint;
 end; {$endregion}
 {$endregion}
 
@@ -3147,7 +3151,7 @@ procedure TF_MainForm.MI_Align_Image_On_Inner_Window_ResizeClick(sender:TObject)
 begin
   align_picture_to_center:=MI_Align_Image_On_Inner_Window_Resize.Checked;
 end; {$endregion}
-procedure TF_MainForm.SB_Original_Texture_SizeClick             (sender:TObject); {$region -fold}
+procedure TF_MainForm.SB_Centrify_PictureClick                  (sender:TObject); {$region -fold}
 begin
   tex_var.AlignPictureToCenter;
   with srf_var,inn_wnd_rct do
@@ -3157,12 +3161,12 @@ begin
       obj_var.SetWorldAxisShift(world_axis_shift);
       EventGroupsCalc(calc_arr,[8,9,18,30,31,32,41,48]);
       SpeedButtonRepaint;
-      SB_Original_Texture_Size.down:=False;
+      SB_Centrify_Picture.down:=False;
     end;
 end; {$endregion}
-procedure TF_MainForm.SB_Original_Texture_SizeMouseLeave        (sender:TObject); {$region -fold}
+procedure TF_MainForm.SB_Centrify_PictureMouseLeave             (sender:TObject); {$region -fold}
 begin
-  SB_Original_Texture_Size.Repaint;
+  SB_Centrify_Picture.Repaint;
 end; {$endregion}
 {$endregion}
 
@@ -3463,8 +3467,8 @@ end; {$endregion}
 procedure TF_MainForm.VisibilityChange(set_visibility:boolean); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   I_Visibility_Panel      .Visible:=set_visibility;
-  SB_Unfold_Image_Window  .Visible:=set_visibility;
-  SB_Original_Texture_Size.Visible:=set_visibility;
+  SB_Change_Layout  .Visible:=set_visibility;
+  SB_Centrify_Picture.Visible:=set_visibility;
   SB_Visibility_Texture   .Visible:=set_visibility;
   SB_Visibility_Grid      .Visible:=set_visibility;
   SB_Visibility_Spline    .Visible:=set_visibility;
@@ -4272,7 +4276,7 @@ begin
         SetObjBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,@inn_wnd_rct,0,obj_cnt-1);
     end;
   // Get Target Render For OpenGL Output:
-  GLBitmapToRect(texture_id,srf_bmp,down_play_anim_ptr^);
+  GLBitmapInit(texture_id,srf_bmp,down_play_anim_ptr^);
   //if down_play_anim_ptr^ then
   GetObject(srf_bmp.Handle,SizeOf(buffer),@buffer);
 end; {$endregion}
@@ -5300,16 +5304,12 @@ begin
           FilScene2(low_lr_obj_cnt,obj_cnt-1);
       end; {$endregion}
 
-  {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
-  if copy2_calc then
-    MainBmpToLowerBmp; {$endregion}
-
   {Background Post-Processing After Points Selection} {$region -fold}
   if bkg_pp_calc then
     BkgPP; {$endregion}
 
   {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
-  if copy3_calc then
+  if copy2_calc then
     MainBmpToLowerBmp; {$endregion}
 
   {World Axis---------------------------------------} {$region -fold}
@@ -12351,7 +12351,9 @@ begin
         FmlSplineObj[cur_tlt_dwn_btn_ind](world_axis.x+srf_var.world_axis_shift.x,
                                           world_axis.y+srf_var.world_axis_shift.y);
       sln_pts_cnt_add:=0;
-      LowerBmpToMainBmp;
+      BmpToBmp2(srf_bmp_ptr ,low_bmp_ptr ,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
+      BmpToBmp2(low_bmp_ptr ,low_bmp2_ptr,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
+      BmpToBmp2(low_bmp2_ptr,srf_bmp_ptr ,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
       color_info:=Default(TColorInfo);
       SetColorInfo(SetColorInv(clRed),color_info);
       with inn_wnd_rct do
@@ -12402,7 +12404,6 @@ begin
         PtPos(0,0),
         cnc_ends and (fml_pts_cnt>2)
       );}
-
       if show_collider then
         begin
           SetColorInfo(clBlue,color_info);
@@ -12420,9 +12421,10 @@ begin
             cnc_ends and (fml_pts_cnt>2)
           );
         end;
-      if show_world_axis then
-        WorldAxisDraw;
-      CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
+      {if show_world_axis then
+        WorldAxisDraw;}
+      CnvToCnv (srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
+      BmpToBmp2(low_bmp_ptr,srf_bmp_ptr,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
     end;
 end; {$endregion}
 procedure TCurve.Cycloid           (constref x,y              :integer);                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -14436,14 +14438,14 @@ begin
             FmlSplineObj[cur_tlt_dwn_btn_ind](world_axis.x,world_axis.y);
             Inc(sln_pts_cnt,sln_pts_cnt_add);
             sln_pts_add:=fml_pts;
-            EventGroupsCalc(calc_arr,[12,16,30,33,41]);
+            EventGroupsCalc(calc_arr,[12,16,30,33,41,48]);
           end;
         2:
           begin
             if (pts_cnt_val=0) then
               Exit;
             RndSplineObj(world_axis,512{256},512{256});
-            EventGroupsCalc(calc_arr,[12,16,30,33,40,41]);
+            EventGroupsCalc(calc_arr,[12,16,30,33,40,41,48]);
           end;
       end;
     end;
@@ -15637,7 +15639,7 @@ begin
   sln_with_sel_pts_cnt:=ArrNzItCnt(has_sel_pts,4); {$endregion}
 
   {Selected Points Rectangle Calc.------} {$region -fold}
-  sel_pts_rct:=PtsRngIndsRctCalc
+  sel_pts_rct:=obj_var.PtsRngIndsRctCalc
   (
     pts,
     sel_pts_inds,
@@ -15645,10 +15647,10 @@ begin
   );
   with sel_pts_rct do
     begin
-      left  :=sel_pts_rct.left  -sel_pts_rct_mrgn+srf_var.world_axis_shift.x;
-      top   :=sel_pts_rct.top   -sel_pts_rct_mrgn+srf_var.world_axis_shift.y;
-      right :=sel_pts_rct.right +sel_pts_rct_mrgn+srf_var.world_axis_shift.x;
-      bottom:=sel_pts_rct.bottom+sel_pts_rct_mrgn+srf_var.world_axis_shift.y;
+      left  :=sel_pts_rct.left  -sel_pts_rct_mrgn;
+      top   :=sel_pts_rct.top   -sel_pts_rct_mrgn;
+      right :=sel_pts_rct.right +sel_pts_rct_mrgn;
+      bottom:=sel_pts_rct.bottom+sel_pts_rct_mrgn;
       width :=right-left;
       height:=bottom-top;
     end; {$endregion}
@@ -17122,13 +17124,13 @@ begin
 
       fx_arr[0].rep_cnt        :=01{02}; //must be in range of [0..255]
 
-      fx_arr[0].nt_pix_srf_type:=01; //must be in range of [0..001]
-      fx_arr[0].nt_pix_cfx_type:=17; //must be in range of [0..255]
-      fx_arr[0].nt_pix_cng_type:=00; //must be in range of [0..001]
+      fx_arr[0].nt_pix_srf_type:=01    ; //must be in range of [0..001]
+      fx_arr[0].nt_pix_cfx_type:=17    ; //must be in range of [0..255]
+      fx_arr[0].nt_pix_cng_type:=00    ; //must be in range of [0..001]
 
-      fx_arr[0].pt_pix_srf_type:=01; //must be in range of [0..001]
-      fx_arr[0].pt_pix_cfx_type:=17; //must be in range of [0..255]
-      fx_arr[0].pt_pix_cng_type:=00; //must be in range of [0..001]
+      fx_arr[0].pt_pix_srf_type:=01    ; //must be in range of [0..001]
+      fx_arr[0].pt_pix_cfx_type:=17    ; //must be in range of [0..255]
+      fx_arr[0].pt_pix_cng_type:=00    ; //must be in range of [0..001]
 
     end;
 end; {$endregion}
@@ -18029,7 +18031,7 @@ end;
 {LI} {$region -fold}
 procedure CursorInit(constref cur_ind,im_lst_ind:integer; constref location:string; constref ImgLstGetBmp:TProc1); {$region -fold}
 var
-  bmp_alpha,bmp_color: Graphics.TBitmap; // кастомные иконки для курсоров
+  bmp_alpha,bmp_color: Graphics.TBitmap;
   icon_info          : TIconInfo;
 begin
   if FileExists(location) then
@@ -18342,17 +18344,17 @@ begin
       T_Game .Enabled       :=False;
       {OpenGLControl2.Visible:=False;
       OpenGLControl2.Enabled:=False;}
-      time_interval         :=0;
+      //time_interval         :=0;
     end;
 
-  with srf_var do
+  {with srf_var do
     main_char_pos:=PtPos(world_axis.x+world_axis_shift.x+main_char_pos_spawn_arr[Random(6)].x,
                          world_axis.y+world_axis_shift.y+main_char_pos_spawn_arr[Random(6)].y);
 
   with srf_var do
     Logo1_img.SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
   with srf_var do
-    Logo2_img.SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
+    Logo2_img.SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);}
 
   //LCLVLCPlayer_Intro.PlayFile(Application.Location+INTRO_MOVIE);
 
@@ -18366,7 +18368,7 @@ begin
   with srf_var do
     begin
       // Get Target Render For OpenGL Output:
-      GLBitmapToRect(texture_id,srf_bmp,down_play_anim_ptr^);
+      GLBitmapInit(texture_id,srf_bmp,down_play_anim_ptr^);
       //if down_play_anim_ptr^ then
       GetObject(srf_bmp.Handle,SizeOf(buffer),@buffer);
     end;
@@ -18797,7 +18799,7 @@ procedure TF_MainForm.TB_SpeedChange    (sender:TObject);                       
 begin
   cmr_var.parallax_shift.x:=TB_Speed.Position;
   cmr_var.parallax_shift.y:=TB_Speed.Position;
-  main_char_speed         :=TB_Speed.Position;
+  //main_char_speed         :=TB_Speed.Position;
   obj_var.SetParallaxShift(cmr_var.parallax_shift);
 end; {$endregion}
 procedure TF_MainForm.TB_SpeedClick     (sender:TObject);                                                          {$region -fold}
@@ -18872,7 +18874,7 @@ begin
                   {Align Pivot on Points}
                   AlignPivotOnP    (x,y,shift);
                   {Drawing of Selected Edges, Points and Objects}
-                  WholeSubgraphDraw(x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct,{ClippedRct(}inn_wnd_rct{,sel_pts_rct)});
+                  WholeSubgraphDraw(x,y,pvt,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
                   {Selected Points Rectangle Position}
                   SelPtsRctPosCalc (x,y,sel_pts_rct);
                   {Pivot Position}
@@ -19461,10 +19463,10 @@ begin
       with srf_var do
         begin
           need_repaint:=True;
-          LowerBmpToMainBmp;
           if (sel_var.sel_pts_cnt>0) then
             with pvt_var do
               begin
+                LowerBmpToMainBmp;
                 case pvt_mode of
                   (pmPivotMove  ): pvt_mode:=(pmPivotScale );
                   (pmPivotScale ): pvt_mode:=(pmPivotRotate);
@@ -19476,6 +19478,7 @@ begin
               end
           else
             begin
+              LowerBmp2ToMainBmp;
               if (CB_Select_Items_Selection_Drawing_Mode.ItemIndex=CB_Select_Items_Selection_Drawing_Mode.Items.Count-1) then
                 CB_Select_Items_Selection_Drawing_Mode.ItemIndex:=0
               else
@@ -19495,100 +19498,35 @@ begin
     Exit;
   if down_play_anim_ptr^ then
      begin
-       if (key=#32{'space'}) then
-         time_interval:=-1;
+       {if (key=#32{'space'}) then
+         time_interval:=-1;}
        Exit;
      end; {$endregion}
 
   {Switch Buttons---} {$region -fold}
-  {if (key='_') then
-    begin
-      prev_key:='_';
-      Exit;
-    end;}
-  // button 'Text':
   if (key=Char(key_arr[04]{#49})) or (key=Char(key_alt_arr[04]{' '})) then
-    begin
-      ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
-      if down_text_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end;
+    ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
   // button 'Brush':
   if (key=Char(key_arr[05]{#50})) or (key=Char(key_alt_arr[05]{' '})) then
-    begin
-      ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
-      if down_brush_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end;
+    ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
   // button 'Spray':
   if (key=Char(key_arr[06]{#51})) or (key=Char(key_alt_arr[06]{' '})) then
-    begin
-      ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
-      if down_spray_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end;
+    ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
   // button 'Spline':
   if (key=Char(key_arr[07]{#52})) or (key=Char(key_alt_arr[07]{'q'})) then
-    begin
-      ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
-      if down_spline_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end;
+    ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
   // button 'Select Points':
   if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
-    begin
-      ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
-      if down_select_points_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end;
+    ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
   // button 'Select Texture Region':
   if (key=Char(key_arr[09]{#54})) or (key=Char(key_alt_arr[09]{' '})) then
-    begin
-      ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
-      if down_select_texture_region_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end;
+    ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
   // button 'Regular Grid':
   if (key=Char(key_arr[10]{#54})) or (key=Char(key_alt_arr[10]{' '})) then
-    begin
-      ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
-      if down_rgrid_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end;
+    ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
   // button 'Snap Grid':
   if (key=Char(key_arr[11]{#54})) or (key=Char(key_alt_arr[11]{' '})) then
-    begin
-      ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008);
-      if down_sgrid_ptr^ then
-        prev_key:=key
-      else
-        prev_key:='_';
-    end; {$endregion}
-
-  if scene_tree_mouse_down then
-    Exit;
-  with TV_Scene_Tree do
-    if (SelectionCount<>0) then
-      begin
-        Items.ClearMultiSelection(True);
-        L_Object_Name                      .Caption:='';
-        SE_Object_Properties_Parallax_Shift.Color  :=DEFAULT_MISCELLANEOUS_VALUES_COLOR;
-        UnsPnlsCalc;
-      end;
+    ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008); {$endregion}
 
 end; {$endregion}
 procedure TF_MainForm.FormKeyDown       (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
@@ -19617,7 +19555,7 @@ begin
          (sel_pts_cnt        >0) then
         Exit; {$endregion}
 
-      if T_Menu.Enabled then
+      {if T_Menu.Enabled then
         begin
           case Key of
             65,68,87,83: PlaySound(PChar(SELECT_ITEM),0,SND_ASYNC);
@@ -19652,7 +19590,7 @@ begin
               end;
           end;
           Exit;
-        end;
+        end;}
 
       if T_Game.Enabled or T_Game_Loop.Enabled then
         begin
@@ -20019,7 +19957,7 @@ begin
     S_Splitter4.height       :=splitter_thickness;
     P_Splitter5.height       :=splitter_thickness;
     S_Splitter6.height       :=splitter_thickness;
-    S_Splitter7.top          :=(F_MainForm.height+S_Splitter6.top)>>1;
+    S_Splitter7.top          :=(F_MainForm.height+S_Splitter6.top)>>1-20;
     S_Splitter7.height       :=splitter_thickness;
     splitters_arr[0]         :=Unaligned(@S_Splitter0.top );
     splitters_arr[1]         :=Unaligned(@S_Splitter1.left);
@@ -20252,7 +20190,7 @@ begin
 
   {Align Canvas---------} {$region -fold}
   tex_var.AlignPictureToCenter;
-  SB_Unfold_Image_WindowClick(F_MainForm);
+  SB_Change_LayoutClick(F_MainForm);
   S_Splitter2.top:=540; {$endregion}
 
   with srf_var do
@@ -20264,7 +20202,7 @@ begin
   useless_arr_[0]:=1;
 
   {Game-----------------} {$region -fold}
-  with srf_var do
+  {with srf_var do
     logo1_img:=TFastImage.Create(srf_bmp_ptr,
                                  srf_bmp.width,
                                  srf_bmp.height,
@@ -20374,7 +20312,7 @@ begin
       pt_pix_cng_type  :=001;
       nt_pix_cfx_type  :=002;
       pt_pix_cfx_type  :=002;
-    end; {$endregion}
+    end;} {$endregion}
 
 end; {$endregion}
 procedure TF_MainForm.FormActivate      (sender:TObject);                                                          {$region -fold}
@@ -20411,7 +20349,7 @@ begin
   SB_Select_Items_Outer_Subgraph_Show.Enabled:=False;
   SB_Select_Items_Inner_Subgraph_Show.Enabled:=False;
   S_TreeView_Splitter.left                   :=F_MainForm.width;
-  SB_Original_Texture_SizeClick           (Self);
+  SB_Centrify_PictureClick                (Self);
 
   {Hot Keys Panel-----} {$region -fold}
   F_Hot_Keys.Visible:=True;
@@ -21118,20 +21056,6 @@ begin
             ObjectShowChange;
             single_selected_node_ind                    :=target_node.AbsoluteIndex;
             shift_name                                  :=GetEnumName(TypeInfo(TShiftStateEnum),Ord(TShiftStateEnum(shift)));
-
-            if not down_select_points_ptr^ then
-              if (prev_key='_') then
-                begin
-                  case obj_var.sel_koo of
-                    kooEmpty: prev_key:='_';
-                    kooCurve: prev_key:=Char(key_arr[07]);
-                    //...
-                    kooRGrid: prev_key:=Char(key_arr[10]);
-                    kooSGrid: prev_key:=Char(key_arr[11]);
-                  end;
-                  FormKeyPress(F_MainForm,prev_key);
-                end;
-
             if (shift_name='ssSuper') then
               begin
                 Items.ClearMultiSelection(True);
@@ -21737,8 +21661,8 @@ begin
       {Draw Objects of Lower Layer} {$region -fold}
       if dir_a then
         begin
-          main_char_pos.x-=parallax_shift.x;
-          main_char_pos.x+=main_char_speed;
+          {main_char_pos.x-=parallax_shift.x;
+          main_char_pos.x+=main_char_speed;}
           MovLeft;
           if low_bmp_draw then
             begin
@@ -21754,8 +21678,8 @@ begin
         end;
       if dir_d then
         begin
-          main_char_pos.x+=parallax_shift.x;
-          main_char_pos.x-=main_char_speed;
+          {main_char_pos.x+=parallax_shift.x;
+          main_char_pos.x-=main_char_speed;}
           MovRight;
           if low_bmp_draw then
             begin
@@ -21771,8 +21695,8 @@ begin
         end;
       if dir_w then
         begin
-          main_char_pos.y-=parallax_shift.y;
-          main_char_pos.y+=main_char_speed;
+          {main_char_pos.y-=parallax_shift.y;
+          main_char_pos.y+=main_char_speed;}
           MovUp;
           if low_bmp_draw then
             begin
@@ -21788,8 +21712,8 @@ begin
         end;
       if dir_s then
         begin
-          main_char_pos.y+=parallax_shift.y;
-          main_char_pos.y-=main_char_speed;
+          {main_char_pos.y+=parallax_shift.y;
+          main_char_pos.y-=main_char_speed;}
           MovDown;
           if low_bmp_draw then
             begin
@@ -22464,7 +22388,7 @@ begin
       with srf_var do
         begin
           //glDrawPixels(srf_bmp.Width,srf_bmp.Height,32993{swap channels: GL_RGBA=$1908 to GL_BGRA=32993},GL_UNSIGNED_BYTE,{srf_bmp_ptr}buffer.bmBits);
-          glEnable       (GL_TEXTURE_2D);
+          //glEnable       (GL_TEXTURE_2D);
           glTexImage2D   (GL_TEXTURE_2D,0,3,srf_bmp.Width,srf_bmp.Height,0,32993{swap channels: GL_RGBA=$1908 to GL_BGRA=32993},GL_UNSIGNED_BYTE,srf_bmp_ptr{buffer.bmBits});
           glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST{GL_LINEAR});
           {glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST{GL_LINEAR});
@@ -22495,7 +22419,7 @@ begin
   with srf_var do
     begin
       PPFloodFill(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,bg_color);
-      with logo1_img do
+      {with logo1_img do
         begin
           FadeTemplate0(100,100,100,col_trans_arr[02],time_interval);
           if (time_interval=0) then
@@ -22511,7 +22435,7 @@ begin
           SetRctPos(world_axis.x+world_axis_shift.x-logo1_img.bmp_ftimg_width >>1,
                     world_axis.y+world_axis_shift.y-logo1_img.bmp_ftimg_height>>1);
           SdrProc[3];
-        end;
+        end;}
       //GetCursorPos(cur_pos);
       //cur_pos:=ScreenToClient(cur_pos);
       //CursorDraw(cur_pos.x,cur_pos.y);
@@ -22536,7 +22460,7 @@ begin
   with srf_var do
     begin
       PPFloodFill(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,bg_color);
-      with logo2_img do
+      {with logo2_img do
         begin
           FadeTemplate1(100,100,100,col_trans_arr[02],time_interval);
           if (time_interval=0) then
@@ -22553,7 +22477,7 @@ begin
           SetRctPos(world_axis.x+world_axis_shift.x-logo2_img.bmp_ftimg_width >>1,
                     world_axis.y+world_axis_shift.y-logo2_img.bmp_ftimg_height>>1);
           SdrProc[3];
-        end;
+        end;}
       //GetCursorPos(cur_pos);
       //cur_pos:=ScreenToClient(cur_pos);
       //CursorDraw(cur_pos.x,cur_pos.y);
@@ -22575,7 +22499,7 @@ begin
 end; {$endregion}
 procedure TF_MainForm.T_Logo3Timer    (sender:TObject);                   {$region -fold}
 begin
-  time_interval+=1;
+  {time_interval+=1;
   case time_interval of
     0          :
       begin
@@ -22590,11 +22514,11 @@ begin
             090: PlaySound    (PChar(EGG_EXPLOSION           ),0,SND_ASYNC);
             210: PlaySound    (PChar(LETTERS_DROP            ),0,SND_ASYNC);
             380: time_interval:=-1;
-  end;
+  end;}
 end; {$endregion}
 procedure TF_MainForm.T_MenuTimer     (sender:TObject);                   {$region -fold}
 begin
-  with srf_var do
+  {with srf_var do
     begin
       PPFloodFill(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,bg_color,flood_fill_inc);
       flood_fill_inc:=not flood_fill_inc;
@@ -22691,14 +22615,14 @@ begin
         glVertex3f   (-1,-1,0);
       glEnd;
     end;
-  OpenGLControl2.SwapBuffers;
+  OpenGLControl2.SwapBuffers;}
 end; {$endregion}
 procedure TF_MainForm.T_GameTimer     (sender:TObject);                   {$region -fold}
 var
   color_info: TColorInfo;
   i         : integer;
 begin
-  with srf_var do
+  {with srf_var do
     begin
       PPFloodFill(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,bg_color,flood_fill_inc);
       flood_fill_inc:=not flood_fill_inc;
@@ -22752,7 +22676,7 @@ begin
         glVertex3f   (-1,-1,0);
       glEnd;
     end;
-  OpenGLControl2.SwapBuffers;
+  OpenGLControl2.SwapBuffers;}
 end; {$endregion}
 {$endregion}
 

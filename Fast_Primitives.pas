@@ -4146,7 +4146,7 @@ function PtsRngRctCalc          (constref pts                :TPtPosFArr;
                                  constref end_pts_ind        :TColor=0): TRect;                {$ifdef Linux}[local];{$endif}
 function PtsRngIndsRctCalc      (constref pts                :TPtPosFArr;
                                  constref sel_pts_inds       :TColorArr;
-                                 constref pts_cnt            :TColor): TRect;                  {$ifdef Linux}[local];{$endif}
+                                 constref pts_cnt            :TColor  ): TRect;                {$ifdef Linux}[local];{$endif}
 
 // (Set Rectangle) Установить прямоугольник:
 procedure PtRct                 (constref pts                :TPtPosFArr;
@@ -4155,23 +4155,23 @@ procedure PtRct                 (constref pts                :TPtPosFArr;
 function PtRctB                 (constref rct_left,
                                           rct_top,
                                           rct_right,
-                                          rct_bottom         :integer    ): TPtRectB;  inline; {$ifdef Linux}[local];{$endif}
+                                          rct_bottom         :integer   ): TPtRectB;   inline; {$ifdef Linux}[local];{$endif}
 function PtRct                  (constref rct_left,
                                           rct_top,
                                           rct_right,
-                                          rct_bottom         :integer    ): TPtRect;   inline; {$ifdef Linux}[local];{$endif}
-function PtRct                  (constref rct                :TRect      ): TPtRect;   inline; {$ifdef Linux}[local];{$endif}
-function PtRct                  (constref rct                :TPtRectF   ): TPtRect;   inline; {$ifdef Linux}[local];{$endif}
-function PtRct                  (constref rct                :TPtPosFArr ): TPtRect;   inline; {$ifdef Linux}[local];{$endif}
+                                          rct_bottom         :integer   ): TPtRect;    inline; {$ifdef Linux}[local];{$endif}
+function PtRct                  (constref rct                :TRect     ): TPtRect;    inline; {$ifdef Linux}[local];{$endif}
+function PtRct                  (constref rct                :TPtRectF  ): TPtRect;    inline; {$ifdef Linux}[local];{$endif}
+function PtRct                  (constref rct                :TPtPosFArr): TPtRect;    inline; {$ifdef Linux}[local];{$endif}
 function PtBounds               (constref rct_left,
                                           rct_top,
                                           rct_width,
-                                          rct_height         :integer    ): TPtRect;   inline; {$ifdef Linux}[local];{$endif}
-function PtBounds               (constref rct                :TRect      ): TPtRect;   inline; {$ifdef Linux}[local];{$endif}
+                                          rct_height         :integer   ): TPtRect;    inline; {$ifdef Linux}[local];{$endif}
+function PtBounds               (constref rct                :TRect     ): TPtRect;    inline; {$ifdef Linux}[local];{$endif}
 function PtBoundsF              (constref rct_left,
                                           rct_top,
                                           rct_width,
-                                          rct_height         :integer    ): TPtRectF;  inline; {$ifdef Linux}[local];{$endif}
+                                          rct_height         :integer   ): TPtRectF;   inline; {$ifdef Linux}[local];{$endif}
 
 // (Inner Clipped Rectangle) Внутренний обрезанный прямоугольник:
 function ClippedRctB            (constref out_rct,
@@ -4302,7 +4302,7 @@ function Angle2                 (constref x0,y0,x1,y1,x2,y2  :double): double;  
 (********************************** Blitters **********************************)
 
 function  GetBmpHandle          (         bmp                :TBitmap): PInteger{pointer}; inline;
-procedure GLBitmapToRect        (         tex_id             :TColor;
+procedure GLBitmapInit          (         tex_id             :TColor;
                                           bmp                :Graphics.TBitmap;
                                           b                  :boolean);                inline;
 procedure CnvToCnv              (         rct_dst            :TPtRect;
@@ -6155,7 +6155,7 @@ begin
 end; {$endregion}
 
 // (Bounding Rectangle of Points Set) Ограничиваюший прямоугольник множества точек:
-function PtsRngRctCalc    (constref pts:TPtPosFArr; var rct_bnd_ind_arr:TEnum2Arr; constref start_pts_ind:TColor=0; constref end_pts_ind:TColor=0): TRect; {$ifdef Linux}[local];{$endif} {$region -fold}
+function PtsRngRctCalc    (constref pts:TPtPosFArr; var rct_bnd_ind_arr  :TEnum2Arr; constref start_pts_ind:TColor=0; constref end_pts_ind:TColor=0): TRect; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                                : PPtPosF;
   min_x,min_y,max_x,max_y                : double;
@@ -6224,7 +6224,7 @@ begin
   rct_bnd_ind_arr[3]:=ind_max_y; {$endregion}
 
 end; {$endregion}
-function PtsRngIndsRctCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColorArr; constref pts_cnt:TColor                                      ): TRect; {$ifdef Linux}[local];{$endif} {$region -fold}
+function PtsRngIndsRctCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColorArr; constref pts_cnt:TColor                                       ): TRect; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                                : PPtPosF;
   sel_pts_inds_ptr                       : PInteger;
@@ -35425,11 +35425,11 @@ end; {$endregion}
 (********************************** Blitters **********************************) {$region -fold}
 
 // Get Bitmap Handle:
-function  GetBmpHandle  (bmp:Graphics.TBitmap): PInteger{pointer}; inline; {$region -fold}
+function  GetBmpHandle(bmp:Graphics.TBitmap): PInteger{pointer}; inline; {$region -fold}
 var
   bmp_info: TBitmapInfo;
 begin
-  bmp_info.bmiHeader.biSize       :=sizeof(BitmapInfo.bmiHeader);
+  bmp_info.bmiHeader.biSize       :=SizeOf(BitmapInfo.bmiHeader);
   bmp_info.bmiHeader.biWidth      :=bmp.Width;
   bmp_info.bmiHeader.biHeight     :=-bmp.Height; // BitMap.Height will invert image on axis X
   bmp_info.bmiHeader.biPlanes     :=1;
@@ -35437,7 +35437,7 @@ begin
   bmp_info.bmiHeader.biCompression:=BI_RGB;
   bmp.Handle:=CreateDIBSection(bmp.Canvas.Handle,bmp_info,DIB_RGB_COLORS,GetBmpHandle,0,0);
 end; {$endregion}
-procedure GLBitmapToRect(tex_id:TColor; bmp:Graphics.TBitmap; b:boolean); inline; {$region -fold}
+procedure GLBitmapInit(tex_id:TColor; bmp:Graphics.TBitmap; b:boolean); inline; {$region -fold}
 begin
   if (not b) then
     glDisable(GL_TEXTURE_2D)

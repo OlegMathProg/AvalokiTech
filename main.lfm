@@ -3807,8 +3807,8 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter6
     Left = 764
-    Height = 399
-    Top = 5
+    Height = 400
+    Top = 4
     Width = 261
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoExpand = True
@@ -3898,16 +3898,16 @@ object F_MainForm: TF_MainForm
   object S_Splitter4: TSplitter
     AnchorSideLeft.Control = S_Splitter3
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Side = asrBottom
+    AnchorSideTop.Control = P_Splitter5
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
     Left = 764
     Height = 4
-    Top = 1
+    Top = 0
     Width = 261
     Align = alNone
-    Anchors = [akLeft, akRight]
+    Anchors = [akTop, akLeft, akRight]
     AutoSnap = False
     Color = 5731167
     ParentColor = False
@@ -3939,7 +3939,7 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 4
     Height = 4
-    Top = 384
+    Top = 242
     Width = 756
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -3986,7 +3986,7 @@ object F_MainForm: TF_MainForm
     ParentShowHint = False
     ResizeAnchor = akTop
   end
-  object SB_Unfold_Image_Window: TSpeedButton
+  object SB_Change_Layout: TSpeedButton
     AnchorSideLeft.Control = S_Splitter1
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = P_Splitter5
@@ -3994,7 +3994,7 @@ object F_MainForm: TF_MainForm
     Cursor = crHandPoint
     Left = 6
     Height = 24
-    Hint = 'Unfold Image Window'
+    Hint = 'Change Layout'
     Top = 6
     Width = 24
     AllowAllUp = True
@@ -4084,8 +4084,8 @@ object F_MainForm: TF_MainForm
       370478A4370478A4370478A4370478A4370378A4370078A43700
     }
     GroupIndex = 1
-    OnClick = SB_Unfold_Image_WindowClick
-    OnMouseLeave = SB_Unfold_Image_WindowMouseLeave
+    OnClick = SB_Change_LayoutClick
+    OnMouseLeave = SB_Change_LayoutMouseLeave
     ShowHint = True
     ParentBidiMode = False
     ParentFont = False
@@ -4338,13 +4338,13 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 164
-    Height = 276
-    Top = 388
+    Height = 418
+    Top = 246
     Width = 596
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
-    ClientHeight = 276
+    ClientHeight = 418
     ClientWidth = 596
     Color = 13290949
     ParentColor = False
@@ -4357,7 +4357,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Image_Editor
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 276
+      Height = 418
       Top = 0
       Width = 596
       ActivePage = TS_Draw
@@ -4372,13 +4372,13 @@ object F_MainForm: TF_MainForm
       Options = [nboShowCloseButtons, nboMultiLine, nboHidePageListPopup, nboKeyboardTabSwitch, nboShowAddTabButton, nboDoChangeOnSetIndex]
       object TS_File: TTabSheet
         Caption = 'File'
-        ClientHeight = 268
+        ClientHeight = 410
         ClientWidth = 565
         object SB_Image_List: TScrollBox
           AnchorSideRight.Control = TS_Draw
           AnchorSideRight.Side = asrBottom
           Left = 32
-          Height = 264
+          Height = 406
           Top = 0
           Width = 531
           HorzScrollBar.Increment = 1
@@ -4390,7 +4390,7 @@ object F_MainForm: TF_MainForm
           VertScrollBar.Smooth = True
           VertScrollBar.Tracking = True
           Anchors = [akTop, akLeft, akRight, akBottom]
-          ClientHeight = 260
+          ClientHeight = 402
           ClientWidth = 527
           Color = 13881769
           ParentBiDiMode = False
@@ -4406,7 +4406,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
             Left = 0
-            Height = 260
+            Height = 402
             Top = 0
             Width = 527
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4435,7 +4435,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 156
             Height = 180
-            Top = 15
+            Top = 72
             Width = 680
             Anchors = []
             BevelColor = 7958609
@@ -4673,13 +4673,13 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_File
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 264
+          Height = 406
           Top = 0
           Width = 29
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Bottom = 4
           BevelOuter = bvLowered
-          ClientHeight = 264
+          ClientHeight = 406
           ClientWidth = 29
           Color = 13359793
           ParentColor = False
@@ -4891,7 +4891,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_Draw: TTabSheet
         Caption = 'Draw'
-        ClientHeight = 268
+        ClientHeight = 410
         ClientWidth = 565
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
@@ -4906,7 +4906,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_Draw
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 233
+          Height = 375
           Top = 35
           Width = 563
           HorzScrollBar.Increment = 1
@@ -4920,7 +4920,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 229
+          ClientHeight = 371
           ClientWidth = 559
           Color = 15921635
           ParentBiDiMode = False
@@ -4938,7 +4938,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 0
             Height = 488
-            Top = -106
+            Top = -20
             Width = 1040
             Anchors = []
             BevelColor = 7958609
@@ -9084,9 +9084,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 308
+            Left = 192
             Height = 176
-            Top = -34
+            Top = 80
             Width = 912
             Anchors = []
             BevelColor = 9665894
@@ -10828,9 +10828,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 8
+            Left = 16
             Height = 206
-            Top = 69
+            Top = 256
             Width = 529
             Anchors = []
             BevelColor = 9665894
@@ -11667,9 +11667,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 412
+            Left = 320
             Height = 63
-            Top = 5
+            Top = 136
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -11852,9 +11852,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 374
+            Left = 388
             Height = 110
-            Top = -4
+            Top = 120
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -11873,9 +11873,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 370
+            Left = 400
             Height = 63
-            Top = 14
+            Top = 136
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12059,7 +12059,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 551
             Height = 63
-            Top = -29
+            Top = -28
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12241,9 +12241,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 393
+            Left = 448
             Height = 110
-            Top = 2
+            Top = 120
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12302,9 +12302,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 422
+            Left = 488
             Height = 110
-            Top = 2
+            Top = 112
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12557,7 +12557,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_AnimK: TTabSheet
         Caption = 'AnimK'
-        ClientHeight = 268
+        ClientHeight = 410
         ClientWidth = 565
         object P_Animation_Buttons: TPanel
           AnchorSideRight.Control = TS_AnimK
@@ -12668,7 +12668,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_AnimK
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 233
+          Height = 375
           Top = 35
           Width = 563
           HorzScrollBar.Page = 1
@@ -12676,7 +12676,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 229
+          ClientHeight = 371
           ClientWidth = 559
           TabOrder = 1
           object P_Add_Actor: TPanel
@@ -12688,7 +12688,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 8
             Height = 176
-            Top = -14
+            Top = 34
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13170,7 +13170,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 120
             Height = 200
-            Top = 55
+            Top = 149
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13259,7 +13259,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 154
             Height = 40
-            Top = -18
+            Top = -17
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -13280,7 +13280,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 86
             Height = 40
-            Top = -18
+            Top = -17
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13296,15 +13296,15 @@ object F_MainForm: TF_MainForm
       end
     end
   end
-  object SB_Original_Texture_Size: TSpeedButton
-    AnchorSideLeft.Control = SB_Unfold_Image_Window
+  object SB_Centrify_Picture: TSpeedButton
+    AnchorSideLeft.Control = SB_Change_Layout
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = P_Splitter5
     AnchorSideTop.Side = asrBottom
     Cursor = crHandPoint
     Left = 32
     Height = 24
-    Hint = 'Original Texture Size'
+    Hint = 'Centrify Picture'
     Top = 6
     Width = 24
     AllowAllUp = True
@@ -13393,8 +13393,8 @@ object F_MainForm: TF_MainForm
       5B0099B65B0099B65B0099B65B0099B65B0099B65B0099B65B00
     }
     GroupIndex = 1
-    OnClick = SB_Original_Texture_SizeClick
-    OnMouseLeave = SB_Original_Texture_SizeMouseLeave
+    OnClick = SB_Centrify_PictureClick
+    OnMouseLeave = SB_Centrify_PictureMouseLeave
     ShowHint = True
     ParentBidiMode = False
     ParentFont = False
@@ -13647,7 +13647,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter4
     Left = 764
-    Height = 1
+    Height = 0
     Top = 0
     Width = 83
     Anchors = [akTop, akLeft, akBottom]
@@ -13697,7 +13697,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = 755
     Height = 17
-    Top = 378
+    Top = 236
     Width = 15
     Caption = '>'
     Enabled = False
@@ -13719,7 +13719,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = -6
     Height = 17
-    Top = 378
+    Top = 236
     Width = 15
     Anchors = [akTop, akRight]
     Caption = '<'
@@ -13738,8 +13738,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = SB_TreeView_Object_Tags
     AnchorSideBottom.Side = asrBottom
     Left = 976
-    Height = 397
-    Top = 5
+    Height = 398
+    Top = 4
     Width = 4
     Align = alCustom
     Anchors = [akTop, akBottom]
@@ -13756,7 +13756,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     Left = 768
     Height = 25
-    Top = 9
+    Top = 8
     Width = 208
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 4
@@ -13784,8 +13784,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = TV_Scene_Tree
     AnchorSideBottom.Side = asrBottom
     Left = 980
-    Height = 369
-    Top = 33
+    Height = 370
+    Top = 32
     Width = 41
     HorzScrollBar.Page = 1
     VertScrollBar.Increment = 1
@@ -13849,7 +13849,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = S_Splitter7
     Left = 764
-    Height = 178
+    Height = 112
     Top = 408
     Width = 261
     HorzScrollBar.Increment = 16
@@ -13859,7 +13859,7 @@ object F_MainForm: TF_MainForm
     VertScrollBar.Increment = 26
     VertScrollBar.Page = 78
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 174
+    ClientHeight = 108
     ClientWidth = 257
     Color = 11117709
     ParentColor = False
@@ -13893,13 +13893,13 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_Object_Properties
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 152
+      Height = 86
       Top = 22
       Width = 257
       Anchors = [akTop, akLeft, akRight, akBottom]
       BevelColor = 7895160
       BevelOuter = bvNone
-      ClientHeight = 152
+      ClientHeight = 86
       ClientWidth = 257
       Color = 10063735
       ParentColor = False
@@ -14088,7 +14088,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 20
     Height = 23
-    Top = 341
+    Top = 199
     Width = 224
     Anchors = [akLeft, akBottom]
     AutoSize = False
@@ -14111,8 +14111,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 276
-    Top = 388
+    Height = 418
+    Top = 246
     Width = 156
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = 6780768
@@ -14141,14 +14141,14 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter3
     AnchorSideBottom.Side = asrBottom
     Left = 764
-    Height = 74
-    Top = 590
+    Height = 140
+    Top = 524
     Width = 261
     HorzScrollBar.Page = 144
     VertScrollBar.Increment = 26
     VertScrollBar.Page = 18
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 70
+    ClientHeight = 136
     ClientWidth = 257
     Color = 11117709
     ParentColor = False
@@ -14183,7 +14183,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = SB_Tag_Properties
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 48
+      Height = 114
       Top = 22
       Width = 257
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -14205,7 +14205,7 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 764
     Height = 4
-    Top = 586
+    Top = 520
     Width = 261
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -14222,7 +14222,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 8
     Height = 31
-    Top = 349
+    Top = 207
     Width = 118
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 4
@@ -14245,7 +14245,7 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Side = asrBottom
     Left = 980
     Height = 25
-    Top = 9
+    Top = 8
     Width = 41
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
@@ -14269,8 +14269,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 160
-    Height = 276
-    Top = 388
+    Height = 418
+    Top = 246
     Width = 4
     Align = alCustom
     Anchors = [akTop, akBottom]
