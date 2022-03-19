@@ -474,12 +474,12 @@ type
 
   TProc2            =procedure(var      arr_dst      :TColorArr;
                                constref arr_dst_width:TColor;
-                               constref val          :TColor) of object;
+                               constref val          :TColor)        of object;
   PProc2            =^TProc2;
 
   TProc3            =procedure(constref x0,y0,x1,y1  :integer;
                                constref proc_ptr_a   :TProc0;
-                               constref proc_ptr_b   :TProc0) of object;
+                               constref proc_ptr_b   :TProc0)        of object;
   PProc3            =^TProc3;
 
   TProc4            =procedure(constref bmp_dst_ptr  :PInteger;
@@ -506,7 +506,7 @@ type
                                constref bmp_dst_width:TColor);
   PProc6            =^TProc6;
 
-  TProc7            =procedure(constref x,y          :integer) of object;
+  TProc7            =procedure(constref x,y          :integer)       of object;
   PProc7            =^TProc7;
 
   TProc8            =procedure(         pixel_ptr    :PInteger;
@@ -519,8 +519,26 @@ type
                                constref rct_src      :TPtRect;
                                constref d_width,
                                         c,s,v,w,
-                                        lt,tp,rt,bt  :integer); {$ifdef Linux}[local];{$endif}
+                                        lt,tp,rt,bt  :integer);
   PProc9            =^TProc9;
+
+  TProc10           =procedure(         x,y          :integer;
+                               constref pvt          :TPtPosF;
+                               var      pts          :TPtPosFArr;
+                               constref bmp_dst_ptr  :PInteger;
+                               constref rct_clp      :TPtRect)       of object;
+  PProc10           =^TProc10;
+
+  TProc11           =procedure(         x,y          :integer;
+                               constref pvt          :TPtPosF;
+                               var      pts          :TPtPosFArr;
+                               constref bmp_dst_ptr  :PInteger;
+                               constref rct1,rct2    :TPtRect)       of object;
+  PProc11           =^TProc11;
+
+  TProc12           =procedure(         x,y          :integer;
+                               var      sel_pts_rect :TPtRectF)      of object;
+  PProc12           =^TProc12;
 
   TFunc0            =function (         pixel        :TColor;
                                constref r            :byte    =000;
@@ -3699,6 +3717,17 @@ procedure PtsScl                (constref pvt                :TPtPosF;
                                  var      rct                :TRect;
                                           scl_mul            :TPtPosF;
                                  constref scl_dir            :TSclDir);                inline; {$ifdef Linux}[local];{$endif}
+function  GetDir1               (         prev_pos,
+                                          curr_pos,
+                                          pvt                :TPtPosF): TSclDir;       inline; {$ifdef Linux}[local];{$endif}
+function  GetDir2               (         prev_pos,
+                                          curr_pos,
+                                          pvt                :TPtPosF): TSclDir;       inline; {$ifdef Linux}[local];{$endif}
+procedure SetMul                (         prev_pos,
+                                          curr_pos,
+                                          pvt                :TPtPosF;
+                                 var      scl_mul            :TPtPosF;
+                                 constref scl_dir            :TSclDir);                inline; {$ifdef Linux}[local];{$endif}
 
 // (Points Rotation) Вращение точек:
 procedure GetRot                (constref pvt                :TPtPos;
@@ -4205,6 +4234,9 @@ function ClippedArr             (constref rct_src            :TPtRect;
 function NCSRectCalc            (constref rct_src            :TRect;
                                  constref bucket_width,
                                           bucket_heigth      :integer): TRect;         inline; {$ifdef Linux}[local];{$endif}
+function NCSRectCalc            (constref rct_src            :TPtRectF;
+                                 constref bucket_width,
+                                          bucket_heigth      :integer): TPtRectF;      inline; {$ifdef Linux}[local];{$endif}
 
 // (Two Rectangles Bounding Rectangle 1) Ограничивающий прямоугольник для двух заданных прямоугольников:
 function TwoRctsBoundingRct     (constref rct1,
@@ -4226,6 +4258,8 @@ function IsRct1OutOfRct2        (constref rct1,
 function IsRct1OutOfRct2        (constref rct1,
                                           rct2               :TPtRect): boolean;       inline; {$ifdef Linux}[local];{$endif}
 function IsRct1OutOfRct2        (constref rct1               :TRect;
+                                 constref rct2               :TPtRect): boolean;       inline; {$ifdef Linux}[local];{$endif}
+function IsRct1OutOfRct2        (constref rct1               :TPtRectF;
                                  constref rct2               :TPtRect): boolean;       inline; {$ifdef Linux}[local];{$endif}
 
 // (Point in Rectangle) Точка в прямоугольнике:
@@ -6865,7 +6899,19 @@ begin
 end; {$endregion}
 
 // (Find Rectangle Which Has Not Coprime Width and Height(GCD(src_rect.Width,src_rect.Height)<>1) for source rectangle src_rect) Находит прямоугольник с не взаимно простыми сторонами(GCD(src_rect.Width,src_rect.Height)<>1) для исходного прямоугольника src_rect:
-function NCSRectCalc(constref rct_src:TRect; constref bucket_width,bucket_heigth:integer): TRect; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function NCSRectCalc(constref rct_src:TRect   ; constref bucket_width,bucket_heigth:integer): TRect   ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  with Result do
+    begin
+      left  :=rct_src.left;
+      top   :=rct_src.top ;
+      width :=(Trunc(rct_src.width /bucket_width )+1)*bucket_width ;
+      height:=(Trunc(rct_src.height/bucket_heigth)+1)*bucket_heigth;
+      right :=left+width;
+      bottom:=top+height;
+    end;
+end; {$endregion}
+function NCSRectCalc(constref rct_src:TPtRectF; constref bucket_width,bucket_heigth:integer): TPtRectF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with Result do
     begin
@@ -6928,21 +6974,28 @@ begin
 end; {$endregion}
 
 // (Rectangle out of Rectangle) Прямоугольник вне прямоугольника:
-function IsRct1OutOfRct2(constref rct1,                rct2:TRect  ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsRct1OutOfRct2(constref rct1,                   rct2:TRect  ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct1.right <=rct2.left  ) or
           (rct1.bottom<=rct2.top   ) or
           (rct1.left  >=rct2.right ) or
           (rct1.top   >=rct2.bottom);
 end; {$endregion}
-function IsRct1OutOfRct2(constref rct1,                rct2:TPtRect): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsRct1OutOfRct2(constref rct1,                   rct2:TPtRect): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct1.right <=rct2.left  ) or
           (rct1.bottom<=rct2.top   ) or
           (rct1.left  >=rct2.right ) or
           (rct1.top   >=rct2.bottom);
 end; {$endregion}
-function IsRct1OutOfRct2(constref rct1:TRect; constref rct2:TPtRect): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsRct1OutOfRct2(constref rct1:TRect   ; constref rct2:TPtRect): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(rct1.right <=rct2.left  ) or
+          (rct1.bottom<=rct2.top   ) or
+          (rct1.left  >=rct2.right ) or
+          (rct1.top   >=rct2.bottom);
+end; {$endregion}
+function IsRct1OutOfRct2(constref rct1:TPtRectF; constref rct2:TPtRect): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(rct1.right <=rct2.left  ) or
           (rct1.bottom<=rct2.top   ) or
@@ -31103,7 +31156,7 @@ var
   i      : integer;
 begin
   if (pts=Nil) then
-    Exit;                                                                          // 0 1 2   3 4 5 6
+    Exit;
   if (scl_dir=sdNone) then
     Exit;
   if (scl_dir=sdDown) then
@@ -31172,6 +31225,42 @@ begin
       width :=right-left;
       height:=bottom-top;
     end;
+end; {$endregion}
+function  GetDir1(prev_pos,curr_pos,pvt:TPtPosF): TSclDir;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  dist  : double;
+begin
+  Result:=sdNone;
+  dist  :=PtDistSqr(pvt.x,pvt.y,curr_pos.x,curr_pos.y)-
+          PtDistSqr(pvt.x,pvt.y,prev_pos.x,prev_pos.y);
+  if (dist>0) then
+    Result:=sdUp
+  else
+  if (dist<0) then
+    Result:=sdDown
+  else
+  if (dist=0) then
+    Result:=sdNone;
+end; {$endregion}
+function  GetDir2(prev_pos,curr_pos,pvt:TPtPosF): TSclDir;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=sdNone;
+  if (curr_pos.x>prev_pos.x) then
+    Result:=sdUp
+  else
+  if (curr_pos.x<prev_pos.x) then
+    Result:=sdDown
+  else
+  if (curr_pos.x=prev_pos.x) then
+    Result:=sdNone;
+end; {$endregion}
+procedure SetMul (prev_pos,curr_pos,pvt:TPtPosF;        var scl_mul:TPtPosF; constref scl_dir:TSclDir);                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  scl_mul:=PtPosF(DEFAULT_SCL_MUL,
+                  DEFAULT_SCL_MUL);
+  if (scl_dir=sdDown) then
+    scl_mul:=PtPosF(1/scl_mul.x,
+                    1/scl_mul.y);
 end; {$endregion}
 
 // (Points Rotation) Вращение точек:
