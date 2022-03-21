@@ -1724,6 +1724,8 @@ type
       {destroy class instance}
       destructor  Destroy;                                                                  override; {$ifdef Linux}[local];{$endif}
       {TODO}
+      procedure FillSelBmpAndSelPtsBRectDraw;                                                 inline; {$ifdef linux}[local];{$endif}
+      {TODO}
       procedure ChangeSelectionMode             (         item_ind           :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {add circle}
       procedure AddCircleSelection;                                                           inline; {$ifdef Linux}[local];{$endif}
@@ -5293,7 +5295,11 @@ end; {$endregion}
 procedure TSurface.SelectedSubgrtaphDraw;                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var,sel_var,pvt_var do
-    WholeSubgraphDraw0(Trunc(pvt_pos.x),Trunc(pvt_pos.y),pvt_pos,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
+    begin
+      //SelPtsPosCalc     (Trunc(pvt_pos.x),Trunc(pvt_pos.y));
+      //WholeSubgraphDraw0(Trunc(pvt_pos.x),Trunc(pvt_pos.y),pvt_pos,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
+      FillSelBmpAndSelPtsBRectDraw;
+    end;
 end; {$endregion}
 {Sel. Tools Marker: Reset Background Settings}
 procedure TSurface.STMSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -15178,7 +15184,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure FillSelectedBmpAndSelectedPtsBRectDraw;                                                                                                       inline; {$ifdef linux}[local];{$endif} {$region -fold}
+procedure TSelPts.FillSelBmpAndSelPtsBRectDraw;                                                                                                         inline; {$ifdef linux}[local];{$endif} {$region -fold}
 begin
   if exp0 then
     if show_spline then
@@ -17207,7 +17213,7 @@ begin
               else
                 begin
                   fill_bmp_only:=True;
-                  FillSelectedBmpAndSelectedPtsBRectDraw;
+                  FillSelBmpAndSelPtsBRectDraw;
                   fill_bmp_only:=False;
                 end;
             end
@@ -17275,15 +17281,17 @@ begin
       if (eds_bld_stl=dsMonochrome) then
         pp_dec_2_proc_ind:=2;
       fill_bmp_only:=True;
-      FillSelectedBmpAndSelectedPtsBRectDraw;
+      FillSelBmpAndSelPtsBRectDraw;
       fill_bmp_only:=False;
     end;
 end; {$endregion}
 procedure TF_MainForm.CB_Select_Items_Outer_Subgraph_Clip_StyleSelect (sender:TObject); {$region -fold}
 begin
   with sel_var,outer_subgraph_img,local_prop do
-    clp_stl:=TClipStyle(CB_Select_Items_Outer_Subgraph_Clip_Style.ItemIndex);
-  FillSelectedBmpAndSelectedPtsBRectDraw;
+    begin
+      clp_stl:=TClipStyle(CB_Select_Items_Outer_Subgraph_Clip_Style.ItemIndex);
+      FillSelBmpAndSelPtsBRectDraw;
+    end;
 end; {$endregion}
 procedure TF_MainForm.SB_Select_Items_Outer_Subgraph_ColorClick       (sender:TObject); {$region -fold}
 begin
@@ -17298,12 +17306,12 @@ begin
           if (clp_stl=csResilientEdges) then
             begin
               SetColorInfo(eds_col,color_info);
-              FillSelectedBmpAndSelectedPtsBRectDraw;
+              FillSelBmpAndSelPtsBRectDraw;
             end
           else
             begin
               fill_bmp_only:=True;
-              FillSelectedBmpAndSelectedPtsBRectDraw;
+              FillSelBmpAndSelPtsBRectDraw;
               fill_bmp_only:=False;
             end;
         end;
@@ -17363,7 +17371,7 @@ begin
               else
                 begin
                   fill_bmp_only:=True;
-                  FillSelectedBmpAndSelectedPtsBRectDraw;
+                  FillSelBmpAndSelPtsBRectDraw;
                   fill_bmp_only:=False;
                 end;
             end
@@ -17431,15 +17439,17 @@ begin
       if (eds_bld_stl=dsMonochrome) then
         pp_dec_2_proc_ind:=2;
       fill_bmp_only:=True;
-      FillSelectedBmpAndSelectedPtsBRectDraw;
+      FillSelBmpAndSelPtsBRectDraw;
       fill_bmp_only:=False;
     end;
 end; {$endregion}
 procedure TF_MainForm.CB_Select_Items_Inner_Subgraph_Clip_StyleSelect (sender:TObject); {$region -fold}
 begin
   with sel_var,inner_subgraph_img,local_prop do
-    clp_stl:=TClipStyle(CB_Select_Items_Inner_Subgraph_Clip_Style.ItemIndex);
-  FillSelectedBmpAndSelectedPtsBRectDraw;
+    begin
+      clp_stl:=TClipStyle(CB_Select_Items_Inner_Subgraph_Clip_Style.ItemIndex);
+      FillSelBmpAndSelPtsBRectDraw;
+    end;
 end; {$endregion}
 procedure TF_MainForm.SB_Select_Items_Inner_Subgraph_ColorClick       (sender:TObject); {$region -fold}
 begin
@@ -17454,12 +17464,12 @@ begin
           if (clp_stl=csResilientEdges) then
             begin
               SetColorInfo(eds_col,color_info);
-              FillSelectedBmpAndSelectedPtsBRectDraw;
+              FillSelBmpAndSelPtsBRectDraw;
             end
           else
             begin
               fill_bmp_only:=True;
-              FillSelectedBmpAndSelectedPtsBRectDraw;
+              FillSelBmpAndSelPtsBRectDraw;
               fill_bmp_only:=False;
             end;
         end;
@@ -17473,7 +17483,7 @@ begin
     begin
       sel_bounds_prop.rct_eds_show:=not sel_bounds_prop.rct_eds_show;
       fill_bmp_only:=True;
-      FillSelectedBmpAndSelectedPtsBRectDraw;
+      FillSelBmpAndSelPtsBRectDraw;
       fill_bmp_only:=False;
     end;
 end; {$endregion}
@@ -17545,7 +17555,7 @@ procedure TF_MainForm.CB_Select_Points_Show_BoundsChange              (sender:TO
 begin
   show_selected_pts_b_rect:=CB_Select_Points_Show_Bounds.Checked;
   if exp0 then
-    FillSelectedBmpAndSelectedPtsBRectDraw;
+    sel_var.FillSelBmpAndSelPtsBRectDraw;
 end; {$endregion}
 {$endregion}
 
@@ -17957,8 +17967,8 @@ begin
 end; {$endregion}
 procedure TPivot.SelPtsPosCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  pos_dif.x:=x-Trunc(pvt_pos.x);
-  pos_dif.y:=y-Trunc(pvt_pos.y);
+  pos_dif.x:=x-{Trunc(}pvt_pos.x{)};
+  pos_dif.y:=y-{Trunc(}pvt_pos.y{)};
 end; {$endregion}
 procedure TPivot.SelPtsSclCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -19656,7 +19666,7 @@ begin
                                   need_repaint:=True;
                                   MainBmpToLowerBmp2;
                                   fill_bmp_only:=True;
-                                  FillSelectedBmpAndSelectedPtsBRectDraw;
+                                  FillSelBmpAndSelPtsBRectDraw;
                                   fill_bmp_only:=False;
                                   PivotDraw(PtPos(0,0));
                                   CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
@@ -19959,7 +19969,7 @@ begin
                 with sel_var do
                   begin
                     fill_bmp_only:=True;
-                    FillSelectedBmpAndSelectedPtsBRectDraw;
+                    FillSelBmpAndSelPtsBRectDraw;
                     fill_bmp_only:=False;
                   end;
                 PivotDraw(Ptpos(0,0));
