@@ -269,9 +269,11 @@ type
       // (Checks If Another Kind Of Object Is Available After Selected Object(From start_ind) In Objects array(obj_arr)) Проверяет есть ли другой вид обьектов после выбранного(начиная с start_ind) в массиве обьектов(obj_arr):
       function  IsAnotherObjKindAfter1(constref koo              :TKindOfObject;
                                        constref start_ind        :TColor=0): boolean; inline; {$ifdef Linux}[local];{$endif}
-      function  IsAnotherObjKindAfter2(constref koo              :TKindOfObject;
+      function  IsAnotherObjKindAfter2(constref start_ind        :TColor=0): boolean; inline; {$ifdef Linux}[local];{$endif}
+      function  IsAnotherObjKindAfter3(constref koo              :TKindOfObject;
                                        constref start_ind        :TColor=0): boolean; inline; {$ifdef Linux}[local];{$endif}
-      function  IsAnotherObjKindAfter3(constref start_ind        :TColor=0): boolean; inline; {$ifdef Linux}[local];{$endif}
+      function  IsAnotherObjKindAfter4(constref koo              :TKindOfObject;
+                                       constref start_ind        :TColor=0): boolean; inline; {$ifdef Linux}[local];{$endif}
       // (Calculate Low Layer Objects Count) Подсчет количества обьектов нижнего слоя:
       function  LowLrObjCntCalc1: TColor;                                             inline; {$ifdef Linux}[local];{$endif}
       procedure LowLrObjCntCalc2;                                                     inline; {$ifdef Linux}[local];{$endif}
@@ -438,8 +440,7 @@ begin
   obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=0) or
-       ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=1) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,1]) then
       begin
         curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
         FilProc[(obj_inds_arr_ptr+i)^];
@@ -456,8 +457,7 @@ begin
   obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=0) or
-       ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=2) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,2]) then
       begin
         curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
         FilProc[(obj_inds_arr_ptr+i)^];
@@ -532,8 +532,7 @@ begin
   obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=0) or
-       ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=1) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,1]) then
       begin
         curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
         MovProc[(obj_inds_arr_ptr+i)^];
@@ -550,8 +549,7 @@ begin
   obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=0) or
-       ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show=2) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,2]) then
       begin
         curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
         MovProc[(obj_inds_arr_ptr+i)^];
@@ -751,23 +749,7 @@ begin
         Break;
       end;
 end; {$endregion}
-function    TSceneTree.IsAnotherObjKindAfter2(constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  obj_arr_ptr     : PObjInfo;
-  obj_inds_arr_ptr: PColor;
-  i               : integer;
-begin
-  Result          :=False;
-  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
-  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
-  for i:=start_ind to Length(obj_arr)-1 do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo<>koo) and (not ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract)) then
-      begin
-        Result:=True;
-        Break;
-      end;
-end; {$endregion}
-function    TSceneTree.IsAnotherObjKindAfter3(                            constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.IsAnotherObjKindAfter2(                            constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -778,6 +760,39 @@ begin
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to Length(obj_arr)-1 do
     if (not ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract)) then
+      begin
+        Result:=True;
+        Break;
+      end;
+end; {$endregion}
+function    TSceneTree.IsAnotherObjKindAfter3(constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
+begin
+  Result          :=False;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
+  for i:=start_ind to Length(obj_arr)-1 do
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo<>koo) and (not (obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract) then
+      begin
+        Result:=True;
+        Break;
+      end;
+end; {$endregion}
+function    TSceneTree.IsAnotherObjKindAfter4(constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
+begin
+  Result          :=False;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
+  for i:=start_ind to Length(obj_arr)-1 do
+    if (((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo<>koo) and (not (obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract         )) or
+       (((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo =koo) and (    (obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [2,3])) then
       begin
         Result:=True;
         Break;

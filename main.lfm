@@ -14289,7 +14289,7 @@ object F_MainForm: TF_MainForm
   end
   object MainMenu1: TMainMenu
     ParentBidiMode = False
-    Left = 536
+    Left = 216
     Top = 40
     object MI_File: TMenuItem
       Caption = '&File'
@@ -14492,7 +14492,7 @@ object F_MainForm: TF_MainForm
     Enabled = False
     Interval = 15
     OnTimer = T_Game_LoopTimer
-    Left = 800
+    Left = 696
     Top = 40
   end
   object TrayIcon1: TTrayIcon
@@ -16938,19 +16938,19 @@ object F_MainForm: TF_MainForm
     end
   end
   object PM_Unfold_And_Align_Image: TPopupMenu
-    Left = 504
-    Top = 8
+    Left = 248
+    Top = 40
     object MI_Align_Image_On_Inner_Window_Resize: TMenuItem
       AutoCheck = True
       Caption = 'Align Image On Inner Window Resize'
       OnClick = MI_Align_Image_On_Inner_Window_ResizeClick
     end
   end
-  object IL_Pivot_Bmp: TImageList
+  object IL_Local_Axis: TImageList
     Height = 15
     Width = 15
-    Left = 568
-    Top = 40
+    Left = 536
+    Top = 96
     Bitmap = {
       4C7A010000000F0000000F000000500100000000000078DAA5533D4BC350147D
       637E427E424490482D0644B1E0928243DA49C1C5208A080A2E2151AB4D636C7C
@@ -16969,7 +16969,7 @@ object F_MainForm: TF_MainForm
   object IL_Add_Actor_Default_Icon: TImageList
     Height = 64
     Width = 64
-    Left = 376
+    Left = 344
     Top = 96
     Bitmap = {
       4C7A010000004000000040000000CC0D00000000000078DADD5B0750545916ED
@@ -17089,7 +17089,7 @@ object F_MainForm: TF_MainForm
   object IL_Butons_Icons: TImageList
     Height = 32
     Width = 32
-    Left = 280
+    Left = 248
     Top = 96
     Bitmap = {
       4C7A0600000020000000200000007C0500000000000078DAED5C31681C39148D
@@ -17142,7 +17142,7 @@ object F_MainForm: TF_MainForm
   object IL_Buttons_Background: TImageList
     Height = 32
     Width = 32
-    Left = 312
+    Left = 280
     Top = 96
     Bitmap = {
       4C7A040000002000000020000000CA0400000000000078DAED9ACF6B545714C7
@@ -17189,7 +17189,7 @@ object F_MainForm: TF_MainForm
   object IL_Cursors_Icons: TImageList
     Height = 32
     Width = 32
-    Left = 344
+    Left = 312
     Top = 96
     Bitmap = {
       4C7A010000002000000020000000B70700000000000078DAB5576B5093671656
@@ -17260,7 +17260,7 @@ object F_MainForm: TF_MainForm
   object IL_Select_Points: TImageList
     Height = 24
     Width = 24
-    Left = 408
+    Left = 376
     Top = 96
     Bitmap = {
       4C7A010000001800000018000000520600000000000078DA7D56D74F5B671437
@@ -17320,7 +17320,7 @@ object F_MainForm: TF_MainForm
   object IL_Spline_Templates: TImageList
     Height = 50
     Width = 50
-    Left = 440
+    Left = 408
     Top = 96
     Bitmap = {
       4C7A060000003200000032000000F61800000000000078DAED9D799454D5F1C7
@@ -17529,7 +17529,7 @@ object F_MainForm: TF_MainForm
   object IL_Arrow_Up_Down: TImageList
     Height = 14
     Width = 17
-    Left = 472
+    Left = 440
     Top = 96
     Bitmap = {
       4C7A02000000110000000E000000C70000000000000078DA4B4B4B6348A33D66
@@ -17545,7 +17545,7 @@ object F_MainForm: TF_MainForm
     Height = 32
     Masked = True
     Width = 32
-    Left = 504
+    Left = 472
     Top = 96
     Bitmap = {
       4C7A100000002000000020000000422600000000000078DAED7D095C5455FB3F
@@ -17866,7 +17866,7 @@ object F_MainForm: TF_MainForm
   object IL_World_Axis: TImageList
     Height = 119
     Width = 119
-    Left = 536
+    Left = 504
     Top = 96
     Bitmap = {
       4C7A0100000077000000770000000B0200000000000078DAEDDDB189C2001480
@@ -18205,35 +18205,35 @@ object F_MainForm: TF_MainForm
     Enabled = False
     Interval = 15
     OnTimer = T_Logo1Timer
-    Left = 600
+    Left = 536
     Top = 40
   end
   object T_Logo2: TTimer
     Enabled = False
     Interval = 15
     OnTimer = T_Logo2Timer
-    Left = 632
+    Left = 568
     Top = 40
   end
   object T_Menu: TTimer
     Enabled = False
     Interval = 15
     OnTimer = T_MenuTimer
-    Left = 704
+    Left = 632
     Top = 40
   end
   object T_Game: TTimer
     Enabled = False
     Interval = 15
     OnTimer = T_GameTimer
-    Left = 736
+    Left = 664
     Top = 40
   end
   object T_Logo3: TTimer
     Enabled = False
     Interval = 15
     OnTimer = T_Logo3Timer
-    Left = 664
+    Left = 600
     Top = 40
   end
   object OD_Spline_Load: TOpenDialog
@@ -18243,8 +18243,8 @@ object F_MainForm: TF_MainForm
     Top = 536
   end
   object IL_Fold_Unfold: TImageList
-    Left = 280
-    Top = 128
+    Left = 216
+    Top = 96
     Bitmap = {
       4C7A0200000010000000100000002E0000000000000078DA63601834C01088FF
       43696CFC5133E86F0625FA47F5921E5FA360340D0D54FA1B2DF706A719340500

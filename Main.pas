@@ -4495,7 +4495,7 @@ begin
         sln_obj_cnt,
         sln_pts_cnt
       );
-      is_not_abst_obj_kind_after:=IsAnotherObjKindAfter2
+      is_not_abst_obj_kind_after:=IsAnotherObjKindAfter4
       (
         kooCurve,
         sel_obj_min_ind
@@ -12216,7 +12216,7 @@ begin
     begin
       j:=obj_var.curve_inds_sct_arr[i];
       if (j>=start_ind) and (j<=end_ind) then
-        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show<>3) then
+        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show<2) then
           begin
             k:=obj_var.obj_arr[obj_var.obj_inds_arr[j]].k_ind;
             ClrSplinePts   (k);
