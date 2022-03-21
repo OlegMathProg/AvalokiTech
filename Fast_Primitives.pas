@@ -203,9 +203,10 @@ type
   end; {$endregion}
   PPtPos            =^TPtPos;
 
-  TPtPos2           =packed record {$region -fold}
+  TPtPos2           =record {$region -fold}
     arr        : array[0..5] of word;
     obj_ind    : integer;
+    pts_ind    : integer;
     dup_pts_cnt: integer;
     weight     : integer;
     class operator    =(r1,r2      :TPtPos2): boolean; inline; {$ifdef Linux}[local];{$endif}
@@ -539,6 +540,9 @@ type
   TProc12           =procedure(         x,y          :integer;
                                var      sel_pts_rect :TPtRectF)      of object;
   PProc12           =^TProc12;
+
+  TProc13           =procedure(         x,y          :integer)       of object;
+  PProc13           =^TProc13;
 
   TFunc0            =function (         pixel        :TColor;
                                constref r            :byte    =000;
@@ -4157,6 +4161,7 @@ procedure Text                  (constref x,y                :integer;
 // (Set Point) Установить точку:
 function PtPos                  (constref pt                 :TPtPosF): TPtPos;        inline; {$ifdef Linux}[local];{$endif}
 function PtPos                  (constref pos_x,pos_y        :integer): TPtPos;        inline; {$ifdef Linux}[local];{$endif}
+function PtPos                  (constref pos_x,pos_y        :double ): TPtPos;        inline; {$ifdef Linux}[local];{$endif}
 function PtPosF                 (constref pt                 :TPtPos ): TPtPosF;       inline; {$ifdef Linux}[local];{$endif}
 function PtPosF                 (constref pos_x,pos_y        :double ): TPtPosF;       inline; {$ifdef Linux}[local];{$endif}
 function PtPosF                 (constref pos_x,pos_y        :integer): TPtPosF;       inline; {$ifdef Linux}[local];{$endif}
@@ -4751,7 +4756,7 @@ var
   PPBlurProc          : array[0..11] of TProc6;
   curve_default_prop  : TCurveProp={$region -fold}
   (
-    dup_pts_id               : (arr:(0,0,0,0,0,0); obj_ind:-1; dup_pts_cnt:0; weight:0);
+    dup_pts_id               : (arr:(0,0,0,0,0,0); obj_ind:-1; pts_ind:-1; dup_pts_cnt:0; weight:0);
     curve_obj_ind            : 0;
     pts_cnt                  : 0;
     pts_cnt_val              : 1;
@@ -4931,6 +4936,7 @@ end; {$endregion}
 procedure      TPtPos2.SetEqual1(var r1:TPtPos2; constref r2:TPtPos2);                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   r1.obj_ind    :=-1{r2.obj_ind};
+  r1.pts_ind    :=-1{r2.pts_ind};
   r1.dup_pts_cnt:=r2.dup_pts_cnt;
   r1.arr[0]     :=r2.arr[0];
   r1.arr[1]     :=r2.arr[1];
@@ -6129,6 +6135,11 @@ begin
   Result.x:=pos_x;
   Result.y:=pos_y;
 end; {$endregion}
+function PtPos (constref pos_x,pos_y:double ): TPtPos;  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result.x:=Trunc(pos_x);
+  Result.y:=Trunc(pos_y);
+end; {$endregion}
 function PtPosF(constref pt:TPtPos          ): TPtPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result.x:=pt.x;
@@ -7189,12 +7200,11 @@ end; {$endregion}
 // (Angle Between Two Connected Segments,(x1,y1) - Connection Point) Угол между двумя соединенными сегментами,(x1,y1) - точка соединения:
 function Angle1(constref x0,y0,x1,y1,x2,y2:double): double ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  Result:=ONE_DIV_BY_FULL_ROT*ArcCos(((x0-x1)*(x2-x1)+(y0-y1)*(y2-y1))/Sqrt((Sqr(x0-x1)+Sqr(y0-y1))*(Sqr(x2-x1)+Sqr(y2-y1))));
+  Result:=     ONE_DIV_BY_FULL_ROT*ArcCos(((x0-x1)*(x2-x1)+(y0-y1)*(y2-y1))/Sqrt((Sqr(x0-x1)+Sqr(y0-y1))*(Sqr(x2-x1)+Sqr(y2-y1))));
 end; {$endregion}
 function Angle2(constref x0,y0,x1,y1,x2,y2:double): double ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  Result:=ONE_DIV_BY_FULL_ROT*ArcCos(((x0-x1)*(x2-x1)+(y0-y1)*(y2-y1))/Sqrt((Sqr(x0-x1)+Sqr(y0-y1))*(Sqr(x2-x1)+Sqr(y2-y1))));
-  Result:=180-Result;
+  Result:=180-(ONE_DIV_BY_FULL_ROT*ArcCos(((x0-x1)*(x2-x1)+(y0-y1)*(y2-y1))/Sqrt((Sqr(x0-x1)+Sqr(y0-y1))*(Sqr(x2-x1)+Sqr(y2-y1)))));
 end; {$endregion}
 
 // (Parallax) Параллакс:
@@ -31162,8 +31172,8 @@ begin
   if (scl_dir=sdDown) then
     scl_mul:=PtPosF(1/scl_mul.x,
                     1/scl_mul.y);
-  d1       :=pvt.x*(1-scl_mul.x);
-  d2       :=pvt.y*(1-scl_mul.y);
+  d1       :=pvt.x*(1-scl_mul.x){pvt.x-pvt.x*scl_mul.x};
+  d2       :=pvt.y*(1-scl_mul.y){pvt.y-pvt.y*scl_mul.y};
   pts_ptr  :=Unaligned(@pts[fst_ind]);
   for i:=0 to lst_ind-fst_ind do
     begin
@@ -31183,10 +31193,10 @@ begin
   if (scl_dir=sdNone) then
     Exit;
   if (scl_dir=sdDown) then
-    scl_mul :=PtPosF(1/scl_mul.x,
-                     1/scl_mul.y);
-  d1        :=pvt.x*(1-scl_mul.x);
-  d2        :=pvt.y*(1-scl_mul.y);
+    scl_mul:=PtPosF(1/scl_mul.x,
+                    1/scl_mul.y);
+  d1       :=pvt.x*(1-scl_mul.x){pvt.x-pvt.x*scl_mul.x};
+  d2       :=pvt.y*(1-scl_mul.y){pvt.y-pvt.y*scl_mul.y};
   with rct do
     begin
     //left  :=scl_mul.x*left   +d1;
@@ -31212,10 +31222,10 @@ begin
   if (scl_dir=sdNone) then
     Exit;
   if (scl_dir=sdDown) then
-    scl_mul :=PtPosF(1/scl_mul.x,
-                     1/scl_mul.y);
-  d1        :=pvt.x*(1-scl_mul.x);
-  d2        :=pvt.y*(1-scl_mul.y);
+    scl_mul:=PtPosF(1/scl_mul.x,
+                    1/scl_mul.y);
+  d1       :=pvt.x*(1-scl_mul.x){pvt.x-pvt.x*scl_mul.x};
+  d2       :=pvt.y*(1-scl_mul.y){pvt.y-pvt.y*scl_mul.y};
   with rct do
     begin
       left  :=Trunc (scl_mul.x*left  +d1);

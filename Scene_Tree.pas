@@ -275,7 +275,6 @@ type
       // (Calculate Low Layer Objects Count) Подсчет количества обьектов нижнего слоя:
       function  LowLrObjCntCalc1: TColor;                                             inline; {$ifdef Linux}[local];{$endif}
       procedure LowLrObjCntCalc2;                                                     inline; {$ifdef Linux}[local];{$endif}
-      procedure LowLrObjCntCalc3;                                                     inline; {$ifdef Linux}[local];{$endif}
       // (Check Equality Of Two Objects By Kind) Проверка на равенство двух обьектов по виду:
       function  AreTwoObjKindEqual    (constref obj_ind1,
                                                 obj_ind2         :TColor): boolean;   inline; {$ifdef Linux}[local];{$endif}
@@ -291,7 +290,7 @@ type
       // (Bounding Rectangle of Points Set) Ограничиваюший прямоугольник множества точек:
       function  PtsRngIndsRctCalc     (constref pts              :TPtPosFArr;
                                        constref sel_pts_inds     :TColorArr;
-                                       constref pts_cnt          :TColor): TRect;     inline; {$ifdef Linux}[local];{$endif}
+                                       constref pts_cnt          :TColor): TPtRectF;  inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
   PSceneTree    =^TSceneTree;
 
@@ -354,7 +353,7 @@ var
 
 implementation
 
-uses
+uses  //
 
   Main;
 
@@ -738,11 +737,15 @@ end; {$endregion}
 // (Checks If Another Kind Of Object Is Available After Selected Object(From start_ind) In Objects array(obj_arr)) Проверяет есть ли другой вид обьектов после выбранного(начиная с start_ind) в иерархии сцены(scene tree):
 function    TSceneTree.IsAnotherObjKindAfter1(constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i: integer;
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
 begin
-  Result:=False;
+  Result          :=False;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to Length(obj_arr)-1 do
-    if (obj_arr[obj_inds_arr[i]].koo<>koo) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo<>koo) then
       begin
         Result:=True;
         Break;
@@ -750,11 +753,15 @@ begin
 end; {$endregion}
 function    TSceneTree.IsAnotherObjKindAfter2(constref koo:TKindOfObject; constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i: integer;
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
 begin
-  Result:=False;
+  Result          :=False;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to Length(obj_arr)-1 do
-    if (obj_arr[obj_inds_arr[i]].koo<>koo) and (not (obj_arr[obj_inds_arr[i]].abstract)) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo<>koo) and (not ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract)) then
       begin
         Result:=True;
         Break;
@@ -762,11 +769,15 @@ begin
 end; {$endregion}
 function    TSceneTree.IsAnotherObjKindAfter3(                            constref start_ind:TColor=0): boolean;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i: integer;
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
 begin
-  Result:=False;
+  Result          :=False;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to Length(obj_arr)-1 do
-    if (not (obj_arr[obj_inds_arr[i]].abstract)) then
+    if (not ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract)) then
       begin
         Result:=True;
         Break;
@@ -775,19 +786,25 @@ end; {$endregion}
 // (Calculate Low Layer Objects Count) Подсчет количества обьектов "нижнего" слоя:
 function    TSceneTree.LowLrObjCntCalc1: TColor;                                                                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i     : integer;
-  p_s   : TPtPos;
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
+  p_s             : TPtPos;
 begin
   Result:=Length(obj_inds_arr);
   if (Result=1) then
     Exit;
-  p_s   :=obj_arr[obj_inds_arr[1]].parallax_shift;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
+  p_s             :=obj_arr[obj_inds_arr[1]].parallax_shift;
   for i:=1 to Length(obj_arr)-1 do
-    if (obj_arr[obj_inds_arr[i]].anim_type<>ltStatic) or (not (obj_arr[obj_inds_arr[i]].parallax_shift=p_s)) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.anim_type<>ltStatic) or (not ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.parallax_shift=p_s)) then
       begin
         Result:=i;
         Break;
       end;
+  low_lr_obj_cnt:=Result;
+  upp_lr_obj_cnt:=obj_cnt-low_lr_obj_cnt;
 end; {$endregion}
 procedure   TSceneTree.LowLrObjCntCalc2;                                                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -799,12 +816,6 @@ begin
     obj_arr[obj_inds_arr[i]].is_low_lr_obj:=True;
   for i:=low_lr_obj_cnt+1 to obj_cnt-1 do
     obj_arr[obj_inds_arr[i]].is_low_lr_obj:=False;}
-end; {$endregion}
-procedure   TSceneTree.LowLrObjCntCalc3;                                                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  low_lr_obj_cnt:=LowLrObjCntCalc1;
-  upp_lr_obj_cnt:=obj_cnt-low_lr_obj_cnt;
-  LowLrObjCntCalc2;
 end; {$endregion}
 // (Check Equality Of Two Objects By Kind) Проверка на равенство двух обьектов по виду:
 function    TSceneTree.AreTwoObjKindEqual    (constref obj_ind1,obj_ind2:TColor): boolean;                                                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -823,6 +834,7 @@ begin
 end; {$endregion}
 function    TSceneTree.Min9(constref obj_inds_arr_:TColorArr; constref arr:TSlPtArr; constref max_item_val:TColor; constref item_cnt:TColor): TColor;                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
+
   i: integer;
 begin
   Result:=max_item_val;
@@ -831,7 +843,7 @@ begin
       Result:=obj_arr[obj_inds_arr_[arr[i].obj_ind]].t_ind;
 end; {$endregion}
 // (Bounding Rectangle of Points Set) Ограничиваюший прямоугольник множества точек:
-function    TSceneTree.PtsRngIndsRctCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColorArr; constref pts_cnt:TColor): TRect;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function    TSceneTree.PtsRngIndsRctCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColorArr; constref pts_cnt:TColor): TPtRectF;                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                                : PPtPosF;
   sel_pts_inds_ptr                       : PInteger;
@@ -843,7 +855,7 @@ begin
   {Misc. Precalc.----} {$region -fold}
   pts_ptr         :=Unaligned(@pts         [0]);
   sel_pts_inds_ptr:=Unaligned(@sel_pts_inds[0]);
-  Result          :=Default(TRect);
+  Result          :=Default(TPtRectF);
   ind_min_x       :=0;
   ind_min_y       :=0;
   ind_max_x       :=0;
@@ -886,10 +898,10 @@ begin
   {Set Rectangle-----} {$region -fold}
   with Result do
     begin
-      left  :=Trunc(pts[ind_min_x].x)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_min_x]]].world_axis_shift.x+0;
-      top   :=Trunc(pts[ind_min_y].y)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_min_y]]].world_axis_shift.y+0;
-      right :=Trunc(pts[ind_max_x].x)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_max_x]]].world_axis_shift.x+1;
-      bottom:=Trunc(pts[ind_max_y].y)+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_max_y]]].world_axis_shift.y+1;
+      left  :={Trunc(}pts[ind_min_x].x{)}+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_min_x]]].world_axis_shift.x+0;
+      top   :={Trunc(}pts[ind_min_y].y{)}+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_min_y]]].world_axis_shift.y+0;
+      right :={Trunc(}pts[ind_max_x].x{)}+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_max_x]]].world_axis_shift.x+1;
+      bottom:={Trunc(}pts[ind_max_y].y{)}+obj_arr[curve_inds_obj_arr[sln_var.sln_obj_ind[ind_max_y]]].world_axis_shift.y+1;
       width :=right-left;
       height:=bottom-top;
     end; {$endregion}

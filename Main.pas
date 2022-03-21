@@ -27,23 +27,23 @@ const
   NAV_SEL_COL_1                     =$00C8CFA9;
 
   {Resources Paths}
-  SELECTION_TOOLS_MARKER_ICON      ='Pics\Selection_Tools\Selection_Tools_Marker.png';
-  DEFAULT_CURSOR_ICON              ='Pics\Cursors\Cursor_0.png';
-  DEFAULT_TILE_MAP_ICON            ='Pics\Map_Editor\Default_Tile_Map_Icon.png';
-  DEFAULT_TILE_MAP_SPRITE_ICON     ='Pics\Map_Editor\Default_Tile_Map_Sprite_Icon0.png';
-  DEFAULT_ACTOR_ICON               ='Pics\Actors\Default_Actor_Icon.png';
-  TIMELINE_BUTTON_ICON_PREFIX      ='Pics\TimeLine\Timeline_Button_Icon_';
-  TEXT_BUTTON_ICON                 ='Pics\Paint_Tools_Icons_List\Text.png';
-  BRUSH_BUTTON_ICON                ='Pics\Paint_Tools_Icons_List\Brush.png';
-  SPRAY_BUTTON_ICON                ='Pics\Paint_Tools_Icons_List\Spray.png';
-  SPLINE_BUTTON_ICON               ='Pics\Paint_Tools_Icons_List\Spline.png';
-  SELECT_POINTS_BUTTON_ICON        ='Pics\Paint_Tools_Icons_List\Select_Points.png';
-  SELECT_TEXTURE_REGION_BUTTON_ICON='Pics\Paint_Tools_Icons_List\Select_Texture_Region.png';
-  REGULAR_GRID_BUTTON_ICON         ='Pics\Paint_Tools_Icons_List\Grid.png';
-  SNAP_GRID_BUTTON_ICON            ='Pics\Paint_Tools_Icons_List\Snap_Grid.png';
-  BRUSH_CURSOR_ICON                ='Pics\Cursors\Cursor_3.png';
-  WORLD_AXIS_ICON                  ='Pics\World_Axis\World_Axis.png';
-  LOCAL_AXIS_ICON                  ='Pics\Local_Axis\Local_Axis.png';
+  SELECTION_TOOLS_MARKER_ICON       ='Pics\Selection_Tools\Selection_Tools_Marker.png';
+  DEFAULT_CURSOR_ICON               ='Pics\Cursors\Cursor_0.png';
+  DEFAULT_TILE_MAP_ICON             ='Pics\Map_Editor\Default_Tile_Map_Icon.png';
+  DEFAULT_TILE_MAP_SPRITE_ICON      ='Pics\Map_Editor\Default_Tile_Map_Sprite_Icon0.png';
+  DEFAULT_ACTOR_ICON                ='Pics\Actors\Default_Actor_Icon.png';
+  TIMELINE_BUTTON_ICON_PREFIX       ='Pics\TimeLine\Timeline_Button_Icon_';
+  TEXT_BUTTON_ICON                  ='Pics\Paint_Tools_Icons_List\Text.png';
+  BRUSH_BUTTON_ICON                 ='Pics\Paint_Tools_Icons_List\Brush.png';
+  SPRAY_BUTTON_ICON                 ='Pics\Paint_Tools_Icons_List\Spray.png';
+  SPLINE_BUTTON_ICON                ='Pics\Paint_Tools_Icons_List\Spline.png';
+  SELECT_POINTS_BUTTON_ICON         ='Pics\Paint_Tools_Icons_List\Select_Points.png';
+  SELECT_TEXTURE_REGION_BUTTON_ICON ='Pics\Paint_Tools_Icons_List\Select_Texture_Region.png';
+  REGULAR_GRID_BUTTON_ICON          ='Pics\Paint_Tools_Icons_List\Grid.png';
+  SNAP_GRID_BUTTON_ICON             ='Pics\Paint_Tools_Icons_List\Snap_Grid.png';
+  BRUSH_CURSOR_ICON                 ='Pics\Cursors\Cursor_3.png';
+  WORLD_AXIS_ICON                   ='Pics\World_Axis\World_Axis.png';
+  LOCAL_AXIS_ICON                   ='Pics\Local_Axis\Local_Axis.png';
 
 (***************************** Miscellaneous Types ****************************)
 type
@@ -76,9 +76,9 @@ type
   TISGraph           =class;
   TSelPts            =class;
   TPivot             =class;
-  TCircSel           =class;
-  TBrushSel          =class;
-  TRectSel           =class;
+  TCrcSel            =class;
+  TBrsSel            =class;
+  TRctSel            =class;
   TTlMap             =class;
 
   {TF_MainForm--------}
@@ -1858,6 +1858,10 @@ type
   TPivot             =class {$region -fold}
     public
       sel_tls_mrk          : TFastImage;
+      {points transform}
+      pos_dif              : TPtPosF;
+      scl_dif              : TPtPosF;
+      rot_dif              : TPtPosF;
       {TODO}
       pvt_pos              : TPtPosF;
       {TODO}
@@ -1883,7 +1887,7 @@ type
       {TODO}
       pvt_marker           : TPtPos;
       {previous pivot}
-      pvt_prev             : TPtPos;
+      pvt_prev             : TPtPosF;
       {mouse motion vector}
       mos_mot_vec          : TLnPos;
       {TODO}
@@ -1918,6 +1922,8 @@ type
       {TODO}
       move_pvt_to_pt_button: boolean;
       {TODO}
+      SelPtsCalcProc       : array[0..2] of TProc13;
+      {TODO}
       SelPtsRctCalcProc    : array[0..2] of TProc12;
       {create class instance}
       constructor Create                  (         w,h:TColor);                            {$ifdef Linux}[local];{$endif}
@@ -1951,17 +1957,24 @@ type
                                                     shift            :TShiftState); inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure PivotToPoint              (         x,y              :integer;
-                                           constref pts              :TPtPosFArr;
-                                           constref pts_cnt          :TColor;
-                                           constref crc_rad_sqr      :TColor);              {$ifdef Linux}[local];{$endif}
+                                                    srf_var_         :TSurface;
+                                                    sln_var_         :TCurve;
+                                                    sel_var_         :TSelPts;
+                                                    crc_sel_var_     :TCrcSel);             {$ifdef Linux}[local];{$endif}
       procedure PivotToPoint              (         x,y              :integer;
-                                           constref pts              :TPtPos2Arr;
-                                           constref rct_clp          :TPtRect;
-                                           constref arr_dst_width    :TColor;
-                                           constref crc_rad          :TColor;
-                                                    density          :TColor=1);            {$ifdef Linux}[local];{$endif}
+                                                    density          :TColor;
+                                                    srf_var_         :TSurface;
+                                                    sln_var_         :TCurve;
+                                                    sel_var_         :TSelPts;
+                                                    crc_sel_var_     :TCrcSel);             {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure SclSettings               (         x,y              :integer);     inline; {$ifdef Linux}[local];{$endif}
+      {TODO}
+      procedure SelPtsPosCalc             (         x,y              :integer);     inline; {$ifdef Linux}[local];{$endif}
+      {TODO}
+      procedure SelPtsSclCalc             (         x,y              :integer);     inline; {$ifdef Linux}[local];{$endif}
+      {TODO}
+      procedure SelPtsRotCalc             (         x,y              :integer);     inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure SelPtsRctPosCalc          (         x,y              :integer;
                                            var      sel_pts_rect     :TPtRectF);    inline; {$ifdef Linux}[local];{$endif}
@@ -1994,7 +2007,7 @@ type
   PPivot             =^TPivot;
 
   {Circle Selection---}
-  TCircSel           =class {$region -fold}
+  TCrcSel            =class {$region -fold}
     public
       {TODO}
       crc_sel_col       : TColor;
@@ -2029,10 +2042,10 @@ type
       {TODO}
       procedure ResizeCircleSelectionModeDraw;                                          inline; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
-  PCircSel           =^TCircSel;
+  PCrcSel            =^TCrcSel;
 
   {Brush Selection----}
-  TBrushSel          =class {$region -fold}
+  TBrsSel            =class {$region -fold}
     public
       {TODO}
       draw_brs_sel: boolean;
@@ -2041,10 +2054,10 @@ type
       {destroy class instance}
       destructor  Destroy;                             override; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
-  PBrushSel          =^TBrushSel;
+  PBrsSel            =^TBrsSel;
 
   {Rectangle Selection}
-  TRectSel           =class {$region -fold}
+  TRctSel            =class {$region -fold}
     public
       {TODO}
       rct_sel  : TRect;
@@ -2055,7 +2068,7 @@ type
       {destroy class instance}
       destructor  Destroy; override; {$ifdef Linux}[local];{$endif}
   end; {$endregion}
-  PRectSel           =^TRectSel;
+  PRctSel            =^TRctSel;
 
   {TileMap Editor-----}
   TTlMap             =class {$region -fold}
@@ -2322,13 +2335,13 @@ var
   pvt_var                    : TPivot;
 
   {Circle Selection}
-  crc_sel_var                : TCircSel;
+  crc_sel_var                : TCrcSel;
 
   {Brush Selection}
-  brs_sel_var                : TBrushSel;
+  brs_sel_var                : TBrsSel;
 
   {Rectangle Selection}
-  rct_sel_var                : TRectSel;
+  rct_sel_var                : TRctSel;
 
   {Map Editor}
   tlm_var                    : TTlMap;
@@ -3249,6 +3262,7 @@ end; {$endregion}
 {UI} {$region -fold}
 procedure TF_MainForm.S_Splitter0ChangeBounds         (sender:TObject); {$region -fold}
 begin
+  KeysDisable;
   {$ifdef Windows}
   Application.ProcessMessages;
   {$else}
@@ -3269,6 +3283,7 @@ var
   end; {$endregion}
 
 begin
+  KeysDisable;
   n:=P_UV_Operations.top
     +P_UV_Operations.height
     +CCB_2D_Operations_Automatic.height
@@ -3314,6 +3329,7 @@ begin
 end; {$endregion}
 procedure TF_MainForm.S_Splitter3ChangeBounds         (sender:TObject); {$region -fold}
 begin
+  KeysDisable;
   //Align3DViewer;
   {$ifdef Windows}
   Application.ProcessMessages;
@@ -3326,17 +3342,20 @@ begin
 end; {$endregion}
 procedure TF_MainForm.S_Splitter6ChangeBounds         (sender:TObject); {$region -fold}
 begin
+  KeysDisable;
   TV_Scene_Tree.Update;
   SB_TreeView_Object_Tags.Update;
   SB_Object_Properties.Update;
 end; {$endregion}
 procedure TF_MainForm.S_Splitter7ChangeBounds         (sender:TObject); {$region -fold}
 begin
+  KeysDisable;
   SB_Object_Properties.Update;
   SB_Tag_Properties.Update;
 end; {$endregion}
 procedure TF_MainForm.S_Splitter8ChangeBounds         (sender:TObject); {$region -fold}
 begin
+  KeysDisable;
   //Align3DViewer;
   {$ifdef Windows}
   Application.ProcessMessages;
@@ -3346,6 +3365,7 @@ begin
 end; {$endregion}
 procedure MoveBorders;           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
+  F_MainForm.KeysEnable;
   SplittersPosCalc;
   {TODO}
   F_MainForm.S_Splitter1.Left:=0;
@@ -11934,14 +11954,15 @@ begin
       b          :=partial_pts_sum[spline_ind];
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr:=Unaligned(@sln_pts[b]);
-      for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
-        begin
-          pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
-          if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
-            dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
-          Inc(sln_pts_ptr);
-        end;
+      //if (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
+        for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
+          begin
+            pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
+                      Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+            if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
+              dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
+            Inc(sln_pts_ptr);
+          end;
     end;
 end; {$endregion}
 procedure TCurve.AddSplineDupPts1  (constref spline_ind       :TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -11956,17 +11977,18 @@ begin
       b          :=partial_pts_sum[spline_ind];
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr:=Unaligned(@sln_pts[b]);
-      for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
-        begin
-          if (not sel_var.is_point_selected[b+i]) then
-            begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
-              if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
-                dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
-            end;
-          Inc(sln_pts_ptr);
-        end;
+      //if (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
+        for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
+          begin
+            if (not sel_var.is_point_selected[b+i]) then
+              begin
+                pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
+                          Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+                if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
+                  dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
+              end;
+            Inc(sln_pts_ptr);
+          end;
     end;
 end; {$endregion}
 procedure TCurve.AddSplineDupPts2  (constref spline_ind       :TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -11981,17 +12003,18 @@ begin
       b          :=partial_pts_sum[spline_ind];
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr:=Unaligned(@sln_pts[b]);
-      for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
-        begin
-          if (not sel_var.is_point_selected[b+i]) then
-            begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
-              if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
-                dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
-            end;
-          Inc(sln_pts_ptr);
-        end;
+      //if (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
+        for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
+          begin
+            if (not sel_var.is_point_selected[b+i]) then
+              begin
+                pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
+                          Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+                if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
+                  dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
+              end;
+            Inc(sln_pts_ptr);
+          end;
     end;
 end; {$endregion}
 procedure TCurve.AddSplineDupPts3  (constref spline_ind       :TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -12006,17 +12029,18 @@ begin
       b          :=partial_pts_sum[spline_ind];
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr:=Unaligned(@sln_pts[b]);
-      for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
-        begin
-          if sel_var.is_point_selected[b+i] then
-            begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
-              if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
-                dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
-            end;
-          Inc(sln_pts_ptr);
-        end;
+      //if (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
+        for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
+          begin
+            if sel_var.is_point_selected[b+i] then
+              begin
+                pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
+                          Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+                if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
+                  dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
+              end;
+            Inc(sln_pts_ptr);
+          end;
     end;
 end; {$endregion}
 procedure TCurve.AddSplineDupPtsAll(constref start_ind,end_ind:TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -12032,14 +12056,18 @@ begin
         b          :=partial_pts_sum[j];
         obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[j]]);
         sln_pts_ptr:=Unaligned(@sln_pts[b]);
-        for i:=0 to sln_obj_pts_cnt[j]-1 do
-          begin
-            pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
-            if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
-              dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width].obj_ind:=j;
-            Inc(sln_pts_ptr);
-          end;
+        if (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
+          for i:=0 to sln_obj_pts_cnt[j]-1 do
+            begin
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
+                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
+                begin
+                  dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width].obj_ind:=j;
+                  dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width].pts_ind:=partial_pts_sum[j]+i;
+                end;
+              Inc(sln_pts_ptr);
+            end;
       end;
 end; {$endregion}
 procedure TCurve.ClrSplineDupPts0  (constref spline_ind       :TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -15186,18 +15214,18 @@ begin
           //InvalidateInnerWindow;
         end;
 end; {$endregion}
-constructor TCircSel.Create;                                                                                                                                    {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TCrcSel.Create;                                                                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   crc_sel_col :=clGreen;
   crc_rad     :=10;
   crc_rad_sqr :=crc_rad*crc_rad;
   draw_crc_sel:=True;
 end; {$endregion}
-destructor  TCircSel.Destroy;                                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TCrcSel.Destroy;                                                                                                                                    {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-procedure TCircSel.CircleSelection        (x,y:integer; constref m_c_var:TSurface; constref s_c_var:TSelPts; constref pts:TPtPosFArr; constref pts_cnt:TColor; constref sel_draw:boolean=True); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCrcSel.CircleSelection        (x,y:integer; constref m_c_var:TSurface; constref s_c_var:TSelPts; constref pts:TPtPosFArr; constref pts_cnt:TColor; constref sel_draw:boolean=True); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   color_info     : TColorInfo;
   obj_arr_ptr    : PObjInfo;
@@ -15355,7 +15383,7 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TCircSel.CircleSelectionModeDraw(x,y:integer; constref m_c_var:TSurface);                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCrcSel.CircleSelectionModeDraw(x,y:integer; constref m_c_var:TSurface);                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with srf_var do
     if IsPtInRct(x,y,PtRct(inn_wnd_rct.left  +crc_rad,
@@ -15366,7 +15394,7 @@ begin
     else
       CircleC(x,y,crc_rad,srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,crc_sel_col);
 end; {$endregion}
-procedure TCircSel.ResizeCircleSelectionModeDraw;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TCrcSel.ResizeCircleSelectionModeDraw;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   sel_pos: TPtPos;
 begin
@@ -15377,19 +15405,19 @@ begin
   crc_sel_rct.width :=crc_rad<<1;
   crc_sel_rct.height:=crc_rad<<1;
 end; {$endregion}
-constructor TBrushSel.Create;                                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TBrsSel.Create;                                                                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   draw_brs_sel:=False;
 end; {$endregion}
-destructor  TBrushSel.Destroy;                                                                                                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TBrsSel.Destroy;                                                                                                                                    {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-constructor TRectSel.Create;                                                                                                                                    {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TRctSel.Create;                                                                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   rct_width:=10;
 end; {$endregion}
-destructor  TRectSel.Destroy;                                                                                                                                   {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TRctSel.Destroy;                                                                                                                                    {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
@@ -16146,7 +16174,6 @@ var
   outer_subgraph1_ptr: PEdge;
   outer_subgraph3_ptr: PEdge;
   i                  : integer;
-  n1,n2              : double;
 begin
 
   if (outer_subgraph1_eds_cnt=0) and
@@ -16158,10 +16185,6 @@ begin
   if fill_bmp_only then
     Exit;
 
-  {Misc. Precalc.-----------------} {$region -fold}
-  n1:=x-Trunc(pvt.x);
-  n2:=y-Trunc(pvt.y); {$endregion}
-
   {Drawing Of Outer Subgraph Lines} {$region -fold}
   if (outer_subgraph1_eds_cnt>0) then
     begin
@@ -16170,8 +16193,8 @@ begin
       for i:=0 to outer_subgraph1_eds_cnt-1 do
         begin
           is_point_pos_calc[outer_subgraph1_ptr^.last_point]:=True;
-          (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
-          (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
+          (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=pvt_var.pos_dif.x;
+          (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=pvt_var.pos_dif.y;
           Inc(outer_subgraph1_ptr);
         end;
     end;
@@ -16182,8 +16205,8 @@ begin
       for i:=0 to outer_subgraph3_eds_cnt-1 do
         begin
           is_point_pos_calc[outer_subgraph3_ptr^.last_point]:=True;
-          (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
-          (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
+          (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=pvt_var.pos_dif.x;
+          (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=pvt_var.pos_dif.y;
           Inc(outer_subgraph3_ptr);
         end;
     end; {$endregion}
@@ -16195,7 +16218,6 @@ var
   outer_subgraph1_ptr: PEdge;
   outer_subgraph3_ptr: PEdge;
   i                  : integer;
-  n1,n2              : double;
 begin
 
   if (outer_subgraph1_eds_cnt=0) and
@@ -16207,14 +16229,8 @@ begin
   if fill_bmp_only then
     Exit;
 
-  {Misc. Precalc.-----------------} {$region -fold}
-  with pvt_var do
-    begin
-      n1:=(pvt.x-srf_var.world_axis_shift.x)*(1-pvt_scl.x);
-      n2:=(pvt.y-srf_var.world_axis_shift.y)*(1-pvt_scl.y);
-      if (scl_dir=sdNone) then
-        Exit;
-    end; {$endregion}
+  if (pvt_var.scl_dir=sdNone) then
+    Exit;
 
   {Drawing Of Outer Subgraph Lines} {$region -fold}
   if (outer_subgraph1_eds_cnt>0) then
@@ -16225,9 +16241,9 @@ begin
         begin
           is_point_pos_calc[outer_subgraph1_ptr^.last_point]:=True;
           (pts_ptr+outer_subgraph1_ptr^.last_point)^.x*=pvt_var.pvt_scl.x;
-          (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=n1;
+          (pts_ptr+outer_subgraph1_ptr^.last_point)^.x+=pvt_var.scl_dif.x;
           (pts_ptr+outer_subgraph1_ptr^.last_point)^.y*=pvt_var.pvt_scl.y;
-          (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=n2;
+          (pts_ptr+outer_subgraph1_ptr^.last_point)^.y+=pvt_var.scl_dif.y;
           Inc(outer_subgraph1_ptr);
         end;
     end;
@@ -16239,9 +16255,9 @@ begin
         begin
           is_point_pos_calc[outer_subgraph3_ptr^.last_point]:=True;
           (pts_ptr+outer_subgraph3_ptr^.last_point)^.x*=pvt_var.pvt_scl.x;
-          (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=n1;
+          (pts_ptr+outer_subgraph3_ptr^.last_point)^.x+=pvt_var.scl_dif.x;
           (pts_ptr+outer_subgraph3_ptr^.last_point)^.y*=pvt_var.pvt_scl.y;
-          (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=n2;
+          (pts_ptr+outer_subgraph3_ptr^.last_point)^.y+=pvt_var.scl_dif.y;
           Inc(outer_subgraph3_ptr);
         end;
     end; {$endregion}
@@ -16253,7 +16269,6 @@ var
   outer_subgraph1_ptr: PEdge;
   outer_subgraph3_ptr: PEdge;
   i                  : integer;
-  n1,n2              : double;
 begin
   {
   if (outer_subgraph1_eds_cnt=0) and
@@ -16676,7 +16691,6 @@ var
   inner_subgraph_ptr         : PEdge;
   out_or_inn_subgraph_pts_ptr: PByte;
   i                          : integer;
-  n1,n2                      : double;
 begin
 
   if (inner_subgraph__eds_cnt=0) then
@@ -16686,10 +16700,6 @@ begin
 
   if fill_bmp_only then
     Exit;
-
-  {Misc. Precalc.-----------------} {$region -fold}
-  n1:=x-Trunc(pvt.x);
-  n2:=y-Trunc(pvt.y); {$endregion}
 
   {Drawing Of Inner Subgraph Lines} {$region -fold}
   if (inner_subgraph__eds_cnt>0) then
@@ -16704,15 +16714,15 @@ begin
           if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
             if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
               begin
-                pts_f3.x+=n1;
-                pts_f3.y+=n2;
+                pts_f3.x+=pvt_var.pos_dif.x;
+                pts_f3.y+=pvt_var.pos_dif.y;
                 is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
               end;
           if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
             if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
               begin
-                pts_l3.x+=n1;
-                pts_l3.y+=n2;
+                pts_l3.x+=pvt_var.pos_dif.x;
+                pts_l3.y+=pvt_var.pos_dif.y;
                 is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
               end;
           (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
@@ -16729,7 +16739,6 @@ var
   inner_subgraph_ptr         : PEdge;
   out_or_inn_subgraph_pts_ptr: PByte;
   i                          : integer;
-  n1,n2                      : double;
 begin
 
   if (inner_subgraph__eds_cnt=0) then
@@ -16740,14 +16749,8 @@ begin
   if fill_bmp_only then
     Exit;
 
-  {Misc. Precalc.-----------------} {$region -fold}
-  with pvt_var do
-    begin
-      n1:=(pvt.x-srf_var.world_axis_shift.x)*(1-pvt_scl.x);
-      n2:=(pvt.y-srf_var.world_axis_shift.y)*(1-pvt_scl.y);
-      if (scl_dir=sdNone) then
-        Exit;
-    end; {$endregion}
+  if (pvt_var.scl_dir=sdNone) then
+    Exit;
 
   {Drawing Of Inner Subgraph Lines} {$region -fold}
   if (inner_subgraph__eds_cnt>0) then
@@ -16763,18 +16766,18 @@ begin
             if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
               begin
                 pts_f3.x*=pvt_var.pvt_scl.x;
-                pts_f3.x+=n1;
+                pts_f3.x+=pvt_var.scl_dif.x;
                 pts_f3.y*=pvt_var.pvt_scl.y;
-                pts_f3.y+=n2;
+                pts_f3.y+=pvt_var.scl_dif.y;
                 is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
               end;
           if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
             if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
               begin
                 pts_l3.x*=pvt_var.pvt_scl.x;
-                pts_l3.x+=n1;
+                pts_l3.x+=pvt_var.scl_dif.x;
                 pts_l3.y*=pvt_var.pvt_scl.y;
-                pts_l3.y+=n2;
+                pts_l3.y+=pvt_var.scl_dif.y;
                 is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
               end;
           (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
@@ -17551,6 +17554,10 @@ end; {$endregion}
 constructor TPivot.Create(w,h:TColor);                                                                             {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
+  SelPtsCalcProc   [0]:=@SelPtsPosCalc;
+  SelPtsCalcProc   [1]:=@SelPtsSclCalc;
+  SelPtsCalcProc   [2]:=@SelPtsRotCalc;
+
   SelPtsRctCalcProc[0]:=@SelPtsRctPosCalc;
   SelPtsRctCalcProc[1]:=@SelPtsRctSclCalc;
   SelPtsRctCalcProc[2]:=@SelPtsRctRotCalc;
@@ -17736,8 +17743,8 @@ begin
       shift.x+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.x;
       shift.y+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.y;
     end;
-  pvt_pos.x :=(p.x+shift.x)/sel_pts_cnt+1;
-  pvt_pos.y :=(p.y+shift.y)/sel_pts_cnt+1;
+  pvt_pos.x :=(p.x+shift.x)/sel_pts_cnt;
+  pvt_pos.y :=(p.y+shift.y)/sel_pts_cnt;
   pvt_origin:=pvt_pos;
 end; {$endregion}
 procedure TPivot.AlignPivotOnX(var x,y:integer; shift:TShiftState);                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -17772,52 +17779,60 @@ procedure TPivot.AlignPivotOnP(var x,y:integer; shift:TShiftState);             
 begin
   if (shift=[ssAlt]) then
     with srf_var,sln_var,crc_sel_var do
-      PivotToPoint(x,y,dup_pts_arr,inn_wnd_rct,srf_bmp.width,crc_rad);
+    //PivotToPoint(x,y,  srf_var,sln_var,sel_var,crc_sel_var);
+      PivotToPoint(x,y,1,srf_var,sln_var,sel_var,crc_sel_var);
 end; {$endregion}
-procedure TPivot.PivotToPoint     (x,y:integer; constref pts:TPtPosFArr; constref pts_cnt:TColor;                                 constref crc_rad_sqr:TColor);                   {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotToPoint     (x,y:integer;                 srf_var_:TSurface; sln_var_:TCurve; sel_var_:TSelPts; crc_sel_var_:TCrcSel); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr               : PPtPosF;
+  obj_arr_ptr           : PObjInfo;
   is_point_in_circle_ptr: PByteBool;
   v,inf,sup             : double;
-  i,ind_of_min          : integer;
+  i,j,ind_of_min        : integer;
   draw                  : boolean;
 begin
 
   inf                   :=0;
-  sup                   :=crc_rad_sqr;
+  sup                   :=crc_sel_var_.crc_rad_sqr;
   ind_of_min            :=0;
 
-  pts_ptr               :=Unaligned(@pts                       [0]);
-  is_point_in_circle_ptr:=Unaligned(@sel_var.is_point_in_circle[0]);
-  for i:=0 to pts_cnt-1 do
+  pts_ptr               :=Unaligned(@sln_var_.sln_pts           [0]);
+  is_point_in_circle_ptr:=Unaligned(@sel_var_.is_point_in_circle[0]);
+  for i:=0 to sln_var_.sln_obj_cnt-1 do
     begin
-      v:=(pts_ptr^.x-x)*(pts_ptr^.x-x)+
-         (pts_ptr^.y-y)*(pts_ptr^.y-y);
-      Inc(pts_ptr);
-      if (v<=crc_rad_sqr) then
+      obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[i]]);
+      for j:=0 to sln_var_.sln_obj_pts_cnt[i]-1 do
         begin
-          if (not is_point_in_circle_ptr^) then
+          v:=(pts_ptr^.x-x+obj_arr_ptr^.world_axis_shift.x)*(pts_ptr^.x-x+obj_arr_ptr^.world_axis_shift.x)+
+             (pts_ptr^.y-y+obj_arr_ptr^.world_axis_shift.y)*(pts_ptr^.y-y+obj_arr_ptr^.world_axis_shift.y);
+          if (v<=crc_sel_var_.crc_rad_sqr) then
             begin
-              is_point_in_circle_ptr^:=True;
-              if (v<=sup-inf) then
+              if (not is_point_in_circle_ptr^) then
                 begin
-                  inf       :=sup-v;
-                  ind_of_min:=i;
+                  is_point_in_circle_ptr^:=True;
+                  if (v<=sup-inf) then
+                    begin
+                      inf       :=sup-v;
+                      ind_of_min:=sln_var_.partial_pts_sum[i]+j;
+                    end;
                 end;
+              if is_point_in_circle_ptr^ then
+                 is_point_in_circle_ptr^:=False;
             end;
-          if is_point_in_circle_ptr^ then
-            is_point_in_circle_ptr^:=False;
+          Inc(pts_ptr);
+          Inc(is_point_in_circle_ptr);
         end;
-      Inc(is_point_in_circle_ptr);
     end;
 
-  draw:=(pts[ind_of_min].x-x)*(pts[ind_of_min].x-x)+
-        (pts[ind_of_min].y-y)*(pts[ind_of_min].y-y)<=crc_rad_sqr;
+  draw:=(sln_var_.sln_pts[ind_of_min].x-x+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.x)*
+        (sln_var_.sln_pts[ind_of_min].x-x+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.x)+
+        (sln_var_.sln_pts[ind_of_min].y-y+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.y)*
+        (sln_var_.sln_pts[ind_of_min].y-y+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.y)<=crc_sel_var_.crc_rad_sqr;
 
   if draw then
     begin
-      pvt_pos.x:=pts[ind_of_min].x;
-      pvt_pos.y:=pts[ind_of_min].y;
+      pvt_pos.x:=sln_var_.sln_pts[ind_of_min].x+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.x;
+      pvt_pos.y:=sln_var_.sln_pts[ind_of_min].y+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.y;
     end
   else
     begin
@@ -17827,11 +17842,12 @@ begin
   pvt_to_pt_draw_pt:=draw;
 
 end; {$endregion}
-procedure TPivot.PivotToPoint     (x,y:integer; constref pts:TPtPos2Arr; constref rct_clp:TPtRect; constref arr_dst_width:TColor; constref crc_rad    :TColor; density:TColor=1); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotToPoint     (x,y:integer; density:TColor; srf_var_:TSurface; sln_var_:TCurve; sel_var_:TSelPts; crc_sel_var_:TCrcSel); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  a,b,b2,c,m: double;
-  i,d       : integer;
-  draw      : boolean;
+  pt         : TPtPos;
+  a,b,b2,c,m : double;
+  i,d,pts_ind: integer;
+  draw       : boolean;
 begin
 
   {
@@ -17848,7 +17864,6 @@ begin
     srf_bmp_ptr       - pointer to target drawing surface(srf_bmp);
     rct_clp           - target drawing rectangular area;
     crc_rad           - circle radius;
-    arr_dst_width     - width of destination buffer;
     mos_mot_vec       - mouse motion vector;
     mos_mot_vec       : TLnPos;
     pvt_prev          - previous pivot;
@@ -17859,20 +17874,20 @@ begin
   }
 
   draw   :=False;
-  density:=Min(density,crc_rad); // density between circles;
+  density:=Min(density,crc_sel_var_.crc_rad); // density between circles;
 
   mos_mot_vec.x1:=x;
   mos_mot_vec.y1:=y;
 
-  for i:=1 to Trunc(crc_rad/density) do
+  for i:=1 to Trunc(crc_sel_var_.crc_rad/density) do
     begin
       d:=density*i;
-      if IsPtInRct(x,y,PtRct(rct_clp.left  +d,
-                             rct_clp.top   +d,
-                             rct_clp.right -d,
-                             rct_clp.bottom-d)) then
+      if IsPtInRct(x,y,PtRct(srf_var_.inn_wnd_rct.left  +d,
+                             srf_var_.inn_wnd_rct.top   +d,
+                             srf_var_.inn_wnd_rct.right -d,
+                             srf_var_.inn_wnd_rct.bottom-d)) then
         begin
-          if CircleW(x,y,d,pts,arr_dst_width,pvt_pos) then // drawing of regular circle(wave)
+          if CircleW(x,y,d,sln_var_.dup_pts_arr,srf_var_.srf_bmp.width,pvt_pos) then // drawing of regular circle(wave)
             begin
               draw:=True;
               Break;
@@ -17880,7 +17895,7 @@ begin
         end
       else
         begin
-          if CircleWC(x,y,d,pts,rct_clp,arr_dst_width,pvt_pos) then // drawing of clipped circle(wave)
+          if CircleWC(x,y,d,sln_var_.dup_pts_arr,srf_var_.inn_wnd_rct,srf_var_.srf_bmp.width,pvt_pos) then // drawing of clipped circle(wave)
             begin
               draw:=True;
               Break;
@@ -17888,22 +17903,27 @@ begin
         end;
     end;
 
+  pt       :=PtPos(pvt_pos);
+  pts_ind  :=sln_var_.dup_pts_arr[pt.x+pt.y*sln_var_.pts_big_img.ln_arr_width].pts_ind;
+  pvt_pos.x:=sln_var_.sln_pts[pts_ind].x+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[pts_ind]]].world_axis_shift.x;
+  pvt_pos.y:=sln_var_.sln_pts[pts_ind].y+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[pts_ind]]].world_axis_shift.y;
+
   if draw then
     begin
       //4*(m^2):=2*(b^2+c^2)-a^2;
       m :=  sqrt(sqr(mos_mot_vec.x0-mos_mot_vec.x1)+sqr(mos_mot_vec.y0-mos_mot_vec.y1));
       a :=2*sqrt(sqr(pvt_prev.x    -pvt_pos.x)     +sqr(pvt_prev.y    -pvt_pos.y));
       b :=  sqrt(sqr(mos_mot_vec.x1-pvt_pos.x)     +sqr(mos_mot_vec.y1-pvt_pos.y));
-      b2:=  sqrt(sqr(pvt_pos.x+pvt_prev.x-mos_mot_vec.x0-mos_mot_vec.x1)+
-                 sqr(pvt_pos.y+pvt_prev.y-mos_mot_vec.y0-mos_mot_vec.y1));
+      b2:=  sqrt(sqr(pvt_pos.x     +pvt_prev.x     -    mos_mot_vec.x0-mos_mot_vec.x1)+
+                 sqr(pvt_pos.y     +pvt_prev.y     -    mos_mot_vec.y0-mos_mot_vec.y1));
       c :=  sqrt(((4*m*m+a*a)/2)-b*b);
       if (Trunc(b2)=Max(Trunc(b),Trunc(c))) then
         begin
           pvt_pos.x:=pvt_prev.x;
           pvt_pos.y:=pvt_prev.y;
         end;
-      pvt_prev.x:=Trunc(pvt_pos.x);
-      pvt_prev.y:=Trunc(pvt_pos.y);
+      pvt_prev.x:=pvt_pos.x;
+      pvt_prev.y:=pvt_pos.y;
     end
   else
     begin
@@ -17912,7 +17932,7 @@ begin
     end;
   pvt_to_pt_draw_pt:=draw;
 
-  with sel_var,crc_sel_var,crc_sel_rct do
+  with sel_var_,crc_sel_var_,crc_sel_rct do
     begin
       FilSelPtsObj(x-crc_rad,y-crc_rad);
       {if IsPtInRct(x,y,PtRct(rct_clp.left  +crc_rad,
@@ -17934,6 +17954,19 @@ begin
   scl_dir       :=GetDir2(prev_mouse_pos,curr_mouse_pos,pvt_pos                );
                   SetMul (prev_mouse_pos,curr_mouse_pos,pvt_pos,pvt_scl,scl_dir);
   prev_mouse_pos:=curr_mouse_pos;
+end; {$endregion}
+procedure TPivot.SelPtsPosCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  pos_dif.x:=x-Trunc(pvt_pos.x);
+  pos_dif.y:=y-Trunc(pvt_pos.y);
+end; {$endregion}
+procedure TPivot.SelPtsSclCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  scl_dif.x:=(pvt_pos.x-srf_var.world_axis_shift.x)*(1-pvt_scl.x){pvt_pos.x-srf_var.world_axis_shift.x-pvt_pos.x*pvt_scl.x+srf_var.world_axis_shift.x*pvt_scl.x};
+  scl_dif.y:=(pvt_pos.y-srf_var.world_axis_shift.y)*(1-pvt_scl.y){pvt_pos.y-srf_var.world_axis_shift.y-pvt_pos.y*pvt_scl.y+srf_var.world_axis_shift.y*pvt_scl.y};
+end; {$endregion}
+procedure TPivot.SelPtsRotCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
 end; {$endregion}
 procedure TPivot.SelPtsRctPosCalc (x,y:integer; var sel_pts_rect:TPtRectF);                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -19324,12 +19357,13 @@ begin
                 end; {$endregion}
               (pmPivotScale ): {$region -fold}
                 begin
-                  SclSettings(x,y);
+                  SclSettings  (x,y);
                 end; {$endregion}
               (pmPivotRotate): {$region -fold}
                 begin
                 end; {$endregion}
             end;
+            SelPtsCalcProc   [Byte(pvt_var.pvt_mode)](x,y);
             WholeSubgraphProc[Byte(pvt_var.pvt_mode)](x,y,pvt_pos,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
             SelPtsRctCalcProc[Byte(pvt_var.pvt_mode)](x,y,sel_pts_rct);
             PivotDraw(Ptpos(0,0)); {$endregion}
@@ -19398,8 +19432,8 @@ begin
                 SelectdPointsCalc(x,y,pvt_pos,sln_pts,srf_bmp_ptr,inn_wnd_rct);
                 SelectdPointsDraw(x,y,pvt_pos,sln_pts,srf_bmp_ptr,inn_wnd_rct);
               end;
-          //PivotToPoint(x,y,sln_pts,sln_pts_cnt,                  crc_rad_sqr);
-            PivotToPoint (x,y,dup_pts_arr,inn_wnd_rct,srf_bmp.width,crc_rad);
+            //PivotToPoint(x,y,  srf_var,sln_var,sel_var,crc_sel_var);
+            PivotToPoint(x,y,1,srf_var,sln_var,sel_var,crc_sel_var);
             PivotModeDraw(srf_bmp.Canvas);
             PivotAxisDraw(srf_bmp.Canvas,pvt_axis_rect,PtPos(0,0));
             if pvt_to_pt_draw_pt then
@@ -19695,8 +19729,8 @@ begin
               end;
               ArrClear(dup_pts_arr,inn_wnd_rct,srf_bmp.width);
               AddSplineDupPtsAll(0,sln_obj_cnt-1);
-              pvt_prev.x:=Trunc(pvt_pos.x);
-              pvt_prev.y:=Trunc(pvt_pos.y);
+              {pvt_prev.x:=pvt_pos.x;
+              pvt_prev.y:=pvt_pos.y;}
               L_Object_Info.Visible:=not pvt_to_pt;
               if I_Visibility_Panel.Visible then
                  I_Visibility_Panel.Visible:=False;
@@ -20094,8 +20128,8 @@ begin
           begin
             ArrClear(dup_pts_arr,inn_wnd_rct,srf_bmp.width);
             AddSplineDupPtsAll(0,sln_obj_cnt-1);
-            pvt_prev.x         :=Trunc(pvt.x);
-            pvt_prev.y         :=Trunc(pvt.y);
+            pvt_prev.x         :=pvt_pos.x;
+            pvt_prev.y         :=pvt_pos.y;
             need_align_pivot_p2:=False;
           end;}
 
@@ -20555,13 +20589,13 @@ begin
   pvt_var:=TPivot.Create(25,25); {$endregion}
 
   {Circle Selection-----} {$region -fold}
-  crc_sel_var:=TCircSel.Create; {$endregion}
+  crc_sel_var:=TCrcSel.Create; {$endregion}
 
   {Brush Selection------} {$region -fold}
-  brs_sel_var:=TBrushSel.Create; {$endregion}
+  brs_sel_var:=TBrsSel.Create; {$endregion}
 
   {Rectangle Selection--} {$region -fold}
-  rct_sel_var:=TRectSel.Create; {$endregion}
+  rct_sel_var:=TRctSel.Create; {$endregion}
 
   {Play Animation-------} {$region -fold}
   down_play_anim_ptr:=Unaligned(@SB_Play_Anim.Down); {$endregion}
@@ -21724,7 +21758,9 @@ begin
   if (TV_Scene_Tree.SelectionCount=0) or (is_mouse_in_scene_tree) then
     Exit;
   obj_var.LowLrObjCntCalc1;
-  WrtNodeData(PByte(@obj_var.obj_arr[0].obj_show),obj_var.global_prop.obj_show,PByte(@obj_var.obj_arr[1].obj_show)-PByte(@obj_var.obj_arr[0].obj_show));
+  WrtNodeData(PByte(@obj_var.obj_arr[0].obj_show),
+              obj_var.global_prop.obj_show,
+              PByte(@obj_var.obj_arr[1].obj_show)-PByte(@obj_var.obj_arr[0].obj_show));
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
 // (Tag    Properties) Свойства тега:
