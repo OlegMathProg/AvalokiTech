@@ -9084,9 +9084,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 192
+            Left = -96
             Height = 176
-            Top = 80
+            Top = 160
             Width = 912
             Anchors = []
             BevelColor = 9665894
@@ -11667,9 +11667,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 320
+            Left = 472
             Height = 63
-            Top = 136
+            Top = 8
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -11852,7 +11852,7 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 388
+            Left = 472
             Height = 110
             Top = 120
             Width = 530
@@ -11873,9 +11873,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 400
+            Left = 488
             Height = 63
-            Top = 136
+            Top = 72
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12241,9 +12241,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 448
+            Left = 504
             Height = 110
-            Top = 120
+            Top = 32
             Width = 530
             Anchors = []
             BevelColor = 9665894

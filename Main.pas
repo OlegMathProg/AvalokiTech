@@ -1742,11 +1742,6 @@ type
       procedure SelectAllPts                    (const    pts_cnt,
                                                           eds_cnt            :TColor);        inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure SelectedPtsRectDraw             (         cnv_dst            :TCanvas;
-                                                          b_rct              :TPtRectF;
-                                                          color1,
-                                                          color2             :TColor);        inline; {$ifdef Linux}[local];{$endif}
-      {TODO}
       procedure SubgraphCalc                    (var      has_sel_pts        :T1Byte1Arr;
                                                  constref pts                :TPtPosFArr;
                                                  constref fst_lst_sln_obj_pts:TEnum0Arr;
@@ -1774,7 +1769,7 @@ type
                                                           is_pt_marked       :TBool1Arr);     inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure DuplicatedPtsToBmp;                                                           inline; {$ifdef Linux}[local];{$endif}
-      {TODO}
+      {outer subgraph}
       procedure OuterSubgraphCalc0              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
@@ -1795,7 +1790,7 @@ type
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
                                                  constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
-      {TODO}
+      {inner subgraph}
       procedure InnerSubgraphCalc0              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
@@ -1812,6 +1807,22 @@ type
                                                  constref bmp_dst_ptr        :PInteger;
                                                  constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
       procedure InnerSubgraphDraw               (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+      {single point graph}
+      procedure SinglePtGraphCalc0              (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+      procedure SinglePtGraphCalc1              (         x,y                :integer;
+                                                 constref pvt                :TPtPosF;
+                                                 var      pts                :TPtPosFArr;
+                                                 constref bmp_dst_ptr        :PInteger;
+                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+      procedure SinglePtGraphCalc2              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
@@ -1896,6 +1907,8 @@ type
       pvt_axis_rect        : TPtRect;
       {TODO}
       align_pivot          : TPtPos;
+      {TODO}
+      weighted_pvt_shift   : TPtPos;
       {TODO}
       need_align_pivot_x   : boolean;
       {TODO}
@@ -2444,7 +2457,19 @@ var
   frame_skip                 : byte;
   frame_step                 : byte=1;
 
-
+  {
+    Nearest TODO:
+      - Optimization:
+        1. get rid of double, triple or quadruple addressing; (priority: medium; complexity: easy);
+        2. ...;
+      - UI:
+        1. implementation of object tags; (priority: high; complexity: middling);
+        2. ...;
+      - Splines:
+        1. static contour anti-aliasing for sparse sprites in compressed sparse row format; (priority: low; complexity: hard);
+        2. implementation of drawing for lines of any width greater than 3; (priority: low; complexity: very hard);
+        3. Bezier splines; (priority: high; complexity: middling);
+  }
 
 (******************************************************************************)
 
@@ -3264,7 +3289,7 @@ end; {$endregion}
 {UI} {$region -fold}
 procedure TF_MainForm.S_Splitter0ChangeBounds         (sender:TObject); {$region -fold}
 begin
-  KeysDisable;
+  //KeysDisable;
   {$ifdef Windows}
   Application.ProcessMessages;
   {$else}
@@ -3285,7 +3310,7 @@ var
   end; {$endregion}
 
 begin
-  KeysDisable;
+  //KeysDisable;
   n:=P_UV_Operations.top
     +P_UV_Operations.height
     +CCB_2D_Operations_Automatic.height
@@ -3331,7 +3356,7 @@ begin
 end; {$endregion}
 procedure TF_MainForm.S_Splitter3ChangeBounds         (sender:TObject); {$region -fold}
 begin
-  KeysDisable;
+  //KeysDisable;
   //Align3DViewer;
   {$ifdef Windows}
   Application.ProcessMessages;
@@ -3344,20 +3369,20 @@ begin
 end; {$endregion}
 procedure TF_MainForm.S_Splitter6ChangeBounds         (sender:TObject); {$region -fold}
 begin
-  KeysDisable;
+  //KeysDisable;
   TV_Scene_Tree.Update;
   SB_TreeView_Object_Tags.Update;
   SB_Object_Properties.Update;
 end; {$endregion}
 procedure TF_MainForm.S_Splitter7ChangeBounds         (sender:TObject); {$region -fold}
 begin
-  KeysDisable;
+  //KeysDisable;
   SB_Object_Properties.Update;
   SB_Tag_Properties.Update;
 end; {$endregion}
 procedure TF_MainForm.S_Splitter8ChangeBounds         (sender:TObject); {$region -fold}
 begin
-  KeysDisable;
+  //KeysDisable;
   //Align3DViewer;
   {$ifdef Windows}
   Application.ProcessMessages;
@@ -3367,7 +3392,7 @@ begin
 end; {$endregion}
 procedure MoveBorders;           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  F_MainForm.KeysEnable;
+  //F_MainForm.KeysEnable;
   SplittersPosCalc;
   {TODO}
   F_MainForm.S_Splitter1.Left:=0;
@@ -4523,11 +4548,11 @@ begin
   with obj_var,sln_var,sel_var do
     begin
       if (not is_not_abst_obj_kind_after) then
-        ClrSplineAll(sel_obj_min_ind,obj_var.obj_cnt-1);
+        ClrSplineAll(sel_obj_min_ind,obj_cnt-1);
       for i:=0 to sln_obj_cnt-1 do
         begin
-          j:=obj_var.obj_arr[obj_var.curve_inds_obj_arr[i]].t_ind;
-          if (j>=sel_obj_min_ind) and (j<=obj_var.obj_cnt-1) then
+          j:=obj_arr[curve_inds_obj_arr[i]].t_ind;
+          if (j>=sel_obj_min_ind) and (j<=obj_cnt-1) and (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
             begin
               if (has_sel_pts[i]<>0) then
                 begin
@@ -4571,17 +4596,17 @@ begin
     Exit;
   with obj_var,sln_var,sel_var,crc_sel_var,pvt_var do
     begin
-      if (pvt_mode=pmPivotMove) then
+      {if (pvt_mode=pmPivotMove) then
         if (((not outer_subgraph_img.local_prop.eds_show) and (not inner_subgraph_img.local_prop.eds_show))  or
             (     outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show))) and
            (pvt_draw_sel_eds_off<>pvt_pos) then
-          UnselectedPtsCalc1(fst_lst_sln_obj_pts,sln_pts,pvt_pos,pvt_origin);
+          UnselectedPtsCalc1(fst_lst_sln_obj_pts,sln_pts,pvt_pos,pvt_origin);}
       if rectangles_calc then
-        RctSplineAll1(sel_obj_min_ind,obj_var.obj_cnt-1);
+        RctSplineAll1(sel_obj_min_ind,obj_cnt-1);
       for i:=0 to sln_obj_cnt-1 do
         begin
-          j:=obj_var.obj_arr[obj_var.curve_inds_obj_arr[i]].t_ind;
-          if (j>=sel_obj_min_ind) and (j<=obj_var.obj_cnt-1) then
+          j:=obj_arr[curve_inds_obj_arr[i]].t_ind;
+          if (j>=sel_obj_min_ind) and (j<=obj_cnt-1) and (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
             begin
               if (has_sel_pts[i]<>0) then
                 begin
@@ -4957,6 +4982,7 @@ begin
       has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
       b              :=spline_scale_calc or form_resize_calc or ((not repaint_spline_hid_ln_calc1) and repaint_spline_hid_ln_calc2);
       for i:=0 to sln_obj_cnt-1 do
+        if (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
         begin
 
           {Bounding Rectangles: Edges}
@@ -5159,117 +5185,118 @@ begin
       has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
       b              :=spline_scale_calc or form_resize_calc or (not repaint_spline_hid_ln_calc2);
       for i:=0 to sln_obj_cnt-1 do
-        begin
+        if (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
+          begin
 
-          {Bounding Rectangles: Edges}
-          with (rct_eds_var_ptr+i)^,local_prop do
-            begin
-              if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b0_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      AddSplineRctEds(i);
-                      CrtSplineRctEds(i);
-                    end;
-                  lazy_repaint_prev:=b0;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            {Bounding Rectangles: Edges}
+            with (rct_eds_var_ptr+i)^,local_prop do
+              begin
+                if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b0_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        AddSplineRctEds(i);
+                        CrtSplineRctEds(i);
+                      end;
+                    lazy_repaint_prev:=b0;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
 
-          {Bounding Rectangles: Points}
-          with (rct_pts_var_ptr+i)^,local_prop do
-            begin
-              if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b1_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      AddSplineRctPts(i);
-                      CrtSplineRctPts(i);
-                    end;
-                  lazy_repaint_prev:=b1;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            {Bounding Rectangles: Points}
+            with (rct_pts_var_ptr+i)^,local_prop do
+              begin
+                if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b1_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        AddSplineRctPts(i);
+                        CrtSplineRctPts(i);
+                      end;
+                    lazy_repaint_prev:=b1;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
 
-          {Edges}
-          with (eds_var_ptr+i)^,local_prop do
-            begin
-              if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b2_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      if ((has_sel_pts_ptr+i)^=0) then
-                        AddSplineEds00(i)
-                      else
-                        AddSplineEds02(i);
-                      CrtSplineEds    (i);
-                    end;
-                  lazy_repaint_prev:=b2;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            {Edges}
+            with (eds_var_ptr+i)^,local_prop do
+              begin
+                if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b2_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        if ((has_sel_pts_ptr+i)^=0) then
+                          AddSplineEds00(i)
+                        else
+                          AddSplineEds02(i);
+                        CrtSplineEds    (i);
+                      end;
+                    lazy_repaint_prev:=b2;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
 
-          {Points}
-          with (pts_var_ptr+i)^,local_prop do
-            begin
-              if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b3_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      if ((has_sel_pts_ptr+i)^=0) then
-                        begin
-                          AddSplineDupPts0(i);
-                          AddSplinePts0   (i);
-                          ClrSplineDupPts0(i);
-                        end
-                      else
-                        begin
-                          AddSplineDupPts1(i);
-                          AddSplinePts1   (i);
-                          ClrSplineDupPts1(i);
-                        end;
-                      CrtSplinePts(i);
-                    end;
-                  lazy_repaint_prev:=b3;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            {Points}
+            with (pts_var_ptr+i)^,local_prop do
+              begin
+                if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b3_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        if ((has_sel_pts_ptr+i)^=0) then
+                          begin
+                            AddSplineDupPts0(i);
+                            AddSplinePts0   (i);
+                            ClrSplineDupPts0(i);
+                          end
+                        else
+                          begin
+                            AddSplineDupPts1(i);
+                            AddSplinePts1   (i);
+                            ClrSplineDupPts1(i);
+                          end;
+                        CrtSplinePts(i);
+                      end;
+                    lazy_repaint_prev:=b3;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
 
         end;
     end;
@@ -12216,7 +12243,7 @@ begin
     begin
       j:=obj_var.curve_inds_sct_arr[i];
       if (j>=start_ind) and (j<=end_ind) then
-        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show<2) then
+        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show<2) and (obj_var.obj_arr[obj_var.curve_inds_obj_arr[i]].obj_show<3) then
           begin
             k:=obj_var.obj_arr[obj_var.obj_inds_arr[j]].k_ind;
             ClrSplinePts   (k);
@@ -12441,7 +12468,7 @@ var
   i: integer;
 begin
   with rct_eds_img_arr[spline_ind],local_prop,fst_img do
-    if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
+    if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -12459,7 +12486,7 @@ var
   i: integer;
 begin
   with rct_pts_img_arr[spline_ind],local_prop,fst_img do
-    if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
+    if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -12477,7 +12504,7 @@ var
   i: integer;
 begin
   with eds_img_arr[spline_ind],local_prop,fst_img do
-    if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
+    if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -12495,7 +12522,7 @@ var
   i: integer;
 begin
   with pts_img_arr[spline_ind],local_prop,fst_img do
-    if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
+    if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -15135,10 +15162,6 @@ begin
                                       bucket_rct.width,
                                       bucket_rct.height);
       LowerBmpToMainBmp;
-      if show_selected_pts_b_rect then
-        SelectedPtsRectDraw(srf_bmp.Canvas,sel_pts_rct,clPurple,clNavy);
-      {PtsRectDraw1(srf_bmp.Canvas,
-                   ncs_adv_clip_rect,clRed);}
       with srf_bmp.Canvas do
         begin
           Pen.Color:=bucket_rct_color;
@@ -15188,10 +15211,9 @@ procedure TSelPts.FillSelBmpAndSelPtsBRectDraw;                                 
 begin
   if exp0 then
     if show_spline then
-      with srf_var,sln_var,sel_var do
+      with srf_var,sln_var,sel_var,pvt_var do
         begin
           LowerBmpToMainBmp;
-          {Fill Selected Bmp}
           if outer_subgraph_img.local_prop.eds_show then
             OuterSubgraphDraw(Trunc(pvt_var.pvt_pos.X),
                               Trunc(pvt_var.pvt_pos.Y),
@@ -15213,11 +15235,18 @@ begin
                               sln_pts,
                               srf_bmp_ptr,
                               inn_wnd_rct);
-          {Draw Selected Points Bounding Rectangle}
-          if show_selected_pts_b_rect then
-            SelectedPtsRectDraw(srf_bmp.Canvas,sel_pts_rct,clPurple,clNavy);
-          CnvToCnv     (srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY{NOTSRCCOPY});
-          //InvalidateInnerWindow;
+          if sel_bounds_prop.rct_eds_show then
+            SelectdPointsBnds(Trunc(pvt_var.pvt_pos.X),
+                              Trunc(pvt_var.pvt_pos.Y),
+                              pvt_var.pvt_pos,
+                              sln_pts,
+                              srf_bmp_ptr,
+                              inn_wnd_rct);
+          CnvToCnv                         (srf_bmp_rct,
+                                            F_MainForm.
+                                            Canvas,
+                                            srf_bmp.Canvas,
+                                            SRCCOPY{NOTSRCCOPY});
         end;
 end; {$endregion}
 constructor TCrcSel.Create;                                                                                                                                     {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -15631,10 +15660,6 @@ end; {$endregion}
 procedure TSelPts.SelectAllPts(const pts_cnt,eds_cnt:TColor);                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TSelPts.SelectedPtsRectDraw(cnv_dst:TCanvas; b_rct:TPtRectF; color1,color2:TColor);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  {PtsRectDraw2(cnv_dst,b_rct,color1,color2);}
-end; {$endregion}
 procedure TSelPts.SubgraphCalc(var has_sel_pts:T1Byte1Arr; constref pts:TPtPosFArr; constref fst_lst_sln_obj_pts:TEnum0Arr; constref obj_ind:TColorArr; constref sln_obj_cnt:TColor; constref sln_pts_cnt:TColor); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   outer_subgraph1_ptr        : PEdge;
@@ -15653,10 +15678,10 @@ var
   b                          : integer;
 begin
 
-  {Misc. Precalc.-----------------------} {$region -fold}
+  {Misc. Precalc.-------------------------------} {$region -fold}
   c:=Min(2*sel_pts_cnt,sln_pts_cnt); {$endregion}
 
-  {Clear Arrays-------------------------} {$region -fold}
+  {Clear Arrays---------------------------------} {$region -fold}
   SetLength(outer_subgraph1,0);
   SetLength(outer_subgraph2,0);
   SetLength(outer_subgraph3,0);
@@ -15664,14 +15689,14 @@ begin
   SetLength(sl_pt_subgraph_,0);
   FillByte((@has_sel_pts[0])^,Length(has_sel_pts),0); {$endregion}
 
-  {Create Arrays------------------------} {$region -fold}
+  {Create Arrays--------------------------------} {$region -fold}
   SetLength(outer_subgraph1,c          );
   SetLength(outer_subgraph2,c          );
   SetLength(outer_subgraph3,c          );
   SetLength(inner_subgraph_,sel_pts_cnt);
   SetLength(sl_pt_subgraph_,sel_pts_cnt); {$endregion}
 
-  {Outer and Inner Subgraph Calc.-------} {$region -fold}
+  {Outer, Inner Subgraph and Single Points Calc.} {$region -fold}
   obj_ind_ptr                :=Unaligned(@obj_ind                [0]);
   fst_lst_sln_obj_pts_ptr    :=Unaligned(@fst_lst_sln_obj_pts    [0]);
   is_point_selected_ptr      :=Unaligned(@is_point_selected      [0]);
@@ -15843,17 +15868,17 @@ begin
       Inc(sel_pts_inds_ptr);
     end; {$endregion}
 
-  {Edges Count--------------------------} {$region -fold}
+  {Edges Count----------------------------------} {$region -fold}
   outer_subgraph1_eds_cnt:=PEdge(outer_subgraph1_ptr)-PEdge(@outer_subgraph1[0]);
   outer_subgraph2_eds_cnt:=PEdge(outer_subgraph2_ptr)-PEdge(@outer_subgraph2[0]);
   outer_subgraph3_eds_cnt:=PEdge(outer_subgraph3_ptr)-PEdge(@outer_subgraph3[0]);
   inner_subgraph__eds_cnt:=PEdge(inner_subgraph__ptr)-PEdge(@inner_subgraph_[0]);
   sl_pt_subgraph__eds_cnt:=PSlPt(sl_pt_subgraph__ptr)-PSlPt(@sl_pt_subgraph_[0]); {$endregion}
 
-  {Count of Splines with Selected Points} {$region -fold}
+  {Count of Splines with Selected Points--------} {$region -fold}
   sln_with_sel_pts_cnt:=ArrNzItCnt(has_sel_pts,4); {$endregion}
 
-  {Selected Points Rectangle Calc.------} {$region -fold}
+  {Selected Points Rectangle Calc.--------------} {$region -fold}
   sel_pts_rct:=obj_var.PtsRngIndsRctCalc
   (
     pts,
@@ -15870,7 +15895,7 @@ begin
       height:=bottom-top;
     end; {$endregion}
 
-  {Minimal Index of Selected Spline-----} {$region -fold}
+  {Minimal Index of Selected Spline-------------} {$region -fold}
   f_arr:=Nil;
   f_arr:=TColorArr.Create
   (
@@ -16186,8 +16211,6 @@ begin
      (outer_subgraph3_eds_cnt=0) then
     Exit;
 
-  outer_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
-
   if fill_bmp_only then
     Exit;
 
@@ -16229,8 +16252,6 @@ begin
   if (outer_subgraph1_eds_cnt=0) and
      (outer_subgraph3_eds_cnt=0) then
     Exit;
-
-  outer_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
 
   if fill_bmp_only then
     Exit;
@@ -16280,8 +16301,6 @@ begin
   if (outer_subgraph1_eds_cnt=0) and
      (outer_subgraph3_eds_cnt=0) then
     Exit;
-
-  outer_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
 
   if fill_bmp_only then
     Exit;
@@ -16702,39 +16721,34 @@ begin
   if (inner_subgraph__eds_cnt=0) then
     Exit;
 
-  inner_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
-
   if fill_bmp_only then
     Exit;
 
   {Drawing Of Inner Subgraph Lines} {$region -fold}
-  if (inner_subgraph__eds_cnt>0) then
+  pts_ptr                    :=Unaligned(@pts                    [0]);
+  inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
+  out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
+  for i:=0 to inner_subgraph__eds_cnt-1 do
     begin
-      pts_ptr                    :=Unaligned(@pts                    [0]);
-      inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
-      out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
-      for i:=0 to inner_subgraph__eds_cnt-1 do
-        begin
-          pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
-          pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
-          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
-            if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
-              begin
-                pts_f3.x+=pvt_var.pos_dif.x;
-                pts_f3.y+=pvt_var.pos_dif.y;
-                is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
-              end;
-          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
-            if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
-              begin
-                pts_l3.x+=pvt_var.pos_dif.x;
-                pts_l3.y+=pvt_var.pos_dif.y;
-                is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
-              end;
-          (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
-          (pts_ptr+inner_subgraph_ptr^.last_point )^:=pts_l3;
-          Inc(inner_subgraph_ptr);
-        end;
+      pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+      pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+      if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
+        if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
+          begin
+            pts_f3.x+=pvt_var.pos_dif.x;
+            pts_f3.y+=pvt_var.pos_dif.y;
+            is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
+          end;
+      if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
+        if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
+          begin
+            pts_l3.x+=pvt_var.pos_dif.x;
+            pts_l3.y+=pvt_var.pos_dif.y;
+            is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
+          end;
+      (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
+      (pts_ptr+inner_subgraph_ptr^.last_point )^:=pts_l3;
+      Inc(inner_subgraph_ptr);
     end; {$endregion}
 
 end; {$endregion}
@@ -16750,8 +16764,6 @@ begin
   if (inner_subgraph__eds_cnt=0) then
     Exit;
 
-  inner_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
-
   if fill_bmp_only then
     Exit;
 
@@ -16759,37 +16771,34 @@ begin
     Exit;
 
   {Drawing Of Inner Subgraph Lines} {$region -fold}
-  if (inner_subgraph__eds_cnt>0) then
+  pts_ptr                    :=Unaligned(@pts                    [0]);
+  inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
+  out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
+  for i:=0 to inner_subgraph__eds_cnt-1 do
     begin
-      pts_ptr                    :=Unaligned(@pts                    [0]);
-      inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
-      out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
-      for i:=0 to inner_subgraph__eds_cnt-1 do
-        begin
-          pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
-          pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
-          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
-            if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
-              begin
-                pts_f3.x*=pvt_var.pvt_scl.x;
-                pts_f3.x+=pvt_var.scl_dif.x;
-                pts_f3.y*=pvt_var.pvt_scl.y;
-                pts_f3.y+=pvt_var.scl_dif.y;
-                is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
-              end;
-          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
-            if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
-              begin
-                pts_l3.x*=pvt_var.pvt_scl.x;
-                pts_l3.x+=pvt_var.scl_dif.x;
-                pts_l3.y*=pvt_var.pvt_scl.y;
-                pts_l3.y+=pvt_var.scl_dif.y;
-                is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
-              end;
-          (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
-          (pts_ptr+inner_subgraph_ptr^.last_point )^:=pts_l3;
-          Inc(inner_subgraph_ptr);
-        end;
+      pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+      pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+      if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
+        if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
+          begin
+            pts_f3.x*=pvt_var.pvt_scl.x;
+            pts_f3.x+=pvt_var.scl_dif.x;
+            pts_f3.y*=pvt_var.pvt_scl.y;
+            pts_f3.y+=pvt_var.scl_dif.y;
+            is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
+          end;
+      if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
+        if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
+          begin
+            pts_l3.x*=pvt_var.pvt_scl.x;
+            pts_l3.x+=pvt_var.scl_dif.x;
+            pts_l3.y*=pvt_var.pvt_scl.y;
+            pts_l3.y+=pvt_var.scl_dif.y;
+            is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
+          end;
+      (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
+      (pts_ptr+inner_subgraph_ptr^.last_point )^:=pts_l3;
+      Inc(inner_subgraph_ptr);
     end; {$endregion}
 
 end; {$endregion}
@@ -16806,43 +16815,34 @@ begin
   if (inner_subgraph__eds_cnt=0) then
     Exit;
 
-  inner_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
-
   if fill_bmp_only then
     Exit;
 
-  {Misc. Precalc.-----------------} {$region -fold}
-  n1:=x-Trunc(pvt.x);
-  n2:=y-Trunc(pvt.y); {$endregion}
-
   {Drawing Of Inner Subgraph Lines} {$region -fold}
-  if (inner_subgraph__eds_cnt>0) then
+  pts_ptr                    :=Unaligned(@pts                    [0]);
+  inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
+  out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
+  for i:=0 to inner_subgraph__eds_cnt-1 do
     begin
-      pts_ptr                    :=Unaligned(@pts                    [0]);
-      inner_subgraph_ptr         :=Unaligned(@inner_subgraph_        [0]);
-      out_or_inn_subgraph_pts_ptr:=Unaligned(@out_or_inn_subgraph_pts[0]);
-      for i:=0 to inner_subgraph__eds_cnt-1 do
-        begin
-          pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
-          pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
-          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
-            if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
-              begin
-                pts_f3.x+=n1;
-                pts_f3.y+=n2;
-                is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
-              end;
-          if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
-            if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
-              begin
-                pts_l3.x+=n1;
-                pts_l3.y+=n2;
-                is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
-              end;
-          (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
-          (pts_ptr+inner_subgraph_ptr^.last_point )^:=pts_l3;
-          Inc(inner_subgraph_ptr);
-        end;
+      pts_f3:=(pts_ptr+inner_subgraph_ptr^.first_point)^;
+      pts_l3:=(pts_ptr+inner_subgraph_ptr^.last_point )^;
+      if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.first_point)^=2) then
+        if (not is_point_pos_calc[inner_subgraph_ptr^.first_point]) then
+          begin
+            pts_f3.x+=n1;
+            pts_f3.y+=n2;
+            is_point_pos_calc[inner_subgraph_ptr^.first_point]:=True;
+          end;
+      if ((out_or_inn_subgraph_pts_ptr+inner_subgraph_ptr^.last_point )^=2) then
+        if (not is_point_pos_calc[inner_subgraph_ptr^.last_point]) then
+          begin
+            pts_l3.x+=n1;
+            pts_l3.y+=n2;
+            is_point_pos_calc[inner_subgraph_ptr^.last_point]:=True;
+          end;
+      (pts_ptr+inner_subgraph_ptr^.first_point)^:=pts_f3;
+      (pts_ptr+inner_subgraph_ptr^.last_point )^:=pts_l3;
+      Inc(inner_subgraph_ptr);
     end; {$endregion}
   }
 end; {$endregion}
@@ -16862,8 +16862,6 @@ begin
 
   if (inner_subgraph__eds_cnt=0) then
     Exit;
-
-  inner_subgraph_img.bmp_dst_ptr:=bmp_dst_ptr;
 
   if fill_bmp_only then
     goto lbl_flood_fill_only;
@@ -17035,6 +17033,66 @@ begin
   inner_subgraph_img.FillBuffer(rct_clp); {$endregion}
 
 end; {$endregion}
+procedure TSelPts.SinglePtGraphCalc0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  pts_ptr            : PPtPosF;
+  sl_pt_subgraph__ptr: PSlPt;
+  i                  : integer;
+begin
+
+  if (sl_pt_subgraph__eds_cnt=0) then
+    Exit;
+
+  if fill_bmp_only then
+    Exit;
+
+  {Drawing Of Inner Subgraph Lines} {$region -fold}
+  pts_ptr            :=Unaligned(@pts            [0]);
+  sl_pt_subgraph__ptr:=Unaligned(@sl_pt_subgraph_[0]);
+  for i:=0 to sl_pt_subgraph__eds_cnt-1 do
+    begin
+      (pts_ptr+sl_pt_subgraph__ptr^.point)^.x+=pvt_var.pos_dif.x;
+      (pts_ptr+sl_pt_subgraph__ptr^.point)^.y+=pvt_var.pos_dif.y;
+      Inc(sl_pt_subgraph__ptr);
+    end; {$endregion}
+
+end; {$endregion}
+procedure TSelPts.SinglePtGraphCalc1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  pts_ptr            : PPtPosF;
+  sl_pt_subgraph__ptr: PSlPt;
+  i                  : integer;
+begin
+
+  if (sl_pt_subgraph__eds_cnt=0) then
+    Exit;
+
+  if fill_bmp_only then
+    Exit;
+
+  if (pvt_var.scl_dir=sdNone) then
+    Exit;
+
+  {Drawing Of Inner Subgraph Lines} {$region -fold}
+  pts_ptr            :=Unaligned(@pts            [0]);
+  sl_pt_subgraph__ptr:=Unaligned(@sl_pt_subgraph_[0]);
+  for i:=0 to sl_pt_subgraph__eds_cnt-1 do
+    begin
+      (pts_ptr+sl_pt_subgraph__ptr^.point)^.x*=pvt_var.pvt_scl.x;
+      (pts_ptr+sl_pt_subgraph__ptr^.point)^.x+=pvt_var.scl_dif.x;
+      (pts_ptr+sl_pt_subgraph__ptr^.point)^.y*=pvt_var.pvt_scl.y;
+      (pts_ptr+sl_pt_subgraph__ptr^.point)^.y+=pvt_var.scl_dif.y;
+      Inc(sl_pt_subgraph__ptr);
+    end; {$endregion}
+
+end; {$endregion}
+procedure TSelPts.SinglePtGraphCalc2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  pts_ptr            : PPtPosF;
+  sl_pt_subgraph__ptr: PSlPt;
+  i                  : integer;
+begin
+end; {$endregion}
 procedure TSelPts.SelectdPointsCalc (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
@@ -17047,13 +17105,6 @@ var
   n2: double=0.0;
 begin
 
-  {Misc. Precalc.-----------------} {$region -fold}
-  if (pvt_var.pvt_mode=pmPivotMove) then
-    begin
-      n1:=x-pvt.x;
-      n2:=y-pvt.y;
-    end; {$endregion}
-
   with sel_bounds_prop do
     begin
       pts_rct_inn_width :=Trunc(sel_pts_rct.width );
@@ -17063,8 +17114,8 @@ begin
       SetRctValues(sel_bounds_prop);
       Fast_Primitives.Rectangle
       (
-        Trunc(sel_pts_rct.left+n1)+Trunc(sel_pts_rct.width )>>1-pts_rct_width__odd,
-        Trunc(sel_pts_rct.top +n2)+Trunc(sel_pts_rct.height)>>1-pts_rct_height_odd,
+        Trunc(sel_pts_rct.left+pvt_var.pos_dif.x)+Trunc(sel_pts_rct.width )>>1-pts_rct_width__odd,
+        Trunc(sel_pts_rct.top +pvt_var.pos_dif.y)+Trunc(sel_pts_rct.height)>>1-pts_rct_height_odd,
         bmp_dst_ptr,
         sel_pts_big_img.bmp_dst_width,
         sel_pts_big_img.bmp_dst_height,
@@ -17076,81 +17127,90 @@ begin
 end; {$endregion}
 procedure TSelPts.WholeSubgraphDraw0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct1,rct2:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  {Drawing of Outer Subgraph }
-  if (     outer_subgraph_img.local_prop.eds_show  and      inner_subgraph_img.local_prop.eds_show)  or
-     ((not outer_subgraph_img.local_prop.eds_show) and      inner_subgraph_img.local_prop.eds_show)  or
-     (     outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show)) then
-    OuterSubgraphCalc0(x,y,pvt,pts,bmp_dst_ptr,rct1);
+
+  {Drawing of Outer Subgraph--------} {$region fold}
+  OuterSubgraphCalc0(x,y,pvt,pts,bmp_dst_ptr,rct1);
   if outer_subgraph_img.local_prop.eds_show then
-    OuterSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1);
-  {Drawing of Inner Subgraph }
-  if (     outer_subgraph_img.local_prop.eds_show  and inner_subgraph_img.local_prop.eds_show) or
-     ((not outer_subgraph_img.local_prop.eds_show) and inner_subgraph_img.local_prop.eds_show) then
-    InnerSubgraphCalc0(x,y,pvt,pts,bmp_dst_ptr,rct2);
+    OuterSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  {Drawing of Inner Subgraph--------} {$region fold}
+  InnerSubgraphCalc0(x,y,pvt,pts,bmp_dst_ptr,rct2);
   if inner_subgraph_img.local_prop.eds_show then
-    InnerSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct2);
-  {Drawing of Selected Points}
+    InnerSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct2); {$endregion}
+
+  {Drawing of Single Point Graph----} {$region fold}
+  SinglePtGraphCalc0(x,y,pvt,pts,bmp_dst_ptr,rct2); {$endregion}
+
+  {Drawing of Selected Points-------} {$region fold}
   if sel_pts_big_img.local_prop.eds_show then
     begin
       SelectdPointsCalc(x,y,pvt,pts,bmp_dst_ptr,rct1);
       SelectdPointsDraw(x,y,pvt,pts,bmp_dst_ptr,rct1);
-    end;
-  {Drawing of Selected Points Bounds}
+    end; {$endregion}
+
+  {Drawing of Selected Points Bounds} {$region fold}
   if sel_bounds_prop.rct_eds_show then
     SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1);
-  SelPtsIndsToFalse2;
+  SelPtsIndsToFalse2; {$endregion}
+
 end; {$endregion}
 procedure TSelPts.WholeSubgraphDraw1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct1,rct2:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  {Drawing of Outer Subgraph }
-  if (     outer_subgraph_img.local_prop.eds_show  and      inner_subgraph_img.local_prop.eds_show)  or
-     ((not outer_subgraph_img.local_prop.eds_show) and      inner_subgraph_img.local_prop.eds_show)  or
-     (     outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show)) then
-    OuterSubgraphCalc1(x,y,pvt,pts,bmp_dst_ptr,rct1);
+
+  {Drawing of Outer Subgraph--------} {$region fold}
+  OuterSubgraphCalc1(x,y,pvt,pts,bmp_dst_ptr,rct1);
   if outer_subgraph_img.local_prop.eds_show then
-    OuterSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1);
-  {Drawing of Inner Subgraph }
-  if (     outer_subgraph_img.local_prop.eds_show  and inner_subgraph_img.local_prop.eds_show) or
-     ((not outer_subgraph_img.local_prop.eds_show) and inner_subgraph_img.local_prop.eds_show) then
-    InnerSubgraphCalc1(x,y,pvt,pts,bmp_dst_ptr,rct1);
+    OuterSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  {Drawing of Inner Subgraph--------} {$region fold}
+  InnerSubgraphCalc1(x,y,pvt,pts,bmp_dst_ptr,rct1);
   if inner_subgraph_img.local_prop.eds_show then
-    InnerSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1);
-  {Drawing of Selected Points}
+    InnerSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  {Drawing of Single Point Graph----} {$region fold}
+  SinglePtGraphCalc1(x,y,pvt,pts,bmp_dst_ptr,rct2); {$endregion}
+
+  {Drawing of Selected Points-------} {$region fold}
   if sel_pts_big_img.local_prop.eds_show then
     begin
       SelectdPointsCalc(x,y,pvt,pts,bmp_dst_ptr,rct1);
       SelectdPointsDraw(x,y,pvt,pts,bmp_dst_ptr,rct1);
-    end;
-  {Drawing of Selected Points Bounds}
+    end; {$endregion}
+
+  {Drawing of Selected Points Bounds} {$region fold}
   if sel_bounds_prop.rct_eds_show then
     SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1);
-  SelPtsIndsToFalse2;
+  SelPtsIndsToFalse2; {$endregion}
+
 end; {$endregion}
 procedure TSelPts.WholeSubgraphDraw2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct1,rct2:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  {Drawing of Outer Subgraph }
-  if (     outer_subgraph_img.local_prop.eds_show  and      inner_subgraph_img.local_prop.eds_show)  or
-     ((not outer_subgraph_img.local_prop.eds_show) and      inner_subgraph_img.local_prop.eds_show)  or
-     (     outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show)) then
-    OuterSubgraphCalc2(x,y,pvt,pts,bmp_dst_ptr,rct1);
+
+  {Drawing of Outer Subgraph--------} {$region fold}
+  OuterSubgraphCalc2(x,y,pvt,pts,bmp_dst_ptr,rct1);
   if outer_subgraph_img.local_prop.eds_show then
-    OuterSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1);
-  {Drawing of Inner Subgraph }
-  if (     outer_subgraph_img.local_prop.eds_show  and inner_subgraph_img.local_prop.eds_show) or
-     ((not outer_subgraph_img.local_prop.eds_show) and inner_subgraph_img.local_prop.eds_show) then
-    InnerSubgraphCalc2(x,y,pvt,pts,bmp_dst_ptr,rct1);
+    OuterSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  {Drawing of Inner Subgraph--------} {$region fold}
+  InnerSubgraphCalc2(x,y,pvt,pts,bmp_dst_ptr,rct1);
   if inner_subgraph_img.local_prop.eds_show then
-    InnerSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1);
-  {Drawing of Selected Points}
+    InnerSubgraphDraw (x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  {Drawing of Single Point Graph----} {$region fold}
+  SinglePtGraphCalc2(x,y,pvt,pts,bmp_dst_ptr,rct2); {$endregion}
+
+  {Drawing of Selected Points-------} {$region fold}
   if sel_pts_big_img.local_prop.eds_show then
     begin
       SelectdPointsCalc(x,y,pvt,pts,bmp_dst_ptr,rct1);
       SelectdPointsDraw(x,y,pvt,pts,bmp_dst_ptr,rct1);
-    end;
-  {Drawing of Selected Points Bounds}
+    end; {$endregion}
+
+  {Drawing of Selected Points Bounds} {$region fold}
   if sel_bounds_prop.rct_eds_show then
     SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1);
-  SelPtsIndsToFalse2;
+  SelPtsIndsToFalse2; {$endregion}
+
 end; {$endregion}
 procedure TSelPts.SelPvtAndSplineEdsToBmp;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -17175,56 +17235,13 @@ begin
   P_Select_Items_Outer_Subgraph_Prop.Color:=Darken(P_Select_Items_Outer_Subgraph_Prop.Color,0,0,0,0,0,16);
 end; {$endregion}
 procedure TF_MainForm.SB_Select_Items_Outer_Subgraph_ShowClick        (sender:TObject); {$region -fold}
-var
-  pvt_shift: TPtPosF;
 begin
   BtnColAndDown(SB_Select_Items_Outer_Subgraph_Show,sel_var.outer_subgraph_img.local_prop.eds_show);
-  with srf_var,sel_var,pvt_var do
+  with sel_var do
     begin
-      if outer_subgraph_img.local_prop.eds_show then
-        pvt_draw_sel_eds_on :=pvt_pos
-      else
-        pvt_draw_sel_eds_off:=pvt_pos;
-      pvt_shift.x:=pvt_draw_sel_eds_on.x-pvt_draw_sel_eds_off.x;
-      pvt_shift.y:=pvt_draw_sel_eds_on.y-pvt_draw_sel_eds_off.y;
-      if exp0 then
-        begin
-          if outer_subgraph_img.local_prop.eds_show then
-            begin
-              if (pvt_draw_sel_eds_off<>pvt_draw_sel_eds_on)  then
-                begin
-                  OuterSubgraphProc[Byte(pvt_var.pvt_mode)]
-                  (
-                    Trunc(pvt_pos.x)+Trunc(pvt_shift.x),
-                    Trunc(pvt_pos.y)+Trunc(pvt_shift.y),
-                    pvt_var.pvt_pos,
-                    sln_var.sln_pts,
-                    srf_var.srf_bmp_ptr,
-                    srf_var.inn_wnd_rct
-                  );
-                  OuterSubgraphDraw(Trunc(pvt_pos.x)+Trunc(pvt_shift.x),
-                                    Trunc(pvt_pos.y)+Trunc(pvt_shift.y),
-                                    pvt_var.pvt_pos,
-                                    sln_var.sln_pts,
-                                    srf_var.srf_bmp_ptr,
-                                    srf_var.inn_wnd_rct);
-                  InvalidateInnerWindow;
-                end
-              else
-                begin
-                  fill_bmp_only:=True;
-                  FillSelBmpAndSelPtsBRectDraw;
-                  fill_bmp_only:=False;
-                end;
-            end
-          else
-            begin
-              LowerBmpToMainBmp;
-              if show_selected_pts_b_rect then
-                SelectedPtsRectDraw(srf_bmp.Canvas,sel_pts_rct,clPurple,clNavy);
-              InvalidateInnerWindow;
-            end;
-        end;
+      //fill_bmp_only:=True;
+      FillSelBmpAndSelPtsBRectDraw;
+      //fill_bmp_only:=False;
     end;
 end; {$endregion}
 procedure TF_MainForm.CB_Select_Items_Outer_Subgraph_Line_StyleSelect (sender:TObject); {$region -fold}
@@ -17304,16 +17321,10 @@ begin
         begin
           eds_col:=CD_Select_Color.Color;
           if (clp_stl=csResilientEdges) then
-            begin
-              SetColorInfo(eds_col,color_info);
-              FillSelBmpAndSelPtsBRectDraw;
-            end
-          else
-            begin
-              fill_bmp_only:=True;
-              FillSelBmpAndSelPtsBRectDraw;
-              fill_bmp_only:=False;
-            end;
+            SetColorInfo(eds_col,color_info);
+          fill_bmp_only:=True;
+          FillSelBmpAndSelPtsBRectDraw;
+          fill_bmp_only:=False;
         end;
     end;
   SB_Select_Items_Outer_Subgraph_Color.Color:=CD_Select_Color.Color;
@@ -17321,7 +17332,6 @@ begin
 end; {$endregion}
 procedure TF_MainForm.CB_Select_Items_Outer_Subgraph_Show_BoundsChange(sender:TObject); {$region -fold}
 begin
-
 end; {$endregion}
 {Inner Subgraph}
 procedure TF_MainForm.P_Select_Items_Inner_Subgraph_PropMouseEnter    (sender:TObject); {$region -fold}
@@ -17333,56 +17343,13 @@ begin
   P_Select_Items_Inner_Subgraph_Prop.Color:=Darken(P_Select_Items_Inner_Subgraph_Prop.Color,0,0,0,0,0,16);
 end; {$endregion}
 procedure TF_MainForm.SB_Select_Items_Inner_Subgraph_ShowClick        (sender:TObject); {$region -fold}
-var
-  pvt_shift: TPtPosF;
 begin
   BtnColAndDown(SB_Select_Items_Inner_Subgraph_Show,sel_var.inner_subgraph_img.local_prop.eds_show);
-  with srf_var,sel_var,pvt_var do
+  with sel_var do
     begin
-      if inner_subgraph_img.local_prop.eds_show then
-        pvt_draw_sel_eds_on :=pvt_pos
-      else
-        pvt_draw_sel_eds_off:=pvt_pos;
-      pvt_shift.x:=pvt_draw_sel_eds_on.x-pvt_draw_sel_eds_off.x;
-      pvt_shift.y:=pvt_draw_sel_eds_on.y-pvt_draw_sel_eds_off.y;
-      if exp0 then
-        begin
-          if inner_subgraph_img.local_prop.eds_show then
-            begin
-              if (pvt_draw_sel_eds_off<>pvt_draw_sel_eds_on)  then
-                begin
-                  InnerSubgraphProc[Byte(pvt_var.pvt_mode)]
-                  (
-                    Trunc(pvt_pos.x)+Trunc(pvt_shift.x),
-                    Trunc(pvt_pos.y)+Trunc(pvt_shift.y),
-                    pvt_var.pvt_pos,
-                    sln_var.sln_pts,
-                    srf_var.srf_bmp_ptr,
-                    ClippedRct(inn_wnd_rct,sel_pts_rct)
-                  );
-                  InnerSubgraphDraw(Trunc(pvt_pos.x)+Trunc(pvt_shift.x),
-                                    Trunc(pvt_pos.y)+Trunc(pvt_shift.y),
-                                    pvt_var.pvt_pos,
-                                    sln_var.sln_pts,
-                                    srf_var.srf_bmp_ptr,
-                                    ClippedRct(inn_wnd_rct,sel_pts_rct));
-                  InvalidateInnerWindow;
-                end
-              else
-                begin
-                  fill_bmp_only:=True;
-                  FillSelBmpAndSelPtsBRectDraw;
-                  fill_bmp_only:=False;
-                end;
-            end
-          else
-            begin
-              LowerBmpToMainBmp;
-              if show_selected_pts_b_rect then
-                SelectedPtsRectDraw(srf_bmp.Canvas,sel_pts_rct,clPurple,clNavy);
-              InvalidateInnerWindow;
-            end;
-        end;
+      //fill_bmp_only:=True;
+      FillSelBmpAndSelPtsBRectDraw;
+      //fill_bmp_only:=False;
     end;
 end; {$endregion}
 procedure TF_MainForm.CB_Select_Items_Inner_Subgraph_Line_StyleSelect (sender:TObject); {$region -fold}
@@ -17462,16 +17429,10 @@ begin
         begin
           eds_col:=CD_Select_Color.Color;
           if (clp_stl=csResilientEdges) then
-            begin
-              SetColorInfo(eds_col,color_info);
-              FillSelBmpAndSelPtsBRectDraw;
-            end
-          else
-            begin
-              fill_bmp_only:=True;
-              FillSelBmpAndSelPtsBRectDraw;
-              fill_bmp_only:=False;
-            end;
+            SetColorInfo(eds_col,color_info);
+          fill_bmp_only:=True;
+          FillSelBmpAndSelPtsBRectDraw;
+          fill_bmp_only:=False;
         end;
     end;
   SB_Select_Items_Inner_Subgraph_Color.Color:=CD_Select_Color.Color;
@@ -17553,9 +17514,13 @@ begin
 end; {$endregion}
 procedure TF_MainForm.CB_Select_Points_Show_BoundsChange              (sender:TObject); {$region -fold}
 begin
-  show_selected_pts_b_rect:=CB_Select_Points_Show_Bounds.Checked;
-  if exp0 then
-    sel_var.FillSelBmpAndSelPtsBRectDraw;
+  with sel_var do
+    begin
+      sel_bounds_prop.rct_eds_show:=CB_Select_Points_Show_Bounds.Checked;
+      fill_bmp_only:=True;
+      FillSelBmpAndSelPtsBRectDraw;
+      fill_bmp_only:=False;
+    end;
 end; {$endregion}
 {$endregion}
 
@@ -17721,7 +17686,6 @@ procedure TPivot.PivotCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColor
 var
   sel_pts_inds_ptr: PInteger;
   p               : TPtPosF;
-  shift           : TPtPos;
   i,j,sel_obj_ind : integer;
   sel_obj_pts_cnt : integer;
 begin
@@ -17734,8 +17698,8 @@ begin
       p.y+=pts[sel_pts_inds_ptr^].y;
       Inc(sel_pts_inds_ptr);
     end;
-  j    :=0;
-  shift:=Default(TPtPos);
+  j                 :=0;
+  weighted_pvt_shift:=Default(TPtPos);
   while (j<sel_pts_cnt) do
     begin
       sel_obj_pts_cnt:=0;
@@ -17750,11 +17714,11 @@ begin
           else
             Break;
         end;
-      shift.x+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.x;
-      shift.y+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.y;
+      weighted_pvt_shift.x+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.x;
+      weighted_pvt_shift.y+=sel_obj_pts_cnt*obj_var.obj_arr[obj_var.curve_inds_obj_arr[sel_obj_ind]].world_axis_shift.y;
     end;
-  pvt_pos.x :=(p.x+shift.x)/sel_pts_cnt;
-  pvt_pos.y :=(p.y+shift.y)/sel_pts_cnt;
+  pvt_pos.x :=(p.x+weighted_pvt_shift.x)/sel_pts_cnt;
+  pvt_pos.y :=(p.y+weighted_pvt_shift.y)/sel_pts_cnt;
   pvt_origin:=pvt_pos;
 end; {$endregion}
 procedure TPivot.AlignPivotOnX(var x,y:integer; shift:TShiftState);                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -17972,8 +17936,8 @@ begin
 end; {$endregion}
 procedure TPivot.SelPtsSclCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  scl_dif.x:=(pvt_pos.x-srf_var.world_axis_shift.x)*(1-pvt_scl.x){pvt_pos.x-srf_var.world_axis_shift.x-pvt_pos.x*pvt_scl.x+srf_var.world_axis_shift.x*pvt_scl.x};
-  scl_dif.y:=(pvt_pos.y-srf_var.world_axis_shift.y)*(1-pvt_scl.y){pvt_pos.y-srf_var.world_axis_shift.y-pvt_pos.y*pvt_scl.y+srf_var.world_axis_shift.y*pvt_scl.y};
+  scl_dif.x:=(pvt_pos.x-(weighted_pvt_shift.x/sel_var.sel_pts_cnt))*(1-pvt_scl.x){pvt_pos.x-srf_var.world_axis_shift.x-pvt_pos.x*pvt_scl.x+srf_var.world_axis_shift.x*pvt_scl.x};
+  scl_dif.y:=(pvt_pos.y-(weighted_pvt_shift.y/sel_var.sel_pts_cnt))*(1-pvt_scl.y){pvt_pos.y-srf_var.world_axis_shift.y-pvt_pos.y*pvt_scl.y+srf_var.world_axis_shift.y*pvt_scl.y};
 end; {$endregion}
 procedure TPivot.SelPtsRotCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -19248,6 +19212,8 @@ begin
     end;
   if down_select_points_ptr^ then
     sel_var.MinimizeCircleSelection;
+  if (not exp0) then
+    F_MainForm.KeysEnable;
 end; {$endregion}
 procedure ButtonKeyPress(sp_btn:TSpeedButton; btn_pnl1,btn_pnl2,btn_pnl3:TPanel; down_btn_ptr:PByteBool; b:byte; cur1:integer; cur2:integer=crDefault); {$region -fold}
 begin
@@ -19648,8 +19614,8 @@ begin
                               CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                               need_repaint:=False;
                             end;
-                          if (outer_subgraph_img.local_prop.eds_show and inner_subgraph_img.local_prop.eds_show) then
-                            pvt_origin  :=pvt_pos;
+                          //if (outer_subgraph_img.local_prop.eds_show and inner_subgraph_img.local_prop.eds_show) then
+                          pvt_origin    :=pvt_pos;
                           pvt_to_pt     :=False;
                           draw_crc_sel  :=False;
                           resize_crc_sel:=False;
@@ -19672,8 +19638,6 @@ begin
                                   CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                                   need_repaint:=False;
                                 end;
-                              if (pvt_var.pvt_mode=pmPivotMove) then
-                                UnselectedPtsCalc0(fst_lst_sln_obj_pts,sln_pts,pvt_pos,pvt_origin);
                             end;
                           ChangeSelectionMode(CB_Select_Items_Selection_Drawing_Mode.ItemIndex);
                         end;
@@ -19739,8 +19703,6 @@ begin
               end;
               ArrClear(dup_pts_arr,inn_wnd_rct,srf_bmp.width);
               AddSplineDupPtsAll(0,sln_obj_cnt-1);
-              {pvt_prev.x:=pvt_pos.x;
-              pvt_prev.y:=pvt_pos.y;}
               L_Object_Info.Visible:=not pvt_to_pt;
               if I_Visibility_Panel.Visible then
                  I_Visibility_Panel.Visible:=False;
@@ -20827,10 +20789,7 @@ begin
       {$endif}
     end;
   AlphaBlend:=False;}
-  OnActivate:=Nil;             // Блокирует повторый вызов события
-  {OnActivate:=@FormActivate;} // Возобновляет повторный вызов события
-  {F_3D_Viewer.Show;}
-  {MI_Full_ScreenClick(F_MainForm);}
+  OnActivate:=Nil;
   fill_scene_calc:=True;
   show_world_axis:=True;
   with srf_var,inn_wnd_rct do
@@ -20842,15 +20801,13 @@ begin
   SB_Spline_Points_ShowClick              (Self);
   SB_Select_Items_Outer_Subgraph_ShowClick(Self);
   SB_Select_Items_Inner_Subgraph_ShowClick(Self);
-  SB_Select_Items_Outer_Subgraph_Show.Enabled:=False;
-  SB_Select_Items_Inner_Subgraph_Show.Enabled:=False;
-  S_TreeView_Splitter.left                   :=F_MainForm.width;
+  S_TreeView_Splitter.left:=F_MainForm.width;
   SB_Centrify_PictureClick                (Self);
 
   {Hot Keys Panel-----} {$region -fold}
-  F_Hot_Keys.Visible:=True;
   F_Hot_Keys.Left   :=F_MainForm.left+11;
-  F_Hot_Keys.Top    :=F_MainForm.top +81; {$endregion}
+  F_Hot_Keys.Top    :=F_MainForm.top +81;
+  F_Hot_Keys.Visible:=True; {$endregion}
 
   {OpenGL Window------} {$region -fold}
   OpenGLControl2.Visible:=False;
@@ -21587,14 +21544,28 @@ begin
       if (target_node<>Nil) then
         begin
           if (target_node.GetPrev<>Nil) then
-            target_node.GetPrev.NodeEffect:=gdeNormal;
-          target_node        .NodeEffect:=gdeHighlighted;
+            begin
+              target_node.GetPrev.NodeEffect:=gdeNormal;
+              if (not target_node.GetPrev.Selected) then
+                (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[target_node.GetPrev.AbsoluteIndex]] as TPanel).Color:=$00ABAFA3;
+            end;
+          target_node.NodeEffect:=gdeHighlighted;
+          if (not target_node.Selected) then
+            (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[target_node.AbsoluteIndex]] as TPanel).Color:=$00ABC0B4;
           if (target_node.GetNext<>Nil) then
-            target_node.GetNext.NodeEffect:=gdeNormal;
+            begin
+              target_node.GetNext.NodeEffect:=gdeNormal;
+              if (not target_node.GetNext.Selected) then
+                (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[target_node.GetNext.AbsoluteIndex]] as TPanel).Color:=$00ABAFA3;
+            end;
         end
       else
         for i:=0 to Items.Count-1 do
-          Items[i].NodeEffect:=gdeNormal;
+          begin
+            Items[i].NodeEffect:=gdeNormal;
+            if (not Items[i].Selected) then
+              (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[i]] as TPanel).Color:=$00ABAFA3;
+          end;
     end;
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeMouseEnter                       (sender:TObject);                                                           {$region -fold}
@@ -21607,7 +21578,11 @@ var
 begin
   with TV_Scene_Tree do
     for i:=0 to Items.Count-1 do
-      Items[i].NodeEffect:=gdeNormal;
+      begin
+        Items[i].NodeEffect:=gdeNormal;
+        if (not Items[i].Selected) then
+          (SB_TreeView_Object_Tags.Controls[obj_var.obj_inds_arr[i]] as TPanel).Color:=$00ABAFA3;
+      end;
   is_mouse_in_scene_tree:=False;
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeDblClick                         (sender:TObject);                                                           {$region -fold}
