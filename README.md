@@ -13,7 +13,7 @@ Nearest TODO:
     1. implementation of object tags; (priority: high; complexity: middling);
     2. ...;
   - Sprites:
-    1. implementation of rotation and scaling of CSR-images(Compressed Sparse Row);
+    1. implementation of rotation and scaling of CSR-images(Compressed Sparse Row); (priority: medium; complexity: very hard);
     2. ...;
   - Splines:
     1. static contour anti-aliasing for sparse sprites in CSR format; (priority: low; complexity: hard);
