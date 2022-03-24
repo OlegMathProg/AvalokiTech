@@ -7,15 +7,15 @@
 
 Nearest TODO:
   - Optimization:
-    1. get rid of double, triple or quadruple addressing; (priority: low; complexity: easy);
+    1. get rid of double, triple or quadruple addressing (priority: low; complexity: easy);
     2. ...;
   - UI:
-    1. implementation of object tags; (priority: high; complexity: middling);
+    1. implementation of object tags(priority: high; complexity: middling);
     2. ...;
   - Sprites:
-    1. implementation of rotation and scaling of CSR-images(Compressed Sparse Row); (priority: medium; complexity: very hard);
+    1. implementation of rotation and scaling of CSR-images(Compressed Sparse Row), possibly with bilinear filtering (priority: medium; complexity: very hard);
     2. ...;
   - Splines:
-    1. static contour anti-aliasing for sparse sprites in CSR format; (priority: low; complexity: hard);
-    2. implementation of drawing for CSR-lines of any width greater than 3; (priority: low; complexity: very hard);
-    3. Bezier splines; (priority: high; complexity: middling).
+    1. static contour anti-aliasing for sparse sprites in CSR format (priority: low; complexity: hard);
+    2. implementation of drawing for CSR-lines of any width greater than 3 (priority: low; complexity: very hard);
+    3. Bezier splines (priority: high; complexity: middling).
