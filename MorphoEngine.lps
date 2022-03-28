@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="6257"/>
-        <CursorPos Y="21781"/>
+        <TopLine Value="24"/>
+        <CursorPos X="60" Y="18370"/>
         <FoldState Value=" TL ho?e11 p0i~TC60M2 TKtlK67 T3q~A0{N]Sj=Q2^]Q2tuZCI091 TJqsKd3EK"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -90,8 +90,7 @@
       <Unit9>
         <Filename Value="Scene_Tree.pas"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="324"/>
-        <CursorPos X="7" Y="360"/>
+        <CursorPos Y="756"/>
         <UsageCount Value="104"/>
         <Loaded Value="True"/>
       </Unit9>
