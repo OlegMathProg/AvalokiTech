@@ -418,7 +418,6 @@ type
     RB_Edges                                         : TRadioButton;
     RB_Points                                        : TRadioButton;
     RB_Polygons                                      : TRadioButton;
-    RB_Spline_Adaptive                               : TRadioButton;
     RB_Spline_Constant                               : TRadioButton;
     RB_Spline_None                                   : TRadioButton;
     RG_Edit_Mode                                     : TGroupBox;
@@ -1162,7 +1161,6 @@ type
       {Repaint Spline: Drawing---------------------}
       procedure RepSplineDraw0;                                                   inline; {$ifdef Linux}[local];{$endif}
       procedure RepSplineDraw1;                                                   inline; {$ifdef Linux}[local];{$endif}
-      procedure RepSplineDraw2;                                                   inline; {$ifdef Linux}[local];{$endif}
       {Duplicated Points: Drawing------------------}
       procedure DupPtsDraw;                                                       inline; {$ifdef Linux}[local];{$endif}
       {World Axis: Reset Background Settings-------}
@@ -1948,7 +1946,7 @@ type
       {TODO}
       procedure LocalAxisCreate;                                                    inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure LocalAxisToBmp            (constref x,y:integer);                   inline; {$ifdef Linux}[local];{$endif}
+      procedure LocalAxisDraw             (constref x,y:integer);                   inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure LocalAxisHighlight        (constref x,y:integer);                   inline; {$ifdef Linux}[local];{$endif}
       {TODO}
@@ -2004,13 +2002,16 @@ type
       procedure IsPivotOutOfInnerWindow   (var      custom_rect      :TPtRect;
                                            constref pvt_             :TPtPosF);     inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure PivotMarkerDraw           (         cnv_dst          :TCanvas);     inline; {$ifdef Linux}[local];{$endif}
-      {TODO}
       procedure PivotToPointDraw          (         cnv_dst          :TCanvas);     inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure PivotAxisDraw             (         cnv_dst          :TCanvas;
+      procedure PivotAxisDraw0            (         cnv_dst          :TCanvas;
                                            constref custom_rct       :TPtRect;
                                            constref shift            :TPtPos);      inline; {$ifdef Linux}[local];{$endif}
+      {TODO}
+      procedure PivotAxisDraw1            (         cnv_dst          :TCanvas;
+                                           constref custom_rct       :TPtRect;
+                                           constref shift            :TPtPos;
+                                                    x,y              :integer);     inline; {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure PivotBoundsDraw;                                                    inline; {$ifdef Linux}[local];{$endif}
       {TODO}
@@ -2018,7 +2019,8 @@ type
       {TODO}
       procedure PivotModeDraw             (         cnv_dst          :TCanvas);     inline; {$ifdef Linux}[local];{$endif}
       {TODO}
-      procedure PivotDraw                 (constref shift            :TPtPos);      inline; {$ifdef Linux}[local];{$endif}
+      procedure PivotDraw                 (constref shift            :TPtPos;
+                                                    x,y              :integer);     inline; {$ifdef Linux}[local];{$endif}
     end; {$endregion}
   PPivot             =^TPivot;
 
@@ -2473,7 +2475,7 @@ var
   }
 
 (******************************************************************************)
-      //0503706270
+
 
 
 {forward declarations begin}(**************************************************)
@@ -4546,17 +4548,19 @@ end; {$endregion}
 procedure TSurface.SelectPivotDraw;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
+  editor_or_game: set of byte;
 begin
   if (not show_spline) then
     Exit;
   with obj_var,sln_var,sel_var do
     begin
+      editor_or_game:=[0,1+Byte(res_var_ptr^)];
       if (not is_not_abst_obj_kind_after) then
         ClrSplineAll(sel_obj_min_ind,obj_cnt-1);
       for i:=0 to sln_obj_cnt-1 do
         begin
           j:=obj_arr[curve_inds_obj_arr[i]].t_ind;
-          if (j>=sel_obj_min_ind) and (j<=obj_cnt-1) and (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
+          if (j>=sel_obj_min_ind) and (j<=obj_cnt-1) and (obj_arr[curve_inds_obj_arr[i]].obj_show in editor_or_game) then
             begin
               if (has_sel_pts[i]<>0) then
                 begin
@@ -4587,30 +4591,27 @@ begin
             end;
         end;
       if (not is_not_abst_obj_kind_after) then
-        FilScene1(sel_obj_min_ind,obj_var.obj_cnt-1);
+        FilScene(sel_obj_min_ind,obj_var.obj_cnt-1);
       SelPvtAndSplineEdsToBmp;
     end;
 end; {$endregion}
 {Unselect Pivot: Drawing---------------------}
 procedure TSurface.UnselectPivotDraw;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i,j: integer;
+  i,j           : integer;
+  editor_or_game: set of byte;
 begin
   if (not show_spline) then
     Exit;
   with obj_var,sln_var,sel_var,crc_sel_var,pvt_var do
     begin
-      {if (pvt_mode=pmPivotMove) then
-        if (((not outer_subgraph_img.local_prop.eds_show) and (not inner_subgraph_img.local_prop.eds_show))  or
-            (     outer_subgraph_img.local_prop.eds_show  and (not inner_subgraph_img.local_prop.eds_show))) and
-           (pvt_draw_sel_eds_off<>pvt_pos) then
-          UnselectedPtsCalc1(fst_lst_sln_obj_pts,sln_pts,pvt_pos,pvt_origin);}
+      editor_or_game:=[0,1+Byte(res_var_ptr^)];
       if rectangles_calc then
         RctSplineAll1(sel_obj_min_ind,obj_cnt-1);
       for i:=0 to sln_obj_cnt-1 do
         begin
           j:=obj_arr[curve_inds_obj_arr[i]].t_ind;
-          if (j>=sel_obj_min_ind) and (j<=obj_cnt-1) and (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
+          if (j>=sel_obj_min_ind) and (j<=obj_cnt-1) and (obj_arr[curve_inds_obj_arr[i]].obj_show in editor_or_game) then
             begin
               if (has_sel_pts[i]<>0) then
                 begin
@@ -4654,7 +4655,7 @@ begin
             end;
         end;
       if (not is_not_abst_obj_kind_after) then
-        FilScene1(sel_obj_min_ind,obj_var.obj_cnt-1);
+        FilScene(sel_obj_min_ind,obj_var.obj_cnt-1);
       SelPvtAndSplineEdsToBmp;
       SelPtsIndsToFalse1;
       FillByte((@has_sel_pts[0])^,Length(has_sel_pts),0);
@@ -4972,11 +4973,13 @@ var
   b              : boolean;
   b0 ,b1 ,b2 ,b3 : boolean;
   b0_,b1_,b2_,b3_: boolean;
+  editor_or_game : set of byte;
 begin
   if (not show_spline) then
     Exit;
   with obj_var,sln_var do
     begin
+      editor_or_game :=[0,1+Byte(res_var_ptr^)];
       if rectangles_calc then
         RctSplineAll2(0,obj_var.obj_cnt-1){RctSplineAll0(0,sln_obj_cnt-1)};
       rct_eds_var_ptr:=Unaligned(@rct_eds_img_arr[0]);
@@ -4986,7 +4989,7 @@ begin
       has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
       b              :=spline_scale_calc or form_resize_calc or ((not repaint_spline_hid_ln_calc1) and repaint_spline_hid_ln_calc2);
       for i:=0 to sln_obj_cnt-1 do
-        if (obj_arr[curve_inds_obj_arr[i]].obj_show in [0,1]) then
+        if (obj_arr[curve_inds_obj_arr[i]].obj_show in editor_or_game) then
           begin
 
             b:=b or obj_arr[curve_inds_obj_arr[i]].forced_repaint;
@@ -5177,216 +5180,13 @@ var
   b              : boolean;
   b0 ,b1 ,b2 ,b3 : boolean;
   b0_,b1_,b2_,b3_: boolean;
+  editor_or_game : set of byte;
 begin
   if (not show_spline) then
     Exit;
   with obj_var,sln_var do
     begin
-      if rectangles_calc then
-        RctSplineAll2(0,obj_var.obj_cnt-1){RctSplineAll0(0,sln_obj_cnt-1)};
-      rct_eds_var_ptr:=Unaligned(@rct_eds_img_arr[0]);
-      rct_pts_var_ptr:=Unaligned(@rct_pts_img_arr[0]);
-          eds_var_ptr:=Unaligned(@    eds_img_arr[0]);
-          pts_var_ptr:=Unaligned(@    pts_img_arr[0]);
-      has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
-      b              :=spline_scale_calc or form_resize_calc or ((not repaint_spline_hid_ln_calc1) and repaint_spline_hid_ln_calc2);
-      for i:=0 to sln_obj_cnt-1 do
-        if (obj_arr[curve_inds_obj_arr[i]].obj_show in [0,2]) then
-          begin
-
-            b:=b or obj_arr[curve_inds_obj_arr[i]].forced_repaint;
-
-            {Bounding Rectangles: Edges}
-            with (rct_eds_var_ptr+i)^,local_prop do
-              begin
-                if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                  begin
-                    b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                    b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                    if b0_ then
-                      begin
-                        if free_mem_on_scale_down and (fst_img<>Nil) then
-                          fst_img.ClrArr;
-                        AddSplineRctEds(i);
-                        CrtSplineRctEds(i);
-                      end;
-                    lazy_repaint_prev:=b0;
-                  end
-                else
-                  begin
-                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                      fst_img.ClrArr;
-                    lazy_repaint_prev:=False;
-                  end;
-              end;
-
-            {Bounding Rectangles: Points}
-            with (rct_pts_var_ptr+i)^,local_prop do
-              begin
-                if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                  begin
-                    b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                    b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                    if b1_ then
-                      begin
-                        if free_mem_on_scale_down and (fst_img<>Nil) then
-                          fst_img.ClrArr;
-                        AddSplineRctPts(i);
-                        CrtSplineRctPts(i);
-                      end;
-                    lazy_repaint_prev:=b1;
-                  end
-                else
-                  begin
-                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                      fst_img.ClrArr;
-                    lazy_repaint_prev:=False;
-                  end;
-              end;
-
-            {Edges}
-            with (eds_var_ptr+i)^,local_prop do
-              begin
-                if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                  begin
-                    b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                    b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                    if b2_ then
-                      begin
-                        if free_mem_on_scale_down and (fst_img<>Nil) then
-                          fst_img.ClrArr;
-                        //if ((has_sel_pts_ptr+i)^=0) then
-                          begin
-                            if b2 then
-                              begin
-                                if byte_mode then
-                                  begin
-                                    if hid_ln_elim then
-                                      begin
-                                        if (hid_ln_cnt=0) then
-                                          AddSplineEds15(i)
-                                        else
-                                          AddSplineEds11(i);
-                                      end
-                                    else
-                                      AddSplineEds09(i);
-                                  end
-                                else
-                                  begin
-                                    if hid_ln_elim then
-                                      begin
-                                        if (hid_ln_cnt=0) then
-                                          AddSplineEds13(i)
-                                        else
-                                          AddSplineEds06(i);
-                                      end
-                                    else
-                                      AddSplineEds01(i);
-                                  end;
-                              end
-                            else
-                              begin
-                                if byte_mode then
-                                  begin
-                                    if hid_ln_elim then
-                                      begin
-                                        if (hid_ln_cnt=0) then
-                                          AddSplineEds14(i)
-                                        else
-                                          AddSplineEds10(i);
-                                      end
-                                    else
-                                      AddSplineEds08(i);
-                                  end
-                                else
-                                  begin
-                                    if hid_ln_elim then
-                                      begin
-                                        if (hid_ln_cnt=0) then
-                                          AddSplineEds12(i)
-                                        else
-                                          AddSplineEds05(i);
-                                      end
-                                    else
-                                      AddSplineEds00(i);
-                                  end;
-                              end;
-                          end
-                        {else
-                          AddSplineEds1(i)};
-                        CrtSplineEds(i);
-                      end;
-                    lazy_repaint_prev:=b2;
-                  end
-                else
-                  begin
-                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                      fst_img.ClrArr;
-                    lazy_repaint_prev:=False;
-                  end;
-              end;
-
-            {Points}
-            with (pts_var_ptr+i)^,local_prop do
-              begin
-                if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                  begin
-                    b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                    b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                    if b3_ then
-                      begin
-                        if free_mem_on_scale_down and (fst_img<>Nil) then
-                          fst_img.ClrArr;
-                        //if ((has_sel_pts_ptr+i)^=0) then
-                          begin
-                            AddSplineDupPts0(i);
-                            if byte_mode then
-                              AddSplinePts4 (i)
-                            else
-                              AddSplinePts0 (i);
-                            ClrSplineDupPts0(i);
-                          end
-                        {else
-                          begin
-                            AddSplineDupPts1(i);
-                            if byte_mode then
-                              AddSplinePts5 (i)
-                            else
-                              AddSplinePts1 (i);
-                            ClrSplineDupPts1(i);
-                          end};
-                        CrtSplinePts(i);
-                      end;
-                    lazy_repaint_prev:=b3;
-                  end
-                else
-                  begin
-                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                      fst_img.ClrArr;
-                    lazy_repaint_prev:=False;
-                  end;
-              end;
-
-        end;
-    end;
-
-end; {$endregion}
-procedure TSurface.RepSplineDraw2;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  rct_eds_var_ptr: PFastLine;
-  rct_pts_var_ptr: PFastLine;
-      eds_var_ptr: PFastLine;
-      pts_var_ptr: PFastLine;
-  has_sel_pts_ptr: PByte;
-  i              : integer;
-  b              : boolean;
-  b0 ,b1 ,b2 ,b3 : boolean;
-  b0_,b1_,b2_,b3_: boolean;
-begin
-  if (not show_spline) then
-    Exit;
-  with obj_var,sln_var do
-    begin
+      editor_or_game :=[0,1+Byte(res_var_ptr^)];
       if rectangles_calc then
         RctSplineAll2(0,obj_var.obj_cnt-1){RctSplineAll0(0,sln_obj_cnt-1)};
       rct_eds_var_ptr:=Unaligned(@rct_eds_img_arr[0]);
@@ -5396,7 +5196,7 @@ begin
       has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
       b              :=spline_scale_calc or form_resize_calc or (not repaint_spline_hid_ln_calc2);
       for i:=0 to sln_obj_cnt-1 do
-        if (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
+        if (obj_arr[curve_inds_obj_arr[i]].obj_show in editor_or_game) then
           begin
 
             b:=b or obj_arr[curve_inds_obj_arr[i]].forced_repaint;
@@ -5710,25 +5510,15 @@ begin
   if repaint_spline_calc then
     begin
       if down_select_points_ptr^ and (not sel_var.sel_pts) then
-        RepSplineDraw2
+        RepSplineDraw1
       else
-        begin
-          if (not down_play_anim_ptr^) then
-            RepSplineDraw0
-          else
-            RepSplineDraw1;
-        end;
+        RepSplineDraw0;
     end; {$endregion}
 
   {Scene Drawing(Lower Layer)-----------------------} {$region -fold}
   if ((fill_scene_calc and sel_var.is_not_abst_obj_kind_after and (not unselect_pivot_calc)) or form_resize_calc or bckgd_scale_calc) then
     with obj_var do
-      begin
-        if (not down_play_anim_ptr^) then
-          FilScene1(0,low_lr_obj_cnt-1)
-        else
-          FilScene2(0,low_lr_obj_cnt-1);
-      end; {$endregion}
+      FilScene(0,low_lr_obj_cnt-1); {$endregion}
 
   {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
   if copy1_calc then
@@ -5737,12 +5527,7 @@ begin
   {Scene Drawing(Upper Layer)-----------------------} {$region -fold}
   if ((fill_scene_calc and sel_var.is_not_abst_obj_kind_after and (not unselect_pivot_calc)) or form_resize_calc or bckgd_scale_calc) and (not down_play_anim_ptr^) then
     with obj_var do
-      begin
-        if (not down_play_anim_ptr^) then
-          FilScene1(low_lr_obj_cnt,obj_cnt-1)
-        else
-          FilScene2(low_lr_obj_cnt,obj_cnt-1);
-      end; {$endregion}
+      FilScene(low_lr_obj_cnt,obj_cnt-1); {$endregion}
 
   {Background Post-Processing After Points Selection} {$region -fold}
   if bkg_pp_calc then
@@ -5778,7 +5563,7 @@ begin
 
   {Pivot--------------------------------------------} {$region -fold}
   if exp0 then
-    pvt_var.PivotDraw(PtPos(0,0)); {$endregion}
+    pvt_var.PivotDraw(PtPos(0,0),Trunc(pvt_var.pvt_pos.x),Trunc(pvt_var.pvt_pos.y)); {$endregion}
 
   {Copy Main Buffer To Lower Buffer ----------------} {$region -fold}
   if copy7_calc then
@@ -12455,13 +12240,15 @@ begin
 end; {$endregion}
 procedure TCurve.ClrSplineAll      (constref start_ind,end_ind:TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i,j,k: integer;
+  i,j,k         : integer;
+  editor_or_game: set of byte;
 begin
+  editor_or_game:=[0,1+Byte(obj_var.res_var_ptr^)];
   for i:=sln_obj_cnt-1 downto 0 do
     begin
       j:=obj_var.curve_inds_sct_arr[i];
       if (j>=start_ind) and (j<=end_ind) then
-        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show<3) then
+        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show in editor_or_game) then
           begin
             k:=obj_var.obj_arr[obj_var.obj_inds_arr[j]].k_ind;
             ClrSplinePts   (k);
@@ -15237,8 +15024,7 @@ procedure TF_MainForm.RB_Spline_AdaptiveChange                               (se
 begin
   with sln_var.global_prop do
     begin
-      remove_brunching_adaptive:=RB_Spline_Adaptive.Checked;
-      remove_brunching_constant:=RB_Spline_Constant  .Checked;
+      remove_brunching_constant:=RB_Spline_Constant.Checked;
       remove_brunching_none    :=RB_Spline_None    .Checked;
     end;
 end; {$endregion}
@@ -15536,8 +15322,8 @@ begin
                           );
                           {Point(v,
                                 w,
-                                low_bmp_ptr,
-                                low_bmp.width,
+                                low_bmp2_ptr,
+                                low_bmp2.width,
                                 color_info,
                                 inn_wnd_rct);}
                         end;
@@ -15578,8 +15364,8 @@ begin
                           );
                           {Point(v,
                                 w,
-                                low_bmp_ptr,
-                                low_bmp.width,
+                                low_bmp2_ptr,
+                                low_bmp2.width,
                                 color_info,
                                 inn_wnd_rct);}
                         end;
@@ -17744,7 +17530,7 @@ end; {$endregion}
 
 // (Local Pivot) Локальная ось:
 {LI} {$region -fold}
-constructor TPivot.Create(w,h:TColor);                                                                             {$ifdef Linux}[local];{$endif} {$region -fold}
+constructor TPivot.Create(w,h:TColor);                                                                                                       {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
   SelPtsCalcProc   [0]:=@SelPtsPosCalc;
@@ -17768,11 +17554,11 @@ begin
   SelectionToolsMarkerCreate; {$endregion}
 
 end; {$endregion}
-destructor  TPivot.Destroy;                                                                                        {$ifdef Linux}[local];{$endif} {$region -fold}
+destructor  TPivot.Destroy;                                                                                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   inherited Destroy;
 end; {$endregion}
-procedure TPivot.LocalAxisCreate;                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.LocalAxisCreate;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   // Create World Axis Icon:
   with srf_var do
@@ -17823,7 +17609,7 @@ begin
 
     end;
 end; {$endregion}
-procedure TPivot.LocalAxisToBmp    (constref x,y:integer);                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.LocalAxisDraw     (constref x,y:integer);                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with local_axis_bmp do
     begin
@@ -17832,7 +17618,7 @@ begin
       SdrProc[3];
     end;
 end; {$endregion}
-procedure TPivot.LocalAxisHighLight(constref x,y:integer);                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.LocalAxisHighLight(constref x,y:integer);                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with local_axis_bmp do
     begin
@@ -17851,7 +17637,7 @@ begin
       fx_arr[0].pt_pix_cfx_type:=04; //must be in range of [0..255]
       fx_arr[0].pt_pix_cng_type:=00; //must be in range of [0..001]
 
-      LocalAxisToBmp(x,y);
+      LocalAxisDraw(x,y);
 
       pix_drw_type             :=00; //must be in range of [0..002]
       nt_pix_cfx_type          :=02;
@@ -17861,7 +17647,7 @@ begin
       fx_arr[0].rep_cnt        :=00; //must be in range of [0..255]
     end;
 end; {$endregion}
-procedure TPivot.SelectionToolsMarkerCreate;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelectionToolsMarkerCreate;                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   sel_tls_mrk:=TFastImage.Create(srf_var.srf_bmp_ptr,
                                  srf_var.srf_bmp.width,
@@ -17874,7 +17660,7 @@ begin
   // Drawing Settings:
   with sel_tls_mrk do
     begin
-      col_trans_arr[02]:=100;
+      col_trans_arr[02]:=64;
       pix_drw_type     :=0; //must be in range of [0..002]
       nt_pix_srf_type  :=1; //must be in range of [0..002]
       nt_pix_cfx_type  :=2; //must be in range of [0..002]
@@ -17885,22 +17671,23 @@ begin
       fx_cnt           :=0; //must be in range of [0..255]
     end;
 end; {$endregion}
-procedure TPivot.SelectionToolsMarkerDraw(constref x,y:integer);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelectionToolsMarkerDraw(constref x,y:integer);                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sel_tls_mrk do
     begin
-      SetRctPos(x,y);
+      SetRctPos(x-bmp_ftimg_width_origin >>1,
+                y-bmp_ftimg_height_origin>>1);
       SdrProc[3];
     end;
 end; {$endregion}
-procedure TPivot.SetPivotAxisRect(constref pt_rct:TPtRect; constref margin:TColor=10);                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SetPivotAxisRect(constref pt_rct:TPtRect; constref margin:TColor=10);                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   pvt_axis_rect:=PtRct(pt_rct.left  +margin,
                        pt_rct.top   +margin,
                        pt_rct.right -margin,
                        pt_rct.bottom-margin);
 end; {$endregion}
-procedure TPivot.PivotCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColorArr; constref sel_pts_cnt:TColor); {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotCalc(constref pts:TPtPosFArr; constref sel_pts_inds:TColorArr; constref sel_pts_cnt:TColor);                           {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   sel_pts_inds_ptr: PInteger;
   p               : TPtPosF;
@@ -17939,7 +17726,7 @@ begin
   pvt_pos.y :=(p.y+weighted_pvt_shift.y)/sel_pts_cnt;
   pvt_origin:=pvt_pos;
 end; {$endregion}
-procedure TPivot.AlignPivotOnX(var x,y:integer; shift:TShiftState);                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.AlignPivotOnX(var x,y:integer; shift:TShiftState);                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if need_align_pivot_x then
     y:=align_pivot.y;
@@ -17953,7 +17740,7 @@ begin
   else
     need_align_pivot_x:=False;
 end; {$endregion}
-procedure TPivot.AlignPivotOnY(var x,y:integer; shift:TShiftState);                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.AlignPivotOnY(var x,y:integer; shift:TShiftState);                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if need_align_pivot_y then
     x:=align_pivot.x;
@@ -17967,7 +17754,7 @@ begin
   else
     need_align_pivot_y:=False;
 end; {$endregion}
-procedure TPivot.AlignPivotOnP(var x,y:integer; shift:TShiftState);                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.AlignPivotOnP(var x,y:integer; shift:TShiftState);                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (shift=[ssAlt]) then
     with srf_var,sln_var,crc_sel_var do
@@ -17995,8 +17782,8 @@ begin
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[i]]);
       for j:=0 to sln_var_.sln_obj_pts_cnt[i]-1 do
         begin
-          v:=(pts_ptr^.x-x+obj_arr_ptr^.world_axis_shift.x)*(pts_ptr^.x-x+obj_arr_ptr^.world_axis_shift.x)+
-             (pts_ptr^.y-y+obj_arr_ptr^.world_axis_shift.y)*(pts_ptr^.y-y+obj_arr_ptr^.world_axis_shift.y);
+          v:=sqr(pts_ptr^.x-x+obj_arr_ptr^.world_axis_shift.x)+
+             sqr(pts_ptr^.y-y+obj_arr_ptr^.world_axis_shift.y);
           if (v<=crc_sel_var_.crc_rad_sqr) then
             begin
               if (not is_point_in_circle_ptr^) then
@@ -18016,10 +17803,8 @@ begin
         end;
     end;
 
-  draw:=(sln_var_.sln_pts[ind_of_min].x-x+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.x)*
-        (sln_var_.sln_pts[ind_of_min].x-x+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.x)+
-        (sln_var_.sln_pts[ind_of_min].y-y+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.y)*
-        (sln_var_.sln_pts[ind_of_min].y-y+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.y)<=crc_sel_var_.crc_rad_sqr;
+  draw:=sqr(sln_var_.sln_pts[ind_of_min].x-x+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.x)+
+        sqr(sln_var_.sln_pts[ind_of_min].y-y+obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var_.sln_obj_ind[ind_of_min]]].world_axis_shift.y)<=crc_sel_var_.crc_rad_sqr;
 
   if draw then
     begin
@@ -18140,27 +17925,27 @@ begin
   mos_mot_vec.y0:=mos_mot_vec.y1;
 
 end; {$endregion}
-procedure TPivot.SclSettings      (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SclSettings      (x,y:integer);                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   curr_mouse_pos:=PtPosF(x,y);
   scl_dir       :=GetDir2(prev_mouse_pos,curr_mouse_pos,pvt_pos                );
                   SetMul (prev_mouse_pos,curr_mouse_pos,pvt_pos,pvt_scl,scl_dir);
   prev_mouse_pos:=curr_mouse_pos;
 end; {$endregion}
-procedure TPivot.SelPtsPosCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelPtsPosCalc    (x,y:integer);                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   pos_dif.x:=x-{Trunc(}pvt_pos.x{)};
   pos_dif.y:=y-{Trunc(}pvt_pos.y{)};
 end; {$endregion}
-procedure TPivot.SelPtsSclCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelPtsSclCalc    (x,y:integer);                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   scl_dif.x:=(pvt_pos.x-(weighted_pvt_shift.x/sel_var.sel_pts_cnt))*(1-pvt_scl.x){pvt_pos.x-srf_var.world_axis_shift.x-pvt_pos.x*pvt_scl.x+srf_var.world_axis_shift.x*pvt_scl.x};
   scl_dif.y:=(pvt_pos.y-(weighted_pvt_shift.y/sel_var.sel_pts_cnt))*(1-pvt_scl.y){pvt_pos.y-srf_var.world_axis_shift.y-pvt_pos.y*pvt_scl.y+srf_var.world_axis_shift.y*pvt_scl.y};
 end; {$endregion}
-procedure TPivot.SelPtsRotCalc    (x,y:integer);                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelPtsRotCalc    (x,y:integer);                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TPivot.SelPtsRctPosCalc (x,y:integer; var sel_pts_rect:TPtRectF);                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelPtsRctPosCalc (x,y:integer; var sel_pts_rect:TPtRectF);                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sel_pts_rect do
     begin
@@ -18171,16 +17956,16 @@ begin
     end;
   pvt_pos:=PtPosF(x,y);
 end; {$endregion}
-procedure TPivot.SelPtsRctSclCalc (x,y:integer; var sel_pts_rect:TPtRectF);                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelPtsRctSclCalc (x,y:integer; var sel_pts_rect:TPtRectF);                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   pvt_scl:=PtPosF(DEFAULT_SCL_MUL,
                   DEFAULT_SCL_MUL);
   PtsScl(pvt_pos,sel_pts_rect,pvt_scl,scl_dir);
 end; {$endregion}
-procedure TPivot.SelPtsRctRotCalc (x,y:integer; var sel_pts_rect:TPtRectF);                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.SelPtsRctRotCalc (x,y:integer; var sel_pts_rect:TPtRectF);                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TPivot.IsPivotOutOfInnerWindow(var custom_rect:TPtRect; constref pvt_:TPtPosF);                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.IsPivotOutOfInnerWindow(var custom_rect:TPtRect; constref pvt_:TPtPosF);                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   m1,m2,m3,m4: integer;
   x0,y0,x1,y1: integer;
@@ -18355,42 +18140,7 @@ begin
     pvt_marker_draw:=False;
 
 end; {$endregion}
-procedure TPivot.PivotMarkerDraw (cnv_dst:TCanvas);                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  cnv_dst.Rectangle(pvt_marker.x-10,
-                    pvt_marker.y-10,
-                    pvt_marker.x+11,
-                    pvt_marker.y+11);
-  {if pvt_marker_left then
-    begin
-      cnv_dst.Draw(pvt_marker.x-8,
-                   pvt_marker.y-8,
-                   pvt_marker_arr[0]);
-      Exit;
-    end;
-  if pvt_marker_top then
-    begin
-      cnv_dst.Draw(pvt_marker.x-8,
-                   pvt_marker.y-8,
-                   pvt_marker_arr[1]);
-      Exit;
-    end;
-  if pvt_marker_right then
-    begin
-      cnv_dst.Draw(pvt_marker.x-17,
-                   pvt_marker.y-17,
-                   pvt_marker_arr[2]);
-      Exit;
-    end;
-  if pvt_marker_bottom then
-    begin
-      cnv_dst.Draw(pvt_marker.x-17,
-                   pvt_marker.y-17,
-                   pvt_marker_arr[3]);
-      Exit;
-    end;}
-end; {$endregion}
-procedure TPivot.PivotToPointDraw(cnv_dst:TCanvas);                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotToPointDraw(cnv_dst:TCanvas);                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with cnv_dst do
     begin
@@ -18403,7 +18153,95 @@ begin
                 Trunc(pvt_pos.y)+5);
     end;
 end; {$endregion}
-procedure TPivot.PivotAxisDraw   (cnv_dst:TCanvas; constref custom_rct:TPtRect; constref shift:TPtPos);    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotModeDraw   (cnv_dst:TCanvas);                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  with cnv_dst do
+    case pvt_mode of
+      (pmPivotMove):
+        begin
+          Pen.Mode :=pmMerge;
+          Pen.Color:=clRed;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-18,
+                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y));
+          Pen.Width:=2;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-24,
+                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y));
+          {
+          Pen.Color:=clGreen;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
+                    Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
+          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)-2);
+          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)+2);
+          LineTo   (Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
+          Pen.Color:=clBlue;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
+                    Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
+          LineTo   (Trunc(pvt_pos.x)-2, Trunc(pvt_pos.y)-50);
+          LineTo   (Trunc(pvt_pos.x)+2, Trunc(pvt_pos.y)-50);
+          LineTo   (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
+          }
+          Pen.Width:=1;
+        end;
+      (pmPivotScale):
+        begin
+          Pen.Mode :=pmMerge;
+          Pen.Color:=clRed;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-18,
+                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y)-18);
+          Line     (Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y)-18,
+                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y));
+          Pen.Width:=2;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-24,
+                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y)-24);
+          Line     (Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y)-24,
+                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y));
+          {
+          Pen.Color:=clGreen;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
+                    Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
+          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)-2);
+          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)+2);
+          LineTo   (Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
+          Pen.Color:=clBlue;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
+                    Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
+          LineTo   (Trunc(pvt_pos.x)-2, Trunc(pvt_pos.y)-50);
+          LineTo   (Trunc(pvt_pos.x)+2, Trunc(pvt_pos.y)-50);
+          LineTo   (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
+          }
+          Pen.Width:=1;
+        end;
+      (pmPivotRotate):
+        begin
+          Brush.Style:=bsClear;
+          Pen.Mode :=pmMerge;
+          Pen.Color  :=clRed;
+          Pen.Width  :=2;
+          RadialPie(Trunc(pvt_pos.x)-24,Trunc(pvt_pos.y)+24,
+                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y)-24,3,-1440);
+          Pen.Width  :=1;
+          RadialPie(Trunc(pvt_pos.x)-18,Trunc(pvt_pos.y)+18,
+                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y)-18,3,-1440);
+          {
+          Pen.Color:=clGreen;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
+                    Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
+          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)-2);
+          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)+2);
+          LineTo   (Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
+          Pen.Color:=clBlue;
+          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
+                    Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
+          LineTo   (Trunc(pvt_pos.x)-2, Trunc(pvt_pos.y)-50);
+          LineTo   (Trunc(pvt_pos.x)+2, Trunc(pvt_pos.y)-50);
+          LineTo   (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
+          }
+          Brush.Style:=bsSolid;
+          Pen.Width:=1;
+        end;
+    end;
+end; {$endregion}
+procedure TPivot.PivotAxisDraw0  (cnv_dst:TCanvas; constref custom_rct:TPtRect; constref shift:TPtPos);                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with cnv_dst do
     begin
@@ -18478,113 +18316,53 @@ begin
 
     end;
 end; {$endregion}
-procedure TPivot.PivotBoundsDraw;                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotAxisDraw1  (cnv_dst:TCanvas; constref custom_rct:TPtRect; constref shift:TPtPos; x,y:integer);                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  color_info: TColorInfo;
+  x0,y0     :integer;
+begin
+  SetColorInfo($007889E9,color_info);
+  x0:=Trunc   (pvt_origin.x);
+  y0:=Trunc   (pvt_origin.y);
+  LineAC      (x0,y0,x,y,srf_var.srf_bmp_ptr,srf_var.srf_bmp.width,color_info,custom_rct);
+  {with cnv_dst do
+    begin
+
+      Pen.Width:=3;
+
+      Pen.Mode :=pmMerge;
+      Pen.Color:=clRed;
+      Pen.Style:=psSolid;
+      {$ifdef Windows}
+      MoveTo        (Trunc(pvt_origin.x),Trunc(pvt_origin.y));
+      Windows.LineTo(Handle,x,y);
+      {$else}
+      Line(Trunc(pvt_origin.x),Trunc(pvt_origin.y),x,y);
+      {$endif}
+
+      Pen.Width:=1;
+      Pen.Mode :=pmCopy;
+      Pen.Style:=psSolid;
+
+    end;}
+end; {$endregion}
+procedure TPivot.PivotBoundsDraw;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   //
 end; {$endregion}
-procedure TPivot.PivotAngleDraw;                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotAngleDraw;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   //
 end; {$endregion}
-procedure TPivot.PivotModeDraw   (cnv_dst:TCanvas);                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-  with cnv_dst do
-    case pvt_mode of
-      (pmPivotMove):
-        begin
-          Pen.Mode :=pmCopy;
-          Pen.Color:=clRed;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-18,
-                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y));
-          Pen.Width:=2;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-24,
-                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y));
-          {
-          Pen.Color:=clGreen;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
-                    Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
-          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)-2);
-          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)+2);
-          LineTo   (Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
-          Pen.Color:=clBlue;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
-                    Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
-          LineTo   (Trunc(pvt_pos.x)-2, Trunc(pvt_pos.y)-50);
-          LineTo   (Trunc(pvt_pos.x)+2, Trunc(pvt_pos.y)-50);
-          LineTo   (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
-          }
-          Pen.Width:=1;
-        end;
-      (pmPivotScale):
-        begin
-          Pen.Mode :=pmCopy;
-          Pen.Color:=clRed;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-18,
-                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y)-18);
-          Line     (Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y)-18,
-                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y));
-          Pen.Width:=2;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-24,
-                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y)-24);
-          Line     (Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y)-24,
-                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y));
-          {
-          Pen.Color:=clGreen;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
-                    Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
-          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)-2);
-          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)+2);
-          LineTo   (Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
-          Pen.Color:=clBlue;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
-                    Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
-          LineTo   (Trunc(pvt_pos.x)-2, Trunc(pvt_pos.y)-50);
-          LineTo   (Trunc(pvt_pos.x)+2, Trunc(pvt_pos.y)-50);
-          LineTo   (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
-          }
-          Pen.Width:=1;
-        end;
-      (pmPivotRotate):
-        begin
-          Brush.Style:=bsClear;
-          Pen.Mode   :=pmCopy;
-          Pen.Color  :=clRed;
-          Pen.Width  :=2;
-          RadialPie(Trunc(pvt_pos.x)-24,Trunc(pvt_pos.y)+24,
-                    Trunc(pvt_pos.x)+24,Trunc(pvt_pos.y)-24,3,-1440);
-          Pen.Width  :=1;
-          RadialPie(Trunc(pvt_pos.x)-18,Trunc(pvt_pos.y)+18,
-                    Trunc(pvt_pos.x)+18,Trunc(pvt_pos.y)-18,3,-1440);
-          {
-          Pen.Color:=clGreen;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
-                    Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
-          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)-2);
-          LineTo   (Trunc(pvt_pos.x)+50,Trunc(pvt_pos.y)+2);
-          LineTo   (Trunc(pvt_pos.x)+60,Trunc(pvt_pos.y));
-          Pen.Color:=clBlue;
-          Line     (Trunc(pvt_pos.x),   Trunc(pvt_pos.y),
-                    Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
-          LineTo   (Trunc(pvt_pos.x)-2, Trunc(pvt_pos.y)-50);
-          LineTo   (Trunc(pvt_pos.x)+2, Trunc(pvt_pos.y)-50);
-          LineTo   (Trunc(pvt_pos.x),   Trunc(pvt_pos.y)-60);
-          }
-          Brush.Style:=bsSolid;
-          Pen.Width:=1;
-        end;
-    end;
-end; {$endregion}
-procedure TPivot.PivotDraw(constref shift:TPtPos);                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TPivot.PivotDraw(constref shift:TPtPos; x,y:integer);                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with srf_var.srf_bmp do
     begin
-      LocalAxisToBmp(Trunc(pvt_pos.x),
-                     Trunc(pvt_pos.y));
-      PivotModeDraw(Canvas);
-      PivotAxisDraw(Canvas,pvt_axis_rect,shift); 
-      //SelectionToolsMarkerDraw(Trunc(pvt.x)+100,Trunc(pvt.y)-sel_tls_mrk.bmp_ftimg_width>>1);
-      if pvt_marker_draw then
-        PivotMarkerDraw(Canvas);
+      PivotModeDraw (Canvas);
+      PivotAxisDraw0(Canvas,pvt_axis_rect,shift);
+      PivotAxisDraw1(Canvas,pvt_axis_rect,shift,x,y);
+      SelectionToolsMarkerDraw(x,y);
+      LocalAxisDraw (Trunc(pvt_pos.x),Trunc(pvt_pos.y));
     end;
 end; {$endregion}
 {$endregion}
@@ -19560,7 +19338,7 @@ begin
             SelPtsCalcProc   [Byte(pvt_var.pvt_mode)](x,y);
             WholeSubgraphProc[Byte(pvt_var.pvt_mode)](x,y,pvt_pos,sln_pts,srf_bmp_ptr,inn_wnd_rct,ClippedRct(inn_wnd_rct,sel_pts_rct));
             SelPtsRctCalcProc[Byte(pvt_var.pvt_mode)](x,y,sel_pts_rct);
-            PivotDraw(Ptpos(0,0)); {$endregion}
+            PivotDraw(Ptpos(0,0),x,y); {$endregion}
 
             CnvToCnv     (srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY{NOTSRCCOPY});
             {$ifdef Windows}
@@ -19590,8 +19368,8 @@ begin
               end;
             FilSelPtsObj(crc_sel_rct.left,crc_sel_rct.top); //CircleSelectionModeDraw(x,y,srf_var);
             if (sel_pts_cnt>0) then
-              if ((pvt_pos.x-x)*(pvt_pos.x-x)+
-                  (pvt_pos.y-y)*(pvt_pos.y-y)<=crc_rad_sqr) then
+              if (sqr(pvt_pos.x-x)+
+                  sqr(pvt_pos.y-y)<=crc_rad_sqr) then
                 LocalAxisHighLight(Trunc(pvt_pos.x),
                                    Trunc(pvt_pos.y));
             if sel_var.sel_pts then
@@ -19627,14 +19405,14 @@ begin
                 SelectdPointsDraw(x,y,pvt_pos,sln_pts,srf_bmp_ptr,inn_wnd_rct);
               end;
             //PivotToPoint(x,y,  srf_var,sln_var,sel_var,crc_sel_var);
-            PivotToPoint(x,y,1,srf_var,sln_var,sel_var,crc_sel_var);
-            PivotModeDraw(srf_bmp.Canvas);
-            PivotAxisDraw(srf_bmp.Canvas,pvt_axis_rect,PtPos(0,0));
+            PivotToPoint  (x,y,1,srf_var,sln_var,sel_var,crc_sel_var);
+            PivotModeDraw (srf_bmp.Canvas);
+            PivotAxisDraw0(srf_bmp.Canvas,pvt_axis_rect,PtPos(0,0));
+            PivotAxisDraw1(srf_bmp.Canvas,pvt_axis_rect,PtPos(0,0),Trunc(pvt_pos.x),Trunc(pvt_pos.y));
             if pvt_to_pt_draw_pt then
               PivotToPointDraw(srf_bmp.Canvas)
             else
-              LocalAxisToBmp(Trunc(pvt_pos.x),
-                             Trunc(pvt_pos.y));
+              LocalAxisDraw(Trunc(pvt_pos.x),Trunc(pvt_pos.y));
             CnvToCnv
             (
               srf_bmp_rct,
@@ -19815,8 +19593,8 @@ begin
                       x:=align_pivot.x;
                       y:=align_pivot.y;
                     end;
-                  if ((pvt_pos.x-x)*(pvt_pos.x-x)+
-                      (pvt_pos.y-y)*(pvt_pos.y-y)<=crc_rad_sqr) then
+                  if (sqr(pvt_pos.x-x)+
+                      sqr(pvt_pos.y-y)<=crc_rad_sqr) then
                     begin
                       move_pvt:=(not move_pvt);
                       if show_visibility_panel then
@@ -19852,7 +19630,7 @@ begin
                                   fill_bmp_only:=True;
                                   FillSelBmpAndSelPtsBRectDraw;
                                   fill_bmp_only:=False;
-                                  PivotDraw(PtPos(0,0));
+                                  PivotDraw(PtPos(0,0),Trunc(pvt_pos.x),Trunc(pvt_pos.y));
                                   CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
                                   need_repaint:=False;
                                 end;
@@ -19906,8 +19684,8 @@ begin
         with srf_var,sln_var,pvt_var do
           if down_select_points_ptr^ and
              move_pvt_to_pt_button   and
-             ((pvt_pos.x-x)*(pvt_pos.x-x)+
-              (pvt_pos.y-y)*(pvt_pos.y-y)<=crc_sel_var.crc_rad_sqr) then
+             (sqr(pvt_pos.x-x)+
+              sqr(pvt_pos.y-y)<=crc_sel_var.crc_rad_sqr) then
             begin
               pvt_to_pt:=not pvt_to_pt;
               case CB_Select_Items_Selection_Drawing_Mode.ItemIndex of
@@ -20152,7 +19930,7 @@ begin
                     FillSelBmpAndSelPtsBRectDraw;
                     fill_bmp_only:=False;
                   end;
-                PivotDraw(Ptpos(0,0));
+                PivotDraw(Ptpos(0,0),Trunc(pvt_pos.x),Trunc(pvt_pos.y));
               end
           else
             begin
@@ -20333,7 +20111,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
-            MovScene1(0,low_lr_obj_cnt-1);
+            MovScene(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
         {#100}{'d'} 68: {$region -fold}
@@ -20346,7 +20124,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
-            MovScene1(0,low_lr_obj_cnt-1);
+            MovScene(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
         {#119}{'w'} 87: {$region -fold}
@@ -20359,7 +20137,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
-            MovScene1(0,low_lr_obj_cnt-1);
+            MovScene(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
         {#115}{'s'} 83: {$region -fold}
@@ -20372,7 +20150,7 @@ begin
               low_bmp.height,
               inn_wnd_rct
             );
-            MovScene1(0,low_lr_obj_cnt-1);
+            MovScene(0,low_lr_obj_cnt-1);
           end; {$endregion}
 
       end;
@@ -20397,7 +20175,7 @@ begin
                     obj_cnt-1
                   );
                   SetRctDstPtr(@inn_wnd_rct,low_lr_obj_cnt,obj_cnt-1);
-                  MovScene1   (             low_lr_obj_cnt,obj_cnt-1);
+                  MovScene    (             low_lr_obj_cnt,obj_cnt-1);
               end; {$endregion}
               {Hide Panels----------------} {$region -fold}
               VisibilityChange(False);
@@ -20405,7 +20183,7 @@ begin
               {Pivot Drawing--------------} {$region -fold}
               if (sel_pts_cnt>0) then
                 begin
-                  PivotDraw(srf_var.world_axis_shift);
+                  PivotDraw(srf_var.world_axis_shift,Trunc(pvt_pos.x),Trunc(pvt_pos.y));
                   IsPivotOutOfInnerWindow(pvt_axis_rect,pvt_pos);
                 end; {$endregion}
               {World Axis Drawing---------} {$region -fold}
@@ -20788,7 +20566,8 @@ begin
   rct_sel_var:=TRctSel.Create; {$endregion}
 
   {Play Animation-------} {$region -fold}
-  down_play_anim_ptr:=Unaligned(@SB_Play_Anim.Down); {$endregion}
+  down_play_anim_ptr :=Unaligned(@SB_Play_Anim.Down);
+  obj_var.res_var_ptr:=down_play_anim_ptr; {$endregion}
 
   {Map Editor-----------} {$region -fold}
   tlm_var              :=TTlMap.Create;
@@ -21978,7 +21757,7 @@ begin
   WrtNodeData(PBoolean(@obj_var.obj_arr[0].forced_repaint),
               True,
               PBoolean(@obj_var.obj_arr[1].forced_repaint)-PBoolean(@obj_var.obj_arr[0].forced_repaint));
-  srf_var.EventGroupsCalc(calc_arr,[18,30,41,48]);
+  srf_var.EventGroupsCalc(calc_arr,[18,30,41]+[41+7*Byte(down_select_points_ptr^)]);
   WrtNodeData(PBoolean(@obj_var.obj_arr[0].forced_repaint),
               False,
               PBoolean(@obj_var.obj_arr[1].forced_repaint)-PBoolean(@obj_var.obj_arr[0].forced_repaint));
@@ -22379,7 +22158,7 @@ begin
                 low_bmp.height,
                 inn_wnd_rct
               );
-              MovScene2(0,low_lr_obj_cnt-1);
+              MovScene(0,low_lr_obj_cnt-1);
             end;
         end;
       if dir_d then
@@ -22394,7 +22173,7 @@ begin
                 low_bmp.height,
                 inn_wnd_rct
               );
-              MovScene2(0,low_lr_obj_cnt-1);
+              MovScene(0,low_lr_obj_cnt-1);
             end;
         end;
       if dir_w then
@@ -22409,7 +22188,7 @@ begin
                 low_bmp.height,
                 inn_wnd_rct
               );
-              MovScene2(0,low_lr_obj_cnt-1);
+              MovScene(0,low_lr_obj_cnt-1);
             end;
         end;
       if dir_s then
@@ -22424,7 +22203,7 @@ begin
                 low_bmp.height,
                 inn_wnd_rct
               );
-              MovScene2(0,low_lr_obj_cnt-1);
+              MovScene(0,low_lr_obj_cnt-1);
             end;
         end;
 
@@ -22487,7 +22266,7 @@ begin
             obj_cnt-1
           );}
           SetRctDstPtr(@inn_wnd_rct,low_lr_obj_cnt,obj_cnt-1);
-          MovScene2   (             low_lr_obj_cnt,obj_cnt-1);
+          MovScene    (             low_lr_obj_cnt,obj_cnt-1);
         end; {$endregion}
 
       with fast_actor_set_var.d_icon do
@@ -22721,7 +22500,7 @@ begin
       end;} {$endregion}
 
       {Fluid Simul.----------} {$region -fold}
-      SetColorInfo(clDkGray{Red},color_info);
+      {SetColorInfo(clDkGray{Red},color_info);
       if (sln_pts_cnt>0) then
         begin
           for i:=0 to sln_obj_pts_cnt[0]-1 do
@@ -22764,7 +22543,7 @@ begin
             end;
           //WaterWaveParamChg(a0,001,00,00);
           WaterWaveParamChg(a3,0.5,00,80);
-        end;
+        end;}
 
       {WaterWave2(PtPosF(world_axis.x,
                          world_axis.y),

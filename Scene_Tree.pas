@@ -207,6 +207,9 @@ type
       // count of selected objects of "FText":
       ftext_selected    : boolean;
 
+      // reserved:
+      res_var_ptr       : PBoolean;
+
       constructor Create;                                                                     {$ifdef Linux}[local];{$endif}
       destructor  Destroy;                                                          override; {$ifdef Linux}[local];{$endif}
 
@@ -221,9 +224,7 @@ type
       procedure FilPrtcl;                                                             inline; {$ifdef Linux}[local];{$endif}
       procedure FilCurve;                                                             inline; {$ifdef Linux}[local];{$endif}
       procedure FilFText;                                                             inline; {$ifdef Linux}[local];{$endif}
-      procedure FilScene1             (         start_ind,
-                                                end_ind          :TColor);            inline; {$ifdef Linux}[local];{$endif}
-      procedure FilScene2             (         start_ind,
+      procedure FilScene              (         start_ind,
                                                 end_ind          :TColor);            inline; {$ifdef Linux}[local];{$endif}
       procedure MovEmpty;                                                             inline; {$ifdef Linux}[local];{$endif}
       procedure MovBkgnd;                                                             inline; {$ifdef Linux}[local];{$endif}
@@ -236,9 +237,7 @@ type
       procedure MovPrtcl;                                                             inline; {$ifdef Linux}[local];{$endif}
       procedure MovCurve;                                                             inline; {$ifdef Linux}[local];{$endif}
       procedure MovFText;                                                             inline; {$ifdef Linux}[local];{$endif}
-      procedure MovScene1             (         start_ind,
-                                                end_ind          :TColor);            inline; {$ifdef Linux}[local];{$endif}
-      procedure MovScene2             (         start_ind,
+      procedure MovScene              (         start_ind,
                                                 end_ind          :TColor);            inline; {$ifdef Linux}[local];{$endif}
       procedure MovWorldAxisShiftRight;                                               inline; {$ifdef Linux}[local];{$endif}
       procedure MovWorldAxisShiftLeft;                                                inline; {$ifdef Linux}[local];{$endif}
@@ -432,35 +431,20 @@ begin
   sln_var_inst_ptr:=Unaligned(@sln_var);
   sln_var_inst_ptr^.FilSplineObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.FilScene1             (start_ind,end_ind:TColor);                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.FilScene              (start_ind,end_ind:TColor);                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
   i               : integer;
+  editor_or_game  : set of byte;
 begin
   if (obj_cnt=0) then
     Exit;
+  editor_or_game  :=[0,1+Byte(res_var_ptr^)];
   obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,1]) then
-      begin
-        curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
-        FilProc[(obj_inds_arr_ptr+i)^];
-      end;
-end; {$endregion}
-procedure   TSceneTree.FilScene2             (start_ind,end_ind:TColor);                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  obj_arr_ptr     : PObjInfo;
-  obj_inds_arr_ptr: PColor;
-  i               : integer;
-begin
-  if (obj_cnt=0) then
-    Exit;
-  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
-  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
-  for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,2]) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in editor_or_game) then
       begin
         curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
         FilProc[(obj_inds_arr_ptr+i)^];
@@ -524,35 +508,20 @@ begin
   sln_var_inst_ptr:=Unaligned(@sln_var);
   sln_var_inst_ptr^.MovSplineObj(curr_obj_ind);
 end; {$endregion}
-procedure   TSceneTree.MovScene1             (start_ind,end_ind:TColor);                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovScene              (start_ind,end_ind:TColor);                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
   i               : integer;
+  editor_or_game  : set of byte;
 begin
   if (obj_cnt=0) then
     Exit;
+  editor_or_game  :=[0,1+Byte(res_var_ptr^)];
   obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,1]) then
-      begin
-        curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
-        MovProc[(obj_inds_arr_ptr+i)^];
-      end;
-end; {$endregion}
-procedure   TSceneTree.MovScene2             (start_ind,end_ind:TColor);                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  obj_arr_ptr     : PObjInfo;
-  obj_inds_arr_ptr: PColor;
-  i               : integer;
-begin
-  if (obj_cnt=0) then
-    Exit;
-  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
-  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
-  for i:=start_ind to end_ind do
-    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,2]) then
+    if ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in editor_or_game) then
       begin
         curr_obj_ind:=(obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.k_ind;
         MovProc[(obj_inds_arr_ptr+i)^];

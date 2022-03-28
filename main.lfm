@@ -3939,7 +3939,7 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 4
     Height = 4
-    Top = 242
+    Top = 176
     Width = 756
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -4338,13 +4338,13 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 164
-    Height = 418
-    Top = 246
+    Height = 484
+    Top = 180
     Width = 596
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
-    ClientHeight = 418
+    ClientHeight = 484
     ClientWidth = 596
     Color = 13290949
     ParentColor = False
@@ -4357,7 +4357,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Image_Editor
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 418
+      Height = 484
       Top = 0
       Width = 596
       ActivePage = TS_Draw
@@ -4372,13 +4372,13 @@ object F_MainForm: TF_MainForm
       Options = [nboShowCloseButtons, nboMultiLine, nboHidePageListPopup, nboKeyboardTabSwitch, nboShowAddTabButton, nboDoChangeOnSetIndex]
       object TS_File: TTabSheet
         Caption = 'File'
-        ClientHeight = 410
+        ClientHeight = 476
         ClientWidth = 565
         object SB_Image_List: TScrollBox
           AnchorSideRight.Control = TS_Draw
           AnchorSideRight.Side = asrBottom
           Left = 32
-          Height = 406
+          Height = 472
           Top = 0
           Width = 531
           HorzScrollBar.Increment = 1
@@ -4390,7 +4390,7 @@ object F_MainForm: TF_MainForm
           VertScrollBar.Smooth = True
           VertScrollBar.Tracking = True
           Anchors = [akTop, akLeft, akRight, akBottom]
-          ClientHeight = 402
+          ClientHeight = 468
           ClientWidth = 527
           Color = 13881769
           ParentBiDiMode = False
@@ -4406,7 +4406,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
             Left = 0
-            Height = 402
+            Height = 468
             Top = 0
             Width = 527
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4435,7 +4435,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 156
             Height = 180
-            Top = 72
+            Top = 99
             Width = 680
             Anchors = []
             BevelColor = 7958609
@@ -4673,13 +4673,13 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_File
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 406
+          Height = 472
           Top = 0
           Width = 29
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Bottom = 4
           BevelOuter = bvLowered
-          ClientHeight = 406
+          ClientHeight = 472
           ClientWidth = 29
           Color = 13359793
           ParentColor = False
@@ -4891,7 +4891,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_Draw: TTabSheet
         Caption = 'Draw'
-        ClientHeight = 410
+        ClientHeight = 476
         ClientWidth = 565
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
@@ -4906,7 +4906,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_Draw
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 375
+          Height = 441
           Top = 35
           Width = 563
           HorzScrollBar.Increment = 1
@@ -4920,7 +4920,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 371
+          ClientHeight = 437
           ClientWidth = 559
           Color = 15921635
           ParentBiDiMode = False
@@ -4936,9 +4936,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 0
+            Left = -232
             Height = 488
-            Top = -20
+            Top = 8
             Width = 1040
             Anchors = []
             BevelColor = 7958609
@@ -6821,28 +6821,10 @@ object F_MainForm: TF_MainForm
                 OnMouseEnter = P_Spline_Optimization_PropMouseEnter
                 OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               end
-              object RB_Spline_Adaptive: TRadioButton
-                Left = 10
-                Height = 19
-                Top = 301
-                Width = 66
-                Caption = 'Adaptive'
-                Enabled = False
-                Font.CharSet = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -12
-                Font.Name = 'AR JULIAN'
-                Font.Quality = fqDraft
-                OnChange = RB_Spline_AdaptiveChange
-                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
-                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
-                ParentFont = False
-                TabOrder = 10
-              end
               object RB_Spline_Constant: TRadioButton
                 Left = 10
                 Height = 19
-                Top = 326
+                Top = 301
                 Width = 70
                 Caption = 'Constant'
                 Font.CharSet = ANSI_CHARSET
@@ -6859,7 +6841,7 @@ object F_MainForm: TF_MainForm
               object RB_Spline_None: TRadioButton
                 Left = 10
                 Height = 19
-                Top = 351
+                Top = 326
                 Width = 50
                 Caption = 'None'
                 Checked = True
@@ -6897,7 +6879,7 @@ object F_MainForm: TF_MainForm
                 ParentShowHint = False
                 ParentBidiMode = False
                 ShowHint = True
-                TabOrder = 11
+                TabOrder = 10
               end
             end
             object P_Spline_Drawing_Prop: TPanel
@@ -9084,9 +9066,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -96
+            Left = -16
             Height = 176
-            Top = 160
+            Top = 392
             Width = 912
             Anchors = []
             BevelColor = 9665894
@@ -10828,9 +10810,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 16
+            Left = -56
             Height = 206
-            Top = 256
+            Top = 386
             Width = 529
             Anchors = []
             BevelColor = 9665894
@@ -11669,7 +11651,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 472
             Height = 63
-            Top = 8
+            Top = 15
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -11854,7 +11836,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 472
             Height = 110
-            Top = 120
+            Top = 151
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -11875,7 +11857,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 488
             Height = 63
-            Top = 72
+            Top = 90
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12059,7 +12041,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 551
             Height = 63
-            Top = -28
+            Top = -27
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12243,7 +12225,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 504
             Height = 110
-            Top = 32
+            Top = 47
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12304,7 +12286,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 488
             Height = 110
-            Top = 112
+            Top = 142
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12557,7 +12539,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_AnimK: TTabSheet
         Caption = 'AnimK'
-        ClientHeight = 410
+        ClientHeight = 476
         ClientWidth = 565
         object P_Animation_Buttons: TPanel
           AnchorSideRight.Control = TS_AnimK
@@ -12668,7 +12650,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_AnimK
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 375
+          Height = 441
           Top = 35
           Width = 563
           HorzScrollBar.Page = 1
@@ -12676,7 +12658,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 371
+          ClientHeight = 437
           ClientWidth = 559
           TabOrder = 1
           object P_Add_Actor: TPanel
@@ -12688,7 +12670,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 8
             Height = 176
-            Top = 34
+            Top = 56
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13170,7 +13152,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 120
             Height = 200
-            Top = 149
+            Top = 193
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13259,7 +13241,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 154
             Height = 40
-            Top = -17
+            Top = -16
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -13280,7 +13262,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 86
             Height = 40
-            Top = -17
+            Top = -16
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13697,7 +13679,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = 755
     Height = 17
-    Top = 236
+    Top = 170
     Width = 15
     Caption = '>'
     Enabled = False
@@ -13719,7 +13701,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = -6
     Height = 17
-    Top = 236
+    Top = 170
     Width = 15
     Anchors = [akTop, akRight]
     Caption = '<'
@@ -14088,7 +14070,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 20
     Height = 23
-    Top = 199
+    Top = 133
     Width = 224
     Anchors = [akLeft, akBottom]
     AutoSize = False
@@ -14111,8 +14093,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 418
-    Top = 246
+    Height = 484
+    Top = 180
     Width = 156
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = 6780768
@@ -14222,13 +14204,13 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 8
     Height = 31
-    Top = 207
+    Top = 141
     Width = 118
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 4
     BorderSpacing.Bottom = 4
     Caption = 'Test your might'
-    Color = 5937963
+    Color = 7899625
     Enabled = False
     Font.Color = 2984584
     Font.Style = [fsBold]
@@ -14269,8 +14251,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 160
-    Height = 418
-    Top = 246
+    Height = 484
+    Top = 180
     Width = 4
     Align = alCustom
     Anchors = [akTop, akBottom]
@@ -17258,63 +17240,42 @@ object F_MainForm: TF_MainForm
     }
   end
   object IL_Select_Points: TImageList
-    Height = 24
-    Width = 24
+    Height = 17
+    Width = 17
     Left = 376
     Top = 96
     Bitmap = {
-      4C7A010000001800000018000000520600000000000078DA7D56D74F5B671437
-      89547548AD1435AD9A874A6D026184710D06834930D3EC198843201096C71DC6
-      DB603CC0801936066C33020E25A40990D190AA52FF802A4F7DA9D487A852A3B6
-      52D43C5495AA448D5A8FD3F35DA022F3E1E8B3AEBFFB3BE7FC7E67DC24961224
-      BD6C879259E1A144364390C0A4091299F4387CF67E0A4B7D8CCF8FE2EFF7C87F
-      C4F6EE1F468B4B7A35D673B68B4BC511DC542EEB789E5E6A2A3697EF9459AA1E
-      C8CC958F8A8DB2DF0A74C53F8A35F95B19AC4881EF1CDDF37368CFDE847DF824
-      932E4861851F955A648BF291D6276DAE76681D6E8BB538E4D034D40C75838D50
-      65AE0199A13256D45F0212EECCE3745664C3F7DFD9CFFD75D80974BA40A8CDCD
-      978F5E78D837A584EE89BE6887BB27D239DE1DE918EF8CB68D76C4E4CEF3D1C6
-      A1B3D11A4B5DA4CC5011411FB13C560A596CF6FD64963A7180AF97E2CED2490A
-      BAA77AFF647C1CA8BC7498F671317A5603B40F6D8601E5B41ABA267AA07DB403
-      CED9E5503BD048F28816684AC2794C0164AAB37F4A66A88417F2E0754CE3B23E
-      EB9AEA79D43FAF03CD9C26620818C0B06801339A69C10286A009B4F37A20BE15
-      98DBC5B14BD0E268E57D941A2A209F9386C5EA3CC8A045DF21E6DB7BD871187B
-      5C029D26681A966F110C7DD018B62C5B6168C50EF690139C575CE040B3AF3A60
-      109F1B8366D0CC6A41E951A38F2E68B19F876A4B1D94686590C7E48733556238
-      450B47F6794A405E443A89581BD08271D11CB3AE0CC586D74660ECAA1B26AE4D
-      A24DF3E6DE988491B531B0AF38C08CF970735ACC430DED239DD0646D860A4335
-      14680A6322552EA4AB448F93D98C63C4C70975AAA0CED91418C0D8062F0F4546
-      BE70C124E27A6E78C1B73507BEED793CE7C1BBE583C92FA761749DF8B0236766
-      606638E81EEF01B9B315AACDF550AC2D855C4612112A722085A69844920343BD
-      DBED51FC60237C5C714649CCDE4D2FCCDFF243E04EF07FF3DF0AA08F59DEC7C8
-      DA288905F530F0395C705D8406D4A14C570112A600F1C590AAA26E2571942043
-      2BFEBC3FA0FFCB1EB2836B7D2C367DDD03733711FBAB2004772EC3F2BD555842
-      0BDE5D84C06DF4B1E903F7D5099E2763C004B487810E5717DF1BE5FA4A38C349
-      A3594A31A42BA807A4E7B3F512CAB068FEC7167220E7E331EFE62C0430D6859D
-      6558BD17821062135BBEB7C2E7413823FC39432360441D182F0B5DE3045F0E95
-      861A907245BC06690AE1EF88FF498E5E9283BA866DA16118DFD8C5F7639C8B18
-      FB2AE2AE7EBDCA9F97D10277166076DB8F1C4D8223E442FC41C4D74097FB12E2
-      9FDBC32FDEC5EFA31E23F7C7286D6EBC3668784A6A116B26E641EEFDB7FDC8CD
-      02ACECC54FF258407F24FED9ED5998D820F13B7735467E3AF9F8097E35E21746
-      45C84F9A827A88F11F49E1328F287DCCCFF6553BEAE68A4EDEF080EFE63CCF75
-      706709169197E0DD25D42300F3A80BA9ABB17537D8907F3DF6A0DA43633F7742
-      837597FF7C16F525F82AEA5BA26FBCFA94A0D9D57ACD8AF76DAB8EC8386A374D
-      7C6CCF61CDF879AE02980FD1DC7BC3C7F7C230F69B6571107B4007BD930A32FF
-      A0CED20025BA32ECB1D37C7D9EA22907A9CF78ECDD7CA3B4DE805A5996AC5127
-      EA30863EA6AE4F63AC333083F5E2DD9C015257137C8F91DAB481DE6FC4DA61A1
-      73AC079A6D72A836D542617F692C472D014A95FD0C675DCAFE7C3BC9641C6E73
-      5FBA6FE1E7CD4084D4D2F0FA28DFC3EE0D378CE389B50BC358333C36CE117646
-      03BD137D187B3BD40F36814C5F01A7596998D796CE5C3BB0A7F667671EEBE39E
-      E90346302C98A2A49F6D2B433084BA90D38AFD6442FF3AEC29BC077DC84B9BAB
-      031AB1EE2B4D3550A82D89E4D2F92054E5FC8AB17F7A7086929D45669CD45444
-      D33E86CCCF18CE97882EA0031DFAD307F4D8AB3A607156133D7B267A11FB229C
-      B5B500EE019C0B656109EE806CB5F8C9294658F2AA3DB3BB5F520505A642BA7B
-      4AF1AF1271941E6554E95545541E75B46F4A15EB99EC257339761EF759A3B539
-      5A853BA6542F8B9EE18A208795FC91C652B2C457EC97E77DA40932FBC5798DF6
-      B3DFE3DEC2DEE98E758C75F233E61CCE311273FD600354A19EA5BA72906A0A41
-      C4E67E83EFC627BD01FBC55D96C864BC95ADCD6F94592AB66BACF5BFD45A9BFE
-      AE1F6888565A6AC36586F2A705DAE207224E124A6533A5B89FE2DEB47B5FF6C1
-      DF8B23BB817C4724B1C20F53395102C5898AD239D169ECC9E3F8FF0707BE515E
-      FBEDF01F1DA22CA6
+      4C7A010000001100000011000000BC0300000000000078DA5D545B535A571845
+      6D33D387B67FA1336D1221512E8204C50B255EA080E22D198D46A3513C37EE77
+      0817412E0625C83568126B6C8D4D5293E95B5F3B7DE98F6867FAD0F7CE34D30A
+      677FDD079394E9C337FB3CECB5CE5ADFB7BECDA7C53CFE79B5086849DB254AC8
+      C3F5E155A6EBA2D8221FC665EC64646A012DFEEC322D6A6DA745DCDD56FE7FB8
+      F7783E87273B7952AB6248E3D3BF9C084EFF6E0C4CD5F5DE7118716A6B0356F5
+      AF325A7178859674B79F63DAFE876FB9440ADB86FCDAE44AEA2E7B3765823BC9
+      55B4B8B984E6A2F3EC64701AE9DC0674DD3A0C3D74FF1B212DB5F29B781AFAC9
+      0E9E2668C8581E5881C99A6B4CCE56B3ECDA59F3030B5ACF906829B18C6E8466
+      599D67EC4C651962AF914AE8A4BAEC6F795A2F62FDBD4ED5842D6F679D4577DD
+      5709A07B7B6108ED472058BD07EEA207CC592B2CA7D600F380D6A567FB9841E8
+      5A97BF1150E21E8E07F7E0C2426AE9477F3508A147E15AE23009E9A3FB90FE26
+      03C9A75B107D1C035FD98FF5596129BE0293FE69B86E1B3993133DD041741DF1
+      19114F6AEB95DB0BCE3FC38F22903C4AA1EC491672CFF3907B9187EC7739CC75
+      1FF36C800BEB59DF22E166780E344E1DDB4B0D80D024FB8D4F8B3EFFD2A75908
+      600D1B07F1FAF67116F22F8B507EF5101EBEAE42F1B4DCE0491CA6C05F0900B3
+      6D86F98D45D0BBC7503FA362256B3256408A8647833A73703F0CF1C3CD7AF624
+      07A5D30AECBFDEC7B5079557D586A6F4511A02D570C3CFEDF82218DC1330C8A8
+      3147370808F1B4DAAF590EEE8520FE75A2BE837D144F4B50C5F83DCC53C27A72
+      CF7721F534DDE8AF79C7020B318EC38806CF7500D6A1953BFA075C25EFDFD127
+      31943ECE200E53C01E0ADF976117F784F3173F4880A7EC033243C16C7401BE72
+      1958253D002293EC0F012DE2B793C24F96B74C3F73F3DC7812AF73F3D839DE81
+      ECC90E64BEDD6EF482D369CB3960256982E9E04D18B16B6A0A2E2384F4073E23
+      E67D415EE5A9BC232B9EA2173C155F2DF4388A620771EC6DB3318F00F660CFBB
+      80C033B98535183CE368D0AC666584A2768592E8DEE6B4F532296C998ACC3C73
+      149CF8BEE3CC5572D7DD250F72165DC065777D8B80F9D82232FA276B43F6D15A
+      2FD50F42529A69CA7B0B9FC2DF94F0E3F1F0E40B027B26B64944640876356DAA
+      E39CD76723B7EA46FF141A7568511FA30231D55DC0B9F8E07CD71AC57B77E2BD
+      BBA074A8D6264333BFCC46E6FEB981F3341598417ACF18E0FFFFD5C3F4FDD449
+      4B67DEED4913BE697FB9FDE9E0B553A24F4566B9AADBDAB77ACDAAF44ACC8A3B
+      1D8C5489DF8E8F9ADE8FF7F87F01D47B1861
     }
   end
   object IL_Spline_Templates: TImageList
