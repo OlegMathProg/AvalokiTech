@@ -110,6 +110,8 @@ type
     is_another_obj_kind_after: boolean;
     // is abstract kind of object is available after current object:
     is_an_abst_obj_kind_after: boolean;
+    // forced repaint:
+    forced_repaint           : boolean;
     // local axis:
     local_axis               : TPtPos;
     // parallax:
@@ -346,6 +348,7 @@ var
     rotatable                : True;
     is_another_obj_kind_after: False;
     is_an_abst_obj_kind_after: False;
+    forced_repaint           : False;
     local_axis               : (x:00; y:00);
     world_axis_shift         : (x:00; y:00);
     parallax_shift           : (x:16; y:16);
@@ -355,7 +358,7 @@ var
 
 implementation
 
-uses //
+uses
 
   Main;
 

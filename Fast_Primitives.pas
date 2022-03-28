@@ -803,6 +803,7 @@ type
     spiral_angle             : double;
 
     {Superellipse}
+    {TODO}
 
   end; {$endregion}
   PCurveProp        =^TCurveProp;

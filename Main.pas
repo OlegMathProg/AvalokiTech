@@ -1162,6 +1162,7 @@ type
       {Repaint Spline: Drawing---------------------}
       procedure RepSplineDraw0;                                                   inline; {$ifdef Linux}[local];{$endif}
       procedure RepSplineDraw1;                                                   inline; {$ifdef Linux}[local];{$endif}
+      procedure RepSplineDraw2;                                                   inline; {$ifdef Linux}[local];{$endif}
       {Duplicated Points: Drawing------------------}
       procedure DupPtsDraw;                                                       inline; {$ifdef Linux}[local];{$endif}
       {World Axis: Reset Background Settings-------}
@@ -2472,7 +2473,7 @@ var
   }
 
 (******************************************************************************)
-
+      //0503706270
 
 
 {forward declarations begin}(**************************************************)
@@ -2527,6 +2528,9 @@ procedure WrtNodeData        (         data_start_ptr:PPtPos;
                                        size_of_data  :integer);       inline; {$ifdef Linux}[local];{$endif}
 procedure WrtNodeData        (         data_start_ptr:PByte;
                                        data_write    :byte;
+                                       size_of_data  :integer);       inline; {$ifdef Linux}[local];{$endif}
+procedure WrtNodeData        (         data_start_ptr:PBoolean;
+                                       data_write    :boolean;
                                        size_of_data  :integer);       inline; {$ifdef Linux}[local];{$endif}
 procedure ClrNodeData        (         node_with_data:TTreeNode);     inline; {$ifdef Linux}[local];{$endif}
 procedure DeleteSelectedNodes(         TV            :TTreeView);     inline; {$ifdef Linux}[local];{$endif}
@@ -4982,179 +4986,181 @@ begin
       has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
       b              :=spline_scale_calc or form_resize_calc or ((not repaint_spline_hid_ln_calc1) and repaint_spline_hid_ln_calc2);
       for i:=0 to sln_obj_cnt-1 do
-        if (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
-        begin
+        if (obj_arr[curve_inds_obj_arr[i]].obj_show in [0,1]) then
+          begin
 
-          {Bounding Rectangles: Edges}
-          with (rct_eds_var_ptr+i)^,local_prop do
-            begin
-              if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b0_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      AddSplineRctEds(i);
-                      CrtSplineRctEds(i);
-                    end;
-                  lazy_repaint_prev:=b0;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            b:=b or obj_arr[curve_inds_obj_arr[i]].forced_repaint;
 
-          {Bounding Rectangles: Points}
-          with (rct_pts_var_ptr+i)^,local_prop do
-            begin
-              if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b1_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      AddSplineRctPts(i);
-                      CrtSplineRctPts(i);
-                    end;
-                  lazy_repaint_prev:=b1;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            {Bounding Rectangles: Edges}
+            with (rct_eds_var_ptr+i)^,local_prop do
+              begin
+                if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b0_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        AddSplineRctEds(i);
+                        CrtSplineRctEds(i);
+                      end;
+                    lazy_repaint_prev:=b0;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
 
-          {Edges}
-          with (eds_var_ptr+i)^,local_prop do
-            begin
-              if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b2_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      //if ((has_sel_pts_ptr+i)^=0) then
-                        begin
-                          if b2 then
-                            begin
-                              if byte_mode then
-                                begin
-                                  if hid_ln_elim then
-                                    begin
-                                      if (hid_ln_cnt=0) then
-                                        AddSplineEds15(i)
-                                      else
-                                        AddSplineEds11(i);
-                                    end
-                                  else
-                                    AddSplineEds09(i);
-                                end
-                              else
-                                begin
-                                  if hid_ln_elim then
-                                    begin
-                                      if (hid_ln_cnt=0) then
-                                        AddSplineEds13(i)
-                                      else
-                                        AddSplineEds06(i);
-                                    end
-                                  else
-                                    AddSplineEds01(i);
-                                end;
-                            end
-                          else
-                            begin
-                              if byte_mode then
-                                begin
-                                  if hid_ln_elim then
-                                    begin
-                                      if (hid_ln_cnt=0) then
-                                        AddSplineEds14(i)
-                                      else
-                                        AddSplineEds10(i);
-                                    end
-                                  else
-                                    AddSplineEds08(i);
-                                end
-                              else
-                                begin
-                                  if hid_ln_elim then
-                                    begin
-                                      if (hid_ln_cnt=0) then
-                                        AddSplineEds12(i)
-                                      else
-                                        AddSplineEds05(i);
-                                    end
-                                  else
-                                    AddSplineEds00(i);
-                                end;
-                            end;
-                        end
-                      {else
-                        AddSplineEds1(i)};
-                      CrtSplineEds(i);
-                    end;
-                  lazy_repaint_prev:=b2;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            {Bounding Rectangles: Points}
+            with (rct_pts_var_ptr+i)^,local_prop do
+              begin
+                if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b1_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        AddSplineRctPts(i);
+                        CrtSplineRctPts(i);
+                      end;
+                    lazy_repaint_prev:=b1;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
 
-          {Points}
-          with (pts_var_ptr+i)^,local_prop do
-            begin
-              if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
-                begin
-                  b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
-                  b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
-                  if b3_ then
-                    begin
-                      if free_mem_on_scale_down and (fst_img<>Nil) then
-                        fst_img.ClrArr;
-                      //if ((has_sel_pts_ptr+i)^=0) then
-                        begin
-                          AddSplineDupPts0(i);
-                          if byte_mode then
-                            AddSplinePts4 (i)
-                          else
-                            AddSplinePts0 (i);
-                          ClrSplineDupPts0(i);
-                        end
-                      {else
-                        begin
-                          AddSplineDupPts1(i);
-                          if byte_mode then
-                            AddSplinePts5 (i)
-                          else
-                            AddSplinePts1 (i);
-                          ClrSplineDupPts1(i);
-                        end};
-                      CrtSplinePts(i);
-                    end;
-                  lazy_repaint_prev:=b3;
-                end
-              else
-                begin
-                  if free_mem_on_out_of_wnd and (fst_img<>Nil) then
-                    fst_img.ClrArr;
-                  lazy_repaint_prev:=False;
-                end;
-            end;
+            {Edges}
+            with (eds_var_ptr+i)^,local_prop do
+              begin
+                if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b2_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        //if ((has_sel_pts_ptr+i)^=0) then
+                          begin
+                            if b2 then
+                              begin
+                                if byte_mode then
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds15(i)
+                                        else
+                                          AddSplineEds11(i);
+                                      end
+                                    else
+                                      AddSplineEds09(i);
+                                  end
+                                else
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds13(i)
+                                        else
+                                          AddSplineEds06(i);
+                                      end
+                                    else
+                                      AddSplineEds01(i);
+                                  end;
+                              end
+                            else
+                              begin
+                                if byte_mode then
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds14(i)
+                                        else
+                                          AddSplineEds10(i);
+                                      end
+                                    else
+                                      AddSplineEds08(i);
+                                  end
+                                else
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds12(i)
+                                        else
+                                          AddSplineEds05(i);
+                                      end
+                                    else
+                                      AddSplineEds00(i);
+                                  end;
+                              end;
+                          end
+                        {else
+                          AddSplineEds1(i)};
+                        CrtSplineEds(i);
+                      end;
+                    lazy_repaint_prev:=b2;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
+
+            {Points}
+            with (pts_var_ptr+i)^,local_prop do
+              begin
+                if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b3_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        //if ((has_sel_pts_ptr+i)^=0) then
+                          begin
+                            AddSplineDupPts0(i);
+                            if byte_mode then
+                              AddSplinePts4 (i)
+                            else
+                              AddSplinePts0 (i);
+                            ClrSplineDupPts0(i);
+                          end
+                        {else
+                          begin
+                            AddSplineDupPts1(i);
+                            if byte_mode then
+                              AddSplinePts5 (i)
+                            else
+                              AddSplinePts1 (i);
+                            ClrSplineDupPts1(i);
+                          end};
+                        CrtSplinePts(i);
+                      end;
+                    lazy_repaint_prev:=b3;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
 
         end;
     end;
@@ -5183,10 +5189,217 @@ begin
           eds_var_ptr:=Unaligned(@    eds_img_arr[0]);
           pts_var_ptr:=Unaligned(@    pts_img_arr[0]);
       has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
+      b              :=spline_scale_calc or form_resize_calc or ((not repaint_spline_hid_ln_calc1) and repaint_spline_hid_ln_calc2);
+      for i:=0 to sln_obj_cnt-1 do
+        if (obj_arr[curve_inds_obj_arr[i]].obj_show in [0,2]) then
+          begin
+
+            b:=b or obj_arr[curve_inds_obj_arr[i]].forced_repaint;
+
+            {Bounding Rectangles: Edges}
+            with (rct_eds_var_ptr+i)^,local_prop do
+              begin
+                if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b0_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        AddSplineRctEds(i);
+                        CrtSplineRctEds(i);
+                      end;
+                    lazy_repaint_prev:=b0;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
+
+            {Bounding Rectangles: Points}
+            with (rct_pts_var_ptr+i)^,local_prop do
+              begin
+                if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b1_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        AddSplineRctPts(i);
+                        CrtSplineRctPts(i);
+                      end;
+                    lazy_repaint_prev:=b1;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
+
+            {Edges}
+            with (eds_var_ptr+i)^,local_prop do
+              begin
+                if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b2_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        //if ((has_sel_pts_ptr+i)^=0) then
+                          begin
+                            if b2 then
+                              begin
+                                if byte_mode then
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds15(i)
+                                        else
+                                          AddSplineEds11(i);
+                                      end
+                                    else
+                                      AddSplineEds09(i);
+                                  end
+                                else
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds13(i)
+                                        else
+                                          AddSplineEds06(i);
+                                      end
+                                    else
+                                      AddSplineEds01(i);
+                                  end;
+                              end
+                            else
+                              begin
+                                if byte_mode then
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds14(i)
+                                        else
+                                          AddSplineEds10(i);
+                                      end
+                                    else
+                                      AddSplineEds08(i);
+                                  end
+                                else
+                                  begin
+                                    if hid_ln_elim then
+                                      begin
+                                        if (hid_ln_cnt=0) then
+                                          AddSplineEds12(i)
+                                        else
+                                          AddSplineEds05(i);
+                                      end
+                                    else
+                                      AddSplineEds00(i);
+                                  end;
+                              end;
+                          end
+                        {else
+                          AddSplineEds1(i)};
+                        CrtSplineEds(i);
+                      end;
+                    lazy_repaint_prev:=b2;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
+
+            {Points}
+            with (pts_var_ptr+i)^,local_prop do
+              begin
+                if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                  begin
+                    b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
+                    if b3_ then
+                      begin
+                        if free_mem_on_scale_down and (fst_img<>Nil) then
+                          fst_img.ClrArr;
+                        //if ((has_sel_pts_ptr+i)^=0) then
+                          begin
+                            AddSplineDupPts0(i);
+                            if byte_mode then
+                              AddSplinePts4 (i)
+                            else
+                              AddSplinePts0 (i);
+                            ClrSplineDupPts0(i);
+                          end
+                        {else
+                          begin
+                            AddSplineDupPts1(i);
+                            if byte_mode then
+                              AddSplinePts5 (i)
+                            else
+                              AddSplinePts1 (i);
+                            ClrSplineDupPts1(i);
+                          end};
+                        CrtSplinePts(i);
+                      end;
+                    lazy_repaint_prev:=b3;
+                  end
+                else
+                  begin
+                    if free_mem_on_out_of_wnd and (fst_img<>Nil) then
+                      fst_img.ClrArr;
+                    lazy_repaint_prev:=False;
+                  end;
+              end;
+
+        end;
+    end;
+
+end; {$endregion}
+procedure TSurface.RepSplineDraw2;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  rct_eds_var_ptr: PFastLine;
+  rct_pts_var_ptr: PFastLine;
+      eds_var_ptr: PFastLine;
+      pts_var_ptr: PFastLine;
+  has_sel_pts_ptr: PByte;
+  i              : integer;
+  b              : boolean;
+  b0 ,b1 ,b2 ,b3 : boolean;
+  b0_,b1_,b2_,b3_: boolean;
+begin
+  if (not show_spline) then
+    Exit;
+  with obj_var,sln_var do
+    begin
+      if rectangles_calc then
+        RctSplineAll2(0,obj_var.obj_cnt-1){RctSplineAll0(0,sln_obj_cnt-1)};
+      rct_eds_var_ptr:=Unaligned(@rct_eds_img_arr[0]);
+      rct_pts_var_ptr:=Unaligned(@rct_pts_img_arr[0]);
+          eds_var_ptr:=Unaligned(@    eds_img_arr[0]);
+          pts_var_ptr:=Unaligned(@    pts_img_arr[0]);
+      has_sel_pts_ptr:=Unaligned(@has_sel_pts    [0]);
       b              :=spline_scale_calc or form_resize_calc or (not repaint_spline_hid_ln_calc2);
       for i:=0 to sln_obj_cnt-1 do
         if (obj_arr[curve_inds_obj_arr[i]].obj_show<3) then
           begin
+
+            b:=b or obj_arr[curve_inds_obj_arr[i]].forced_repaint;
 
             {Bounding Rectangles: Edges}
             with (rct_eds_var_ptr+i)^,local_prop do
@@ -5497,9 +5710,14 @@ begin
   if repaint_spline_calc then
     begin
       if down_select_points_ptr^ and (not sel_var.sel_pts) then
-        RepSplineDraw1
+        RepSplineDraw2
       else
-        RepSplineDraw0;
+        begin
+          if (not down_play_anim_ptr^) then
+            RepSplineDraw0
+          else
+            RepSplineDraw1;
+        end;
     end; {$endregion}
 
   {Scene Drawing(Lower Layer)-----------------------} {$region -fold}
@@ -12243,7 +12461,7 @@ begin
     begin
       j:=obj_var.curve_inds_sct_arr[i];
       if (j>=start_ind) and (j<=end_ind) then
-        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show<2) and (obj_var.obj_arr[obj_var.curve_inds_obj_arr[i]].obj_show<3) then
+        if (obj_var.obj_arr[obj_var.obj_inds_arr[j]].obj_show<3) then
           begin
             k:=obj_var.obj_arr[obj_var.obj_inds_arr[j]].k_ind;
             ClrSplinePts   (k);
@@ -12468,7 +12686,7 @@ var
   i: integer;
 begin
   with rct_eds_img_arr[spline_ind],local_prop,fst_img do
-    if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
+    if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -12486,7 +12704,7 @@ var
   i: integer;
 begin
   with rct_pts_img_arr[spline_ind],local_prop,fst_img do
-    if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
+    if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -12504,7 +12722,7 @@ var
   i: integer;
 begin
   with eds_img_arr[spline_ind],local_prop,fst_img do
-    if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
+    if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -12522,7 +12740,7 @@ var
   i: integer;
 begin
   with pts_img_arr[spline_ind],local_prop,fst_img do
-    if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) and (nt_pix_intr_cnt_arr<>Nil) and (nt_pix_intr_sht_arr<>Nil) then
+    if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
         if lazy_repaint_prev and lazy_repaint then
           begin
@@ -20885,7 +21103,7 @@ end; {$endregion}
 
 // (Scene Tree) Иерархия обьектов:
 {LI} {$region -fold}
-procedure ObjIndsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure ObjIndsCalc;                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -20899,7 +21117,7 @@ begin
       LowLrObjCntCalc1;
     end;
 end; {$endregion}
-procedure ScTIndsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure ScTIndsCalc;                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i  : integer;
   i00: integer=-1;
@@ -20938,7 +21156,7 @@ begin
           TKindOfObject(10){kooFtext}: SetIndsSctArrVal(ftext_inds_sct_arr,i10,i);
         end;
 end; {$endregion}
-procedure CngPnVsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure CngPnVsCalc;                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,v: integer;
 
@@ -20976,7 +21194,7 @@ begin
         end;
     end;
 end; {$endregion}
-procedure SelPnlsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure SelPnlsCalc;                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -20985,7 +21203,7 @@ begin
       if (Controls[obj_inds_arr[i]] as TPanel).Visible and Items[i].Selected then
          (Controls[obj_inds_arr[i]] as TPanel).Color:=$0082804D;
 end; {$endregion}
-procedure UnsPnlsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure UnsPnlsCalc;                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -20993,7 +21211,7 @@ begin
     for i:=0 to ControlCount-1 do
       (Controls[obj_var.obj_inds_arr[i]] as TPanel).Color:=$00ABAFA3;
 end; {$endregion}
-procedure SelIndsCalc;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure SelIndsCalc;                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
 begin
@@ -21011,7 +21229,7 @@ begin
       sel_cnt:=SelectionCount;
     end;
 end; {$endregion}
-function  AreAllObjKindEqual: TKindOfObject;                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  AreAllObjKindEqual: TKindOfObject;                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   next_selected_node: TTreeNode;
   curr_selected_node: TTreeNode;
@@ -21060,7 +21278,7 @@ begin
       F_MainForm.L_Object_Name.Caption:=s;
     end;
 end; {$endregion}
-function  AreAllObjPrlxEqual: TPtPos;                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  AreAllObjPrlxEqual: TPtPos;                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   next_selected_node: TTreeNode;
   curr_selected_node: TTreeNode;
@@ -21098,7 +21316,7 @@ begin
         end;
     end;
 end; {$endregion}
-function  AreAllObjShowEqual: TByte;                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  AreAllObjShowEqual: TByte;                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   next_selected_node: TTreeNode;
   curr_selected_node: TTreeNode;
@@ -21139,13 +21357,13 @@ begin
         end;
     end;
 end; {$endregion}
-procedure AreAllObjPropEqual;                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure AreAllObjPropEqual;                                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   obj_var.sel_koo:=AreAllObjKindEqual;
   AreAllObjPrlxEqual;
   AreAllObjShowEqual;
 end; {$endregion}
-procedure ParallaxShiftChange;                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure ParallaxShiftChange;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with F_MainForm,obj_var do
     begin
@@ -21153,7 +21371,7 @@ begin
       global_prop.parallax_shift.y:=SE_Object_Properties_Parallax_Shift.Value;
     end;
 end; {$endregion}
-procedure ObjectShowChange;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure ObjectShowChange;                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with F_MainForm,obj_var do
     if CB_SObject_Properties_Show_In_Editor.Checked then
@@ -21171,7 +21389,7 @@ begin
           global_prop.obj_show:=3;
       end;
 end; {$endregion}
-procedure CrtNodeData(node_with_data:TTreeNode; g_ind:TColor);                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure CrtNodeData(node_with_data:TTreeNode; g_ind:TColor);                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   node_data_pointer: PNodeData;
 begin
@@ -21191,13 +21409,12 @@ begin
   end;
   node_with_data.Data:=PNodeData(node_data_pointer);
 end; {$endregion}
-procedure WrtNodeData(data_start_ptr:PPtPos; data_write:TPtPos; size_of_data:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure WrtNodeData(data_start_ptr:PPtPos;   data_write:TPtPos;  size_of_data:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
   if (F_MainForm.TV_Scene_Tree.SelectionCount=0) then
     Exit;
-  //size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
   with F_MainForm.TV_Scene_Tree,obj_var do
     begin
       for i:=0 to SelectionCount-1 do
@@ -21205,13 +21422,12 @@ begin
       (data_start_ptr+0*size_of_data)^:=(data_start_ptr+obj_inds_arr[1]*size_of_data)^;
     end;
 end; {$endregion}
-procedure WrtNodeData(data_start_ptr:PByte;  data_write:byte;   size_of_data:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure WrtNodeData(data_start_ptr:PByte;    data_write:byte;    size_of_data:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
   if (F_MainForm.TV_Scene_Tree.SelectionCount=0) then
     Exit;
-  //size_of_data:=SizeOf(TObjInfo) div SizeOf(data_start_ptr);
   with F_MainForm.TV_Scene_Tree,obj_var do
     begin
       for i:=0 to SelectionCount-1 do
@@ -21219,12 +21435,25 @@ begin
       (data_start_ptr+0*size_of_data)^:=(data_start_ptr+obj_inds_arr[1]*size_of_data)^;
     end;
 end; {$endregion}
-procedure ClrNodeData(node_with_data:TTreeNode);                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure WrtNodeData(data_start_ptr:PBoolean; data_write:boolean; size_of_data:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
+begin
+  if (F_MainForm.TV_Scene_Tree.SelectionCount=0) then
+    Exit;
+  with F_MainForm.TV_Scene_Tree,obj_var do
+    begin
+      for i:=0 to SelectionCount-1 do
+        (data_start_ptr+obj_inds_arr[sel_inds_arr[i]]*size_of_data)^:=data_write;
+      (data_start_ptr+0*size_of_data)^:=(data_start_ptr+obj_inds_arr[1]*size_of_data)^;
+    end;
+end; {$endregion}
+procedure ClrNodeData(node_with_data:TTreeNode);                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (node_with_data.data<>Nil) then
     Dispose(PNodeData(node_with_data.data));
 end; {$endregion}
-procedure DeleteSelectedNodes(TV:TTreeView);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure DeleteSelectedNodes(TV:TTreeView);                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   List: TList;
   i,j : integer;
@@ -21267,7 +21496,7 @@ begin
     List.Free;
   end;
 end; {$endregion}
-procedure AddTagPanel(constref ind:integer);                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure AddTagPanel(constref ind:integer);                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   P_TreeView_Attributes_Cells:=TPanel.Create(Nil);
   with F_MainForm,TV_Scene_Tree,P_TreeView_Attributes_Cells do
@@ -21285,7 +21514,7 @@ begin
       //Tag       :=ind;
     end;
 end; {$endregion}
-procedure CreateNode(item_text1,item_text2:ansistring; is_first_node:boolean=False);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure CreateNode(item_text1,item_text2:ansistring; is_first_node:boolean=False);      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   item_text: ansistring;
   ind       : integer;
@@ -21746,7 +21975,13 @@ begin
   WrtNodeData(PByte(@obj_var.obj_arr[0].obj_show),
               obj_var.global_prop.obj_show,
               PByte(@obj_var.obj_arr[1].obj_show)-PByte(@obj_var.obj_arr[0].obj_show));
-  srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
+  WrtNodeData(PBoolean(@obj_var.obj_arr[0].forced_repaint),
+              True,
+              PBoolean(@obj_var.obj_arr[1].forced_repaint)-PBoolean(@obj_var.obj_arr[0].forced_repaint));
+  srf_var.EventGroupsCalc(calc_arr,[18,30,41,48]);
+  WrtNodeData(PBoolean(@obj_var.obj_arr[0].forced_repaint),
+              False,
+              PBoolean(@obj_var.obj_arr[1].forced_repaint)-PBoolean(@obj_var.obj_arr[0].forced_repaint));
 end; {$endregion}
 // (Tag    Properties) Свойства тега:
 procedure TF_MainForm.SB_Tag_PropertiesMouseEnter                   (sender:TObject);                                                           {$region -fold}
@@ -22134,8 +22369,6 @@ begin
       {Draw Objects of Lower Layer} {$region -fold}
       if dir_a then
         begin
-          {main_char_pos.x-=parallax_shift.x;
-          main_char_pos.x+=main_char_speed;}
           MovLeft;
           if low_bmp_draw then
             begin
@@ -22151,8 +22384,6 @@ begin
         end;
       if dir_d then
         begin
-          {main_char_pos.x+=parallax_shift.x;
-          main_char_pos.x-=main_char_speed;}
           MovRight;
           if low_bmp_draw then
             begin
@@ -22168,8 +22399,6 @@ begin
         end;
       if dir_w then
         begin
-          {main_char_pos.y-=parallax_shift.y;
-          main_char_pos.y+=main_char_speed;}
           MovUp;
           if low_bmp_draw then
             begin
@@ -22185,8 +22414,6 @@ begin
         end;
       if dir_s then
         begin
-          {main_char_pos.y+=parallax_shift.y;
-          main_char_pos.y-=main_char_speed;}
           MovDown;
           if low_bmp_draw then
             begin
@@ -22210,6 +22437,46 @@ begin
       {Draw Objects of Upper Layer} {$region -fold}
       if (upp_lr_obj_cnt>0) then
         begin
+          if dir_a then
+            begin
+              if dir_w then
+                cmr_var.mov_dir:=mdLeftUp
+              else
+              if dir_s then
+                cmr_var.mov_dir:=mdLeftDown
+              else
+                cmr_var.mov_dir:=mdLeft;
+            end;
+          if dir_d then
+            begin
+              if dir_w then
+                cmr_var.mov_dir:=mdRightUp
+              else
+              if dir_s then
+                cmr_var.mov_dir:=mdRightDown
+              else
+                cmr_var.mov_dir:=mdRight;
+            end;
+          if dir_w then
+            begin
+              if dir_a then
+                cmr_var.mov_dir:=mdLeftUp
+              else
+              if dir_d then
+                cmr_var.mov_dir:=mdRightUp
+              else
+                cmr_var.mov_dir:=mdUp;
+            end;
+          if dir_s then
+            begin
+              if dir_a then
+                cmr_var.mov_dir:=mdLeftDown
+              else
+              if dir_d then
+                cmr_var.mov_dir:=mdRightDown
+              else
+                cmr_var.mov_dir:=mdDown;
+            end;
           {SetObjBkgnd
           (
             srf_bmp_ptr,
@@ -22221,7 +22488,7 @@ begin
           );}
           SetRctDstPtr(@inn_wnd_rct,low_lr_obj_cnt,obj_cnt-1);
           MovScene2   (             low_lr_obj_cnt,obj_cnt-1);
-      end; {$endregion}
+        end; {$endregion}
 
       with fast_actor_set_var.d_icon do
         begin
