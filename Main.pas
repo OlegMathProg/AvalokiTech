@@ -1,5 +1,7 @@
 unit Main;
 
+{This file contains main routines for game editor, including logic and user interfaces}
+
 {$mode objfpc}{$H+,M+,R-,I+,Q-,SMARTLINK+,INLINE+}
 
 interface
@@ -18,7 +20,8 @@ uses
   {$endif}
   IniFiles, Types, TypInfo, Mouse,
   {Own Units}
-  Fast_AnimK, Fast_Primitives, Scene_Tree, Performance_Time{, Game};
+  Documentation, Fast_AnimK, Fast_Primitives, Scene_Tree, Performance_Time,
+  RichMemo{, Game};
 
 const
 
@@ -421,6 +424,7 @@ type
     RB_Spline_Constant                               : TRadioButton;
     RB_Spline_None                                   : TRadioButton;
     RG_Edit_Mode                                     : TGroupBox;
+    RM_Description                                   : TRichMemo;
     SB_Select_Items_Selection_Color                  : TSpeedButton;
     SB_Select_Items_Outer_Subgraph_Color             : TSpeedButton;
     SB_Select_Items_Inner_Subgraph_Color             : TSpeedButton;
@@ -2691,6 +2695,27 @@ procedure TF_MainForm.MI_Object_InfoClick(sender:TObject); {$region -fold}
 begin
   L_Object_Info.Visible:=MI_Object_Info.Checked;
   show_obj_info        :=MI_Object_Info.Checked;
+end; {$endregion}
+{$endregion}
+
+// (Documentation) Документация:
+{LI} {$region -fold}
+procedure AddDocContent(var rich_memo:TRichMemo; str_arr:TStringArr; font_arr:TFontArr); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
+begin
+  with rich_memo do
+    begin
+      Lines.Add(str_arr[0]);
+      SetTextAttributes(0,Length(str_arr[0]),font_arr[0]);
+      if (Length(str_arr)=1) then
+        Exit;
+      for i:=1 to Length(str_arr)-1 do
+        begin
+          Lines.Add(str_arr[i]);
+          SetTextAttributes(Length(str_arr[i-1])+1,Length(str_arr[i]),font_arr[i]);
+        end;
+    end;
 end; {$endregion}
 {$endregion}
 
@@ -5414,8 +5439,8 @@ begin
     end;
   if (down_play_anim_ptr<>Nil) then
     begin
-      timeline_draw      :=      (down_play_anim_ptr^);
-      cursor_draw        :=      (down_play_anim_ptr^);
+      timeline_draw      :=(down_play_anim_ptr^);
+      cursor_draw        :=(down_play_anim_ptr^);
     end;
 
   {Rectangles----------------------------} {$region -fold}

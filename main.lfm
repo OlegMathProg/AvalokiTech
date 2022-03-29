@@ -1,7 +1,7 @@
 object F_MainForm: TF_MainForm
-  Left = 401
+  Left = 537
   Height = 707
-  Top = 95
+  Top = 168
   Width = 1025
   HorzScrollBar.Page = 1
   HorzScrollBar.Visible = False
@@ -14093,11 +14093,12 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 484
-    Top = 180
+    Height = 48
+    Top = 616
     Width = 156
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Anchors = []
     Color = 6780768
+    Enabled = False
     Font.CharSet = ANSI_CHARSET
     Font.Color = 1935614
     Font.Height = -16
@@ -14111,6 +14112,7 @@ object F_MainForm: TF_MainForm
     ReadOnly = True
     ScrollBars = ssAutoBoth
     TabOrder = 22
+    Visible = False
     WordWrap = False
   end
   object SB_Tag_Properties: TScrollBox
@@ -14256,11 +14258,30 @@ object F_MainForm: TF_MainForm
     Width = 4
     Align = alCustom
     Anchors = [akTop, akBottom]
+    AutoSnap = False
     Color = 9014912
     OnChangeBounds = S_Splitter8ChangeBounds
     ParentColor = False
     ParentShowHint = False
     ResizeAnchor = akRight
+  end
+  object RM_Description: TRichMemo
+    AnchorSideLeft.Control = S_Splitter1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = S_Splitter2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = S_Splitter8
+    AnchorSideBottom.Control = P_Image_Editor
+    AnchorSideBottom.Side = asrBottom
+    Left = 4
+    Height = 484
+    Top = 180
+    Width = 156
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = clScrollBar
+    HideSelection = False
+    TabOrder = 29
+    ZoomFactor = 1
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.obj'

@@ -461,6 +461,12 @@ type
 
   TGCDArr           =array of TGCDGrid;
   PGCDArr           =TGCDArr;
+
+  TStringArr        =array of string;
+  PStringArr        =^TStringArr;
+
+  TFontArr          =array of TFont;
+  PFontArr          =^TFontArr;
   {****************************************************************************}
 
 
