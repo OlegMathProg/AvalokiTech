@@ -357,7 +357,7 @@ var
 
 implementation
 
-uses
+uses //
 
   Main;
 
@@ -763,9 +763,9 @@ begin
   obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=start_ind to Length(obj_arr)-1 do
-    if (((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo<>koo) and ((not (obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract         )    or
-                                                             (    (obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,1])))  or
-       (((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo =koo) and  (    (obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [2,3])) then
+    if    (((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.koo<>koo) and
+      ((not (obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.abstract) and
+           ((obj_arr_ptr+(obj_inds_arr_ptr+i)^)^.obj_show in [0,1]))) then
       begin
         Result:=True;
         Break;

@@ -2522,6 +2522,8 @@ procedure AreAllObjPropEqual;                                         inline; {$
 procedure ParallaxShiftChange;                                        inline; {$ifdef Linux}[local];{$endif}
 //
 procedure ObjectShowChange;                                           inline; {$ifdef Linux}[local];{$endif}
+//
+procedure SetVisibilityChange;                                        inline; {$ifdef Linux}[local];{$endif}
 
 procedure CrtNodeData        (         node_with_data:TTreeNode;
                                        g_ind         :TColor);        inline; {$ifdef Linux}[local];{$endif}
@@ -21111,7 +21113,10 @@ begin
         end;
       Result:=obj_var.obj_arr[PNodeData(Items[obj_var.first_sel_node_ind].Data)^.g_ind].obj_show;
       if (SelectionCount=1) then
-        Exit;
+        begin
+
+          Exit;
+        end;
       next_selected_node:=Items[obj_var.first_sel_node_ind];
       curr_selected_node:=next_selected_node;
       while (next_selected_node<>Nil) do
@@ -21167,6 +21172,13 @@ begin
         else
           global_prop.obj_show:=3;
       end;
+end; {$endregion}
+procedure SetVisibilityChange;                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  with F_MainForm,obj_var do
+    begin
+
+    end;
 end; {$endregion}
 procedure CrtNodeData(node_with_data:TTreeNode; g_ind:TColor);                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -21322,19 +21334,19 @@ begin
 end; {$endregion}
 {$endregion}
 {UI} {$region -fold}
-constructor TF_MainForm.Create                                      (TheOwner:TComponent);                                                      {$region -fold}
+constructor TF_MainForm.Create                                  (TheOwner:TComponent);                                                      {$region -fold}
 begin
   inherited Create(TheOwner);
 end; {$endregion}
-procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelDown         (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
+procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelDown     (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
 begin
   TV_Scene_Tree.Perform(WM_VSCROLL,MakeWParam(SB_LINEDOWN,0),0);
 end; {$endregion}
-procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelUp           (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
+procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelUp       (sender:TObject; shift:TShiftState; mousepos:TPoint; var handled:boolean);  {$region -fold}
 begin
   TV_Scene_Tree.Perform(WM_VSCROLL,MakeWParam(SB_LINEUP,0),0);
 end; {$endregion}
-procedure TF_MainForm.MI_Add_GroupClick                             (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Add_GroupClick                         (sender:TObject);                                                           {$region -fold}
 var
   world_axis_shift: TPtPos;
   //items_text      : ansistring;
@@ -21353,7 +21365,7 @@ begin
     end;
   DrawObjectInfo0;
 end; {$endregion}
-procedure TF_MainForm.MI_Remove_ObjectClick                         (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Remove_ObjectClick                     (sender:TObject);                                                           {$region -fold}
 begin
   if (TV_Scene_Tree.Selected=Nil) then
     begin
@@ -21367,7 +21379,7 @@ begin
     end;
   DeleteSelectedNodes(TV_Scene_Tree);
 end; {$endregion}
-procedure TF_MainForm.MI_Group_ObjectsClick                         (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Group_ObjectsClick                     (sender:TObject);                                                           {$region -fold}
 var
   j,m: integer;
 
@@ -21407,14 +21419,14 @@ begin
       Items.EndUpdate;
     end;
 end; {$endregion}
-procedure TF_MainForm.MI_Delete_Without_ChildrenClick               (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Delete_Without_ChildrenClick           (sender:TObject);                                                           {$region -fold}
 begin
 
 end; {$endregion}
-procedure TF_MainForm.MI_Delete_All_GroupsClick                     (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Delete_All_GroupsClick                 (sender:TObject);                                                           {$region -fold}
 begin
 end; {$endregion}
-procedure TF_MainForm.MI_Select_AllClick                            (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Select_AllClick                        (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -21425,7 +21437,7 @@ begin
   SelIndsCalc;
   AreAllObjPropEqual;
 end; {$endregion}
-procedure TF_MainForm.MI_Unselect_AllClick                          (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Unselect_AllClick                      (sender:TObject);                                                           {$region -fold}
 begin
   with TV_Scene_Tree do
     if (SelectionCount<>0) then
@@ -21433,7 +21445,7 @@ begin
   UnsPnlsCalc;
   AreAllObjPropEqual;
 end; {$endregion}
-procedure TF_MainForm.MI_Fold_AllClick                              (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Fold_AllClick                          (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -21441,12 +21453,12 @@ begin
     TV_Scene_Tree.Items[i].Expanded:=False;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Unfold_AllClick                            (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Unfold_AllClick                        (sender:TObject);                                                           {$region -fold}
 begin
   TV_Scene_Tree.FullExpand;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Fold_SelectedClick                         (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Fold_SelectedClick                     (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -21455,7 +21467,7 @@ begin
       TV_Scene_Tree.Items[i].Expanded:=False;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Unfold_SelectedClick                       (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Unfold_SelectedClick                   (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -21464,36 +21476,36 @@ begin
       TV_Scene_Tree.Items[i].Expanded:=True;
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeExpanded                         (sender:TObject; node:TTreeNode);                                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeExpanded                     (sender:TObject; node:TTreeNode);                                           {$region -fold}
 begin
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeExpanding                        (sender:TObject; node:TTreeNode; var allowexpansion:boolean);               {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeExpanding                    (sender:TObject; node:TTreeNode; var allowexpansion:boolean);               {$region -fold}
 begin
   CngPnVsCalc;
 end; {$endregion}
-procedure TF_MainForm.MI_Goto_First_ObjectClick                     (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Goto_First_ObjectClick                 (sender:TObject);                                                           {$region -fold}
 begin
   TV_Scene_Tree.Items[1].Selected:=True;
   SelPnlsCalc;
   SelIndsCalc;
   AreAllObjPropEqual;
 end; {$endregion}
-procedure TF_MainForm.MI_Goto_Last_ObjectClick                      (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.MI_Goto_Last_ObjectClick                  (sender:TObject);                                                           {$region -fold}
 begin
   TV_Scene_Tree.Items[TV_Scene_Tree.Items.Count-1].Selected:=True;
   SelPnlsCalc;
   SelIndsCalc;
   AreAllObjPropEqual;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeDragOver                         (sender,source:TObject; x,y:integer; state:TDragState; var accept:boolean); {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeDragOver                     (sender,source:TObject; x,y:integer; state:TDragState; var accept:boolean); {$region -fold}
 begin
   SelPnlsCalc;
   SelIndsCalc;
   AreAllObjPropEqual;
   accept:=True and (sel_var.sel_pts_cnt=0); // If TRUE then accept the draged item
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeMouseDown                        (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);      {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeMouseDown                    (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);      {$region -fold}
 var
   target_node: TTreeNode;
   shift_name : string;
@@ -21541,7 +21553,7 @@ begin
         UnsPnlsCalc;
       end;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeMouseMove                        (sender:TObject; shift:TShiftState; x,y:integer);                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeMouseMove                    (sender:TObject; shift:TShiftState; x,y:integer);                           {$region -fold}
 var
   target_node: TTreeNode;
   i          : integer;
@@ -21576,11 +21588,11 @@ begin
           end;
     end;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeMouseEnter                       (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeMouseEnter                   (sender:TObject);                                                           {$region -fold}
 begin
   is_mouse_in_scene_tree:=True;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeMouseLeave                       (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeMouseLeave                   (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
@@ -21593,19 +21605,19 @@ begin
       end;
   is_mouse_in_scene_tree:=False;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeDblClick                         (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeDblClick                     (sender:TObject);                                                           {$region -fold}
 begin
 
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeEditing                          (sender:TObject; node:TTreeNode; var allowedit:boolean);                    {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeEditing                      (sender:TObject; node:TTreeNode; var allowedit:boolean);                    {$region -fold}
 begin
   KeysDisable;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeEditingEnd                       (sender:TObject; node:TTreeNode; cancel:boolean);                           {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeEditingEnd                   (sender:TObject; node:TTreeNode; cancel:boolean);                           {$region -fold}
 begin
   KeysEnable;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeKeyDown                          (sender:TObject; var key:word; shift:TShiftState);                          {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeKeyDown                      (sender:TObject; var key:word; shift:TShiftState);                          {$region -fold}
 var
   s: string;
 begin
@@ -21667,7 +21679,7 @@ begin
       end;
     end;
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeKeyPress                         (sender:TObject; var key:char);                                             {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeKeyPress                     (sender:TObject; var key:char);                                             {$region -fold}
 begin
   with TV_Scene_Tree do
     case key of
@@ -21685,7 +21697,7 @@ begin
     end;
   //Mouse_Event
 end; {$endregion}
-procedure TF_MainForm.TV_Scene_TreeDragDrop                         (sender,source:TObject; x,y:integer);                                       {$region -fold}
+procedure TF_MainForm.TV_Scene_TreeDragDrop                     (sender,source:TObject; x,y:integer);                                       {$region -fold}
 var
   source_node,target_node: TTreeNode;
 begin
@@ -21711,7 +21723,7 @@ begin
   cmr_var.parallax_shift:=obj_var.obj_arr[0].parallax_shift;
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
-procedure TF_MainForm.S_TreeView_SplitterChangeBounds               (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.S_TreeView_SplitterChangeBounds           (sender:TObject);                                                           {$region -fold}
 begin
   {$ifdef Windows}
   Application.ProcessMessages;
@@ -21723,17 +21735,17 @@ begin
   treeview_splitter_shift:=S_TreeView_Splitter.left-S_Splitter3.left;
 end; {$endregion}
 // (Object Properties) Свойства обьекта:
-procedure TF_MainForm.SB_Object_PropertiesMouseEnter                (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Object_PropertiesMouseEnter            (sender:TObject);                                                           {$region -fold}
 begin
   SB_Object_Properties.Color:=HighLight(SB_Object_Properties.Color,0,0,0,0,0,16);
   P_Object_Properties .Color:=HighLight(P_Object_Properties .Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.SB_Object_PropertiesMouseLeave                (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Object_PropertiesMouseLeave            (sender:TObject);                                                           {$region -fold}
 begin
   SB_Object_Properties.Color:=Darken(SB_Object_Properties.Color,0,0,0,0,0,16);
   P_Object_Properties .Color:=Darken(P_Object_Properties .Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.SE_Object_Properties_Parallax_ShiftChange     (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SE_Object_Properties_Parallax_ShiftChange (sender:TObject);                                                           {$region -fold}
 begin
   ParallaxShiftChange;
   if (TV_Scene_Tree.SelectionCount=0) or (is_mouse_in_scene_tree) then
@@ -21745,7 +21757,7 @@ begin
   cmr_var.parallax_shift:=obj_var.obj_arr[0].parallax_shift;
   srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
 end; {$endregion}
-procedure TF_MainForm.CB_SObject_Properties_Show_In_EditorChange    (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.CB_SObject_Properties_Show_In_EditorChange(sender:TObject);                                                           {$region -fold}
 begin
   ObjectShowChange;
   if (TV_Scene_Tree.SelectionCount=0) or (is_mouse_in_scene_tree) then
@@ -21763,12 +21775,12 @@ begin
               PBoolean(@obj_var.obj_arr[1].forced_repaint)-PBoolean(@obj_var.obj_arr[0].forced_repaint));
 end; {$endregion}
 // (Tag    Properties) Свойства тега:
-procedure TF_MainForm.SB_Tag_PropertiesMouseEnter                   (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Tag_PropertiesMouseEnter               (sender:TObject);                                                           {$region -fold}
 begin
   SB_Tag_Properties.Color:=HighLight(SB_Tag_Properties.Color,0,0,0,0,0,16);
   P_Tag_Properties .Color:=HighLight(P_Tag_Properties .Color,0,0,0,0,0,16);
 end; {$endregion}
-procedure TF_MainForm.SB_Tag_PropertiesMouseLeave                   (sender:TObject);                                                           {$region -fold}
+procedure TF_MainForm.SB_Tag_PropertiesMouseLeave               (sender:TObject);                                                           {$region -fold}
 begin
   SB_Tag_Properties.Color:=Darken(SB_Tag_Properties.Color,0,0,0,0,0,16);
   P_Tag_Properties .Color:=Darken(P_Tag_Properties .Color,0,0,0,0,0,16);
