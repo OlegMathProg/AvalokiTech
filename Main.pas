@@ -11,7 +11,7 @@ uses
   {ZLib,}
   Graphics, Classes, SysUtils, Forms, ComCtrls, GraphType, LResources, Dialogs, FileUtil,
   Math, Menus, StdCtrls, ExtCtrls, Buttons, Controls, Spin, ExtDlgs, ComboEx, MMSystem,
-  OpenGLContext, lclvlc, GL, GLU,
+  RichMemo, OpenGLContext, lclvlc, GL, GLU,
   {$ifdef Windows}
   Windows, WinInet, ImgList,
   {$endif}
@@ -20,8 +20,7 @@ uses
   {$endif}
   IniFiles, Types, TypInfo, Mouse,
   {Own Units}
-  Documentation, Fast_AnimK, Fast_Primitives, Scene_Tree, Performance_Time,
-  RichMemo{, Game};
+  Documentation, Fast_AnimK, Fast_Primitives, Scene_Tree, Performance_Time{, Game};
 
 const
 
@@ -356,6 +355,7 @@ type
     P_Select_Items_Selection_Prop                    : TPanel;
     P_Select_Items_Outer_Subgraph_Prop               : TPanel;
     P_Select_Items_Inner_Subgraph_Prop               : TPanel;
+    P_Description: TPanel;
     P_Text_Drawing_Prop                              : TPanel;
     P_Spline_Spiral                                  : TPanel;
     P_SGrid                                          : TPanel;
@@ -2483,8 +2483,8 @@ var
 
 
 {forward declarations begin}(**************************************************)
-{Miscellaneous}
-{}
+{Miscellaneous Routines}
+function  GetFocusedControl(parent_control:TControl): string; inline; {$ifdef Linux}[local];{$endif}
 procedure SpeedButtonRepaint; inline; {$ifdef Linux}[local];{$endif}
 procedure BtnColAndDown(constref spd_btn:TSpeedButton; var down_flag:boolean; color_down:TColor=NAV_SEL_COL_0; color_up:TColor=$00CBDAB1); inline; {$ifdef Linux}[local];{$endif}
 procedure SelectionBounds(custom_bitmap:Graphics.TBitmap; custom_rect:TPtRect; custom_color:TColor; custom_width:integer);
@@ -2576,6 +2576,14 @@ uses
 
 {LI = Logic Interface;
  UI = User  Interface.}
+
+// (Miscellaneous Routines) Разные процедуры:
+{LI} {$region -fold}
+function GetFocusedControl(parent_control:TControl): string; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+
+end; {$endregion}
+{$endregion}
 
 // (Main Arrays Finalization) Очистка основных массивов:
 {LI} {$region -fold}
@@ -2700,20 +2708,27 @@ end; {$endregion}
 
 // (Documentation) Документация:
 {LI} {$region -fold}
-procedure AddDocContent(var rich_memo:TRichMemo; str_arr:TStringArr; font_arr:TFontArr); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure AddDocContent(var rich_memo:TRichMemo; str_arr:TStringArr; font_arr:TFontArr; char_pos_start:integer); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  i: integer;
+  i  : integer;
+  str: string;
 begin
   with rich_memo do
     begin
-      Lines.Add(str_arr[0]);
-      SetTextAttributes(0,Length(str_arr[0]),font_arr[0]);
       if (Length(str_arr)=1) then
-        Exit;
-      for i:=1 to Length(str_arr)-1 do
         begin
-          Lines.Add(str_arr[i]);
-          SetTextAttributes(Length(str_arr[i-1])+1,Length(str_arr[i]),font_arr[i]);
+          Lines.Add(str_arr[0]);
+          SetTextAttributes(char_pos_start,Length(str_arr[0])+char_pos_start,font_arr[0]);
+        end
+      else
+        begin
+          str:='';
+          for i:=0 to Length(str_arr)-1 do
+            str+=str_arr[i];
+          Lines.Add(str);
+          SetTextAttributes(char_pos_start,Length(str_arr[0])+char_pos_start,font_arr[0]);
+          for i:=1 to Length(str_arr)-1 do
+            SetTextAttributes(Length(str_arr[i-1])+1+char_pos_start,Length(str_arr[i])+char_pos_start,font_arr[i]);
         end;
     end;
 end; {$endregion}
@@ -14110,6 +14125,14 @@ procedure TF_MainForm.SB_SplineClick                                         (se
 begin
   DrawingPanelsSetVisibility1(down_spline_ptr,P_Spline,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_spline_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
+  AddDocContent(RM_Description,fdesc_doc_str_arr,fdesc_doc_font_arr,0);
+  AddDocContent(RM_Description,curve_doc_str_arr,curve_doc_font_arr,Length(fdesc_doc_str_arr[0]));
+  RM_Description.Perform(EM_GETFIRSTVISIBLELINE,0,0);
 end; {$endregion}
 {Edges-------}
 procedure TF_MainForm.P_Spline_Edges_PropMouseEnter                          (sender:TObject); {$region -fold}
@@ -14394,6 +14417,17 @@ begin
   if Result then
     DrawCanvas;
 end; {$endregion}
+procedure SplineModeSelect;                                                            inline; {$region -fold}
+begin
+  with F_MainForm do
+    begin
+      L_Spline_Points_Freq  .visible :=((CB_Spline_Mode.ItemIndex=0) or (CB_Spline_Mode.ItemIndex=2));
+      SE_Spline_Pts_Freq    .visible :=((CB_Spline_Mode.ItemIndex=0) or (CB_Spline_Mode.ItemIndex=2));
+      L_Spline_Spray_Radius .visible := (CB_Spline_Mode.ItemIndex=2);
+      SE_Spline_Spray_Radius.visible := (CB_Spline_Mode.ItemIndex=2);
+      sln_var.global_prop   .sln_mode:=TSplineMode(CB_Spline_Mode.ItemIndex);
+    end;
+end; {$endregion}
 procedure TF_MainForm.P_Spline_Drawing_PropMouseEnter                        (sender:TObject); {$region -fold}
 begin
   P_Spline_Drawing_Prop.Color:=HighLight(P_Spline_Drawing_Prop.Color,0,0,0,0,0,16);
@@ -14484,11 +14518,7 @@ begin
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_ModeSelect                                   (sender:TObject); {$region -fold}
 begin
-  L_Spline_Points_Freq  .visible:=((CB_Spline_Mode.ItemIndex=0) or (CB_Spline_Mode.ItemIndex=2));
-  SE_Spline_Pts_Freq    .visible:=((CB_Spline_Mode.ItemIndex=0) or (CB_Spline_Mode.ItemIndex=2));
-  L_Spline_Spray_Radius .visible:= (CB_Spline_Mode.ItemIndex=2);
-  SE_Spline_Spray_Radius.visible:= (CB_Spline_Mode.ItemIndex=2);
-  sln_var.global_prop.sln_mode  :=TSplineMode(CB_Spline_Mode.ItemIndex);
+  SplineModeSelect;
 end; {$endregion}
 procedure TF_MainForm.SE_Spline_Pts_FreqChange                               (sender:TObject); {$region -fold}
 begin
@@ -19935,13 +19965,13 @@ end; {$endregion}
 procedure TF_MainForm.FormKeyPress      (sender:TObject; var key:char);                                            {$region -fold}
 begin
 
-  {Change Pivot Mode} {$region -fold}
+  {Change Pivot Mode-} {$region -fold}
   if (key=#32{'space'}) then
     if down_select_points_ptr^ then
-      with srf_var do
+      with srf_var,sel_var do
         begin
           need_repaint:=True;
-          if (sel_var.sel_pts_cnt>0) then
+          if (sel_pts_cnt>0) then
             with pvt_var do
               begin
                 LowerBmpToMainBmp;
@@ -19951,12 +19981,9 @@ begin
                   (pmPivotRotate): pvt_mode:=(pmPivotMove  );
                 end;
                 Screen.Cursor:=crNone;
-                with sel_var do
-                  begin
-                    fill_bmp_only:=True;
-                    FillSelBmpAndSelPtsBRectDraw;
-                    fill_bmp_only:=False;
-                  end;
+                fill_bmp_only:=True;
+                FillSelBmpAndSelPtsBRectDraw;
+                fill_bmp_only:=False;
                 PivotDraw(Ptpos(0,0),Trunc(pvt_pos.x),Trunc(pvt_pos.y));
               end
           else
@@ -19966,14 +19993,26 @@ begin
                 CB_Select_Items_Selection_Drawing_Mode.ItemIndex:=0
               else
                 CB_Select_Items_Selection_Drawing_Mode.ItemIndex:=CB_Select_Items_Selection_Drawing_Mode.ItemIndex+1;
-              sel_var.ChangeSelectionMode(CB_Select_Items_Selection_Drawing_Mode.ItemIndex);
+              ChangeSelectionMode(CB_Select_Items_Selection_Drawing_Mode.ItemIndex);
             end;
           CnvToCnv(srf_bmp_rct,Canvas,srf_bmp.Canvas,SRCCOPY);
           need_repaint:=False;
-          //InvalidateInnerWindow;
         end; {$endregion}
 
-  {Check Exit-------} {$region -fold}
+  {Change Spline Mode} {$region -fold}
+  if (key=#32{'space'}) then
+    if down_spline_ptr^ then
+      with sln_var do
+        if (global_prop.sln_type=stFreeHand) then
+          begin
+            if (CB_Spline_Mode.ItemIndex=CB_Spline_Mode.Items.Count-1) then
+              CB_Spline_Mode.ItemIndex:=0
+            else
+              CB_Spline_Mode.ItemIndex:=CB_Spline_Mode.ItemIndex+1;
+            SplineModeSelect;
+          end; {$endregion}
+
+  {Check Exit--------} {$region -fold}
   if  sln_var.draw_spline            or
      (srf_var.inn_wnd_rct.width <=0) or
      (srf_var.inn_wnd_rct.height<=0) or
@@ -19986,7 +20025,7 @@ begin
        Exit;
      end; {$endregion}
 
-  {Switch Buttons---} {$region -fold}
+  {Switch Buttons----} {$region -fold}
   if (key=Char(key_arr[04]{#49})) or (key=Char(key_alt_arr[04]{' '})) then
     ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
   // button 'Brush':
@@ -19997,7 +20036,17 @@ begin
     ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
   // button 'Spline':
   if (key=Char(key_arr[07]{#52})) or (key=Char(key_alt_arr[07]{'q'})) then
-    ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
+    begin
+      ButtonKeyPress(SB_Spline               ,P_Spline               ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spline_ptr               ,0,000004);
+      if (not down_spline_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+      AddDocContent(RM_Description,fdesc_doc_str_arr,fdesc_doc_font_arr,0);
+      AddDocContent(RM_Description,curve_doc_str_arr,curve_doc_font_arr,Length(fdesc_doc_str_arr[0]));
+      RM_Description.Perform(EM_SCROLLCARET,0,0);
+    end;
   // button 'Select Points':
   if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
     ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
@@ -20410,6 +20459,10 @@ var
 begin
 
   exec_timer:=TPerformanceTime.Create;
+
+  {Documentation--------} {$region -fold}
+  RM_Description.Transparent:=True;
+  HintsFontArrInit; {$endregion}
 
   {Scene Tree-----------} {$region -fold}
   obj_var:=TSceneTree.Create;
