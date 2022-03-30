@@ -52,7 +52,7 @@ procedure HintsFontArrInit; inline; {$region -fold}
 begin
   SetLength(fdesc_doc_font_arr,1);
 
-  fdesc_doc_font_arr[0]        :=TFont.Create;
+  fdesc_doc_font_arr[0]:=TFont.Create;
 
   with fdesc_doc_font_arr[0] do
     begin
@@ -64,7 +64,7 @@ begin
 
   SetLength(curve_doc_font_arr,2);
 
-  curve_doc_font_arr[0]        :=TFont.Create;
+  curve_doc_font_arr[0]:=TFont.Create;
   with curve_doc_font_arr[0] do
     begin
       Color  :=$00B65A66;
@@ -73,7 +73,7 @@ begin
       Size   :=14;
     end;
 
-  curve_doc_font_arr[1]        :=TFont.Create;
+  curve_doc_font_arr[1]:=TFont.Create;
   with curve_doc_font_arr[1] do
     begin
       Color  :=$00394F28;
@@ -81,8 +81,6 @@ begin
       Name   :='Gentium Basic';
       Size   :=12;
     end;
-
-
 end; {$endregion}
 
 end.
