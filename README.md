@@ -5,6 +5,9 @@
 # Of the features, I can note the super high performance of splines and sprites(work is still being done on it). 
 # In the future, a powerful editor for sprites, splines and other game objects will be available.
 
+Screenshots:
+![EditorPreview0](https://user-images.githubusercontent.com/51221856/160921947-4f552c98-457f-4f9c-a314-3e104984b6a4.png)
+
 Nearest TODO:
   - Optimization:
     1. get rid of double, triple or quadruple addressing (priority: low; complexity: easy);
