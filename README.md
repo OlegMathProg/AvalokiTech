@@ -1,10 +1,10 @@
 ![Logo3](https://user-images.githubusercontent.com/51221856/131055087-984f233a-a2b4-4bb8-b1bf-d8ecc2f7de60.png)
 
-# It is a 2D game engine in progress(written on Free Pascal and compilled in Lazarus). 
+# It is a 2D game engine in progress(written on Object Pascal and compilled in Lazarus). 
 # Uses software rendering. 
 # Of the features, I can note the super high performance of splines and sprites(work is still being done on it). 
 # In the future, a powerful editor for sprites, splines and other game objects will be available.
-# Binary executable file(MorphoEngine.exe) is included. 
+# Executable file(MorphoEngine.exe) is included, so run-n-fun 
 
 Screenshots:
 
