@@ -3889,7 +3889,7 @@ object F_MainForm: TF_MainForm
     ShowRoot = False
     StateImages = IL_Scene_Tree_Image_List
     StateImagesWidth = 24
-    TabOrder = 8
+    TabOrder = 6
     ToolTips = False
     OnDblClick = TV_Scene_TreeDblClick
     OnDragDrop = TV_Scene_TreeDragDrop
@@ -13695,7 +13695,7 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 9
+    TabOrder = 7
     Visible = False
   end
   object P_Align_Hot_Keys: TPanel
@@ -13713,7 +13713,7 @@ object F_MainForm: TF_MainForm
     Caption = 'P_Align_Hot_Keys'
     DockSite = True
     Enabled = False
-    TabOrder = 10
+    TabOrder = 8
     Visible = False
   end
   object BB_Bottom_Splitter_To_Right: TBitBtn
@@ -13734,7 +13734,7 @@ object F_MainForm: TF_MainForm
     ParentBidiMode = False
     ParentFont = False
     ParentShowHint = False
-    TabOrder = 11
+    TabOrder = 9
     Visible = False
   end
   object BB_Bottom_Splitter_To_Left: TBitBtn
@@ -13757,7 +13757,7 @@ object F_MainForm: TF_MainForm
     ParentBidiMode = False
     ParentFont = False
     ParentShowHint = False
-    TabOrder = 12
+    TabOrder = 10
     Visible = False
   end
   object S_TreeView_Splitter: TSplitter
@@ -13800,7 +13800,7 @@ object F_MainForm: TF_MainForm
     Font.Name = 'Iskoola Pota'
     ParentColor = False
     ParentFont = False
-    TabOrder = 14
+    TabOrder = 12
   end
   object SB_TreeView_Object_Tags: TScrollBox
     AnchorSideLeft.Control = S_TreeView_Splitter
@@ -13823,7 +13823,7 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Top = 24
     BorderSpacing.Right = 4
     BorderSpacing.Bottom = 2
-    TabOrder = 15
+    TabOrder = 13
     OnMouseWheelDown = SB_TreeView_Object_TagsMouseWheelDown
     OnMouseWheelUp = SB_TreeView_Object_TagsMouseWheelUp
   end
@@ -13838,7 +13838,7 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Top = 2
     ParentShowHint = False
     Smooth = True
-    TabOrder = 16
+    TabOrder = 14
   end
   object SB_StatusBar1: TStatusBar
     AnchorSideTop.Side = asrBottom
@@ -13890,7 +13890,7 @@ object F_MainForm: TF_MainForm
     ClientWidth = 257
     Color = 11117709
     ParentColor = False
-    TabOrder = 18
+    TabOrder = 16
     TabStop = True
     OnMouseEnter = SB_Object_PropertiesMouseEnter
     OnMouseLeave = SB_Object_PropertiesMouseLeave
@@ -14107,7 +14107,7 @@ object F_MainForm: TF_MainForm
     OnClick = TB_SpeedClick
     ParentFont = False
     ParentShowHint = False
-    TabOrder = 20
+    TabOrder = 18
     Visible = False
   end
   object L_Exec_Time_Info: TLabel
@@ -14156,7 +14156,7 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     ReadOnly = True
     ScrollBars = ssAutoBoth
-    TabOrder = 21
+    TabOrder = 19
     Visible = False
     WordWrap = False
   end
@@ -14181,7 +14181,7 @@ object F_MainForm: TF_MainForm
     ClientWidth = 257
     Color = 11117709
     ParentColor = False
-    TabOrder = 23
+    TabOrder = 21
     OnMouseEnter = SB_Tag_PropertiesMouseEnter
     OnMouseLeave = SB_Tag_PropertiesMouseLeave
     object L_Tag_Properties: TLabel
@@ -14189,10 +14189,8 @@ object F_MainForm: TF_MainForm
       Height = 16
       Top = 2
       Width = 136
-      Alignment = taRightJustify
       AutoSize = False
-      BidiMode = bdRightToLeft
-      Caption = 'Tag Properties'
+      Caption = 'Tag Properties:'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -14267,7 +14265,7 @@ object F_MainForm: TF_MainForm
     OnClick = Button1Click
     ParentFont = False
     ParentShowHint = False
-    TabOrder = 25
+    TabOrder = 23
     Visible = False
   end
   object P_Objects_Tags: TPanel
@@ -14294,7 +14292,7 @@ object F_MainForm: TF_MainForm
     Font.Name = 'Iskoola Pota'
     ParentColor = False
     ParentFont = False
-    TabOrder = 26
+    TabOrder = 24
   end
   object S_Splitter8: TSplitter
     AnchorSideTop.Control = S_Splitter2
@@ -14451,7 +14449,7 @@ object F_MainForm: TF_MainForm
       Caption = 'Setings'
       object MI_Trancparency: TMenuItem
         AutoCheck = True
-        Caption = 'Trancparency'
+        Caption = 'Transparency'
         OnClick = MI_TrancparencyClick
       end
       object MI_Antialiasing: TMenuItem

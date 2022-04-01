@@ -355,7 +355,7 @@ type
     P_Select_Items_Selection_Prop                    : TPanel;
     P_Select_Items_Outer_Subgraph_Prop               : TPanel;
     P_Select_Items_Inner_Subgraph_Prop               : TPanel;
-    P_Description: TPanel;
+    P_Description                                    : TPanel;
     P_Text_Drawing_Prop                              : TPanel;
     P_Spline_Spiral                                  : TPanel;
     P_SGrid                                          : TPanel;
@@ -2122,347 +2122,349 @@ type
 var
 
   {General}
-  F_MainForm                 : TF_MainForm;
-  max_sprite_w_h_rct         : TPtRect;
-  ini_var                    : TIniFile;
+  F_MainForm                  : TF_MainForm;
+  max_sprite_w_h_rct          : TPtRect;
+  ini_var                     : TIniFile;
   {inner window margin}
-  inn_wnd_mrg                : integer=01{0}{0};
-  splitter_thickness         : integer=04{2}{1};
-  status_bar_thickness       : integer=53;
-  pp_iters_cnt               : integer=01;
-  skip_invalidate            : byte   =00;
-  move_with_child_form       : boolean;
-  bottom_splitter_to_left    : boolean;
-  bottom_splitter_to_right   : boolean;
-  bucket_size_change         : boolean;
-  align_picture_to_center    : boolean=False;
-  full_screen                : boolean=True;
-  splitters_arr              : array[0..7] of PInteger;
+  inn_wnd_mrg                 : integer=01{0}{0};
+  splitter_thickness          : integer=04{2}{1};
+  status_bar_thickness        : integer=53;
+  pp_iters_cnt                : integer=01;
+  skip_invalidate             : byte   =00;
+  move_with_child_form        : boolean;
+  bottom_splitter_to_left     : boolean;
+  bottom_splitter_to_right    : boolean;
+  bucket_size_change          : boolean;
+  align_picture_to_center     : boolean=False;
+  full_screen                 : boolean=True;
+  splitters_arr               : array[0..7] of PInteger;
 
   {Show Object---------------------------------} {$region -fold}
   // show objects array
-  show_obj_arr               : array[0..9] of boolean;
+  show_obj_arr                : array[0..9] of boolean;
   // show all objects(visibility list)
-  show_all                   : boolean absolute show_obj_arr[00];
+  show_all                    : boolean absolute show_obj_arr[00];
   // show texture(visibility list)
-  show_tex                   : boolean absolute show_obj_arr[01];
+  show_tex                    : boolean absolute show_obj_arr[01];
   // show grid(visibility list)
-  show_grid                  : boolean absolute show_obj_arr[02];
+  show_grid                   : boolean absolute show_obj_arr[02];
   // show snap grid(visibility list)
-  show_snap_grid             : boolean absolute show_obj_arr[03];
+  show_snap_grid              : boolean absolute show_obj_arr[03];
   // show splines(visibility list)
-  show_spline                : boolean absolute show_obj_arr[04];
+  show_spline                 : boolean absolute show_obj_arr[04];
   // show textures on splines
-  show_tex_on_spline         : boolean absolute show_obj_arr[05];
+  show_tex_on_spline          : boolean absolute show_obj_arr[05];
   // show tile maps(visibility list)
-  show_tile_map              : boolean absolute show_obj_arr[06];
+  show_tile_map               : boolean absolute show_obj_arr[06];
   // show actors(visibility list)
-  show_actor                 : boolean absolute show_obj_arr[07];
+  show_actor                  : boolean absolute show_obj_arr[07];
   // show colliders(visibility list)
-  show_collider              : boolean absolute show_obj_arr[08];
+  show_collider               : boolean absolute show_obj_arr[08];
   // show world axis
-  show_world_axis            : boolean absolute show_obj_arr[09]; {$endregion}
+  show_world_axis             : boolean absolute show_obj_arr[09]; {$endregion}
 
   {Show Bounding Rectangles--------------------} {$region -fold}
   // show bounding rectangles array
-  show_b_rect_arr            : array[0..2] of boolean;
+  show_b_rect_arr             : array[0..2] of boolean;
   // show spline points bounding rectangle 1
-  show_spline_pts_b_rect_1   : boolean absolute show_b_rect_arr[0]{=True};
+  show_spline_pts_b_rect_1    : boolean absolute show_b_rect_arr[0]{=True};
   // show spline points bounding rectangle 2
-  show_spline_pts_b_rect_2   : boolean absolute show_b_rect_arr[1]{=True};
+  show_spline_pts_b_rect_2    : boolean absolute show_b_rect_arr[1]{=True};
   // show selected points bounding rectangle
-  show_selected_pts_b_rect   : boolean absolute show_b_rect_arr[2]{=True}; {$endregion}
+  show_selected_pts_b_rect    : boolean absolute show_b_rect_arr[2]{=True}; {$endregion}
 
   {Select Tools(checking of speed buttons down)} {$region -fold}
   // down buttons array
-  down_arr                      : array[0..10] of boolean;
+  down_arr                       : array[0..10] of boolean;
   // down button "Text"
-  down_text_ptr                 : PByteBool;
+  down_text_ptr                  : PByteBool;
   // down button "Brush"
-  down_brush_ptr                : PByteBool;
+  down_brush_ptr                 : PByteBool;
   // down button "Spray"
-  down_spray_ptr                : PByteBool;
+  down_spray_ptr                 : PByteBool;
   // down button "Spline"
-  down_spline_ptr               : PByteBool;
+  down_spline_ptr                : PByteBool;
   // down button "Select Points"
-  down_select_points_ptr        : PByteBool;
+  down_select_points_ptr         : PByteBool;
   // down button "Select Points"
-  down_select_texture_region_ptr: PByteBool;
+  down_select_texture_region_ptr : PByteBool;
   // down button "Regular Grid"
-  down_rgrid_ptr                : PByteBool;
+  down_rgrid_ptr                 : PByteBool;
   // down button "Snap Grid"
-  down_sgrid_ptr                : PByteBool;
+  down_sgrid_ptr                 : PByteBool;
   // down button "Play"
-  down_play_anim_ptr            : PByteBool;
+  down_play_anim_ptr             : PByteBool;
   // down button "Map Editor"
-  down_map_editor_ptr           : PByteBool;
+  down_map_editor_ptr            : PByteBool;
   // down button "Add Actor"
-  down_add_actor_ptr            : PByteBool;
+  down_add_actor_ptr             : PByteBool;
   {// down button "Text Event"
-  down_add_text_event_ptr       : PByteBool;} {$endregion}
+  down_add_text_event_ptr        : PByteBool;} {$endregion}
 
   {Calculation Flags---------------------------} {$region -fold}
   // calculation flags array
-  calc_arr                   : array[0..100] of boolean;
+  calc_arr                    : array[0..100] of boolean;
   // do all layers bounding rectangles need to be calculated:
-  main_bmp_rect_calc         : boolean absolute calc_arr[00];
+  main_bmp_rect_calc          : boolean absolute calc_arr[00];
   // do all layers bitmaps sizes need to be calculated?:
-  main_bmp_size_calc         : boolean absolute calc_arr[01];
+  main_bmp_size_calc          : boolean absolute calc_arr[01];
   // do specified arrays sizes need to be calculated(probably with calculation of appropriate bitmaps sizes):
-  main_bmp_arrs_calc         : boolean absolute calc_arr[02];
+  main_bmp_arrs_calc          : boolean absolute calc_arr[02];
   // get handles of all main buffers:
-  main_bmp_hndl_calc         : boolean absolute calc_arr[03];
+  main_bmp_hndl_calc          : boolean absolute calc_arr[03];
   // resize form:
-  form_resize_calc           : boolean absolute calc_arr[04];
+  form_resize_calc            : boolean absolute calc_arr[04];
   // is canvas changed:
-  change_canvas_calc         : boolean absolute calc_arr[05];
+  change_canvas_calc          : boolean absolute calc_arr[05];
   // background post-processing:
-  bkg_pp_calc                : boolean absolute calc_arr[06];
+  bkg_pp_calc                 : boolean absolute calc_arr[06];
   // is cursor in inner window:
-  drawing_area_enter_calc    : boolean absolute calc_arr[07];
+  drawing_area_enter_calc     : boolean absolute calc_arr[07];
   // does grid need to be calculated:
-  grid_calc                  : boolean absolute calc_arr[08];
+  grid_calc                   : boolean absolute calc_arr[08];
   // does snap grid need to be calculated:
-  snap_grid_calc             : boolean absolute calc_arr[09];
+  snap_grid_calc              : boolean absolute calc_arr[09];
   // calculate snap grid precision:
-  snap_grid_pr_calc          : boolean absolute calc_arr[10];
+  snap_grid_pr_calc           : boolean absolute calc_arr[10];
   // is snap grid precision changed:
-  snap_grid_precision_calc   : boolean absolute calc_arr[11];
+  snap_grid_precision_calc    : boolean absolute calc_arr[11];
   // add spline:
-  add_spline_calc            : boolean absolute calc_arr[12];
+  add_spline_calc             : boolean absolute calc_arr[12];
   // is spline simplification angle changed:
-  spline_smpl_angle_calc     : boolean absolute calc_arr[13];
+  spline_smpl_angle_calc      : boolean absolute calc_arr[13];
   // connect ends of spline:
-  connect_ends_calc          : boolean absolute calc_arr[14];
+  connect_ends_calc           : boolean absolute calc_arr[14];
   // anti-aliasing:
-  spline_aa_calc             : boolean absolute calc_arr[15];
+  spline_aa_calc              : boolean absolute calc_arr[15];
   // ...:
-  sel_tls_mrk_set_bckgd      : boolean absolute calc_arr[16];
+  sel_tls_mrk_set_bckgd       : boolean absolute calc_arr[16];
   // reset background settings for actors:
-  actor_set_bckgd            : boolean absolute calc_arr[17];
+  actor_set_bckgd             : boolean absolute calc_arr[17];
   // repaint all splines:
-  repaint_spline_calc        : boolean absolute calc_arr[18];
+  repaint_spline_calc         : boolean absolute calc_arr[18];
   // scale all splines:
-  spline_scale_calc          : boolean absolute calc_arr[19];
+  spline_scale_calc           : boolean absolute calc_arr[19];
   // draw selected edges:
-  sel_eds_draw_calc          : boolean absolute calc_arr[20];
+  sel_eds_draw_calc           : boolean absolute calc_arr[20];
   // reset background settings for timeline buttons:
-  timeline_set_bkgnd         : boolean absolute calc_arr[21];
+  timeline_set_bkgnd          : boolean absolute calc_arr[21];
   // reset background settings for timeline buttons:
-  cursors_set_bkgnd          : boolean absolute calc_arr[22];
+  cursors_set_bkgnd           : boolean absolute calc_arr[22];
   // timeline drawing:
-  timeline_draw              : boolean absolute calc_arr[23];
+  timeline_draw               : boolean absolute calc_arr[23];
   // cursor drawing:
-  cursor_draw                : boolean absolute calc_arr[24];
+  cursor_draw                 : boolean absolute calc_arr[24];
   // does pivot need to be unselected:
-  unselect_pivot_calc        : boolean absolute calc_arr[27];
+  unselect_pivot_calc         : boolean absolute calc_arr[27];
   // is spliter position changed:
-  splitter_pos_moved_calc    : boolean absolute calc_arr[28];
+  splitter_pos_moved_calc     : boolean absolute calc_arr[28];
   // scale background:
-  bckgd_scale_calc           : boolean absolute calc_arr[29];
+  bckgd_scale_calc            : boolean absolute calc_arr[29];
   // scene drawing:
-  fill_scene_calc            : boolean absolute calc_arr[30];
+  fill_scene_calc             : boolean absolute calc_arr[30];
   // align points:
-  align_pts_calc             : boolean absolute calc_arr[31];
+  align_pts_calc              : boolean absolute calc_arr[31];
   // calculate bounding rectangles:
-  rectangles_calc            : boolean absolute calc_arr[32];
-  // add spline         : hidden lines:
-  add_hid_ln_calc            : boolean absolute calc_arr[33];
+  rectangles_calc             : boolean absolute calc_arr[32];
+  // add spline               : hidden lines:
+  add_hid_ln_calc             : boolean absolute calc_arr[33];
   // repaint all splines: hidden lines:
-  repaint_spline_hid_ln_calc0: boolean absolute calc_arr[34];
-  repaint_spline_hid_ln_calc1: boolean absolute calc_arr[35];
-  repaint_spline_hid_ln_calc2: boolean absolute calc_arr[36];
+  repaint_spline_hid_ln_calc0 : boolean absolute calc_arr[34];
+  repaint_spline_hid_ln_calc1 : boolean absolute calc_arr[35];
+  repaint_spline_hid_ln_calc2 : boolean absolute calc_arr[36];
   // reset background settings for world axis:
-  world_axis_set_bckgd       : boolean absolute calc_arr[37];
+  world_axis_set_bckgd        : boolean absolute calc_arr[37];
   // lazy repaint:
-  lazy_repaint_calc          : boolean absolute calc_arr[38];
+  lazy_repaint_calc           : boolean absolute calc_arr[38];
   // add tile map:
-  add_tlmap_calc             : boolean absolute calc_arr[39];
+  add_tlmap_calc              : boolean absolute calc_arr[39];
   // ...:
-  has_edge_calc              : boolean absolute calc_arr[40];
+  has_edge_calc               : boolean absolute calc_arr[40];
   // ...:
-  copy1_calc                 : boolean absolute calc_arr[41];
+  copy1_calc                  : boolean absolute calc_arr[41];
   // ...:
-  copy2_calc                 : boolean absolute calc_arr[42];
+  copy2_calc                  : boolean absolute calc_arr[42];
   // ...:
-  copy3_calc                 : boolean absolute calc_arr[43];
+  copy3_calc                  : boolean absolute calc_arr[43];
   // ...:
-  copy4_calc                 : boolean absolute calc_arr[44];
+  copy4_calc                  : boolean absolute calc_arr[44];
   // ...:
-  copy5_calc                 : boolean absolute calc_arr[45];
+  copy5_calc                  : boolean absolute calc_arr[45];
   // ...:
-  copy6_calc                 : boolean absolute calc_arr[46];
+  copy6_calc                  : boolean absolute calc_arr[46];
   // ...:
-  copy7_calc                 : boolean absolute calc_arr[47];
+  copy7_calc                  : boolean absolute calc_arr[47];
   // ...:
-  copy8_calc                 : boolean absolute calc_arr[48];
+  copy8_calc                  : boolean absolute calc_arr[48];
   // reset background settings for local axis:
-  local_axis_set_bckgd       : boolean absolute calc_arr[49]; {$endregion}
+  local_axis_set_bckgd        : boolean absolute calc_arr[49]; {$endregion}
 
   {Miscellaneous Expressions-------------------} {$region -fold}
   // expressions array
-  exp_arr                    : array[0..2] of boolean;
+  exp_arr                     : array[0..2] of boolean;
   // selected_pts_count>0
-  exp0                       : boolean absolute exp_arr[0];
+  exp0                        : boolean absolute exp_arr[0];
   // selected_pts_count<>spline_pts_count
-  exp1                       : boolean absolute exp_arr[1];
+  exp1                        : boolean absolute exp_arr[1];
   // spline_pts_count>0
-  exp2                       : boolean absolute exp_arr[2]; {$endregion}
+  exp2                        : boolean absolute exp_arr[2]; {$endregion}
 
   {Visibility Panel}
-  visibility_panel_picture   : Graphics.TBitmap;
-  show_visibility_panel      : boolean=True;
-  show_obj_info              : boolean=True;
+  visibility_panel_picture    : Graphics.TBitmap;
+  show_visibility_panel       : boolean=True;
+  show_obj_info               : boolean=True;
 
   {Buttons:Draw-} {$region -fold}
-  P_Drawing_Buttons_ClickArr : array of TNotifyEvent;
-  prev_panel_draw            : TPanel;
-  curr_panel_draw            : TPanel; {$endregion}
+  P_Drawing_Buttons_ClickArr  : array of TNotifyEvent;
+  P_Animation_Buttons_ClickArr: array of TNotifyEvent;
+  prev_panel_draw             : TPanel;
+  curr_panel_draw             : TPanel; {$endregion}
 
   {Buttons:AnimK} {$region -fold}
-  prev_panel_animk           : TPanel;
-  curr_panel_animk           : TPanel; {$endregion}
+  prev_panel_animk            : TPanel;
+  curr_panel_animk            : TPanel; {$endregion}
 
   {Camera}
-  cmr_var                    : TCamera;
+  cmr_var                     : TCamera;
 
   {Main Layer}
-  srf_var                    : TSurface;
+  srf_var                     : TSurface;
 
   {Background Texture(single instance, not tiled)}
-  tex_var                    : TTex;
+  tex_var                     : TTex;
 
   {Regular Grid}
-  rgr_var                    : TRGrid;
+  rgr_var                     : TRGrid;
 
   {Snap Grid}
-  sgr_var                    : TSGrid;
+  sgr_var                     : TSGrid;
 
   {Spline}
-  sln_var                    : TCurve;
+  sln_var                     : TCurve;
 
   {Text}
-  txt_var                    : TFText;
+  txt_var                     : TFText;
 
   {UV}
-  uv_var                     : TUV;
+  uv_var                      : TUV;
 
   {Intersection Graph}
-  isg_var                    : TISGraph;
+  isg_var                     : TISGraph;
 
   {Selected Points}
-  sel_var                    : TSelPts;
+  sel_var                     : TSelPts;
 
   {Pivot}
-  pvt_var                    : TPivot;
+  pvt_var                     : TPivot;
 
   {Circle Selection}
-  crc_sel_var                : TCrcSel;
+  crc_sel_var                 : TCrcSel;
 
   {Brush Selection}
-  brs_sel_var                : TBrsSel;
+  brs_sel_var                 : TBrsSel;
 
   {Rectangle Selection}
-  rct_sel_var                : TRctSel;
+  rct_sel_var                 : TRctSel;
 
   {Map Editor}
-  tlm_var                    : TTlMap;
+  tlm_var                     : TTlMap;
 
   {Actors}
-  fast_actor_set_var         : TFastActorSet;
-  img_lst_bmp                : Graphics.TBitmap;
-  img_lst_bmp_ptr            : PInteger;
+  fast_actor_set_var          : TFastActorSet;
+  img_lst_bmp                 : Graphics.TBitmap;
+  img_lst_bmp_ptr             : PInteger;
 
   {Physics}
-  fast_physics_var           : TCollider;
+  fast_physics_var            : TCollider;
 
   {Fluid}
-  fast_fluid_var             : TFluid;
+  fast_fluid_var              : TFluid;
 
   {Scene Tree}
-  obj_var                    : TSceneTree;
-  single_selected_node_ind   : integer;
-  source_node_x,source_node_y: integer;
-  is_mouse_in_scene_tree     : boolean;
-  scene_tree_mouse_down      : boolean;
+  obj_var                     : TSceneTree;
+  single_selected_node_ind    : integer;
+  source_node_x,source_node_y : integer;
+  is_mouse_in_scene_tree      : boolean;
+  scene_tree_mouse_down       : boolean;
+  is_scene_tree_editing       : boolean;
 
   {Color Picker}
-  pixel_color                : TColor;
+  pixel_color                 : TColor;
 
   {Brush}
-  custom_icon                : TPortableNetworkGraphic;
-  PrevX,PrevY                : integer;
-  draw_brush                 : boolean;
+  custom_icon                 : TPortableNetworkGraphic;
+  PrevX,PrevY                 : integer;
+  draw_brush                  : boolean;
 
   {Spray}
-  draw_spray                 : boolean;
+  draw_spray                  : boolean;
 
-  sc0,sc1                    : TPtPos;
+  sc0,sc1                     : TPtPos;
 
-  ncs_adv_clip_rect          : TPtRectF;
+  ncs_adv_clip_rect           : TPtRectF;
 
-  mouse_pos_x,mouse_pos_y    : integer;
-  treeview_splitter_shift    : integer;
+  mouse_pos_x,mouse_pos_y     : integer;
+  treeview_splitter_shift     : integer;
 
-  P_TreeView_Attributes_Cells: TPanel;
+  P_TreeView_Attributes_Cells : TPanel;
 
   {Execution Time}
-  exec_timer                 : TPerformanceTime;
+  exec_timer                  : TPerformanceTime;
 
-  test_picture_color         : Graphics.TPicture;
-  test_picture_alpha         : Graphics.TPicture;
+  test_picture_color          : Graphics.TPicture;
+  test_picture_alpha          : Graphics.TPicture;
 
-  vec_x,vec_y                : integer;
+  vec_x,vec_y                 : integer;
 
-  sln_sprite_counter_pos_arr : TColorArr;
-  sln_sprite_counter_rad_arr : TColorArr;
-  sln_sprite_counter_pow_arr : TColorArr;
+  sln_sprite_counter_pos_arr  : TColorArr;
+  sln_sprite_counter_rad_arr  : TColorArr;
+  sln_sprite_counter_pow_arr  : TColorArr;
 
-  sprite_rect_arr            : TPtPosArr;
-  useless_arr_               : T1Byte1Arr;
-  useless_fld_arr_           : TColorArr;
+  sprite_rect_arr             : TPtPosArr;
+  useless_arr_                : T1Byte1Arr;
+  useless_fld_arr_            : TColorArr;
 
-  anim_play2                 : boolean;
+  anim_play2                  : boolean;
 
-  is_active                  : boolean=True;
+  is_active                   : boolean=True;
 
-  downtime_counter           : integer;
-  downtime                   : integer=320;
+  downtime_counter            : integer;
+  downtime                    : integer=320;
 
   {TimeLine}
   // cursors:
-  cur_arr                    : TFastImageArr;
+  cur_arr                     : TFastImageArr;
   // buttons_background:
-  bckgd_btn_arr              : TFastImageArr;
+  bckgd_btn_arr               : TFastImageArr;
   // buttons icons:
-  tmln_btn_arr               : TFastImageArr;
+  tmln_btn_arr                : TFastImageArr;
   // buttons positions:
-  btn_pos_arr                : TPtPosArr;
+  btn_pos_arr                 : TPtPosArr;
 
   {Cursors}
-  cur_pos                    : TPoint;
+  cur_pos                     : TPoint;
 
   {OpenGL Context}
-  texture_id                 : TColor;
-  buffer                     : Windows.BITMAP;
+  texture_id                  : TColor;
+  buffer                      : Windows.BITMAP;
 
   {Physics Test}
-  coll_arr                   : TColorArr;
-  projectile_var             : TProjectile;
-  projectile_arr             : array of TProjectile;
+  coll_arr                    : TColorArr;
+  projectile_var              : TProjectile;
+  projectile_arr              : array of TProjectile;
 
   {Test}
-  angle                      : double=0;
-  flood_fill_inc             : boolean;
-  drs                        : byte;
+  angle                       : double=0;
+  flood_fill_inc              : boolean;
+  drs                         : byte;
 
-  loop_cnt,angle_cnt         : TColor;
-  rot_img_arr                : TFastImageArr;
-  bounding_rct               : TPtRect;
-  arr_test                   : TColorArr;
+  loop_cnt,angle_cnt          : TColor;
+  rot_img_arr                 : TFastImageArr;
+  bounding_rct                : TPtRect;
+  arr_test                    : TColorArr;
 
-  frame_skip                 : byte;
-  frame_step                 : byte=1;
+  frame_skip                  : byte;
+  frame_step                  : byte=1;
 
   {
     Nearest TODO:
@@ -2482,14 +2484,13 @@ var
 
 
 
-{forward declarations begin}(**************************************************)
-{Miscellaneous Routines}
-function  GetFocusedControl(parent_control:TControl): string; inline; {$ifdef Linux}[local];{$endif}
+{Forward Declarations}(********************************************************)
+
+{Miscellaneous Routines} {$region -fold}
 procedure SpeedButtonRepaint; inline; {$ifdef Linux}[local];{$endif}
 procedure BtnColAndDown(constref spd_btn:TSpeedButton; var down_flag:boolean; color_down:TColor=NAV_SEL_COL_0; color_up:TColor=$00CBDAB1); inline; {$ifdef Linux}[local];{$endif}
 procedure SelectionBounds(custom_bitmap:Graphics.TBitmap; custom_rect:TPtRect; custom_color:TColor; custom_width:integer);
 procedure SelectionBoundsRepaint; inline; {$ifdef Linux}[local];{$endif}
-{Check if Colors are Mask Color(clBlack) and Replace Them}
 procedure IsObjColorAMaskColor; inline; {$ifdef Linux}[local];{$endif}
 function  DwmIsCompositionEnabled(out pfEnabled:longbool): HRESULT; external 'Dwmapi.dll';
 function  EnumDisplaySettingsA(lpszDeviceName:LPCSTR; iModeNum:DWORD; var lpDevMode:TDeviceModeA): BOOL; external 'user32';
@@ -2497,11 +2498,11 @@ procedure InvalidateInnerWindow; inline; {$ifdef Linux}[local];{$endif}
 procedure InvalidateRegion(rct_dst:TRect); inline; {$ifdef Linux}[local];{$endif}
 procedure MoveBorders; inline; {$ifdef Linux}[local];{$endif}
 procedure Align3DViewer; inline; {$ifdef Linux}[local];{$endif}
-procedure MainArraysDone; inline; {$ifdef Linux}[local];{$endif}
 function  ObjectInfo0: string; inline; {$ifdef Linux}[local];{$endif}
 procedure CheckDIB; inline; {$ifdef Linux}[local];{$endif}
+{$endregion}
 
-{Scene Tree}
+{Scene Tree------------} {$region -fold}
 // calculate objects indices in object array:
 procedure ObjIndsCalc;                                                inline; {$ifdef Linux}[local];{$endif}
 // calculate objects indices in scene tree:
@@ -2546,22 +2547,28 @@ procedure AddTagPanel        (constref ind           :integer);       inline; {$
 procedure CreateNode         (         item_text1,
                                        item_text2    :ansistring;
                                        is_first_node :boolean=False); inline; {$ifdef Linux}[local];{$endif}
+{$endregion}
 
-{Brush}
+{Brush-----------------} {$region -fold}
 procedure BrushDraw(X,Y:integer); inline; {$ifdef Linux}[local];{$endif}
+{$endregion}
 
-{Spray}
+{Spray-----------------} {$region -fold}
 procedure SprayDraw(X,Y,r:integer; custom_color:TColor); inline; {$ifdef Linux}[local];{$endif}
+{$endregion}
 
-{TimeLine}
+{TimeLine--------------} {$region -fold}
 procedure TimeLineButtonsCreate;                     inline; {$ifdef Linux}[local];{$endif}
 procedure TimeLineButtonsDraw(constref x,y:integer); inline; {$ifdef Linux}[local];{$endif}
+{$endregion}
 
-{Cursors}
+{Cursors---------------} {$region -fold}
 procedure CursorsCreate;                                                inline; {$ifdef Linux}[local];{$endif}
 procedure CursorDraw(constref x,y:integer; constref cur_ind:integer=0); inline; {$ifdef Linux}[local];{$endif}
 procedure CursorDraw;                                                   inline; {$ifdef Linux}[local];{$endif}
-{forward declarations end}(****************************************************)
+{$endregion}
+
+(******************************************************************************)
 
 
 
@@ -2572,63 +2579,16 @@ uses
 
 {$R *.lfm}
 
-{TF_MainForm}
-
 {LI = Logic Interface;
  UI = User  Interface.}
 
 // (Miscellaneous Routines) Разные процедуры:
 {LI} {$region -fold}
-function GetFocusedControl(parent_control:TControl): string; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-begin
-
-end; {$endregion}
-{$endregion}
-
-// (Main Arrays Finalization) Очистка основных массивов:
-{LI} {$region -fold}
-procedure MainArraysDone; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  i: integer;
-begin
-  {for i:=0 to spline_canvas_var.spline_obj_count-1 do
-    FArrClear_1(spline_canvas_var.spline_edges_var[i].f_ln_arr1,spline_canvas_var.spline_edges_var[i].spline_obj_rect_vis.Width,spline_canvas_var.spline_edges_var[i].spline_obj_rect_vis.Height);
-  FArrClear_0(selected_canvas_var.selected_pts_f_ln_var.f_ln_arr0,selected_canvas_var.selected_bmp.Width,selected_canvas_var.selected_bmp.Height);
-  FArrClear_2(selected_canvas_var.selected_pts_f_ln_var.f_ln_arr2,selected_canvas_var.selected_bmp.Width,selected_canvas_var.selected_bmp.Height);
-  FArrClear_0(selected_canvas_var.outer_subgraph_var.f_ln_arr0,main_canvas_var.lower_layer_bmp.Width,main_canvas_var.lower_layer_bmp.Height);
-  FArrClear_1(selected_canvas_var.outer_subgraph_var.f_ln_arr1,selected_canvas_var.selected_bmp.Width,selected_canvas_var.selected_bmp.Height);
-  FArrClear_2(selected_canvas_var.outer_subgraph_var.f_ln_arr2,main_canvas_var.lower_layer_bmp.Width,main_canvas_var.lower_layer_bmp.Height);
-  FArrClear_1(selected_canvas_var.inner_subgraph_var.f_ln_arr1,selected_canvas_var.selected_bmp.Width,selected_canvas_var.selected_bmp.Height);
-  tex_canvas_var.tex_list                               :=Nil;
-  node_tex_inds                                         :=Nil;
-  node_spline_inds                                      :=Nil;
-  //spline_canvas_var.spline_saved_up_pts_var.saved_up_pts:=Nil;
-  spline_canvas_var.spline_obj_pts_count                :=Nil;
-  spline_canvas_var.spline_pts                          :=Nil;
-  spline_canvas_var.first_last_spline_obj_pts           :=Nil;
-  selected_canvas_var.is_point_selected                 :=Nil;
-  selected_canvas_var.is_point_duplicated               :=Nil;
-  selected_canvas_var.outer_subgraph1                   :=Nil;
-  selected_canvas_var.outer_subgraph2                   :=Nil;
-  selected_canvas_var.outer_subgraph3                   :=Nil;
-  selected_canvas_var.inner_subgraph                    :=Nil;
-  selected_canvas_var.selected_pts_indices              :=Nil;
-  is_graph_canvas_var.is_graph_pts                      :=Nil;
-  spline_obj_ind_inc                                    :=0;
-  spline_canvas_var.spline_pts_count                    :=0;
-  spline_canvas_var.spline_obj_count                    :=0;
-  spline_canvas_var.pts_inc                             :=0;
-  selected_canvas_var.selected_pts_count                :=0;
-  selected_canvas_var.outer_subgraph1_edges_count       :=0;
-  selected_canvas_var.outer_subgraph2_edges_count       :=0;
-  selected_canvas_var.outer_subgraph3_edges_count       :=0;
-  selected_canvas_var.inner_subgraph_edges_count        :=0;}
-end; {$endregion}
 {$endregion}
 
 // (Object Info) Информация об обьекте:
 {LI} {$region -fold}
-function ObjectInfo0: string;                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function  ObjectInfo0: string;                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   info_arr  : array[0..19] of string;
   i         : integer;
@@ -2738,7 +2698,7 @@ end; {$endregion}
 {UI} {$region -fold}
 procedure TF_MainForm.TrayIcon1Click(sender:TObject); {$region -fold}
 begin
-  F_MainForm.ShowOnTop;
+  ShowOnTop;
 end; {$endregion}
 {$endregion}
 
@@ -2756,7 +2716,7 @@ var
   file_import: text;
   file_path,file_line,s: string;
 begin
-  begin
+  {begin
     k                       :=-1;
     fcs_cnt                 :=0;
     vts_cnt                 :=0;
@@ -2846,7 +2806,7 @@ begin
   TV_Scene_Tree.Items.AddChild(node_first,ExtractFileName(OpenDialog1.Filename));
   node_first.Expanded:=true;
   {M_Loaded_File.Lines.LoadfromFile(OpenDialog1.Filename);}
-  CloseFile(file_import);
+  CloseFile(file_import);}
 end; {$endregion}
 {$endregion}
 
@@ -3733,67 +3693,6 @@ begin
 end; {$endregion}
 procedure TF_MainForm.SB_IS_Graph_ColorClick  (sender:TObject);               {$region -fold}
 begin
-end; {$endregion}
-{$endregion}
-
-// (Clear Image) Очистить изображение:
-{UI} {$region -fold}
-procedure TF_MainForm.SB_Clear_SceneClick    (sender:TObject); {$region -fold}
-begin
-  P_Selective_Deletion.Visible:=SB_Clear_Scene.Down;
-  P_Load_Save_Clear.Repaint;
-end; {$endregion}
-procedure TF_MainForm.BB_Delete_SelectedClick(sender:TObject); {$region -fold}
-begin
-end; {$endregion}
-procedure TF_MainForm.BB_Delete_AllClick     (sender:TObject); {$region -fold}
-var
-  i: integer;
-begin
-  with srf_var,tex_var,sln_var,sel_var do
-    begin
-
-      {Clear Layer Canvas}
-      srf_bmp.Canvas.Clear;
-      low_bmp.Canvas.Clear;
-
-      {Clear Texture List}
-      for i:=FP_Image_List.ControlCount-1 downto 0 do
-        FP_Image_List.Controls[i].Destroy;
-
-      {Clear Scene Tree Nodes}
-      with TV_Scene_Tree do
-        begin
-          Items[0].DeleteChildren;
-          if Items.Count>1 then
-            for i:=1 to Items.Count-1 do
-              ClrNodeData(Items[i]);
-        end;
-
-      {Reset Layer Bounding Rectangles}
-      srf_bmp_rct:=Default(TPtRect);
-
-      {Clear And Allocate Arrays}
-      MainArraysDone;
-      //MainArraysInit(set_array_mem);
-
-      {Reset Texture}
-      is_tex_enabled :=False;
-      loaded_picture.Clear;
-      loaded_picture :=Graphics.TPicture.Create;
-      tex_bmp_rct_pts:=tex_bmp_rct_origin_pts;
-
-      {Reset Miscellaneous Parameters}
-      SB_StatusBar1.Panels.Items[2].Text:='';
-      L_Object_Info.Caption             :='';
-      FP_Image_List.Caption             :='Texture List is Empty';
-      L_Object_Info.Visible             :=False;
-    //MI_Antialiasing.Checked           :=False;
-    //srf_bmp.Canvas.Antialiasingmode   :=amOff;
-      AlignPictureToCenter;
-      EventGroupsCalc(calc_arr,[0,1,2,8,9]);
-
-    end;
 end; {$endregion}
 {$endregion}
 
@@ -5964,6 +5863,11 @@ procedure TF_MainForm.SB_RGridClick      (sender:TObject);                      
 begin
   DrawingPanelsSetVisibility1(down_rgrid_ptr,P_RGrid,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_rgrid_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
 end; {$endregion}
 procedure TF_MainForm.SB_RGrid_ColorClick(sender:TObject);                                                                                                                  {$region -fold}
 begin
@@ -6087,6 +5991,11 @@ procedure TF_MainForm.SB_SGridClick                                (sender:TObje
 begin
   DrawingPanelsSetVisibility1(down_sgrid_ptr,P_SGrid,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_sgrid_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
 end; {$endregion}
 procedure TF_MainForm.P_2D_Operations_AutomaticMouseEnter          (sender:TObject);                                                                                        {$region -fold}
 begin
@@ -6198,6 +6107,11 @@ procedure TF_MainForm.SB_TextClick                 (sender:TObject); {$region -f
 begin
   DrawingPanelsSetVisibility1(down_text_ptr,P_Text,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_text_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
 end; {$endregion}
 {Drawing}
 procedure TF_MainForm.P_Text_Drawing_PropMouseEnter(sender:TObject); {$region -fold}
@@ -6278,6 +6192,11 @@ procedure TF_MainForm.SB_BrushClick(sender:TObject);                     {$regio
 begin
   DrawingPanelsSetVisibility1(down_brush_ptr,P_Brush,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_brush_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
 end; {$endregion}
 {$endregion}
 
@@ -6301,6 +6220,11 @@ procedure TF_MainForm.SB_SprayClick(sender:TObject);                            
 begin
   DrawingPanelsSetVisibility1(down_spray_ptr,P_Spray,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_spray_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
 end; {$endregion}
 {$endregion}
 
@@ -17285,6 +17209,11 @@ procedure TF_MainForm.SB_Select_ItemsClick                            (sender:TO
 begin
   DrawingPanelsSetVisibility1(down_select_points_ptr,P_Select_Items,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_select_points_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
 end; {$endregion}
 {Outer Subgraph}
 procedure TF_MainForm.P_Select_Items_Outer_Subgraph_PropMouseEnter    (sender:TObject); {$region -fold}
@@ -18521,6 +18450,11 @@ procedure TF_MainForm.SB_Select_Texture_RegionClick(sender:TObject);
 begin
   DrawingPanelsSetVisibility1(down_select_texture_region_ptr,P_Select_Texture_Region,P_Draw_Custom_Panel,prev_panel_draw,curr_panel_draw);
   DrawingPanelsSetVisibility2;
+  if (not down_select_texture_region_ptr^) then
+    begin
+      RM_Description.Lines.Text:='';
+      Exit;
+    end;
   {
   PPBlurProc10(srf_var.srf_bmp_ptr,srf_var.srf_bmp_rct,srf_var.srf_bmp.width);
   PPContrast1(srf_var.srf_bmp_ptr,srf_var.inn_wnd_rct,srf_var.srf_bmp.width,10);
@@ -19265,8 +19199,7 @@ begin
     end;
   if down_select_points_ptr^ then
     sel_var.MinimizeCircleSelection;
-  if (not exp0) then
-    F_MainForm.KeysEnable;
+  F_MainForm.KeysEnable;
 end; {$endregion}
 procedure ButtonKeyPress(sp_btn:TSpeedButton; btn_pnl1,btn_pnl2,btn_pnl3:TPanel; down_btn_ptr:PByteBool; b:byte; cur1:integer; cur2:integer=crDefault); {$region -fold}
 begin
@@ -19317,10 +19250,17 @@ procedure TF_MainForm.KeysEnable;                                           inli
 var
   i: integer;
 begin
+  if (sel_var.sel_pts_cnt>0) or sln_var.draw_spline or is_scene_tree_editing then
+    Exit;
   for i:=0 to P_Drawing_Buttons.ControlCount-1 do
     begin
       (P_Drawing_Buttons.Controls[i] as TSpeedButton).OnClick:=P_Drawing_Buttons_ClickArr[i];
       (P_Drawing_Buttons.Controls[i] as TSpeedButton).Enabled:=True;
+    end;
+  for i:=0 to P_Animation_Buttons.ControlCount-1 do
+    begin
+      (P_Animation_Buttons.Controls[i] as TSpeedButton).OnClick:=P_Animation_Buttons_ClickArr[i];
+      (P_Animation_Buttons.Controls[i] as TSpeedButton).Enabled:=True;
     end;
   OnKeyPress:=@FormKeyPress;
   OnKeyDown :=@FormKeyDown;
@@ -19330,16 +19270,18 @@ procedure TF_MainForm.KeysDisable;                                          inli
 var
   i: integer;
 begin
-  if (sel_var.sel_pts_cnt>0) then
+  if (sel_var.sel_pts_cnt>0) or sln_var.draw_spline or is_scene_tree_editing then
     begin
       for i:=0 to P_Drawing_Buttons.ControlCount-1 do
         begin
           (P_Drawing_Buttons.Controls[i] as TSpeedButton).OnClick:=Nil;
           (P_Drawing_Buttons.Controls[i] as TSpeedButton).Enabled:=False;
         end;
-    end
-  else
-    begin
+      for i:=0 to P_Animation_Buttons.ControlCount-1 do
+        begin
+          (P_Animation_Buttons.Controls[i] as TSpeedButton).OnClick:=Nil;
+          (P_Animation_Buttons.Controls[i] as TSpeedButton).Enabled:=False;
+        end;
       OnKeyPress:=Nil;
       OnKeyDown :=Nil;
       OnKeyUp   :=Nil;
@@ -19605,6 +19547,7 @@ begin
                 if (CB_Spline_Type.ItemIndex=0) then
                   begin
                     draw_spline:=not draw_spline;
+                    KeysDisable;
                     VisibilityChange(False);
                     case CB_Spline_Mode.ItemIndex of
                       0,2:
@@ -19791,6 +19734,7 @@ begin
     with srf_var,sln_var do
       begin
         draw_spline:=False;
+        KeysEnable;
         EventGroupsCalc(calc_arr,[12,30,31,33,40,41]);
         VisibilityChange(srf_var.inner_window_ui_visible);
         SpeedButtonRepaint;
@@ -19808,8 +19752,7 @@ begin
         sel_pts             :=False;
         need_align_pivot_p2 :=True;
         SpeedButtonRepaint;
-        if (sel_pts_cnt>0) then
-          KeysDisable;
+        KeysDisable;
       end; {$endregion}
 
 end; {$endregion}
@@ -20027,13 +19970,34 @@ begin
 
   {Switch Buttons----} {$region -fold}
   if (key=Char(key_arr[04]{#49})) or (key=Char(key_alt_arr[04]{' '})) then
-    ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
+    begin
+      ButtonKeyPress(SB_Text                 ,P_Text                 ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_text_ptr                 ,0,000001);
+      if (not down_text_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+    end;
   // button 'Brush':
   if (key=Char(key_arr[05]{#50})) or (key=Char(key_alt_arr[05]{' '})) then
-    ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
+    begin
+      ButtonKeyPress(SB_Brush                ,P_Brush                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_brush_ptr                ,0,000002);
+      if (not down_brush_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+    end;
   // button 'Spray':
   if (key=Char(key_arr[06]{#51})) or (key=Char(key_alt_arr[06]{' '})) then
-    ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
+    begin
+      ButtonKeyPress(SB_Spray                ,P_Spray                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_spray_ptr                ,0,000003);
+      if (not down_spray_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+    end;
   // button 'Spline':
   if (key=Char(key_arr[07]{#52})) or (key=Char(key_alt_arr[07]{'q'})) then
     begin
@@ -20049,16 +20013,44 @@ begin
     end;
   // button 'Select Points':
   if (key=Char(key_arr[08]{#53})) or (key=Char(key_alt_arr[08]{'e'})) then
-    ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
+    begin
+      ButtonKeyPress(SB_Select_Items         ,P_Select_Items         ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_points_ptr        ,0,crNone);
+      if (not down_select_points_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+    end;
   // button 'Select Texture Region':
   if (key=Char(key_arr[09]{#54})) or (key=Char(key_alt_arr[09]{' '})) then
-    ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
+    begin
+      ButtonKeyPress(SB_Select_Texture_Region,P_Select_Texture_Region,P_Draw_Custom_Panel,P_Drawing_Buttons,down_select_texture_region_ptr,0,000006);
+      if (not down_select_texture_region_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+    end;
   // button 'Regular Grid':
   if (key=Char(key_arr[10]{#54})) or (key=Char(key_alt_arr[10]{' '})) then
-    ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
+    begin
+      ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
+      if (not down_rgrid_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+    end;
   // button 'Snap Grid':
   if (key=Char(key_arr[11]{#54})) or (key=Char(key_alt_arr[11]{' '})) then
-    ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008); {$endregion}
+    begin
+      ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008);
+      if (not down_sgrid_ptr^) then
+        begin
+          RM_Description.Lines.Text:='';
+          Exit;
+        end;
+    end; {$endregion}
 
 end; {$endregion}
 procedure TF_MainForm.FormKeyDown       (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
@@ -20402,8 +20394,7 @@ begin
     OnMouseMove:=Nil;}
   drawing_area_enter_calc:=True;
   DefocusControl(ActiveControl,True);
-  if (sel_var.sel_pts_cnt=0) then
-    KeysEnable;
+  KeysEnable;
   {Play Anim} {$region -fold}
   if down_play_anim_ptr^ then
     begin
@@ -20539,6 +20530,9 @@ begin
     P_Draw_Custom_Panel.Visible     :=False; {$endregion}
 
     {Buttons:AnimK---} {$region -fold}
+    SetLength(P_Animation_Buttons_ClickArr,P_Animation_Buttons.ControlCount);
+    for i:=0 to P_Animation_Buttons.ControlCount-1 do
+      P_Animation_Buttons_ClickArr[i]:=(P_Animation_Buttons.Controls[i] as TSpeedButton).OnClick;
     for i:=0 to SB_AnimK.ControlCount-1 do
       SB_AnimK.Controls[i].Anchors:=[akLeft,akTop,akRight,akBottom];
     prev_panel_animk              :=P_AnimK_Custom_Panel;
@@ -20943,7 +20937,6 @@ begin
 end; {$endregion}
 procedure TF_MainForm.FormDestroy       (sender:TObject);                                                          {$region -fold}
 begin
-  MainArraysDone;
 end; {$endregion}
 procedure TF_MainForm.FormDropFiles     (sender:TObject; const file_names:array of string);                        {$region -fold}
 var
@@ -21689,10 +21682,12 @@ begin
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeEditing                      (sender:TObject; node:TTreeNode; var allowedit:boolean);                    {$region -fold}
 begin
+  is_scene_tree_editing:=True;
   KeysDisable;
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeEditingEnd                   (sender:TObject; node:TTreeNode; cancel:boolean);                           {$region -fold}
 begin
+  is_scene_tree_editing:=False;
   KeysEnable;
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeKeyDown                      (sender:TObject; var key:word; shift:TShiftState);                          {$region -fold}
@@ -21863,6 +21858,62 @@ begin
   SB_Tag_Properties.Color:=Darken(SB_Tag_Properties.Color,0,0,0,0,0,16);
   P_Tag_Properties .Color:=Darken(P_Tag_Properties .Color,0,0,0,0,0,16);
 end; {$endregion}
+// (Clear Scene) Очистить сцену:
+{UI} {$region -fold}
+procedure TF_MainForm.SB_Clear_SceneClick    (sender:TObject); {$region -fold}
+begin
+  {P_Selective_Deletion.Visible:=SB_Clear_Scene.Down;
+  P_Load_Save_Clear.Repaint;}
+end; {$endregion}
+procedure TF_MainForm.BB_Delete_SelectedClick(sender:TObject); {$region -fold}
+begin
+end; {$endregion}
+procedure TF_MainForm.BB_Delete_AllClick     (sender:TObject); {$region -fold}
+var
+  i: integer;
+begin
+  {with srf_var,tex_var,sln_var,sel_var do
+    begin
+
+      {Clear Layer Canvas}
+      srf_bmp.Canvas.Clear;
+      low_bmp.Canvas.Clear;
+
+      {Clear Texture List}
+      for i:=FP_Image_List.ControlCount-1 downto 0 do
+        FP_Image_List.Controls[i].Destroy;
+
+      {Clear Scene Tree Nodes}
+      with TV_Scene_Tree do
+        begin
+          Items[0].DeleteChildren;
+          if Items.Count>1 then
+            for i:=1 to Items.Count-1 do
+              ClrNodeData(Items[i]);
+        end;
+
+      {Reset Layer Bounding Rectangles}
+      srf_bmp_rct:=Default(TPtRect);
+
+      {Reset Texture}
+      is_tex_enabled :=False;
+      loaded_picture.Clear;
+      loaded_picture :=Graphics.TPicture.Create;
+      tex_bmp_rct_pts:=tex_bmp_rct_origin_pts;
+
+      {Reset Miscellaneous Parameters}
+      SB_StatusBar1.Panels.Items[2].Text:='';
+      L_Object_Info.Caption             :='';
+      FP_Image_List.Caption             :='Texture List is Empty';
+      L_Object_Info.Visible             :=False;
+    //MI_Antialiasing.Checked           :=False;
+    //srf_bmp.Canvas.Antialiasingmode   :=amOff;
+      AlignPictureToCenter;
+      EventGroupsCalc(calc_arr,[0,1,2,8,9]);
+
+    end;}
+end; {$endregion}
+{$endregion}
 {$endregion}
 
 // (Game Loop) Игровой цикл:
