@@ -97,6 +97,7 @@ type
   PDrawingStyle     =^TDrawingStyle;
 
   TDynamicsStyle    =(dsNone,
+                      dsNative,
                       dsSoft,
                       dsSpring,
                       dsRigid);
@@ -790,7 +791,7 @@ type
     lazy_repaint_prev        : boolean;
     // byte mode:
     byte_mode                : boolean;
-    faster_compression       : boolean;
+    better_compression       : boolean;
     // free memory on out of window:
     free_mem_on_out_of_wnd   : boolean;
     // free memory on scale down:
@@ -859,7 +860,7 @@ type
     {Spiral}
     // points count:
     spiral_pts_cnt           : TColor;
-    // spiral coil step:
+    // coil step:
     spiral_coil_step         : double;
     // curve radius:
     spiral_rad               : double;
@@ -869,6 +870,20 @@ type
     spiral_angle             : double;
 
     {Superellipse}
+    // points count:
+    superellipse_pts_cnt     : TColor;
+    // curvature:
+    superellipse_curvature0  : double;
+    superellipse_curvature1  : double;
+    superellipse_curvature2  : double;
+    superellipse_curvature3  : double;
+    // curve radius:
+    superellipse_rad         : double;
+    // rotation angle:
+    superellipse_rot         : double;
+    // cut on angle:
+    superellipse_angle       : double;
+
     {TODO}
 
   end; {$endregion}
@@ -1318,7 +1333,7 @@ type
     //
     remove_brunching_none  : boolean;
     //
-    faster_compression     : boolean;
+    better_compression     : boolean;
     //
     need_store_value       : boolean; {$endregion}
 
@@ -3796,6 +3811,16 @@ procedure ArrToArr2             (         arr_src_ptr        :PPtPosF;
                                           arr_dst_ptr        :PPtPosF;
                                           pts_cnt            :integer);                        {$ifdef Linux}[local];{$endif}
 
+// Search For The First Element Not Equal To The Given Value(val) Starting From data_start, length is the number of items to check:
+function NotIndexByte           (         data_start         :PByte;
+                                          length             :integer): integer;               {$ifdef Linux}[local];{$endif}
+function NotIndexWord           (         data_start         :PWord;
+                                          length             :integer): integer;               {$ifdef Linux}[local];{$endif}
+function NotIndexDWord          (         data_start         :PDWord;
+                                          length             :integer): integer;               {$ifdef Linux}[local];{$endif}
+function NotIndexQWord          (         data_start         :PQWord;
+                                          length             :integer): integer;               {$ifdef Linux}[local];{$endif}
+
 {Linked Lists}
 procedure AddListItem           (constref pt_x               :integer;
                                  var      first_item,p1,p2   :PIList);
@@ -5154,7 +5179,7 @@ var
     lazy_repaint             : True;
     lazy_repaint_prev        : False;
     byte_mode                : True;
-    faster_compression       : True;
+    better_compression       : False;
     free_mem_on_out_of_wnd   : True;
     free_mem_on_scale_down   : False;
     remove_brunching_constant: False;
@@ -5200,6 +5225,14 @@ var
     spiral_angle             : 720.0;
 
     {Superellipse}
+    superellipse_pts_cnt     : 256;
+    superellipse_curvature0  : 006.0;
+    superellipse_curvature1  : 006.0;
+    superellipse_curvature2  : 000.1;
+    superellipse_curvature3  : 000.1;
+    superellipse_rad         : 006.0;
+    superellipse_rot         : 000.0;
+    superellipse_angle       : 360.0;
 
   ); {$endregion}
   ftext_default_prop  : TFTextProp={$region -fold}
@@ -8961,6 +8994,77 @@ var
 begin
   for i:=0 to pts_cnt-1 do
     (arr_src_ptr+i)^:=(arr_dst_ptr+i)^;
+end; {$endregion}
+
+// Search For The First Element Not Equal To Zero Starting From data_start, length is the number of items to check:
+function NotIndexByte (data_start:PByte ; length:integer): integer; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i,j: integer;
+begin
+  Result:=-1;
+  for i:=0 to length>>3-1 do
+    if ((PQWord(data_start+i<<3))^<>0) then
+      begin
+        Result:=i<<3;
+        Break;
+      end;
+  data_start+=Result;
+  for j:=0 to Min(7,length-Result) do
+    if (PByte (data_start+j<<0)^<>0) then
+      begin
+        Result+=j<<0;
+        Break;
+      end;
+end; {$endregion}
+function NotIndexWord (data_start:PWord ; length:integer): integer; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i,j: integer;
+begin
+  Result:=-1;
+  for i:=0 to length>>2-1 do
+    if ((PQWord(data_start+i<<2))^<>0) then
+      begin
+        Result:=i<<2;
+        Break;
+      end;
+  data_start+=Result;
+  for j:=0 to Min(3,length-Result) do
+    if (PWord (data_start+j<<0)^<>0) then
+      begin
+        Result+=j<<0;
+        Break;
+      end;
+end; {$endregion}
+function NotIndexDWord(data_start:PDWord; length:integer): integer; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i,j: integer;
+begin
+  Result:=-1;
+  for i:=0 to length>>1-1 do
+    if ((PQWord(data_start+i<<1))^<>0) then
+      begin
+        Result:=i<<1;
+        Break;
+      end;
+  data_start+=Result;
+  for j:=0 to Min(1,length-Result) do
+    if (PDWord(data_start+j<<0)^<>0) then
+      begin
+        Result+=j<<0;
+        Break;
+      end;
+end; {$endregion}
+function NotIndexQWord(data_start:PQWord; length:integer): integer; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  i: integer;
+begin
+  Result:=-1;
+  for i:=0 to length>>0-1 do
+    if (PQWord(data_start+i<<0)^<>0) then
+      begin
+        Result:=i<<0;
+        Break;
+      end;
 end; {$endregion}
 
 {$endregion}
@@ -14186,7 +14290,7 @@ begin
           if (nt_pix_intr_cnt_arr_ptr^<>0) then
             begin
               pix_cnt_in_a_row:=0;
-              for x:=0 to bmp_src_rct_clp.width-1 do
+              for x:=NotIndexDWord(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
                 if ((pix_alpha_ptr+x)^{>}<>0) then
                   begin
                         nt_pix_intr_sht_arr_ptr^:=x;
@@ -14226,7 +14330,7 @@ begin
           if (nt_pix_intr_cnt_arr_ptr^<>0) then
             begin
               pix_cnt_in_a_row:=0;
-              for x:=0 to bmp_src_rct_clp.width-1 do
+              for x:={0}NotIndexByte(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
                 if ((pix_alpha_ptr+x)^{>}<>0) then
                   begin
                         nt_pix_intr_sht_arr_ptr^:=x;
@@ -14266,7 +14370,7 @@ begin
           if (nt_pix_intr_cnt_arr_ptr^<>0) then
             begin
               pix_cnt_in_a_row:=0;
-              for x:=IndexByte(pix_alpha_ptr^,bmp_src_rct_clp.width-1,1) to bmp_src_rct_clp.width-1 do
+              for x:=IndexDWord{IndexByte}(pix_alpha_ptr^,bmp_src_rct_clp.width-1,1) to bmp_src_rct_clp.width-1 do
                 if ((pix_alpha_ptr+x)^=1) then
                   begin
                         nt_pix_intr_sht_arr_ptr^:=x;
@@ -14347,7 +14451,7 @@ begin
           if (pt_pix_intr_cnt_arr_ptr^<>0) then
             begin
               pix_cnt_in_a_row:=0;
-              for x:=0 to bmp_src_rct_clp.width-1 do
+              for x:=NotIndexDWord(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
                 if ((pix_alpha_ptr+x)^{>}<>0) then
                   begin
                         pt_pix_intr_sht_arr_ptr^:=x;
@@ -14387,7 +14491,7 @@ begin
           if (pt_pix_intr_cnt_arr_ptr^<>0) then
             begin
               pix_cnt_in_a_row:=0;
-              for x:=0 to bmp_src_rct_clp.width-1 do
+              for x:={0}NotIndexByte(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
                 if ((pix_alpha_ptr+x)^{>}<>0) then
                   begin
                         pt_pix_intr_sht_arr_ptr^:=x;
@@ -14427,7 +14531,7 @@ begin
           if (pt_pix_intr_cnt_arr_ptr^<>0) then
             begin
               pix_cnt_in_a_row:=0;
-              for x:=IndexByte(pix_alpha_ptr^,bmp_src_rct_clp.width-1,1) to bmp_src_rct_clp.width-1 do
+              for x:=IndexDWord{IndexByte}(pix_alpha_ptr^,bmp_src_rct_clp.width-1,1) to bmp_src_rct_clp.width-1 do
                 if ((pix_alpha_ptr+x)^=1) then
                   begin
                         pt_pix_intr_sht_arr_ptr^:=x;
@@ -15253,7 +15357,7 @@ begin
             CrtNTCountArrA
           else
             CrtNTCountArrC;
-          if (not faster_compression) then
+          if (not better_compression) then
             CrtNTShiftArrA
           else
             CrtNTShiftArrC;
@@ -15268,7 +15372,7 @@ begin
             CrtNTCountArrB
           else
             CrtNTCountArrD;
-          if (not faster_compression) then
+          if (not better_compression) then
             CrtNTShiftArrB
           else
             CrtNTShiftArrD;
@@ -27053,6 +27157,7 @@ begin
                   rct_dst_1.right            :=rct_dst_0.right+nt_pix_intr_sht_arr_ptr_mul;
                   with tilemap_sprite_ptr^ do
                     begin
+                      //fast_image_data_ptr:=@fast_image_data;
                       SetRctPos(rct_dst_1.left,rct_dst_1.top);
                       SdrProc[3];
                     end;

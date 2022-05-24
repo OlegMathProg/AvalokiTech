@@ -141,7 +141,7 @@ type
     CB_Select_Items_Selection_Highlight              : TCheckBox;
     CB_Object_Properties_Recalculate_Position        : TCheckBox;
     CB_Object_Properties_Show_In_Game                : TCheckBox;
-    CB_Spline_Faster_Compression                     : TCheckBox;
+    CB_Spline_Better_Compression                     : TCheckBox;
     CB_Spline_Cycloid_Direction_Y                    : TComboBox;
     CB_Physics_Deletion                              : TCheckBox;
     CB_Select_Points_Show_Bounds                     : TCheckBox;
@@ -188,6 +188,11 @@ type
     FSE_Spline_Spiral_Coil_Step                      : TFloatSpinEdit;
     FSE_Spline_Simplification_Angle                  : TFloatSpinEdit;
     FSE_Spline_Cycloid_Curvature                     : TFloatSpinEdit;
+    FSE_Spline_Superellipse_Curvature0               : TFloatSpinEdit;
+    FSE_Spline_Superellipse_Curvature1               : TFloatSpinEdit;
+    FSE_Spline_Superellipse_Curvature2               : TFloatSpinEdit;
+    FSE_Spline_Superellipse_Curvature3               : TFloatSpinEdit;
+    FSE_Spline_Superellipse_Radius                   : TFloatSpinEdit;
     IL_Default_Tile_Map_Icon                         : TImageList;
     IL_Scene_Tree_Image_List                         : TImageList;
     IL_Local_Axis                                    : TImageList;
@@ -248,6 +253,12 @@ type
     L_Spline_Cycloid_Curvature                       : TLabel;
     L_Select_Items_Outer_Subgraph                    : TLabel;
     L_Select_Items_Outer_Subgraph_Color              : TLabel;
+    L_Spline_Superellipse_Curvature0                 : TLabel;
+    L_Spline_Superellipse_Curvature1                 : TLabel;
+    L_Spline_Superellipse_Curvature2                 : TLabel;
+    L_Spline_Superellipse_Curvature3                 : TLabel;
+    L_Spline_Superellipse_Points_Count               : TLabel;
+    L_Spline_Superellipse_Radius                     : TLabel;
     L_Text_Field                                     : TLabel;
     L_Spline_Rose_Angle                              : TLabel;
     L_Spline_Spiral_Angle                            : TLabel;
@@ -331,6 +342,7 @@ type
     L_Tag_Properties                                 : TLabel;
     MI_Save_Asset                                    : TMenuItem;
     P_DescriptionHeader                              : TPanel;
+    P_Spline_Superellipse                            : TPanel;
     P_Spline_Template_List1                          : TPanel;
     Separator6                                       : TMenuItem;
     MI_Add_Asset                                     : TMenuItem;
@@ -554,19 +566,19 @@ type
     SE_Count_Y                                       : TSpinEdit;
     SE_Spline_Cycloid_Loops_Count                    : TSpinEdit;
     SE_Spline_Cycloid_Points_Count                   : TSpinEdit;
-    SE_Spline_Cycloid_Radius                         : TFloatSpinEdit;
-    SE_Spline_Epicycloid_Angle                       : TFloatSpinEdit;
-    SE_Spline_Epicycloid_Petals_Count                : TFloatSpinEdit;
-    SE_Spline_Epicycloid_Radius                      : TFloatSpinEdit;
-    SE_Spline_Epicycloid_Rotation                    : TFloatSpinEdit;
-    SE_Spline_Rose_Angle                             : TFloatSpinEdit;
-    SE_Spline_Rose_Radius                            : TFloatSpinEdit;
-    SE_Spline_Rose_Rotation                          : TFloatSpinEdit;
+    FSE_Spline_Cycloid_Radius                        : TFloatSpinEdit;
+    FSE_Spline_Epicycloid_Angle                      : TFloatSpinEdit;
+    FSE_Spline_Epicycloid_Petals_Count               : TFloatSpinEdit;
+    FSE_Spline_Epicycloid_Radius                     : TFloatSpinEdit;
+    FSE_Spline_Epicycloid_Rotation                   : TFloatSpinEdit;
+    FSE_Spline_Rose_Angle                            : TFloatSpinEdit;
+    FSE_Spline_Rose_Radius                           : TFloatSpinEdit;
+    FSE_Spline_Rose_Rotation                         : TFloatSpinEdit;
     SE_Spline_Rose_Points_Count                      : TSpinEdit;
-    SE_Spline_Spiral_Angle                           : TFloatSpinEdit;
+    FSE_Spline_Spiral_Angle                          : TFloatSpinEdit;
     SE_Spline_Spiral_Points_Count                    : TSpinEdit;
-    SE_Spline_Spiral_Radius                          : TFloatSpinEdit;
-    SE_Spline_Spiral_Rotation                        : TFloatSpinEdit;
+    FSE_Spline_Spiral_Radius                         : TFloatSpinEdit;
+    FSE_Spline_Spiral_Rotation                       : TFloatSpinEdit;
     SE_Spline_Edges_Points_Radius                    : TSpinEdit;
     SE_Spline_Edges_Width                            : TSpinEdit;
     SE_Spline_Epicycloid_Points_Count                : TSpinEdit;
@@ -588,6 +600,7 @@ type
     SB_Spline_Template_Epicycloid                    : TSpeedButton;
     SB_Spline_Template_Rose                          : TSpeedButton;
     SB_Spline_Template_Spiral                        : TSpeedButton;
+    SE_Spline_Superellipse_Points_Count              : TSpinEdit;
     SE_Spline_Spray_Radius                           : TSpinEdit;
     SE_Object_Properties_Parallax_Shift              : TSpinEdit;
     S_Splitter0                                      : TSplitter;
@@ -669,7 +682,7 @@ type
     procedure CB_Spline_Byte_ModeChange                              (      sender           :TObject);
     procedure CB_Spline_Edges_ShapeSelect                            (      sender           :TObject);
     procedure CB_Spline_Edges_Show_BoundsChange                      (      sender           :TObject);
-    procedure CB_Spline_Faster_CompressionChange                     (      sender           :TObject);
+    procedure CB_Spline_Better_CompressionChange                     (      sender           :TObject);
     procedure CB_Spline_Hidden_Line_EliminationChange                (      sender           :TObject);
     procedure CB_Spline_Lazy_RepaintChange                           (      sender           :TObject);
     procedure CB_Spline_Invert_OrderChange                           (      sender           :TObject);
@@ -722,6 +735,11 @@ type
     procedure FSE_Spline_Cycloid_CurvatureChange                     (      sender           :TObject);
     procedure FSE_Spline_Simplification_AngleEditingDone             (      sender           :TObject);
     procedure FSE_Spline_Spiral_Coil_StepChange                      (      sender           :TObject);
+    procedure FSE_Spline_Superellipse_Curvature0Change               (      sender           :TObject);
+    procedure FSE_Spline_Superellipse_Curvature1Change               (      sender           :TObject);
+    procedure FSE_Spline_Superellipse_Curvature2Change               (      sender           :TObject);
+    procedure FSE_Spline_Superellipse_Curvature3Change               (      sender           :TObject);
+    procedure FSE_Spline_Superellipse_RadiusChange                   (      sender           :TObject);
     procedure I_Frame_ListMouseDown                                  (      sender           :TObject;
                                                                             button           :TMouseButton;
                                                                             shift            :TShiftState;
@@ -833,26 +851,26 @@ type
                                                                       var   handled          :boolean);
     procedure SE_Spline_Cycloid_Loops_CountChange                    (      sender           :TObject);
     procedure SE_Spline_Cycloid_Points_CountChange                   (      sender           :TObject);
-    procedure SE_Spline_Cycloid_RadiusChange                         (      sender           :TObject);
-    procedure SE_Spline_Epicycloid_AngleChange                       (      sender           :TObject);
-    procedure SE_Spline_Epicycloid_Petals_CountChange                (      sender           :TObject);
+    procedure FSE_Spline_Cycloid_RadiusChange                        (      sender           :TObject);
+    procedure FSE_Spline_Epicycloid_AngleChange                      (      sender           :TObject);
+    procedure FSE_Spline_Epicycloid_Petals_CountChange               (      sender           :TObject);
     procedure SE_Spline_Epicycloid_Points_CountChange                (      sender           :TObject);
-    procedure SE_Spline_Epicycloid_RadiusChange                      (      sender           :TObject);
-    procedure SE_Spline_Epicycloid_RotationChange                    (      sender           :TObject);
+    procedure FSE_Spline_Epicycloid_RadiusChange                     (      sender           :TObject);
+    procedure FSE_Spline_Epicycloid_RotationChange                   (      sender           :TObject);
     procedure SE_Spline_Pts_FreqEnter                                (      sender           :TObject);
     procedure SE_Spline_Pts_FreqExit                                 (      sender           :TObject);
     procedure SE_Spline_Pts_FreqMouseDown                            (      sender           :TObject;
                                                                             button           :TMouseButton;
                                                                             shift            :TShiftState;
                                                                             x,y              :integer);
-    procedure SE_Spline_Rose_AngleChange                             (      sender           :TObject);
+    procedure FSE_Spline_Rose_AngleChange                            (      sender           :TObject);
     procedure SE_Spline_Rose_Points_CountChange                      (      sender           :TObject);
-    procedure SE_Spline_Rose_RadiusChange                            (      sender           :TObject);
-    procedure SE_Spline_Rose_RotationChange                          (      sender           :TObject);
-    procedure SE_Spline_Spiral_AngleChange                           (      sender           :TObject);
+    procedure FSE_Spline_Rose_RadiusChange                           (      sender           :TObject);
+    procedure FSE_Spline_Rose_RotationChange                         (      sender           :TObject);
+    procedure FSE_Spline_Spiral_AngleChange                          (      sender           :TObject);
     procedure SE_Spline_Spiral_Points_CountChange                    (      sender           :TObject);
-    procedure SE_Spline_Spiral_RadiusChange                          (      sender           :TObject);
-    procedure SE_Spline_Spiral_RotationChange                        (      sender           :TObject);
+    procedure FSE_Spline_Spiral_RadiusChange                         (      sender           :TObject);
+    procedure FSE_Spline_Spiral_RotationChange                       (      sender           :TObject);
     procedure SE_Spline_Edges_WidthChange                            (      sender           :TObject);
     procedure SE_Spline_Points_CountChange                           (      sender           :TObject);
     procedure SE_Spline_Points_Rectangle_Inner_Rectangle_HeightChange(      sender           :TObject);
@@ -863,6 +881,7 @@ type
     procedure SE_Spline_Points_Rectangle_Thikness_TopChange          (      sender           :TObject);
     procedure SE_Spline_Spray_RadiusChange                           (      sender           :TObject);
     procedure SE_Object_Properties_Parallax_ShiftChange              (      sender           :TObject);
+    procedure SE_Spline_Superellipse_Points_CountChange              (      sender           :TObject);
 
     {Buttons}
     procedure S_Splitter0ChangeBounds                                (      sender           :TObject);
@@ -2650,7 +2669,7 @@ procedure CursorDraw;                                                   inline; 
 implementation
 
 uses
-  model_viewer,Hot_Keys;  // Вызов View > 3D Viewer в меню редактора
+  {model_viewer,}Hot_Keys;
 
 {$R *.lfm}
 
@@ -4819,7 +4838,7 @@ begin
                 begin
                   if byte_mode then
                     begin
-                      if (not faster_compression) then
+                      if (not better_compression) then
                         begin
                           if hid_ln_elim then
                             begin
@@ -4861,7 +4880,7 @@ begin
                 begin
                   if byte_mode then
                     begin
-                      if (not faster_compression) then
+                      if (not better_compression) then
                         begin
                           if hid_ln_elim then
                             begin
@@ -5136,7 +5155,7 @@ begin
                               begin
                                 if byte_mode then
                                   begin
-                                    if (not faster_compression) then
+                                    if (not better_compression) then
                                       begin
                                         if hid_ln_elim then
                                           begin
@@ -5178,7 +5197,7 @@ begin
                               begin
                                 if byte_mode then
                                   begin
-                                    if (not faster_compression) then
+                                    if (not better_compression) then
                                       begin
                                         if hid_ln_elim then
                                           begin
@@ -6544,12 +6563,12 @@ begin
       if local_prop.byte_mode and (not down_select_items_ptr^) then
         begin
           bmp_alpha_ptr2    :=pmt_big_var_ptr^.ln_arr0_ptr;
-          faster_compression:=local_prop.faster_compression;
+          better_compression:=local_prop.better_compression;
         end
       else
         begin
           bmp_alpha_ptr2    :=Nil;
-          faster_compression:=False;
+          better_compression:=False;
         end;
       remove_brunching_none:=local_prop.remove_brunching_none;
       need_store_value     :=down_select_items_ptr^;
@@ -14659,8 +14678,8 @@ begin
       fml_pts_ptr:=Unaligned(@fml_pts[0]);
       for j:=0 to sln_pts_cnt_add-1 do
         begin
-          fml_pts_ptr^.x:=x+a*(t-sin(t*cycloid_curvature)){x+a*sin(t) - circle};
-          fml_pts_ptr^.y:=y+a*(1-cos(t*cycloid_curvature)){y+a*cos(t) - circle};
+          fml_pts_ptr^.x:=x+a*(t-Sin(t*cycloid_curvature)){x+a*Sin(t) - circle};
+          fml_pts_ptr^.y:=y+a*(1-Cos(t*cycloid_curvature)){y+a*Cos(t) - circle};
           Inc(fml_pts_ptr);
           t+=dt;
         end;
@@ -14690,8 +14709,8 @@ begin
         (sfEpicycloid):
           for j:=0 to sln_pts_cnt_add-1 do
             begin
-              fml_pts_ptr^.x:=x+t0*(k*cos(t1)-cos(t2));
-              fml_pts_ptr^.y:=y+t0*(k*sin(t1)-sin(t2));
+              fml_pts_ptr^.x:=x+t0*(k*cos(t1)-Cos(t2));
+              fml_pts_ptr^.y:=y+t0*(k*sin(t1)-Sin(t2));
               Inc(fml_pts_ptr);
               t1+=dt;
               t2+=t3;
@@ -14699,8 +14718,8 @@ begin
         (sfHypocycloid):
           for j:=0 to sln_pts_cnt_add-1 do
             begin
-              fml_pts_ptr^.x:=x+t0*(k*cos(t1)+cos(t2));{t0*((100-64)*cos(t1)+k*cos((100-64/64)*t1))}
-              fml_pts_ptr^.y:=y+t0*(k*sin(t1)-sin(t2));{t0*((100-64)*sin(t1)-k*sin((100-64/64)*t1))}
+              fml_pts_ptr^.x:=x+t0*(k*cos(t1)+Cos(t2));{t0*((100-64)*Cos(t1)+k*Cos((100-64/64)*t1))}
+              fml_pts_ptr^.y:=y+t0*(k*sin(t1)-Sin(t2));{t0*((100-64)*Sin(t1)-k*Sin((100-64/64)*t1))}
               Inc(fml_pts_ptr);
               t1+=dt;
               t2+=t3;
@@ -14724,8 +14743,8 @@ begin
       fml_pts_ptr:=Unaligned(@fml_pts[0]);
       for j:=0 to sln_pts_cnt_add-1 do
         begin
-          fml_pts_ptr^.x:=x+t0*sin(rose_petals_cnt*t1)*cos(t1);
-          fml_pts_ptr^.y:=y+t0*sin(rose_petals_cnt*t1)*sin(t1);
+          fml_pts_ptr^.x:=x+t0*Sin(rose_petals_cnt*t1)*Cos(t1);
+          fml_pts_ptr^.y:=y+t0*Sin(rose_petals_cnt*t1)*Sin(t1);
           Inc(fml_pts_ptr);
           t1+=dt;
         end;
@@ -14759,7 +14778,7 @@ begin
             t1:=dt;
           for j:=0 to sln_pts_cnt_add-1 do
             begin
-              t2            :=exp(spiral_coil_step*ln(t1));
+              t2            :=Exp(spiral_coil_step*Ln(t1));
               fml_pts_ptr^.x:=x+t0*t2*cos(t1);
               fml_pts_ptr^.y:=y+t0*t2*sin(t1);
               Inc(fml_pts_ptr);
@@ -14771,10 +14790,25 @@ end; {$endregion}
 procedure TCurve.Superellipse      (constref x,y              :integer);                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   fml_pts_ptr: PPtPosF;
-  t1,t2,t3,dt: double;
-  j,k        : integer;
+  t0,t1,dt   : double;
+  j          : integer;
 begin
-
+  with global_prop do
+    begin
+      if (sln_pts_cnt_add=0) then
+        Exit;
+      dt         :=superellipse_angle*FULL_ROT/sln_pts_cnt_add;
+      t0         :=superellipse_rad;
+      t1         :=superellipse_rot;
+      fml_pts_ptr:=Unaligned(@fml_pts[0]);
+      for j:=0 to sln_pts_cnt_add-1 do
+        begin
+          fml_pts_ptr^.x:=x+t0*Exp(superellipse_curvature0*Abs(Cos(t1)))*superellipse_curvature2*sign(Cos(t1));
+          fml_pts_ptr^.y:=y+t0*Exp(superellipse_curvature1*Abs(Sin(t1)))*superellipse_curvature3*sign(Sin(t1));
+          Inc(fml_pts_ptr);
+          t1+=dt;
+        end;
+    end;
 end; {$endregion}
 procedure TCurve.HasSplineEds      (constref spline_ind       :TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -16340,7 +16374,7 @@ begin
       CnvToCnv(srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
     end;
 end; {$endregion}
-function CycloidRangeCheck   : boolean;                                                inline; {$region -fold}
+function CycloidRangeCheck     : boolean;                                              inline; {$region -fold}
 begin
   with sln_var,global_prop do
     Result:=(cycloid_pts_cnt <2) or
@@ -16349,7 +16383,7 @@ begin
   if Result then
     DrawCanvas;
 end; {$endregion}
-function EpicycloidRangeCheck: boolean;                                                inline; {$region -fold}
+function EpicycloidRangeCheck  : boolean;                                              inline; {$region -fold}
 begin
   with sln_var,global_prop do
     Result:=((fml_type=(sfEpicycloid )) and (epicycloid_petals_cnt=0)) or
@@ -16360,7 +16394,7 @@ begin
   if Result then
     DrawCanvas;
 end; {$endregion}
-function RoseRangeCheck      : boolean;                                                inline; {$region -fold}
+function RoseRangeCheck        : boolean;                                              inline; {$region -fold}
 begin
   with sln_var,global_prop do
     Result:=(rose_pts_cnt   <3) or
@@ -16369,11 +16403,21 @@ begin
   if Result then
     DrawCanvas;
 end; {$endregion}
-function SpiralRangeCheck    : boolean;                                                inline; {$region -fold}
+function SpiralRangeCheck      : boolean;                                              inline; {$region -fold}
 begin
   with sln_var,global_prop do
     Result:=(spiral_pts_cnt<2) or
             (spiral_rad    =0);
+  if Result then
+    DrawCanvas;
+end; {$endregion}
+function SuperellipseRangeCheck: boolean;                                              inline; {$region -fold}
+begin
+  with sln_var,global_prop do
+    Result:=(superellipse_pts_cnt   <2) or
+            (superellipse_rad       =0) or
+            (superellipse_curvature0=0) or
+            (superellipse_curvature1=0);
   if Result then
     DrawCanvas;
 end; {$endregion}
@@ -16412,11 +16456,11 @@ begin
       if (not (b0 or b2)) and (cur_tlt_dwn_btn_ind<>-1) then
         L_Spline_Templates_Name.Caption:=sln_tlt_nam_arr1[cur_tlt_dwn_btn_ind];
       case cur_tlt_dwn_btn_ind of
-        0: P_Spline_Cycloid   .Visible:=not (b0 or b2 or b3);
-        1: P_Spline_Epicycloid.Visible:=not (b0 or b2 or b3);
-        2: P_Spline_Rose      .Visible:=not (b0 or b2 or b3);
-        3: P_Spline_Spiral    .Visible:=not (b0 or b2 or b3);
-        4:;
+        0: P_Spline_Cycloid     .Visible:=not (b0 or b2 or b3);
+        1: P_Spline_Epicycloid  .Visible:=not (b0 or b2 or b3);
+        2: P_Spline_Rose        .Visible:=not (b0 or b2 or b3);
+        3: P_Spline_Spiral      .Visible:=not (b0 or b2 or b3);
+        4: P_Spline_Superellipse.Visible:=not (b0 or b2 or b3);
       end;
       P_Spline_Freehand        .Visible:=b0;
       P_Spline_Templates       .Visible:=b1 or b2 or b3;
@@ -16461,7 +16505,13 @@ begin
                 SetLength    (fml_pts,spiral_pts_cnt);
                 FmlSplinePrev(        spiral_pts_cnt);
               end;
-            4:;
+            4:
+              begin
+                if SuperellipseRangeCheck then
+                  Exit;
+                SetLength    (fml_pts,superellipse_pts_cnt);
+                FmlSplinePrev(        superellipse_pts_cnt);
+              end;
           end;
     end;
   VisibilityChange(b0 or b2 or b3);
@@ -16544,22 +16594,23 @@ procedure TF_MainForm.SB_Spline_TemplateClick                                (se
 type
   PPanel=^TPanel;
 var
-  panel_arr: array[0..3] of PPanel;
+  panel_arr: array[0..4] of PPanel;
   i        : integer;
 
   procedure PanelsVisible; {$region -fold}
   var
     j: integer;
   begin
-    panel_arr[0]:=@P_Spline_Cycloid   ;
-    panel_arr[1]:=@P_Spline_Epicycloid;
-    panel_arr[2]:=@P_Spline_Rose;
-    panel_arr[3]:=@P_Spline_Spiral;
-    for j:=0 to 3 do
+    for j:=0 to 4 do
       panel_arr[j]^.visible:=False;
   end; {$endregion}
 
 begin
+  panel_arr[0]:=@P_Spline_Cycloid;
+  panel_arr[1]:=@P_Spline_Epicycloid;
+  panel_arr[2]:=@P_Spline_Rose;
+  panel_arr[3]:=@P_Spline_Spiral;
+  panel_arr[4]:=@P_Spline_Superellipse;
   DefocusControl(ActiveControl,True);
   with sln_var do
     begin
@@ -16621,6 +16672,11 @@ begin
               begin
                 PanelsVisible;
                 global_prop.fml_type:=sfSuperellipse;
+                panel_arr[4]^.visible:=True;
+                if SuperellipseRangeCheck then
+                  Exit;
+                SetLength    (fml_pts,global_prop.superellipse_pts_cnt);
+                FmlSplinePrev(        global_prop.superellipse_pts_cnt);
               end;
           end;
         end
@@ -16694,7 +16750,12 @@ begin
                     Exit;
                   sln_pts_cnt_add:=spiral_pts_cnt;
                 end;
-              4:;
+              4:
+                begin
+                  if SuperellipseRangeCheck then
+                    Exit;
+                  sln_pts_cnt_add:=superellipse_pts_cnt;
+                end;
             end;
             FmlSplineObj[cur_tlt_dwn_btn_ind](world_axis.x,world_axis.y);
             Inc(sln_pts_cnt,sln_pts_cnt_add);
@@ -16732,11 +16793,11 @@ begin
       FmlSplinePrev(cycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Cycloid_RadiusChange                         (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Cycloid_RadiusChange                        (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      cycloid_loop_rad:=SE_Spline_Cycloid_Radius.value;
+      cycloid_loop_rad:=FSE_Spline_Cycloid_Radius.value;
       if CycloidRangeCheck then
         Exit;
       FmlSplinePrev(cycloid_pts_cnt);
@@ -16777,39 +16838,39 @@ begin
       FmlSplinePrev(        epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Epicycloid_Petals_CountChange                (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Epicycloid_Petals_CountChange               (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_petals_cnt:=SE_Spline_Epicycloid_Petals_Count.value;
+      epicycloid_petals_cnt:=FSE_Spline_Epicycloid_Petals_Count.value;
       if EpicycloidRangeCheck then
         Exit;
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Epicycloid_RadiusChange                      (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Epicycloid_RadiusChange                     (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_rad:=SE_Spline_Epicycloid_Radius.value;
+      epicycloid_rad:=FSE_Spline_Epicycloid_Radius.value;
       if EpicycloidRangeCheck then
         Exit;
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Epicycloid_RotationChange                    (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Epicycloid_RotationChange                   (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_rot:=SE_Spline_Epicycloid_Rotation.value;
+      epicycloid_rot:=FSE_Spline_Epicycloid_Rotation.value;
       FmlSplinePrev(epicycloid_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Epicycloid_AngleChange                       (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Epicycloid_AngleChange                      (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      epicycloid_angle:=SE_Spline_Epicycloid_Angle.value;
+      epicycloid_angle:=FSE_Spline_Epicycloid_Angle.value;
       if EpicycloidRangeCheck then
         Exit;
       FmlSplinePrev(epicycloid_pts_cnt);
@@ -16849,29 +16910,29 @@ begin
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Rose_RadiusChange                            (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Rose_RadiusChange                           (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_rad:=SE_Spline_Rose_Radius.value;
+      rose_rad:=FSE_Spline_Rose_Radius.value;
       if RoseRangeCheck then
         Exit;
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Rose_RotationChange                          (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Rose_RotationChange                         (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_rot:=SE_Spline_Rose_Rotation.value;
+      rose_rot:=FSE_Spline_Rose_Rotation.value;
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Rose_AngleChange                             (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Rose_AngleChange                            (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      rose_angle:=SE_Spline_Rose_Angle.value;
+      rose_angle:=FSE_Spline_Rose_Angle.value;
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
@@ -16894,30 +16955,88 @@ begin
       FmlSplinePrev(spiral_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Spiral_RadiusChange                          (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Spiral_RadiusChange                         (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_rad:=SE_Spline_Spiral_Radius.value;
+      spiral_rad:=FSE_Spline_Spiral_Radius.value;
       if SpiralRangeCheck then
         Exit;
       FmlSplinePrev(spiral_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Spiral_RotationChange                        (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Spiral_RotationChange                       (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_rot:=SE_Spline_Spiral_Rotation.value;
+      spiral_rot:=FSE_Spline_Spiral_Rotation.value;
       FmlSplinePrev(spiral_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.SE_Spline_Spiral_AngleChange                           (sender:TObject); {$region -fold}
+procedure TF_MainForm.FSE_Spline_Spiral_AngleChange                          (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
-      spiral_angle:=SE_Spline_Spiral_Angle.value;
+      spiral_angle:=FSE_Spline_Spiral_Angle.value;
       FmlSplinePrev(spiral_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.SE_Spline_Superellipse_Points_CountChange              (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      superellipse_pts_cnt:=SE_Spline_Superellipse_Points_Count.value;
+      if SuperellipseRangeCheck then
+        Exit;
+      SetLength    (fml_pts,superellipse_pts_cnt);
+      FmlSplinePrev(        superellipse_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.FSE_Spline_Superellipse_Curvature0Change               (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      superellipse_curvature0:=FSE_Spline_Superellipse_Curvature0.value;
+      if SuperellipseRangeCheck then
+        Exit;
+      FmlSplinePrev(superellipse_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.FSE_Spline_Superellipse_Curvature1Change               (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      superellipse_curvature1:=FSE_Spline_Superellipse_Curvature1.value;
+      if SuperellipseRangeCheck then
+        Exit;
+      FmlSplinePrev(superellipse_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.FSE_Spline_Superellipse_Curvature2Change               (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      superellipse_curvature2:=FSE_Spline_Superellipse_Curvature2.value;
+
+      FmlSplinePrev(superellipse_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.FSE_Spline_Superellipse_Curvature3Change               (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      superellipse_curvature3:=FSE_Spline_Superellipse_Curvature3.value;
+      FmlSplinePrev(superellipse_pts_cnt);
+    end;
+end; {$endregion}
+procedure TF_MainForm.FSE_Spline_Superellipse_RadiusChange                   (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      superellipse_rad:=FSE_Spline_Superellipse_Radius.value;
+      if SuperellipseRangeCheck then
+        Exit;
+      FmlSplinePrev(superellipse_pts_cnt);
     end;
 end; {$endregion}
 procedure TF_MainForm.SE_Spline_Points_CountChange                           (sender:TObject); {$region -fold}
@@ -17037,12 +17156,12 @@ end; {$endregion}
 procedure TF_MainForm.CB_Spline_Byte_ModeChange                              (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.byte_mode         :=not sln_var.global_prop.byte_mode;
-  CB_Spline_Faster_Compression.Enabled  :=CB_Spline_Byte_Mode.Checked;
-  sln_var.global_prop.faster_compression:=CB_Spline_Faster_Compression.Checked and sln_var.global_prop.byte_mode;
+  CB_Spline_Better_Compression.Enabled  :=CB_Spline_Byte_Mode.Checked;
+  sln_var.global_prop.better_compression:=CB_Spline_Better_Compression.Checked and sln_var.global_prop.byte_mode;
 end; {$endregion}
-procedure TF_MainForm.CB_Spline_Faster_CompressionChange                     (sender:TObject); {$region -fold}
+procedure TF_MainForm.CB_Spline_Better_CompressionChange                     (sender:TObject); {$region -fold}
 begin
-  sln_var.global_prop.faster_compression:=not sln_var.global_prop.faster_compression;
+  sln_var.global_prop.better_compression:=not sln_var.global_prop.better_compression;
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_On_Out_Of_WindowChange                       (sender:TObject); {$region -fold}
 begin
@@ -21196,15 +21315,15 @@ begin
       tilemap_arr1[High(tilemap_arr1)]:=TPicture.Create;
       tilemap_arr1[High(tilemap_arr1)].LoadFromFile(default_tlmap_sprite);
       if (not FileExists(default_tlmap_sprite)) then
-      begin
-        tilemap_arr1[High(tilemap_arr1)].Bitmap:=Graphics.TBitmap.Create;
-        with tilemap_arr1[High(tilemap_arr1)].Bitmap do
-          begin
-            Width      :=F_MainForm.IL_Default_Tile_Map_Icon.width;
-            Height     :=F_MainForm.IL_Default_Tile_Map_Icon.height;
-            F_MainForm.IL_Default_Tile_Map_Icon.GetBitmap(0,tilemap_arr1[High(tilemap_arr1)].Bitmap);
-          end;
-      end;
+        begin
+          tilemap_arr1[High(tilemap_arr1)].Bitmap:=Graphics.TBitmap.Create;
+          with tilemap_arr1[High(tilemap_arr1)].Bitmap do
+            begin
+              Width      :=F_MainForm.IL_Default_Tile_Map_Icon.width;
+              Height     :=F_MainForm.IL_Default_Tile_Map_Icon.height;
+              F_MainForm.IL_Default_Tile_Map_Icon.GetBitmap(0,tilemap_arr1[High(tilemap_arr1)].Bitmap);
+            end;
+        end;
 
       {Compress Picture}
       SetLength(tilemap_arr2,
@@ -21220,9 +21339,8 @@ begin
                                                               0,
                                                               True,
                                                               tilemap_arr1[High(tilemap_arr1)]);
-      with tilemap_arr2[High(tilemap_arr2)],fast_image_data,fast_image_proc_var do
+      with tilemap_arr2[High(tilemap_arr2)],fast_image_data do
         begin
-          fast_image_data_ptr:=@fast_image_data;
           tilemap_sprite_w_h:=PtPos    ( tilemap_sprite_icon.fast_image_data.bmp_ftimg_width_origin,
                                          tilemap_sprite_icon.fast_image_data.bmp_ftimg_height_origin);
           tilemap_sprite_ptr:=Unaligned(@tilemap_sprite_icon                                        );
@@ -26161,7 +26279,7 @@ begin
       SetRctSrc;
       SetGrad(0,bmp_ftimg_height-1,Random($FFFFFF),Random($FFFFFF));
       exec_timer.Start;
-      for i:=0 to 10000 do
+      for i:=0 to {1000}0 do
         begin
           GrdNTValueProc0;
           GrdPTValueProc0;
@@ -26173,7 +26291,6 @@ begin
                                      L_Exec_Time_Info.top,
                                      'Execution time: '+FloatToStr(execution_time)+' ms.');
       CnvToCnv(srf_var.srf_bmp_rct,Canvas,srf_var.srf_bmp.Canvas,SRCCOPY);
-      F_MainForm.RM_Description.Lines.Text:=IntToStr(SizeOf(TProc0));
 
 
       {LowerBmpToMainBmp;
