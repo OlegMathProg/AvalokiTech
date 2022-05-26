@@ -141,7 +141,7 @@ type
     CB_Select_Items_Selection_Highlight              : TCheckBox;
     CB_Object_Properties_Recalculate_Position        : TCheckBox;
     CB_Object_Properties_Show_In_Game                : TCheckBox;
-    CB_Spline_Better_Compression                     : TCheckBox;
+    CB_Spline_Better_Quality                         : TCheckBox;
     CB_Spline_Cycloid_Direction_Y                    : TComboBox;
     CB_Physics_Deletion                              : TCheckBox;
     CB_Select_Points_Show_Bounds                     : TCheckBox;
@@ -157,6 +157,9 @@ type
     CB_Spline_Dynamics_Collider                      : TCheckBox;
     CB_Spline_Best_Precision                         : TCheckBox;
     CB_Object_Properties_Show_In_Editor              : TCheckBox;
+    CB_Spline_Rose_Mobius_Grid                       : TCheckBox;
+    CB_Spline_Grid_Clipping_Points                   : TCheckBox;
+    CB_Spline_Grid_Clipping_Attached_Objects         : TCheckBox;
     CB_Text_Background                               : TCheckBox;
     CB_Spline_Lazy_Repaint                           : TCheckBox;
     CB_Spline_Epicycloid_Hypocycloid                 : TCheckBox;
@@ -164,7 +167,7 @@ type
     CB_Spline_Hidden_Line_Elimination                : TCheckBox;
     CB_Spline_Edges_Style                            : TComboBox;
     CB_Spline_Edges_Shape                            : TComboBox;
-    CB_Spline_Grid_Clipping                          : TCheckBox;
+    CB_Spline_Grid_Clipping_Edges                    : TCheckBox;
     CB_Spline_On_Out_Of_Window                       : TCheckBox;
     CB_Spline_On_Scale_Down                          : TCheckBox;
     CB_Spline_Points_Style                           : TComboBox;
@@ -219,7 +222,7 @@ type
     Image7                                           : TImage;
     IL_World_Axis                                    : TImageList;
     IL_AnimK                                         : TImageList;
-    IL_Default_Mask_Template_Sprite_Icon             : TImageList;
+    IL_Default_Tile_Map_Sprite_Icon                  : TImageList;
     Image8                                           : TImage;
     Image9                                           : TImage;
     IL_Fold_Unfold                                   : TImageList;
@@ -253,6 +256,8 @@ type
     L_Spline_Cycloid_Curvature                       : TLabel;
     L_Select_Items_Outer_Subgraph                    : TLabel;
     L_Select_Items_Outer_Subgraph_Color              : TLabel;
+    L_Spline_Grid_Clipping                           : TLabel;
+    L_Spline_Compression                             : TLabel;
     L_Spline_Superellipse_Curvature0                 : TLabel;
     L_Spline_Superellipse_Curvature1                 : TLabel;
     L_Spline_Superellipse_Curvature2                 : TLabel;
@@ -394,7 +399,7 @@ type
     MI_Goto_First_Object                             : TMenuItem;
     MI_Goto_Last_Object                              : TMenuItem;
     MI_Delete_Without_Children                       : TMenuItem;
-    OPD_Add_Mask_Template                            : TOpenPictureDialog;
+    OPD_Add_Tile_Map                                 : TOpenPictureDialog;
     OD_Spline_Load                                   : TOpenDialog;
     OpenGLControl2                                   : TOpenGLControl;
     PageControl1                                     : TPageControl;
@@ -682,7 +687,7 @@ type
     procedure CB_Spline_Byte_ModeChange                              (      sender           :TObject);
     procedure CB_Spline_Edges_ShapeSelect                            (      sender           :TObject);
     procedure CB_Spline_Edges_Show_BoundsChange                      (      sender           :TObject);
-    procedure CB_Spline_Better_CompressionChange                     (      sender           :TObject);
+    procedure CB_Spline_Better_QualityChange                         (      sender           :TObject);
     procedure CB_Spline_Hidden_Line_EliminationChange                (      sender           :TObject);
     procedure CB_Spline_Lazy_RepaintChange                           (      sender           :TObject);
     procedure CB_Spline_Invert_OrderChange                           (      sender           :TObject);
@@ -693,6 +698,7 @@ type
     procedure CB_Spline_Points_ShapeSelect                           (      sender           :TObject);
     procedure CB_Spline_Points_Show_BoundsChange                     (      sender           :TObject);
     procedure CB_Spline_Points_StyleSelect                           (      sender           :TObject);
+    procedure CB_Spline_Rose_Mobius_GridChange                       (      sender           :TObject);
     procedure CB_Text_BackgroundChange                               (      sender           :TObject);
     procedure FormMouseMove                                          (      sender           :TObject;
                                                                             shift            :TShiftState;
@@ -1242,6 +1248,8 @@ type
       procedure SelectedSubgrtaphDraw;                                            inline; {$ifdef Linux}[local];{$endif}
       {Sel. Tools Marker: Reset Background Settings}
       procedure STMSetBckgd;                                                      inline; {$ifdef Linux}[local];{$endif}
+      {Tile Map Default Icon: Reset Background Settings}
+      procedure TlMSetBckgd;                                                      inline; {$ifdef Linux}[local];{$endif}
       {Actors: Reset Background Settings-----------}
       procedure ActSetBckgd;                                                      inline; {$ifdef Linux}[local];{$endif}
       {TimeLine: Reset Background Settings---------}
@@ -2220,6 +2228,7 @@ var
   bucket_size_change          : boolean;
   align_picture_to_center     : boolean=False;
   full_screen                 : boolean=True;
+  game_pause                  : boolean=False;
   splitters_arr               : array[0..7] of PInteger;
 
   {Show Object---------------------------------} {$region -fold}
@@ -2380,7 +2389,9 @@ var
   // ...:
   copy8_calc                  : boolean absolute calc_arr[48];
   // reset background settings for local axis:
-  local_axis_set_bckgd        : boolean absolute calc_arr[49]; {$endregion}
+  local_axis_set_bckgd        : boolean absolute calc_arr[49];
+  // reset background settings for tile map sprite:
+  tlm_sprite_set_bckgd        : boolean absolute calc_arr[50]; {$endregion}
 
   {Miscellaneous Expressions-------------------} {$region -fold}
   // expressions array
@@ -3397,7 +3408,7 @@ begin
 
   with srf_var,sel_var,crc_sel_var do
     begin
-      EventGroupsCalc(calc_arr,[0,1,2,3,4,6,8,9,16,17,18,20,21,22,28,30,31,32,37,44,48,49]);
+      EventGroupsCalc(calc_arr,[0,1,2,3,4,6,8,9,16,17,18,20,21,22,28,30,31,32,37,44,48,49,50]);
       if down_select_items_ptr^ then
         begin
           ResizeCircleSelectionModeDraw;
@@ -4024,7 +4035,7 @@ begin
 
   SetTextInfo(srf_bmp.Canvas,32,$00E6F9EB,'AR DESTINE');
 
-  //WorldAxisCreate;
+  WorldAxisCreate;
 
 end; {$endregion}
 destructor  TSurface.Destroy;                                                                                                                  {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -4044,7 +4055,7 @@ begin
                                         0);
   with world_axis_bmp,fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       SetPPInfo(clRed);
       SetGrad  (0,bmp_ftimg_height,0,255);
@@ -4083,57 +4094,72 @@ begin
     end;
 end; {$endregion}
 procedure TSurface.WorldAxisToBmp(constref x,y:integer);                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  world_axis_x,world_axis_y: integer;
 begin
   {srf_var.srf_bmp.BeginUpdate(True);
   with srf_var,srf_bmp.Canvas,world_axis_shift do
     begin
-      Pen.Mode:=pmNotMask{pmNotXor}{pmCopy};
-
-      Pen.Color:=clGreen;
-
-      Line  (Trunc(00+x),Trunc(y+00),
-             Trunc(60+x),Trunc(y+00));
-      LineTo(Trunc(50+x),Trunc(y-02));
-      LineTo(Trunc(50+x),Trunc(y+02));
-      LineTo(Trunc(60+x),Trunc(y+00));
-
-      Line  (Trunc( 00+x),Trunc(y+00),
-             Trunc( 00+x),Trunc(y-60));
-      LineTo(Trunc(-02+x),Trunc(y-50));
-      LineTo(Trunc( 02+x),Trunc(y-50));
-      LineTo(Trunc( 00+x),Trunc(y-60));
-
+      Pen.Mode    :=pmNotMask{pmNotXor}{pmCopy};
+      Pen.Color   :=clGreen;
+      world_axis_x:=world_axis.x+world_axis_shift.x;
+      world_axis_y:=world_axis.y+world_axis_shift.y;
+      Line  ( 00+world_axis_x,
+              00+world_axis_y,
+              60+world_axis_x,
+              00+world_axis_y);
+      LineTo( 50+world_axis_x,
+             -02+world_axis_y);
+      LineTo( 50+world_axis_x,
+              02+world_axis_y);
+      LineTo( 60+world_axis_x,
+              00+world_axis_y);
+      Line  ( 00+world_axis_x,
+              00+world_axis_y,
+              00+world_axis_x,
+             -60+world_axis_y);
+      LineTo(-02+world_axis_x,
+             -50+world_axis_y);
+      LineTo( 02+world_axis_x,
+             -50+world_axis_y);
+      LineTo( 00+world_axis_x,
+             -60+world_axis_y);
       Pen.Color:=clBlue;
-
       Pen.Style:=psDot;
-      Line  (Trunc( 00+x),Trunc(y+00),
-             Trunc(-60+x),Trunc(y+00));
+      Line  ( 00+world_axis_x,
+              00+world_axis_y,
+             -60+world_axis_x,
+              00+world_axis_y);
       Pen.Style:=psSolid;
-      LineTo(Trunc(-50+x),Trunc(y-02));
-      LineTo(Trunc(-50+x),Trunc(y+02));
-      LineTo(Trunc(-60+x),Trunc(y+00));
-
+      LineTo(-50+world_axis_x,
+             -02+world_axis_y);
+      LineTo(-50+world_axis_x,
+              02+world_axis_y);
+      LineTo(-60+world_axis_x,
+              00+world_axis_y);
       Pen.Style:=psDot;
-      Line  (Trunc( 00+x),Trunc(y+00),
-             Trunc( 00+x),Trunc(y+60));
+      Line  ( 00+world_axis_x,
+              00+world_axis_y,
+              00+world_axis_x,
+              60+world_axis_y);
       Pen.Style:=psSolid;
-      LineTo(Trunc(-02+x),Trunc(y+50));
-      LineTo(Trunc( 02+x),Trunc(y+50));
-      LineTo(Trunc( 00+x),Trunc(y+60));
+      LineTo(-02+world_axis_x,
+              50+world_axis_y);
+      LineTo( 02+world_axis_x,
+              50+world_axis_y);
+      LineTo( 00+world_axis_x,
+              60+world_axis_y);
     end;
   srf_var.srf_bmp.EndUpdate(False);}
 
-  with world_axis_bmp,fast_image_data,fast_image_proc_var do
+  with {pvt_var.sel_tls_mrk}{tlm_var.tilemap_sprite_icon}{pvt_var.local_axis_bmp}world_axis_bmp,fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@world_axis_bmp.fast_image_data;
-      SetRctPos(x+srf_var.world_axis_shift.x,
-                y+srf_var.world_axis_shift.y);
+      fast_image_data_ptr0:=@fast_image_data;
+      SetRctPos(x+world_axis_shift.x,
+                y+world_axis_shift.y);
       SdrProc[3];
-      {SetTextInfo(srf_var.srf_bmp.Canvas,32);
-      srf_var.srf_bmp.Canvas.TextOut(srf_var.world_axis.x+32,
-                                     srf_var.world_axis.y,
-                                     'Hello World');}
     end;
+
 end; {$endregion}
 procedure InvalidateInnerWindow;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -4521,7 +4547,7 @@ begin
 end; {$endregion}
 
 {Events Queue}
-{Get Handles---------------------------------}
+{Get Handles-------------------------------------}
 procedure TSurface.GetHandles;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with obj_var,rgr_var,sgr_var,sln_var,tex_var do
@@ -4543,13 +4569,13 @@ begin
   //if down_play_anim_ptr^ then
   GetObject(srf_bmp.Handle,SizeOf(buffer),@buffer);
 end; {$endregion}
-{World Axis: Drawing-------------------------}
+{World Axis: Drawing-----------------------------}
 procedure TSurface.WorldAxisDraw;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   WorldAxisToBmp(world_axis.x-world_axis_bmp.fast_image_data.bmp_ftimg_width_origin >>1,
                  world_axis.y-world_axis_bmp.fast_image_data.bmp_ftimg_height_origin>>1);
 end; {$endregion}
-{Align Spline: Calculation-------------------}
+{Align Spline: Calculation-----------------------}
 procedure TSurface.AlnSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var,sel_var,sgr_var do
@@ -4561,7 +4587,7 @@ begin
       sel_pts_cnt
     );
 end; {$endregion}
-{Select Pivot: Calculation-------------------}
+{Select Pivot: Calculation-----------------------}
 procedure TSurface.SelectPivotCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
@@ -4595,7 +4621,7 @@ begin
         end;}
     end;
 end; {$endregion}
-{Select Pivot: Drawing-----------------------}
+{Select Pivot: Drawing---------------------------}
 procedure TSurface.SelectPivotDraw;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j: integer;
@@ -4646,7 +4672,7 @@ begin
       SelPvtAndSplineEdsToBmp;
     end;
 end; {$endregion}
-{Unselect Pivot: Drawing---------------------}
+{Unselect Pivot: Drawing-------------------------}
 procedure TSurface.UnselectPivotDraw;                                                                                                  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i,j           : integer;
@@ -4730,7 +4756,7 @@ begin
       exp2                      :=(sln_pts_cnt >0);
     end;
 end; {$endregion}
-{Add Spline: Calculation---------------------}
+{Add Spline: Calculation-------------------------}
 procedure TSurface.AddSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
@@ -4750,9 +4776,10 @@ begin
       CreateNode('Spline',IntToStr(obj_var.curve_cnt));
       ObjIndsCalc;
       ScTIndsCalc;
+      CngPnVsCalc;
     end;
 end; {$endregion}
-{Add Spline: Hidden Lines Calc.--------------}
+{Add Spline: Hidden Lines Calc.------------------}
 procedure TSurface.AddSplineHdLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
@@ -4789,12 +4816,12 @@ begin
           end;
     end;
 end; {$endregion}
-{Add Spline: Has Edge(Lines) Calc.-----------}
+{Add Spline: Has Edge(Lines) Calc.---------------}
 procedure TSurface.AddSplineHsLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   sln_var.HasSplineEds(sln_var.sln_obj_cnt-1);
 end; {$endregion}
-{Add Spline: Drawing-------------------------}
+{Add Spline: Drawing-----------------------------}
 procedure TSurface.AddSplineDraw;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_spline) then
@@ -4838,7 +4865,7 @@ begin
                 begin
                   if byte_mode then
                     begin
-                      if (not better_compression) then
+                      if (not better_quality) then
                         begin
                           if hid_ln_elim then
                             begin
@@ -4880,7 +4907,7 @@ begin
                 begin
                   if byte_mode then
                     begin
-                      if (not better_compression) then
+                      if (not better_quality) then
                         begin
                           if hid_ln_elim then
                             begin
@@ -4944,7 +4971,7 @@ begin
 
     end;
 end; {$endregion}
-{Add Tile Map: Calculation-------------------}
+{Add Tile Map: Calculation-----------------------}
 procedure TSurface.AddTileMapCalc;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (not show_tile_map) then
@@ -4967,7 +4994,7 @@ begin
       CngPnVsCalc;
     end;
 end; {$endregion}
-{Scale Background: Calculation---------------}
+{Scale Background: Calculation-------------------}
 procedure TSurface.SclBckgdCalc;                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with srf_var do
@@ -4983,7 +5010,7 @@ begin
       1
     );
 end; {$endregion}
-{Scale Spline: Calculation-------------------}
+{Scale Spline: Calculation-----------------------}
 procedure TSurface.SclSplineCalc;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var do
@@ -4999,7 +5026,7 @@ begin
       sln_pts_cnt-1
     );
 end; {$endregion}
-{Repaint Splines with Hidden Lines-----------}
+{Repaint Splines with Hidden Lines---------------}
 procedure TSurface.RepSplineHdLn;                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   eds_img_arr_ptr        : PFastLine;
@@ -5042,7 +5069,7 @@ begin
             end;
     end;
 end; {$endregion}
-{Repaint Spline: Drawing---------------------}
+{Repaint Spline: Drawing-------------------------}
 procedure TSurface.RepSplineDraw0;                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct_eds_var_ptr: PFastLine;
@@ -5086,7 +5113,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         AddSplineRctEds(i);
@@ -5098,7 +5125,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5116,7 +5143,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         AddSplineRctPts(i);
@@ -5128,7 +5155,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5146,7 +5173,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         //if ((has_sel_pts_ptr+i)^=0) then
@@ -5155,7 +5182,7 @@ begin
                               begin
                                 if byte_mode then
                                   begin
-                                    if (not better_compression) then
+                                    if (not better_quality) then
                                       begin
                                         if hid_ln_elim then
                                           begin
@@ -5197,7 +5224,7 @@ begin
                               begin
                                 if byte_mode then
                                   begin
-                                    if (not better_compression) then
+                                    if (not better_quality) then
                                       begin
                                         if hid_ln_elim then
                                           begin
@@ -5246,7 +5273,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5264,7 +5291,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         //if ((has_sel_pts_ptr+i)^=0) then
@@ -5293,7 +5320,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5347,7 +5374,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         AddSplineRctEds(i);
@@ -5359,7 +5386,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5377,7 +5404,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         AddSplineRctPts(i);
@@ -5389,7 +5416,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5407,7 +5434,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         if ((has_sel_pts_ptr+i)^=0) then
@@ -5422,7 +5449,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5440,7 +5467,7 @@ begin
                       begin
                         if free_mem_on_scale_down and (fst_img<>Nil) then
                           begin
-                            fast_image_data_ptr:=@fast_image_data;
+                            fast_image_data_ptr0:=@fast_image_data;
                             ClrArr;
                           end;
                         if ((has_sel_pts_ptr+i)^=0) then
@@ -5463,7 +5490,7 @@ begin
                   begin
                     if free_mem_on_out_of_wnd and (fst_img<>Nil) then
                       begin
-                        fast_image_data_ptr:=@fast_image_data;
+                        fast_image_data_ptr0:=@fast_image_data;
                         ClrArr;
                       end;
                     lazy_repaint_prev:=False;
@@ -5474,31 +5501,31 @@ begin
     end;
 
 end; {$endregion}
-{Duplicated Points: Drawing------------------}
+{Duplicated Points: Drawing----------------------}
 procedure TSurface.DupPtsDraw;                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var do
     ArrFill(dup_pts_arr,srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct,clGreen);
 end; {$endregion}
-{World Axis: Reset Background Settings-------}
+{World Axis: Reset Background Settings-----------}
 procedure TSurface.WAxSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with world_axis_bmp,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
     end;
 end; {$endregion}
-{Local Axis: Reset Background Settings-------}
+{Local Axis: Reset Background Settings-----------}
 procedure TSurface.LAxSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with pvt_var.local_axis_bmp,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
     end;
 end; {$endregion}
-{Selected Subgraph: Drawing------------------}
+{Selected Subgraph: Drawing----------------------}
 procedure TSurface.SelectedSubgrtaphDraw;                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with sln_var,sel_var,pvt_var do
@@ -5508,25 +5535,34 @@ begin
       FillSelBmpAndSelPtsBRectDraw;
     end;
 end; {$endregion}
-{Sel. Tools Marker: Reset Background Settings}
+{Sel. Tools Marker: Reset Background Settings----}
 procedure TSurface.STMSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with pvt_var.sel_tls_mrk,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
     end;
 end; {$endregion}
-{Actors: Reset Background Settings-----------}
+{Tile Map Default Icon: Reset Background Settings}
+procedure TSurface.TlMSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  with tlm_var.tilemap_sprite_icon,fast_image_proc_var do
+    begin
+      fast_image_data_ptr0:=@fast_image_data;
+      SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
+    end;
+end; {$endregion}
+{Actors: Reset Background Settings---------------}
 procedure TSurface.ActSetBckgd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with fast_actor_set_var.d_icon,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
     end;
 end; {$endregion}
-{TimeLine: Reset Background Settings---------}
+{TimeLine: Reset Background Settings-------------}
 procedure TSurface.TLnSetBkgnd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
@@ -5534,26 +5570,26 @@ begin
   for i:=0 to 3 do
     with bckgd_btn_arr[i],fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
       end;
   for i:=0 to 5 do
     with tmln_btn_arr[i],fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
       end;
 end; {$endregion}
-{Cursors: Reset Background Settings----------}
+{Cursors: Reset Background Settings--------------}
 procedure TSurface.CurSetBkgnd;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with cur_arr[0],fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetBkgnd(srf_bmp_ptr,srf_bmp.width,srf_bmp.height,inn_wnd_rct);
     end;
 end; {$endregion}
-{Background Post-Processing------------------}
+{Background Post-Processing----------------------}
 procedure TSurface.BkgPP;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i:integer;
@@ -5564,7 +5600,7 @@ begin
     for i:=0 to pp_iters_cnt-1 do
       PPBlur(srf_bmp_ptr,inn_wnd_rct,srf_bmp.width);
 end; {$endregion}
-{Grid Post-Processing------------------------}
+{Grid Post-Processing----------------------------}
 procedure TSurface.GrdPP;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
@@ -5630,6 +5666,10 @@ begin
   {Background Settings: Sel. Tools Marker} {$region -fold}
   if sel_tls_mrk_set_bckgd then
     STMSetBckgd; {$endregion}
+
+  {Background Settings: Tile Map Sprite--} {$region -fold}
+  if tlm_sprite_set_bckgd then
+    TlMSetBckgd; {$endregion}
 
   {Background Settings: Actors-----------} {$region -fold}
   if actor_set_bckgd then
@@ -6562,13 +6602,13 @@ begin
       //pmt_big_var_ptr^.ln_arr0_ptr:=@pmt_big_var_ptr^.ln_arr0[0];
       if local_prop.byte_mode and (not down_select_items_ptr^) then
         begin
-          bmp_alpha_ptr2    :=pmt_big_var_ptr^.ln_arr0_ptr;
-          better_compression:=local_prop.better_compression;
+          bmp_alpha_ptr2:=pmt_big_var_ptr^.ln_arr0_ptr;
+          better_quality:=local_prop.better_quality;
         end
       else
         begin
-          bmp_alpha_ptr2    :=Nil;
-          better_compression:=False;
+          bmp_alpha_ptr2:=Nil;
+          better_quality:=False;
         end;
       remove_brunching_none:=local_prop.remove_brunching_none;
       need_store_value     :=down_select_items_ptr^;
@@ -14206,7 +14246,7 @@ begin
   with rct_eds_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         NTBeginProc[2];
         NTColorProc[0];
       end;
@@ -14216,7 +14256,7 @@ begin
   with rct_pts_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         NTBeginProc[2];
         NTColorProc[0];
       end;
@@ -14226,7 +14266,7 @@ begin
   with eds_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         NTBeginProc[2];
         NTColorProc[0];
       end;
@@ -14236,7 +14276,7 @@ begin
   with pts_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         NTBeginProc[2];
         NTColorProc[0];
       end;
@@ -14266,7 +14306,7 @@ begin
   with rct_eds_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {Compress Sprite} {$region -fold}
       // clear buffers:
@@ -14287,7 +14327,7 @@ begin
   with rct_pts_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {Compress Sprite} {$region -fold}
       // clear buffers:
@@ -14308,7 +14348,7 @@ begin
   with eds_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {Compress Sprite} {$region -fold}
       // clear buffers:
@@ -14375,7 +14415,7 @@ begin
   with pts_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {Compress Sprite} {$region -fold}
       // clear buffers:
@@ -14438,7 +14478,7 @@ begin
   with rct_eds_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
@@ -14457,7 +14497,7 @@ begin
   with rct_pts_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
@@ -14476,7 +14516,7 @@ begin
   with eds_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
@@ -14495,7 +14535,7 @@ begin
   with pts_img_arr[spline_ind],local_prop,fst_img,fast_image_data,fast_image_proc_var do
     if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) and (nt_pix_cnt<>0) then
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
@@ -14623,8 +14663,8 @@ begin
             cnc_ends and (fml_pts_cnt>2)
           );
         end;
-      {if show_world_axis then
-        WorldAxisDraw;}
+      if show_world_axis then
+        WorldAxisDraw;
       CnvToCnv (srf_bmp_rct,F_MainForm.Canvas,srf_bmp.Canvas,SRCCOPY);
       BmpToBmp2(low_bmp_ptr,srf_bmp_ptr,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
     end;
@@ -14741,13 +14781,22 @@ begin
       t0         :=rose_rad;
       t1         :=rose_rot;
       fml_pts_ptr:=Unaligned(@fml_pts[0]);
-      for j:=0 to sln_pts_cnt_add-1 do
-        begin
-          fml_pts_ptr^.x:=x+t0*Sin(rose_petals_cnt*t1)*Cos(t1);
-          fml_pts_ptr^.y:=y+t0*Sin(rose_petals_cnt*t1)*Sin(t1);
-          Inc(fml_pts_ptr);
-          t1+=dt;
-        end;
+      if (not rose_mobius_grid) then
+        for j:=0 to sln_pts_cnt_add-1 do
+          begin
+            fml_pts_ptr^.x:=x+t0*Sin(rose_petals_cnt*t1)*Cos(t1);
+            fml_pts_ptr^.y:=y+t0*Sin(rose_petals_cnt*t1)*Sin(t1);
+            Inc(fml_pts_ptr);
+            t1+=dt;
+          end
+      else
+        for j:=0 to sln_pts_cnt_add-1 do
+          begin
+            fml_pts_ptr^.x:=x+t0*Cos(rose_petals_cnt*t1)*Cos(t1);
+            fml_pts_ptr^.y:=y+t0*Sin(rose_petals_cnt*t1)*Sin(t1);
+            Inc(fml_pts_ptr);
+            t1+=dt;
+          end;
     end;
 end; {$endregion}
 procedure TCurve.Spiral            (constref x,y              :integer);                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -16050,7 +16099,7 @@ procedure TCurve.RepSplineRctEds   (constref spline_ind       :TColor);         
 begin
   with rct_eds_img_arr[spline_ind],local_prop,fst_img,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       ResNTValueArr(rct_eds_big_img.ln_arr1,
                     rct_eds_big_img.ln_arr_width);
     end;
@@ -16059,7 +16108,7 @@ procedure TCurve.RepSplineRctPts   (constref spline_ind       :TColor);         
 begin
   with rct_pts_img_arr[spline_ind],local_prop,fst_img,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       ResNTValueArr(rct_pts_big_img.ln_arr1,
                     rct_pts_big_img.ln_arr_width);
     end;
@@ -16068,7 +16117,7 @@ procedure TCurve.RepSplineEds      (constref spline_ind       :TColor);         
 begin
   with eds_img_arr[spline_ind],local_prop,fst_img,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       ResNTValueArr(eds_big_img.ln_arr1,
                     eds_big_img.ln_arr_width);
     end;
@@ -16077,7 +16126,7 @@ procedure TCurve.RepSplinePts      (constref spline_ind       :TColor);         
 begin
   with pts_img_arr[spline_ind],local_prop,fst_img,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       ResNTValueArr(pts_big_img.ln_arr1,
                     pts_big_img.ln_arr_width);
     end;
@@ -16936,6 +16985,14 @@ begin
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
+procedure TF_MainForm.CB_Spline_Rose_Mobius_GridChange               (sender:TObject); {$region -fold}
+begin
+  with sln_var,global_prop do
+    begin
+      rose_mobius_grid:=CB_Spline_Rose_Mobius_Grid.Checked;
+      FmlSplinePrev(rose_pts_cnt);
+    end;
+end; {$endregion}
 procedure TF_MainForm.SE_Spline_Spiral_Points_CountChange                    (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
@@ -17155,13 +17212,13 @@ begin
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_Byte_ModeChange                              (sender:TObject); {$region -fold}
 begin
-  sln_var.global_prop.byte_mode         :=not sln_var.global_prop.byte_mode;
-  CB_Spline_Better_Compression.Enabled  :=CB_Spline_Byte_Mode.Checked;
-  sln_var.global_prop.better_compression:=CB_Spline_Better_Compression.Checked and sln_var.global_prop.byte_mode;
+  sln_var.global_prop.byte_mode     :=not sln_var.global_prop.byte_mode;
+  CB_Spline_Better_Quality.Enabled  :=CB_Spline_Byte_Mode.Checked;
+  sln_var.global_prop.better_quality:=CB_Spline_Better_Quality.Checked and sln_var.global_prop.byte_mode;
 end; {$endregion}
-procedure TF_MainForm.CB_Spline_Better_CompressionChange                     (sender:TObject); {$region -fold}
+procedure TF_MainForm.CB_Spline_Better_QualityChange                     (sender:TObject); {$region -fold}
 begin
-  sln_var.global_prop.better_compression:=not sln_var.global_prop.better_compression;
+  sln_var.global_prop.better_quality:=not sln_var.global_prop.better_quality;
 end; {$endregion}
 procedure TF_MainForm.CB_Spline_On_Out_Of_WindowChange                       (sender:TObject); {$region -fold}
 begin
@@ -17694,7 +17751,7 @@ begin
       if eds_aa then
         begin
 
-          fast_image_data_ptr:=@fast_image_data;
+          fast_image_data_ptr0:=@fast_image_data;
 
           {Calc. Anti-Aliased Border----------} {$region -fold}
           {ArrClear    (aa_arr1,
@@ -17760,7 +17817,7 @@ begin
   with sel_pts_big_img,local_prop,fst_img,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {Set Bounding Rectangle} {$region -fold}
       with rct_vis do
@@ -17801,7 +17858,7 @@ procedure TSelIts.FilSelPtsObj(constref x,y:integer);                           
 begin
   with sel_pts_big_img,fst_img,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetRctPos(x,y);
       SdrProc[3];
     end;
@@ -19633,8 +19690,8 @@ begin
   CD_Select_Color.Execute;
   with sel_var,sel_pts_big_img,local_prop,fst_img,fast_image_proc_var do
     begin
-      eds_col            :=CD_Select_Color.Color;
-      fast_image_data_ptr:=@fast_image_data;
+      eds_col             :=CD_Select_Color.Color;
+      fast_image_data_ptr0:=@fast_image_data;
       SetPPInfo(eds_col);
     end;
   SB_Select_Items_Selection_Color.Color:=CD_Select_Color.Color;
@@ -19731,7 +19788,7 @@ begin
                                           0);
   with local_axis_bmp,fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       SetPPInfo(clRed);
       SetGrad  (0,bmp_ftimg_height-1,Random($FFFFFF),Random($FFFFFF));
@@ -19767,14 +19824,13 @@ begin
       fx_arr[0].pt_pix_srf_type:=01    ; //must be in range of [0..001]
       fx_arr[0].pt_pix_cfx_type:=17    ; //must be in range of [0..255]
       fx_arr[0].pt_pix_cng_type:=00    ; //must be in range of [0..001]
-
     end;
 end; {$endregion}
 procedure TPivot.LocalAxisDraw     (constref x,y:integer);                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with local_axis_bmp,fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetRctPos(x-bmp_ftimg_width_origin >>1,
                 y-bmp_ftimg_height_origin>>1);
       SdrProc[3];
@@ -19837,7 +19893,7 @@ procedure TPivot.SelectionToolsMarkerDraw(constref x,y:integer);                
 begin
   with sel_tls_mrk,fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetRctPos(x-bmp_ftimg_width_origin >>1,
                 y-bmp_ftimg_height_origin>>1);
       SdrProc[3];
@@ -20613,7 +20669,8 @@ begin
       PivotModeDraw (Canvas);
       PivotAxisDraw0(Canvas,pvt_axis_rect,shift);
       PivotAxisDraw1(Canvas,pvt_axis_rect,shift,x,y);
-      SelectionToolsMarkerDraw(x,y);
+      if (pvt_mode<>pmPivotMove) then
+        SelectionToolsMarkerDraw(x,y);
       LocalAxisDraw (Trunc(pvt_pos.x),Trunc(pvt_pos.y));
     end;
 end; {$endregion}
@@ -20800,7 +20857,7 @@ begin
   for i in [0,1,2,3,4,5] do
     with tmln_btn_arr[i],fast_image_data,fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
 
         SetPPInfo($0036261D);
 
@@ -20835,7 +20892,7 @@ begin
   // Drawing Settings: Button Background:
   with bckgd_btn_arr[0],fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       SetPPInfo(clLtGray);
 
@@ -20869,7 +20926,7 @@ begin
     end;
   with bckgd_btn_arr[1],fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       SetPPInfo(clLtGray);
 
@@ -20975,7 +21032,7 @@ begin
   for i in [0,1,2,4,5] do
     with bckgd_btn_arr[1],fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         SetRctPos(btn_pos_arr[i].x,
                   btn_pos_arr[i].y);
         SdrProc[3];
@@ -20983,7 +21040,7 @@ begin
   for i in [0,1,2,4,5] do
     with tmln_btn_arr[i],fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         SetRctPos(btn_pos_arr[i].x,
                   btn_pos_arr[i].y);
         SdrProc[3];
@@ -20991,6 +21048,7 @@ begin
   {for i in [0,1,2,4,5] do
     with bckgd_btn_arr[3] do
       begin
+        fast_image_data_ptr0:=@fast_image_data;
         SetRctPos(btn_pos_arr[i].x,
                   btn_pos_arr[i].y);
         SdrProc[3];
@@ -21000,7 +21058,7 @@ procedure CursorDraw(constref x,y:integer; constref cur_ind:integer=0); inline; 
 begin
   with cur_arr[cur_ind],fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetRctPos(x,y);
       SdrProc[3];
     end;
@@ -21210,7 +21268,7 @@ begin
 
   with fast_actor_set_var.d_icon,fast_image_data,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       v1:=Trunc(tex_var.tex_bmp_rct_pts[0].x)-bmp_ftimg_width >>1;
       v2:=Trunc(tex_var.tex_bmp_rct_pts[0].y)-bmp_ftimg_height>>1;
       sprite_rect_arr_ptr:=@sprite_rect_arr[0];
@@ -21263,7 +21321,7 @@ procedure TF_MainForm.I_Frame_ListMouseEnter(sender:TObject); {$region -fold}
 begin
   with fast_actor_set_var.d_icon,cmr_var,fast_image_proc_var do
     begin
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
       SetBkgnd(img_lst_bmp_ptr,img_lst_bmp.width,img_lst_bmp.height,bmp_rect);
     end;
 end; {$endregion}
@@ -21287,6 +21345,7 @@ begin
 end; {$endregion}
 destructor  TTlMap.Destroy;                                         {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
+  inherited Destroy;
 end; {$endregion}
 procedure  TTlMap.TileMapSpriteDefaultIconCreate;           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -21298,8 +21357,48 @@ begin
                                                inn_wnd_rct,
                                                max_sprite_w_h_rct,
                                                Application.Location+DEFAULT_TILE_MAP_SPRITE_ICON,
-                                               @F_MainForm.IL_Default_Mask_Template_Sprite_Icon.GetBitmap,
+                                               @F_MainForm.IL_Default_Tile_Map_Sprite_Icon.GetBitmap,
                                                0);
+  with tilemap_sprite_icon,fast_image_data,fast_image_proc_var do
+    begin
+      fast_image_data_ptr0{2}:=@fast_image_data;
+
+      SetPPInfo(clRed);
+      SetGrad  (0,bmp_ftimg_height,0,255);
+
+      col_trans_arr[01]:=132;
+      col_trans_arr[02]:=032;
+      col_trans_arr[03]:=132;
+      col_trans_arr[04]:=132;
+      col_trans_arr[05]:=132;
+      col_trans_arr[06]:=132;
+      col_trans_arr[07]:=132;
+      col_trans_arr[08]:=132;
+      col_trans_arr[09]:=132;
+      col_trans_arr[10]:=0;
+      col_trans_arr[11]:=255;
+      col_trans_arr[12]:=0;
+      col_trans_arr[13]:=255;
+      col_trans_arr[14]:=0;
+      col_trans_arr[15]:=255;
+      col_trans_arr[16]:=0;
+
+      pix_drw_type             :=00{01}; //must be in range of [0..002]
+      nt_pix_cfx_type          :=02{00};
+      pt_pix_cfx_type          :=02{00};
+      fx_cnt                   :=00{01}; //must be in range of [0..255]
+
+      fx_arr[0].rep_cnt        :=01{02}; //must be in range of [0..255]
+
+      fx_arr[0].nt_pix_srf_type:=01    ; //must be in range of [0..001]
+      fx_arr[0].nt_pix_cfx_type:=17    ; //must be in range of [0..255]
+      fx_arr[0].nt_pix_cng_type:=00    ; //must be in range of [0..001]
+
+      fx_arr[0].pt_pix_srf_type:=01    ; //must be in range of [0..001]
+      fx_arr[0].pt_pix_cfx_type:=17    ; //must be in range of [0..255]
+      fx_arr[0].pt_pix_cng_type:=00    ; //must be in range of [0..001]
+
+    end;
 end; {$endregion}
 procedure  TTlMap.AddTileMapObj;                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -21311,7 +21410,7 @@ begin
       {Load Picture}
       SetLength(tilemap_arr1,
          Length(tilemap_arr1)+1);
-      default_tlmap_sprite            :={Application.Location+DEFAULT_TILE_MAP_ICON}F_MainForm.OPD_Add_Mask_Template.Filename;
+      default_tlmap_sprite            :={Application.Location+DEFAULT_TILE_MAP_ICON}F_MainForm.OPD_Add_Tile_Map.Filename;
       tilemap_arr1[High(tilemap_arr1)]:=TPicture.Create;
       tilemap_arr1[High(tilemap_arr1)].LoadFromFile(default_tlmap_sprite);
       if (not FileExists(default_tlmap_sprite)) then
@@ -21371,8 +21470,10 @@ begin
   if show_tile_map then
     with srf_var,tilemap_arr2[tlmap_ind],fast_image_data,fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
-        obj_arr_ptr        :=Unaligned(@obj_var.obj_arr[obj_var.tlmap_inds_obj_arr[tlmap_ind]]);
+        fast_image_data_ptr1:=@fast_image_data;
+        fast_image_data_ptr2:=@tilemap_sprite_ptr^.fast_image_data;
+        fast_image_data_ptr0:=fast_image_data_ptr1;
+        obj_arr_ptr         :=Unaligned(@obj_var.obj_arr[obj_var.tlmap_inds_obj_arr[tlmap_ind]]);
         SetRctPos(world_axis.x-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+obj_arr_ptr^.world_axis_shift.x,
                   world_axis.y-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+obj_arr_ptr^.world_axis_shift.y);
         SetBkgnd
@@ -21382,14 +21483,15 @@ begin
           obj_arr_ptr^.bkgnd_height,
           obj_arr_ptr^.rct_clp_ptr^
         );
-        with tilemap_sprite_ptr^ do
-          SetBkgnd
-          (
-            obj_arr_ptr^.bkgnd_ptr,
-            obj_arr_ptr^.bkgnd_width,
-            obj_arr_ptr^.bkgnd_height,
-            obj_arr_ptr^.rct_clp_ptr^
-          );
+        fast_image_data_ptr0:=fast_image_data_ptr2;
+        SetBkgnd
+        (
+          obj_arr_ptr^.bkgnd_ptr,
+          obj_arr_ptr^.bkgnd_width,
+          obj_arr_ptr^.bkgnd_height,
+          obj_arr_ptr^.rct_clp_ptr^
+        );
+        fast_image_data_ptr0:=fast_image_data_ptr1;
         FilTileMap1;
         bmp_bkgnd_ptr:=@coll_arr[0];
       end;
@@ -21401,8 +21503,10 @@ begin
   if show_tile_map then
     with srf_var,tilemap_arr2[tlmap_ind],fast_image_data,fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
-        obj_arr_ptr        :=Unaligned(@obj_var.obj_arr[obj_var.tlmap_inds_obj_arr[tlmap_ind]]);
+        fast_image_data_ptr1:=@fast_image_data;
+        fast_image_data_ptr2:=@tilemap_sprite_ptr^.fast_image_data;
+        fast_image_data_ptr0:=fast_image_data_ptr1;
+        obj_arr_ptr         :=Unaligned(@obj_var.obj_arr[obj_var.tlmap_inds_obj_arr[tlmap_ind]]);
         SetRctPos(world_axis.x-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+obj_arr_ptr^.world_axis_shift.x,
                   world_axis.y-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+obj_arr_ptr^.world_axis_shift.y);
         SetBkgnd
@@ -21412,14 +21516,15 @@ begin
           obj_arr_ptr^.bkgnd_height,
           obj_arr_ptr^.rct_dst_ptr^
         );
-        with tilemap_sprite_ptr^ do
-          SetBkgnd
-          (
-            obj_arr_ptr^.bkgnd_ptr,
-            obj_arr_ptr^.bkgnd_width,
-            obj_arr_ptr^.bkgnd_height,
-            obj_arr_ptr^.rct_dst_ptr^
-          );
+        fast_image_data_ptr0:=fast_image_data_ptr2;
+        SetBkgnd
+        (
+          obj_arr_ptr^.bkgnd_ptr,
+          obj_arr_ptr^.bkgnd_width,
+          obj_arr_ptr^.bkgnd_height,
+          obj_arr_ptr^.rct_dst_ptr^
+        );
+        fast_image_data_ptr0:=fast_image_data_ptr1;
         FilTileMap1;
         bmp_bkgnd_ptr:=@coll_arr[0];
       end;
@@ -21434,8 +21539,8 @@ procedure TF_MainForm.BB_Add_TilemapClick(sender:TObject); {$region -fold}
 begin
   with srf_var,tlm_var do
     begin
-      OPD_Add_Mask_Template.Options:=OPD_Add_Mask_Template.Options+[ofFileMustExist];
-      if (not OPD_Add_Mask_Template.Execute) then
+      OPD_Add_Tile_Map.Options:=OPD_Add_Tile_Map.Options+[ofFileMustExist];
+      if (not OPD_Add_Tile_Map.Execute) then
         Exit;
       try
         srf_var.EventGroupsCalc(calc_arr,[30,39,41,48]);
@@ -21474,7 +21579,7 @@ begin
   SplittersPosCalc;
   with srf_var do
     begin
-      EventGroupsCalc(calc_arr,[0,1,2,3,4,16,17,18,21,22,30,31,32,37,41,48,49]);
+      EventGroupsCalc(calc_arr,[0,1,2,3,4,16,17,18,21,22,30,31,32,37,41,48,49,50]);
       SetLength(useless_fld_arr_,srf_bmp.width*srf_bmp.height);
       ArrClear (useless_fld_arr_,inn_wnd_rct,  srf_bmp.width );
     end;
@@ -22657,7 +22762,7 @@ begin
   //if down_add_actor_ptr^ then
     with srf_var,fast_actor_set_var.d_icon,fast_image_proc_var do
       begin
-        fast_image_data_ptr:=@fast_image_data;
+        fast_image_data_ptr0:=@fast_image_data;
         SetBkgnd (srf_bmp_ptr,
                   srf_bmp.width,
                   srf_bmp.height,
@@ -22724,14 +22829,14 @@ begin
 
   exec_timer:=TPerformanceTime.Create;
 
-  {Documentation------------} {$region -fold}
+  {Documentation-------------} {$region -fold}
   RM_Description.Transparent:=True;
   HintsFontArrInit; {$endregion}
 
-  {Fast Image Proc Var Init.} {$region -fold}
+  {Fast Image Proc. Var Init.} {$region -fold}
   fast_image_proc_var:=TFastImageProc.Create; {$endregion}
 
-  {Scene Tree---------------} {$region -fold}
+  {Scene Tree----------------} {$region -fold}
   obj_var:=TSceneTree.Create;
   if (srf_var<>Nil) then
     world_axis_shift:=srf_var.world_axis_shift
@@ -22743,12 +22848,12 @@ begin
   ScTIndsCalc;
   CngPnVsCalc; {$endregion}
 
-  {Post-Process Init.-------} {$region -fold}
+  {Post-Process Init.--------} {$region -fold}
   PPDec2ProcInit;
   ArrFillProcInit;
   PPBlurProcInit; {$endregion}
 
-  {General------------------} {$region -fold}
+  {General-------------------} {$region -fold}
 
     {Window Splitters} {$region -fold}
     S_Splitter0.height     :=splitter_thickness;
@@ -22817,7 +22922,7 @@ begin
 
   {$endregion}
 
-  {Visibility Panel---------} {$region -fold}
+  {Visibility Panel----------} {$region -fold}
   visibility_panel_picture                          :=Graphics.TBitmap.Create;
   visibility_panel_picture         .width           :=I_Visibility_Panel.width;
   visibility_panel_picture         .height          :=I_Visibility_Panel.height;
@@ -22826,44 +22931,43 @@ begin
   I_Visibility_Panel.Picture.Bitmap.TransparentColor:=clBlack;
   SelectionBoundsRepaint; {$endregion}
 
-  {Buttons Icons------------} {$region -fold}
+  {Buttons Icons-------------} {$region -fold}
   BB_Reset_Pivot        .Glyph:=SB_Move_Pivot_To_Point.Glyph;
   SB_Visibility_Show_All.Glyph:=SB_Spline_Points_Show .Glyph; {$endregion}
 
-  {Camera-------------------} {$region -fold}
+  {Camera--------------------} {$region -fold}
   cmr_var:=TCamera.Create(I_Frame_List.width,
                           I_Frame_List.height); {$endregion}
 
-  {Main Layer---------------} {$region -fold}
-  srf_var:=TSurface.Create(width,height);
-  srf_var.WorldAxisCreate; {$endregion}
+  {Main Layer----------------} {$region -fold}
+  srf_var:=TSurface.Create(width,height); {$endregion}
 
-  {Texture------------------} {$region -fold}
+  {Texture-------------------} {$region -fold}
   tex_var:=TTex.Create(512,512); {$endregion}
 
-  {Snap Grid----------------} {$region -fold}
+  {Snap Grid-----------------} {$region -fold}
   sgr_var       :=TSGrid.Create(width,height);
   down_sgrid_ptr:=Unaligned(@SB_SGrid.Down); {$endregion}
 
-  {Grid---------------------} {$region -fold}
+  {Grid----------------------} {$region -fold}
   rgr_var             :=TRGrid.Create(width,height);
   SB_RGrid_Color.Color:=rgr_var.rgrid_color;
   down_rgrid_ptr      :=Unaligned(@SB_RGrid.Down); {$endregion}
 
-  {Text---------------------} {$region -fold}
+  {Text----------------------} {$region -fold}
   txt_var      :=TFText.Create(width,height);
   down_text_ptr:=Unaligned(@SB_Text.Down); {$endregion}
 
-  {Brush--------------------} {$region -fold}
+  {Brush---------------------} {$region -fold}
   CB_Brush_Mode.ItemIndex:=00;
   SE_Brush_Radius.Value  :=10;
   SE_Brush_Hardness.Value:=10;
   down_brush_ptr         :=Unaligned(@SB_Brush.Down); {$endregion}
 
-  {Spray--------------------} {$region -fold}
+  {Spray---------------------} {$region -fold}
   down_spray_ptr:=Unaligned(@SB_Spray.Down); {$endregion}
 
-  {Spline-------------------} {$region -fold}
+  {Spline--------------------} {$region -fold}
   CB_Spline_Mode.ItemIndex:=0;
   {SB_Spline     .Down     :=True;
   P_Spline      .Visible  :=True;}
@@ -22879,10 +22983,10 @@ begin
   );
   SplinesTemplatesNamesInit(sln_var); {$endregion}
 
-  {Colliders----------------} {$region -fold}
+  {Colliders-----------------} {$region -fold}
   show_collider:=True; {$endregion}
 
-  {Select Items-------------} {$region -fold}
+  {Select Items--------------} {$region -fold}
   sel_var:=TSelIts.Create
   (
     width,
@@ -22894,38 +22998,38 @@ begin
   );
   down_select_items_ptr:=Unaligned(@SB_Select_Items.Down); {$endregion}
 
-  {Select Texture Region----} {$region -fold}
+  {Select Texture Region-----} {$region -fold}
   down_select_texture_region_ptr:=Unaligned(@SB_Select_Texture_Region.Down); {$endregion}
 
-  {UV-----------------------} {$region -fold}
+  {UV------------------------} {$region -fold}
   uv_var:=TUV.Create(width,height); {$endregion}
 
-  {Intersection Graph-------} {$region -fold}
+  {Intersection Graph--------} {$region -fold}
   isg_var:=TISGraph.Create(width,height); {$endregion}
 
-  {Pivot--------------------} {$region -fold}
+  {Pivot---------------------} {$region -fold}
   pvt_var:=TPivot.Create(25,25); {$endregion}
 
-  {Circle Selection---------} {$region -fold}
+  {Circle Selection----------} {$region -fold}
   crc_sel_var:=TCrcSel.Create; {$endregion}
 
-  {Brush Selection----------} {$region -fold}
+  {Brush Selection-----------} {$region -fold}
   brs_sel_var:=TBrsSel.Create; {$endregion}
 
-  {Rectangle Selection------} {$region -fold}
+  {Rectangle Selection-------} {$region -fold}
   rct_sel_var:=TRctSel.Create; {$endregion}
 
-  {Play Animation-----------} {$region -fold}
+  {Play Animation------------} {$region -fold}
   down_play_anim_ptr :=Unaligned(@SB_Play_Anim.Down);
   obj_var.res_var_ptr:=down_play_anim_ptr; {$endregion}
 
-  {Map Editor---------------} {$region -fold}
+  {Tile Map -----------------} {$region -fold}
   tlm_var              :=TTlMap.Create;
   SB_Map_Editor.Down   :=True;
   P_Map_Editor .Visible:=True;
   down_map_editor_ptr  :=Unaligned(@SB_Map_Editor.Down); {$endregion}
 
-  {Add Actor----------------} {$region -fold}
+  {Add Actor-----------------} {$region -fold}
   with srf_var do
     fast_actor_set_var:=TFastActorSet.Create(srf_bmp_ptr,
                                              srf_bmp.width,
@@ -22967,10 +23071,10 @@ begin
   down_add_actor_ptr:=@SB_Add_Actor.Down;
   show_actor        :=True; {$endregion}
 
-  {TimeLine-----------------} {$region -fold}
+  {TimeLine------------------} {$region -fold}
   TimeLineButtonsCreate; {$endregion}
 
-  {Cursors------------------} {$region -fold}
+  {Cursors-------------------} {$region -fold}
   CursorsCreate;
   // 'Text' button cursor init.:
   CursorInit(1,0,Application.Location+TEXT_BUTTON_ICON                 ,@IL_Drawing_Buttons.GetBitmap);
@@ -22989,11 +23093,11 @@ begin
   // 'Select Texture Region' button cursor init.:
   CursorInit(8,8,Application.Location+SNAP_GRID_BUTTON_ICON            ,@IL_Drawing_Buttons.GetBitmap); {$endregion}
 
-  {Physics------------------} {$region -fold}
+  {Physics-------------------} {$region -fold}
   fast_physics_var:=TCollider.Create(width,height);
   fast_fluid_var  :=TFluid   .Create(0,0); {$endregion}
 
-  {Align Canvas-------------} {$region -fold}
+  {Align Canvas--------------} {$region -fold}
   tex_var.AlignPictureToCenter;
   SB_Change_LayoutClick(F_MainForm);
   S_Splitter2.top :=F_MainForm.height-045{540};
@@ -23007,7 +23111,7 @@ begin
   SetLength(useless_arr_,1);
   useless_arr_[0]:=1;
 
-  {Game---------------------} {$region -fold}
+  {Game----------------------} {$region -fold}
   {with srf_var do
     logo1_img:=TFastImage.Create(srf_bmp_ptr,
                                  srf_bmp.width,
@@ -24640,6 +24744,9 @@ begin
   else
     frame_skip:=0;}
 
+  if (WindowState=wsMinimized) then
+    Exit;
+
   exec_timer.Start;
 
   with obj_var,cmr_var,srf_var,sln_var,tex_var,srf_var,tex_var,sln_var,sel_var,crc_sel_var,pvt_var,fast_physics_var,fast_fluid_var do
@@ -25302,15 +25409,19 @@ begin
 
       WorldAxisDraw; {$endregion}
 
-      {with local_axis_bmp do
+      {with local_axis_bmp,fast_image_data,fast_image_proc_var do
         begin
+          fast_image_data_ptr:=@fast_image_data;
           SetRctPos(10+bmp_ftimg_width_origin >>1,
                     10+bmp_ftimg_height_origin>>1);
           SetRctDst;
           SetRctSrc;
           SetGrad(0,bmp_ftimg_height-1,grad_rng.x,grad_rng.y);
-          GrdNTValueProc0;
-          GrdPTValueProc0;
+          for i:=0 to 1000-1 do
+            begin
+              GrdNTValueProc0;
+              GrdPTValueProc0;
+            end;
         end;}
 
       {Inner Window Rectangle} {$region -fold}
@@ -25842,7 +25953,7 @@ var
         );
         with rot_img_,fast_image_data,fast_image_proc_var do
           begin
-            fast_image_data_ptr:=@fast_image_data;
+            fast_image_data_ptr0:=@fast_image_data;
             SetRctPos (bounding_rct.left,bounding_rct.top);
             SetValInfo(rot_arr_ptr,Nil,Nil,srf_bmp.width,srf_bmp.height);
             bmp_src_rct_clp:=bounding_rct;
@@ -25885,7 +25996,7 @@ var
     if (rot_img_<>Nil) then
       with rot_img_,fast_image_data,fast_image_proc_var do
         begin
-          fast_image_data_ptr:=@fast_image_data;
+          fast_image_data_ptr0:=@fast_image_data;
           SetBkgnd
           (
             srf_var.srf_bmp_ptr,
@@ -26199,7 +26310,7 @@ begin
   with srf_var,pvt_var,local_axis_bmp,fast_image_data,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {exec_timer.Start;
       for i:=0 to 100 do
@@ -26279,7 +26390,7 @@ begin
       SetRctSrc;
       SetGrad(0,bmp_ftimg_height-1,Random($FFFFFF),Random($FFFFFF));
       exec_timer.Start;
-      for i:=0 to {1000}0 do
+      for i:=0 to 1{2000}-1 do
         begin
           GrdNTValueProc0;
           GrdPTValueProc0;

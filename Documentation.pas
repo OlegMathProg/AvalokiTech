@@ -20,7 +20,7 @@ var
   curve_doc_str_arr: TStringArr=
     ('  Spline Factory ',
      'is a powerful module for creating curves/splines. Allows you to draw edges and points, various drawing modes are available. There are also various settings for optimizing rendering, physics and saving separate splines in their own compressed .sif (Spline Image Format) format, which supports only basic curve drawing without any effects or floodfill or .svg (Scalable Vector Graphics).'+#13+
-     '  Now let"s take a closer look at the capabilities of this module.');
+     '  Now let''s take a closer look at the capabilities of this module.');
   selit_doc_str_arr: TStringArr=('');
   txrgn_doc_str_arr: TStringArr=('');
   rgrid_doc_str_arr: TStringArr=('');

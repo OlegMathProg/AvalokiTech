@@ -74,9 +74,9 @@ type
     bkgnd_width              : TColor;
     // background (bitmap destination) height:
     bkgnd_height             : TColor;
-    // outter clipping rectangle:
+    // outer clipping rectangle:
     rct_clp_ptr              : PPtRect;
-    // destination(clipped by outter clipping rectangle) rectangle:
+    // destination(clipped by outer clipping rectangle) rectangle:
     rct_dst_ptr              : PPtRect;
     // (global) position of an object inside object array:
     g_ind                    : TColor;
@@ -365,7 +365,7 @@ var
 
 implementation
 
-uses //
+uses
 
   Main;
 

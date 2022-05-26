@@ -2344,14 +2344,14 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 165
-    Top = 432
+    Height = 425
+    Top = 172
     Width = 228
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 9665894
     BevelInner = bvLowered
     BorderWidth = 2
-    ClientHeight = 165
+    ClientHeight = 425
     ClientWidth = 228
     Color = clScrollBar
     FullRepaint = False
@@ -2366,7 +2366,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Description
       AnchorSideBottom.Side = asrBottom
       Left = 4
-      Height = 124
+      Height = 384
       Top = 37
       Width = 220
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4008,7 +4008,7 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 4
     Height = 4
-    Top = 428
+    Top = 168
     Width = 900
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -4407,13 +4407,13 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 236
-    Height = 165
-    Top = 432
+    Height = 425
+    Top = 172
     Width = 668
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
-    ClientHeight = 165
+    ClientHeight = 425
     ClientWidth = 668
     Color = 13290949
     ParentColor = False
@@ -4426,7 +4426,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Image_Editor
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 165
+      Height = 425
       Top = 0
       Width = 668
       ActivePage = TS_Draw
@@ -4441,13 +4441,13 @@ object F_MainForm: TF_MainForm
       Options = [nboShowCloseButtons, nboMultiLine, nboHidePageListPopup, nboKeyboardTabSwitch, nboShowAddTabButton, nboDoChangeOnSetIndex]
       object TS_File: TTabSheet
         Caption = 'File'
-        ClientHeight = 157
+        ClientHeight = 417
         ClientWidth = 637
         object SB_Image_List: TScrollBox
           AnchorSideRight.Control = TS_Draw
           AnchorSideRight.Side = asrBottom
           Left = 32
-          Height = 153
+          Height = 413
           Top = 0
           Width = 603
           HorzScrollBar.Increment = 1
@@ -4459,7 +4459,7 @@ object F_MainForm: TF_MainForm
           VertScrollBar.Smooth = True
           VertScrollBar.Tracking = True
           Anchors = [akTop, akLeft, akRight, akBottom]
-          ClientHeight = 149
+          ClientHeight = 409
           ClientWidth = 599
           Color = 13881769
           ParentBiDiMode = False
@@ -4475,7 +4475,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
             Left = 0
-            Height = 149
+            Height = 409
             Top = 0
             Width = 599
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4504,7 +4504,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 223
             Height = 180
-            Top = -30
+            Top = 75
             Width = 680
             Anchors = []
             BevelColor = 7958609
@@ -4742,13 +4742,13 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_File
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 153
+          Height = 413
           Top = 0
           Width = 29
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Bottom = 4
           BevelOuter = bvLowered
-          ClientHeight = 153
+          ClientHeight = 413
           ClientWidth = 29
           Color = 13359793
           ParentColor = False
@@ -4960,7 +4960,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_Draw: TTabSheet
         Caption = 'Draw'
-        ClientHeight = 157
+        ClientHeight = 417
         ClientWidth = 637
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
@@ -4975,7 +4975,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_Draw
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 122
+          Height = 382
           Top = 35
           Width = 635
           HorzScrollBar.Increment = 1
@@ -4989,7 +4989,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 118
+          ClientHeight = 378
           ClientWidth = 631
           Color = 15921635
           ParentBiDiMode = False
@@ -5005,15 +5005,15 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -234
-            Height = 488
-            Top = -175
+            Left = -256
+            Height = 552
+            Top = -46
             Width = 1040
             Anchors = []
             BevelColor = 7958609
             BevelInner = bvLowered
             BorderWidth = 2
-            ClientHeight = 488
+            ClientHeight = 552
             ClientWidth = 1040
             Color = 11251619
             FullRepaint = False
@@ -5027,14 +5027,14 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 4
-              Height = 480
+              Height = 544
               Top = 4
               Width = 162
               Anchors = [akTop, akLeft, akBottom]
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 480
+              ClientHeight = 544
               ClientWidth = 162
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -5368,7 +5368,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Spline_Edges_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 355
+                Height = 419
                 Top = 123
                 Width = 158
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -5376,7 +5376,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 6052956
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 355
+                ClientHeight = 419
                 ClientWidth = 158
                 Color = 11117709
                 ParentColor = False
@@ -5417,13 +5417,13 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Edges
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 332
+                  Height = 396
                   Top = 22
                   Width = 156
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BevelColor = 7895160
                   BevelOuter = bvNone
-                  ClientHeight = 332
+                  ClientHeight = 396
                   ClientWidth = 156
                   Color = 10063735
                   ParentColor = False
@@ -5719,7 +5719,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 168
-              Height = 480
+              Height = 544
               Top = 4
               Width = 162
               Anchors = [akTop, akLeft, akBottom]
@@ -5727,7 +5727,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 480
+              ClientHeight = 544
               ClientWidth = 162
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -6100,7 +6100,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Spline_Points_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 355
+                Height = 419
                 Top = 123
                 Width = 158
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -6108,7 +6108,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 6052956
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 355
+                ClientHeight = 419
                 ClientWidth = 158
                 Color = 11117709
                 ParentColor = False
@@ -6391,14 +6391,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Points
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 200
+                  Height = 264
                   Top = 154
                   Width = 156
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 21
                   BevelColor = 7895160
                   BevelOuter = bvNone
-                  ClientHeight = 200
+                  ClientHeight = 264
                   ClientWidth = 156
                   Color = 10063735
                   ParentColor = False
@@ -6539,7 +6539,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 520
-              Height = 480
+              Height = 544
               Top = 4
               Width = 169
               Anchors = [akTop, akLeft, akBottom]
@@ -6547,7 +6547,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 480
+              ClientHeight = 544
               ClientWidth = 169
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -6740,15 +6740,15 @@ object F_MainForm: TF_MainForm
                 State = cbChecked
                 TabOrder = 2
               end
-              object CB_Spline_Grid_Clipping: TCheckBox
+              object CB_Spline_Grid_Clipping_Edges: TCheckBox
                 Left = 10
                 Height = 19
-                Hint = 'Create regular grid with detection which edges and points must be clipped'
-                Top = 126
+                Hint = 'Create regular grid with detection which edges must be clipped'
+                Top = 176
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
-                Caption = 'Grid Clipping'
+                Caption = 'Edges'
                 Checked = True
                 Color = 12236195
                 Enabled = False
@@ -6770,7 +6770,7 @@ object F_MainForm: TF_MainForm
                 Left = 10
                 Height = 19
                 Hint = 'Should spline be partially repainted unless clipped'
-                Top = 151
+                Top = 126
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6796,7 +6796,7 @@ object F_MainForm: TF_MainForm
                 Left = 10
                 Height = 19
                 Hint = 'Except for "Select Points" mode, splines will be drawn about 1.7 times faster'
-                Top = 176
+                Top = 276
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6822,7 +6822,7 @@ object F_MainForm: TF_MainForm
                 Left = 10
                 Height = 19
                 Hint = 'Free memory when object "Spline" is out of window'
-                Top = 251
+                Top = 351
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6848,7 +6848,7 @@ object F_MainForm: TF_MainForm
                 Left = 10
                 Height = 19
                 Hint = 'Free memory when object "Spline" is scaled down'
-                Top = 276
+                Top = 376
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
@@ -6869,19 +6869,19 @@ object F_MainForm: TF_MainForm
                 TabOrder = 7
               end
               object L_Spline_Free_Memory: TLabel
-                Left = 8
-                Height = 16
-                Top = 226
-                Width = 82
+                Left = 10
+                Height = 15
+                Top = 326
+                Width = 77
                 Alignment = taRightJustify
-                AutoSize = False
                 BorderSpacing.Left = 8
                 Caption = 'Free Memory:'
                 Font.CharSet = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4011310
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
+                Font.Style = [fsBold]
                 Layout = tlBottom
                 ParentBidiMode = False
                 ParentFont = False
@@ -6890,19 +6890,19 @@ object F_MainForm: TF_MainForm
                 OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               end
               object L_Spline_Remove_Brunching: TLabel
-                Left = 8
-                Height = 16
-                Top = 301
-                Width = 112
+                Left = 10
+                Height = 15
+                Top = 401
+                Width = 110
                 Alignment = taRightJustify
-                AutoSize = False
                 BorderSpacing.Left = 8
                 Caption = 'Remove Brunching:'
                 Font.CharSet = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4011310
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
                 Font.Quality = fqDraft
+                Font.Style = [fsBold]
                 Layout = tlBottom
                 ParentBidiMode = False
                 ParentFont = False
@@ -6913,7 +6913,8 @@ object F_MainForm: TF_MainForm
               object RB_Spline_Constant: TRadioButton
                 Left = 10
                 Height = 19
-                Top = 326
+                Hint = 'Useful for sparse sprites'
+                Top = 451
                 Width = 70
                 Caption = 'Constant'
                 Font.CharSet = ANSI_CHARSET
@@ -6930,7 +6931,8 @@ object F_MainForm: TF_MainForm
               object RB_Spline_None: TRadioButton
                 Left = 10
                 Height = 19
-                Top = 351
+                Hint = 'Useful for dense sprites'
+                Top = 426
                 Width = 50
                 Caption = 'None'
                 Checked = True
@@ -6970,21 +6972,21 @@ object F_MainForm: TF_MainForm
                 ShowHint = True
                 TabOrder = 10
               end
-              object CB_Spline_Better_Compression: TCheckBox
+              object CB_Spline_Better_Quality: TCheckBox
                 Left = 10
                 Height = 19
                 Hint = 'Drawing will be slightly slower, but compression will be more accurate(only works in activated byte mode)'
-                Top = 201
+                Top = 301
                 Width = 152
                 HelpType = htKeyword
                 AutoSize = False
-                Caption = 'Better Compression'
+                Caption = 'Better Quality'
                 Color = 12236195
                 Font.CharSet = ANSI_CHARSET
                 Font.Color = clCaptionText
                 Font.Height = -12
                 Font.Name = 'AR JULIAN'
-                OnChange = CB_Spline_Better_CompressionChange
+                OnChange = CB_Spline_Better_QualityChange
                 OnMouseEnter = P_Spline_Optimization_PropMouseEnter
                 OnMouseLeave = P_Spline_Optimization_PropMouseLeave
                 ParentColor = False
@@ -6993,6 +6995,100 @@ object F_MainForm: TF_MainForm
                 ParentBidiMode = False
                 ShowHint = True
                 TabOrder = 11
+              end
+              object L_Spline_Grid_Clipping: TLabel
+                Left = 10
+                Height = 15
+                Top = 151
+                Width = 74
+                Alignment = taRightJustify
+                BorderSpacing.Left = 8
+                Caption = 'Grid Clipping:'
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = 4011310
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                Font.Style = [fsBold]
+                Layout = tlBottom
+                ParentBidiMode = False
+                ParentFont = False
+                ParentShowHint = False
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
+              end
+              object CB_Spline_Grid_Clipping_Points: TCheckBox
+                Left = 10
+                Height = 19
+                Hint = 'Create regular grid with detection which points must be clipped'
+                Top = 201
+                Width = 152
+                HelpType = htKeyword
+                AutoSize = False
+                Caption = 'Points'
+                Checked = True
+                Color = 12236195
+                Enabled = False
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clCaptionText
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ParentBidiMode = False
+                ShowHint = True
+                State = cbChecked
+                TabOrder = 12
+              end
+              object CB_Spline_Grid_Clipping_Attached_Objects: TCheckBox
+                Left = 10
+                Height = 19
+                Hint = 'Create regular grid with detection which attached objects must be clipped'
+                Top = 226
+                Width = 152
+                HelpType = htKeyword
+                AutoSize = False
+                Caption = 'Attached Objects'
+                Checked = True
+                Color = 12236195
+                Enabled = False
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = clCaptionText
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ParentBidiMode = False
+                ShowHint = True
+                State = cbChecked
+                TabOrder = 13
+              end
+              object L_Spline_Compression: TLabel
+                Left = 10
+                Height = 15
+                Top = 251
+                Width = 79
+                Alignment = taRightJustify
+                BorderSpacing.Left = 8
+                Caption = 'Compression:'
+                Font.CharSet = ANSI_CHARSET
+                Font.Color = 4011310
+                Font.Height = -12
+                Font.Name = 'AR JULIAN'
+                Font.Quality = fqDraft
+                Font.Style = [fsBold]
+                Layout = tlBottom
+                ParentBidiMode = False
+                ParentFont = False
+                ParentShowHint = False
+                OnMouseEnter = P_Spline_Optimization_PropMouseEnter
+                OnMouseLeave = P_Spline_Optimization_PropMouseLeave
               end
             end
             object P_Spline_Drawing_Prop: TPanel
@@ -7004,7 +7100,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 332
-              Height = 480
+              Height = 544
               Top = 4
               Width = 186
               Anchors = [akTop, akLeft, akBottom]
@@ -7012,7 +7108,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 480
+              ClientHeight = 544
               ClientWidth = 186
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -7089,7 +7185,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Spline_Drawing_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 430
+                Height = 494
                 Top = 48
                 Width = 182
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -7097,7 +7193,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 7895160
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 430
+                ClientHeight = 494
                 ClientWidth = 182
                 Color = 10063735
                 ParentColor = False
@@ -7114,14 +7210,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 340
+                  Height = 404
                   Top = 89
                   Width = 180
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 340
+                  ClientHeight = 404
                   ClientWidth = 180
                   TabOrder = 9
                   Visible = False
@@ -7441,14 +7537,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 340
+                  Height = 404
                   Top = 89
                   Width = 180
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 340
+                  ClientHeight = 404
                   ClientWidth = 180
                   TabOrder = 7
                   Visible = False
@@ -7707,14 +7803,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 340
+                  Height = 404
                   Top = 89
                   Width = 180
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 340
+                  ClientHeight = 404
                   ClientWidth = 180
                   TabOrder = 6
                   Visible = False
@@ -7962,6 +8058,29 @@ object F_MainForm: TF_MainForm
                     TabOrder = 4
                     Value = 256
                   end
+                  object CB_Spline_Rose_Mobius_Grid: TCheckBox
+                    Left = 48
+                    Height = 19
+                    Top = 134
+                    Width = 104
+                    HelpType = htKeyword
+                    AutoSize = False
+                    Caption = 'Mobius Grid'
+                    Color = 12236195
+                    Font.CharSet = ANSI_CHARSET
+                    Font.Color = clCaptionText
+                    Font.Height = -12
+                    Font.Name = 'AR JULIAN'
+                    OnChange = CB_Spline_Rose_Mobius_GridChange
+                    OnMouseEnter = P_Spline_TemplatesMouseEnter
+                    OnMouseLeave = P_Spline_TemplatesMouseLeave
+                    ParentColor = False
+                    ParentFont = False
+                    ParentShowHint = False
+                    ParentBidiMode = False
+                    ShowHint = True
+                    TabOrder = 5
+                  end
                 end
                 object BB_Spline_Templates_Right: TBitBtn
                   AnchorSideLeft.Control = P_Spline_Template_List
@@ -8149,7 +8268,7 @@ object F_MainForm: TF_MainForm
                   ParentFont = False
                   ParentShowHint = False
                   TabOrder = 3
-                  Value = 1
+                  Value = 256
                 end
                 object P_Spline_Epicycloid: TPanel
                   AnchorSideLeft.Control = P_Spline_Templates
@@ -8160,14 +8279,14 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 340
+                  Height = 404
                   Top = 89
                   Width = 180
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 340
+                  ClientHeight = 404
                   ClientWidth = 180
                   TabOrder = 4
                   Visible = False
@@ -8304,7 +8423,6 @@ object F_MainForm: TF_MainForm
                   object CB_Spline_Epicycloid_Hypocycloid: TCheckBox
                     Left = 48
                     Height = 19
-                    Hint = 'Should Spline Be Partially Repainted Unless Clipped'
                     Top = 134
                     Width = 104
                     HelpType = htKeyword
@@ -8446,7 +8564,7 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Templates
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 340
+                  Height = 404
                   Top = 89
                   Width = 180
                   Alignment = taRightJustify
@@ -8454,7 +8572,7 @@ object F_MainForm: TF_MainForm
                   BorderSpacing.Top = 66
                   BevelColor = clGray
                   BevelOuter = bvNone
-                  ClientHeight = 340
+                  ClientHeight = 404
                   ClientWidth = 180
                   TabOrder = 5
                   Visible = False
@@ -9044,7 +9162,7 @@ object F_MainForm: TF_MainForm
                 AnchorSideBottom.Control = P_Spline_Drawing_Prop
                 AnchorSideBottom.Side = asrBottom
                 Left = 2
-                Height = 430
+                Height = 494
                 Top = 48
                 Width = 182
                 Anchors = [akTop, akLeft, akRight, akBottom]
@@ -9052,7 +9170,7 @@ object F_MainForm: TF_MainForm
                 BevelColor = 6052956
                 BevelInner = bvSpace
                 BevelOuter = bvNone
-                ClientHeight = 430
+                ClientHeight = 494
                 ClientWidth = 182
                 Color = 11117709
                 ParentColor = False
@@ -9093,13 +9211,13 @@ object F_MainForm: TF_MainForm
                   AnchorSideBottom.Control = P_Spline_Freehand
                   AnchorSideBottom.Side = asrBottom
                   Left = 1
-                  Height = 407
+                  Height = 471
                   Top = 22
                   Width = 180
                   Anchors = [akTop, akLeft, akRight, akBottom]
                   BevelColor = 7895160
                   BevelOuter = bvNone
-                  ClientHeight = 407
+                  ClientHeight = 471
                   ClientWidth = 180
                   Color = 10063735
                   ParentColor = False
@@ -9281,7 +9399,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 691
-              Height = 480
+              Height = 544
               Top = 4
               Width = 162
               Anchors = [akTop, akLeft, akBottom]
@@ -9289,7 +9407,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 480
+              ClientHeight = 544
               ClientWidth = 162
               Color = 12236195
               Font.CharSet = ANSI_CHARSET
@@ -9462,7 +9580,7 @@ object F_MainForm: TF_MainForm
               AnchorSideBottom.Control = P_Spline
               AnchorSideBottom.Side = asrBottom
               Left = 855
-              Height = 480
+              Height = 544
               Top = 4
               Width = 182
               Anchors = [akTop, akLeft, akRight, akBottom]
@@ -9470,7 +9588,7 @@ object F_MainForm: TF_MainForm
               BevelColor = 9665894
               BevelOuter = bvLowered
               BevelWidth = 2
-              ClientHeight = 480
+              ClientHeight = 544
               ClientWidth = 182
               Color = 12236195
               Constraints.MinWidth = 182
@@ -9565,7 +9683,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 516
             Height = 176
-            Top = -36
+            Top = 79
             Width = 912
             Anchors = []
             BevelColor = 9665894
@@ -11307,9 +11425,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 427
+            Left = 516
             Height = 206
-            Top = -11
+            Top = 206
             Width = 529
             Anchors = []
             BevelColor = 9665894
@@ -12148,7 +12266,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 565
             Height = 63
-            Top = -19
+            Top = 7
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12333,7 +12451,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 567
             Height = 110
-            Top = 0
+            Top = 121
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12354,7 +12472,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 582
             Height = 63
-            Top = 2
+            Top = 75
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12538,7 +12656,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 656
             Height = 63
-            Top = -30
+            Top = -28
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12722,7 +12840,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 604
             Height = 110
-            Top = -27
+            Top = 35
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12781,9 +12899,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 413
+            Left = 512
             Height = 110
-            Top = 64
+            Top = 326
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -13036,7 +13154,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_AnimK: TTabSheet
         Caption = 'AnimK'
-        ClientHeight = 157
+        ClientHeight = 417
         ClientWidth = 637
         object P_Animation_Buttons: TPanel
           AnchorSideRight.Control = TS_AnimK
@@ -13147,7 +13265,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_AnimK
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 122
+          Height = 382
           Top = 35
           Width = 635
           HorzScrollBar.Page = 1
@@ -13155,7 +13273,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 118
+          ClientHeight = 378
           ClientWidth = 631
           TabOrder = 1
           object P_Add_Actor: TPanel
@@ -13167,7 +13285,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 47
             Height = 176
-            Top = -49
+            Top = 37
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13649,7 +13767,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 175
             Height = 200
-            Top = -21
+            Top = 153
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13738,7 +13856,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 207
             Height = 40
-            Top = -19
+            Top = -17
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -13759,7 +13877,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 136
             Height = 40
-            Top = -19
+            Top = -17
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -14176,7 +14294,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = 899
     Height = 17
-    Top = 422
+    Top = 162
     Width = 15
     Caption = '>'
     Enabled = False
@@ -14198,7 +14316,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = -6
     Height = 17
-    Top = 422
+    Top = 162
     Width = 15
     Anchors = [akTop, akRight]
     Caption = '<'
@@ -14587,7 +14705,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 20
     Height = 23
-    Top = 385
+    Top = 125
     Width = 224
     Anchors = [akLeft, akBottom]
     AutoSize = False
@@ -14690,7 +14808,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 8
     Height = 31
-    Top = 393
+    Top = 133
     Width = 118
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 4
@@ -14699,7 +14817,7 @@ object F_MainForm: TF_MainForm
     Color = 7899625
     Enabled = False
     Font.CharSet = ANSI_CHARSET
-    Font.Color = 11950694
+    Font.Color = 12629669
     Font.Height = -16
     Font.Name = 'Gentium Basic'
     ParentBidiMode = False
@@ -14741,8 +14859,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 232
-    Height = 165
-    Top = 432
+    Height = 425
+    Top = 172
     Width = 4
     Align = alCustom
     Anchors = [akTop, akBottom]
@@ -18548,13 +18666,13 @@ object F_MainForm: TF_MainForm
       7539939FE77BCA68F2C7E62EECBF7D85DD45
     }
   end
-  object OPD_Add_Mask_Template: TOpenPictureDialog
+  object OPD_Add_Tile_Map: TOpenPictureDialog
     Filter = 'Графические файлы (*.png;*.xpm;*.bmp;*.cur;*.ico;*.icns;*.jpeg;*.jpg;*.jpe;*.jfif;*.tif;*.tiff;*.gif;*.pbm;*.pgm;*.ppm;*.tga)|*.png;*.xpm;*.bmp;*.cur;*.ico;*.icns;*.jpeg;*.jpg;*.jpe;*.jfif;*.tif;*.tiff;*.gif;*.pbm;*.pgm;*.ppm;*.tga|Portable Network Graphic (*.png)|*.png|Pixmap (*.xpm)|*.xpm|Bitmaps (*.bmp)|*.bmp|Cursor (*.cur)|*.cur|Icon (*.ico)|*.ico|Mac OS X Icon (*.icns)|*.icns|Joint Picture Expert Group (*.jpeg;*.jpg;*.jpe;*.jfif)|*.jpeg;*.jpg;*.jpe;*.jfif|Tagged Image File Format (*.tif;*.tiff)|*.tif;*.tiff|Graphics Interchange Format (*.gif)|*.gif|Portable PixMap (*.pbm;*.pgm;*.ppm)|*.pbm;*.pgm;*.ppm|TGA Image File (*.tga)|*.tga|WaveFront (*.obj)|*.obj|Все файлы (*.*)|*.*'
     Options = [ofAllowMultiSelect, ofEnableSizing, ofViewDetail, ofAutoPreview]
     Left = 344
     Top = 40
   end
-  object IL_Default_Mask_Template_Sprite_Icon: TImageList
+  object IL_Default_Tile_Map_Sprite_Icon: TImageList
     Height = 32
     Width = 64
     Left = 600

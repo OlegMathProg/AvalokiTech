@@ -791,7 +791,7 @@ type
     lazy_repaint_prev        : boolean;
     // byte mode:
     byte_mode                : boolean;
-    better_compression       : boolean;
+    better_quality           : boolean;
     // free memory on out of window:
     free_mem_on_out_of_wnd   : boolean;
     // free memory on scale down:
@@ -856,6 +856,8 @@ type
     rose_rot                 : double;
     // cut on angle:
     rose_angle               : double;
+    // mobius_grid:
+    rose_mobius_grid         : boolean;
 
     {Spiral}
     // points count:
@@ -1333,7 +1335,7 @@ type
     //
     remove_brunching_none  : boolean;
     //
-    better_compression     : boolean;
+    better_quality         : boolean;
     //
     need_store_value       : boolean; {$endregion}
 
@@ -1479,7 +1481,9 @@ type
 
   TFastImageProc    =class {$region -fold}
 
-    fast_image_data_ptr: PFastImageData;
+    fast_image_data_ptr0: PFastImageData;
+    fast_image_data_ptr1: PFastImageData;
+    fast_image_data_ptr2: PFastImageData;
 
     {Proc. Table-----------------} {$region -fold}
     // Image Compression:
@@ -4672,6 +4676,12 @@ function LineCrcIntPt           (constref x0,y0,x1,y1        :integer;
                                  constref x,y,r,v            :double ): boolean;       inline; {$ifdef Linux}[local];{$endif}
 function CrcPosF                (constref x,y,r              :double ): TCrPosF;       inline; {$ifdef Linux}[local];{$endif}
 
+// (Circle-Circle Intersection) Пересечение двух окружностей:
+function CrcCrcInt              (constref x0,y0,r0,x1,y1,r1 :double ): boolean;        inline; {$ifdef Linux}[local];{$endif}
+function CrcCrcInt              (constref x0,y0,r0,x1,y1,r1 :integer): boolean;        inline; {$ifdef Linux}[local];{$endif}
+function CrcCrcInt              (constref crc0,crc1         :TCrPosF): boolean;        inline; {$ifdef Linux}[local];{$endif}
+function CrcCrcInt              (constref crc0,crc1         :TCrPos ): boolean;        inline; {$ifdef Linux}[local];{$endif}
+
 // (Rectangle-Circle Intersection) Пересечение прямоугольника и окружности:
 function RctCrcInt              (constref rct                :TRect;
                                  constref x,y,r              :integer): boolean;       inline; {$ifdef Linux}[local];{$endif}
@@ -5105,7 +5115,7 @@ var
     dup_pts_id               : (arr:(0,0,0,0,0,0); obj_ind:-1; pts_ind:-1; dup_pts_cnt:0; weight:0);
     curve_obj_ind            : 0;
     pts_cnt                  : 0;
-    pts_cnt_val              : 1;
+    pts_cnt_val              : 256;
     eds_smpl_angle           : 2.0;
 
     eds_col_ptr              : Nil;
@@ -5179,7 +5189,7 @@ var
     lazy_repaint             : True;
     lazy_repaint_prev        : False;
     byte_mode                : True;
-    better_compression       : False;
+    better_quality           : False;
     free_mem_on_out_of_wnd   : True;
     free_mem_on_scale_down   : False;
     remove_brunching_constant: False;
@@ -5216,6 +5226,7 @@ var
     rose_rad                 : 256.0;
     rose_rot                 : 000.0;
     rose_angle               : 180.0;
+    rose_mobius_grid         : False;
 
     {Spiral}
     spiral_pts_cnt           : 256;
@@ -5581,10 +5592,10 @@ var
   index: integer;
 begin
   Result:=-1;
-  if List.Count=0 then
+  if list.Count=0 then
     Exit;
   sub_string:=UpperCase(sub_string);
-  for index:=0 to List.Count-1 do
+  for index:=0 to list.Count-1 do
     if (Pos(sub_string,UpperCase(list[index]))>0) then
       begin
         Result:=index;
@@ -7551,15 +7562,15 @@ begin
 end; {$endregion}
 
 // (Point in Circle) Точка в окружности:
-function IsPtInCrc(constref x,y:integer; constref crc_dst:TCrPos           ; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInCrc(constref x,y:integer; constref crc_dst          :TCrPos ; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.y)*(y-crc_dst.y)<=(crc_dst.r+prec)*(crc_dst.r+prec);
 end; {$endregion}
-function IsPtInCrc(constref x,y:integer; constref crc_dst:TCrPosF          ; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInCrc(constref x,y:integer; constref crc_dst          :TCrPosF; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.y)*(y-crc_dst.y)<=(crc_dst.r+prec)*(crc_dst.r+prec);
 end; {$endregion}
-function IsPtInCrc(constref x,y:double ; constref crc_dst:TCrPosF          ; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+function IsPtInCrc(constref x,y:double ; constref crc_dst          :TCrPosF; constref prec:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result:=(x-crc_dst.x)*(x-crc_dst.x)+(y-crc_dst.y)*(y-crc_dst.y)<=(crc_dst.r+prec)*(crc_dst.r+prec);
 end; {$endregion}
@@ -7638,14 +7649,31 @@ begin
 end; {$endregion}
 function LineCrcIntPt(constref x0,y0,x1,y1:integer; constref x,y,r,v:double ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  if ((sqr(x1-x0)+sqr(y1-y0))*sqr(r)-sqr(x1*y0-x0*y1+x*(y1-y0)-y*(x1-x0))>=0) then
-    Result:=True;
+  Result:=((sqr(x1-x0)+sqr(y1-y0))*sqr(r)-sqr(x1*y0-x0*y1+x*(y1-y0)-y*(x1-x0))>=0);
 end; {$endregion}
 function CrcPosF     (                              constref x,y,r  :double ): TCrPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result.x:=x;
   Result.y:=y;
   Result.r:=r;
+end; {$endregion}
+
+// (Circle-Circle Intersection) Пересечение двух окружностей:
+function CrcCrcInt(constref x0,y0,r0,x1,y1,r1:double ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(sqr(r1+r0)<=sqr(x1-x0)+sqr(y1-y0));
+end; {$endregion}
+function CrcCrcInt(constref x0,y0,r0,x1,y1,r1:integer): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(sqr(r1+r0)<=sqr(x1-x0)+sqr(y1-y0));
+end; {$endregion}
+function CrcCrcInt(constref crc0,crc1        :TCrPosF): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(sqr(crc1.r+crc0.r)<=sqr(crc1.x-crc0.x)+sqr(crc1.y-crc0.y));
+end; {$endregion}
+function CrcCrcInt(constref crc0,crc1        :TCrPos ): boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  Result:=(sqr(crc1.r+crc0.r)<=sqr(crc1.x-crc0.x)+sqr(crc1.y-crc0.y));
 end; {$endregion}
 
 // (Rectangle-Circle Intersection) Пересечение прямоугольника и окружности:
@@ -13026,7 +13054,7 @@ end; {$endregion}
 {Clear All Specified Buffers---------------------------} {$region -fold}
 procedure TFastImageProc.ClrArr(arr_clear_val:word); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
 
       {Color/Alpha of Current Layer} {$region -fold}
@@ -13131,7 +13159,7 @@ begin
 end; {$endregion}
 procedure TFastImageProc.ClrArr;                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
 
       {Color       of Lower   Layer} {$region -fold}
@@ -13164,7 +13192,7 @@ var
   d_width        : integer;
 begin
 
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
 
       if (bmp_ftimg_width =0) or (bmp_src_rct_clp.width =0) or
@@ -13307,7 +13335,7 @@ var
   x,y,i                     : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -13372,7 +13400,7 @@ var
   x,y,i                     : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -13438,7 +13466,7 @@ var
   x,y,i                     : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -13503,7 +13531,7 @@ var
   x,y,i                     : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -13570,7 +13598,7 @@ var
   x,y,i,n                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -13642,7 +13670,7 @@ var
   x,y,i,n                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -13714,7 +13742,7 @@ var
   x,y,i,n                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -13785,7 +13813,7 @@ var
   x,y,i,n                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -13857,7 +13885,7 @@ var
   x,y,i,p                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -13927,7 +13955,7 @@ var
   x,y,i,p                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -13997,7 +14025,7 @@ var
   x,y,i,p                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -14066,7 +14094,7 @@ var
   x,y,i,p                   : integer;
   d_width                   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
@@ -14137,7 +14165,7 @@ var
   x,y                    : integer;
   d_width                : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -14170,7 +14198,7 @@ var
   x,y                    : integer;
   d_width                : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -14204,7 +14232,7 @@ var
   x,y                    : integer;
   d_width                : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -14237,7 +14265,7 @@ var
   x,y                    : integer;
   d_width                : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -14272,7 +14300,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (nt_pix_cnt=0) then
         begin
@@ -14312,7 +14340,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (nt_pix_cnt=0) then
         begin
@@ -14352,7 +14380,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (nt_pix_cnt=0) then
         begin
@@ -14392,7 +14420,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (nt_pix_cnt=0) then
         begin
@@ -14433,7 +14461,7 @@ var
   pt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (pt_pix_cnt=0) then
         begin
@@ -14473,7 +14501,7 @@ var
   pt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (pt_pix_cnt=0) then
         begin
@@ -14513,7 +14541,7 @@ var
   pt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (pt_pix_cnt=0) then
         begin
@@ -14553,7 +14581,7 @@ var
   pt_pix_intr_sht_arr_ptr: PInteger;
   x,y,pix_cnt_in_a_row   : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (pt_pix_cnt=0) then
         begin
@@ -14595,7 +14623,7 @@ var
   i                      : integer;
   s                      : longword;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -14622,7 +14650,7 @@ var
   i                      : integer;
   s                      : longword;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         Exit;
@@ -14655,7 +14683,7 @@ var
   nt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_cnt=0) then
         Exit;
@@ -14689,7 +14717,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) then
         Exit;
@@ -14723,7 +14751,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) then
         Exit;
@@ -14756,7 +14784,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) then
         Exit;
@@ -14789,7 +14817,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) then
         Exit;
@@ -14822,7 +14850,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) then
         Exit;
@@ -14856,7 +14884,7 @@ var
   nt_pix_intr_cll_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (nt_pix_cnt=0) then
         begin
@@ -14894,7 +14922,7 @@ var
   pt_pix_intr_cll_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (pt_pix_cnt=0) then
         begin
@@ -14929,7 +14957,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   i                      : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       pt_pix_intr_cll_arr_ptr:=Unaligned(@pt_pix_intr_cll_arr[0]);
       pt_pix_byte_acl_arr_ptr:=Unaligned(@pt_pix_byte_acl_arr[0]);
@@ -14952,7 +14980,7 @@ var
   nt_pix_intr_val_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (nt_pix_cnt=0) then
         begin
@@ -14985,7 +15013,7 @@ end; {$endregion} {$endregion}
 // calculation of image sides Parity}
 procedure TFastImageProc.CalcSidesParity; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if Odd(bmp_src_rct_clp.width) then
         width_parity:=False
@@ -15005,7 +15033,7 @@ var
   x,y,w,h      : integer;
   d_width      : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (bmp_src_rct_clp.width*bmp_src_rct_clp.height<6) then
         Exit;
@@ -15066,7 +15094,7 @@ var
   x,y,w,h      : integer;
   d_width      : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (bmp_src_rct_clp.width*bmp_src_rct_clp.height<6) then
         Exit;
@@ -15128,7 +15156,7 @@ var
   x,y,w,h      : integer;
   d_width      : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (bmp_src_rct_clp.width*bmp_src_rct_clp.height<6) then
         Exit;
@@ -15189,7 +15217,7 @@ var
   x,y,w,h      : integer;
   d_width      : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) or (bmp_src_rct_clp.width*bmp_src_rct_clp.height<6) then
         Exit;
@@ -15247,7 +15275,7 @@ end; {$endregion} {$endregion}
 {Create Array of Tiles Bounding Rectangles-------------} {$region -fold}
 procedure TFastImageProc.CrtRectArr; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     SetLength(rect_src_arr,tiles_cnt);
 end; {$endregion} {$endregion}
 
@@ -15348,7 +15376,7 @@ end; {$endregion}
 // img. kind: 011:
 procedure TFastImageProc.CmpProc011 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       // NT - not transparent pixels;
       if (bmp_alpha_ptr2=Nil) then // byte mode - off:
@@ -15357,7 +15385,7 @@ begin
             CrtNTCountArrA
           else
             CrtNTCountArrC;
-          if (not better_compression) then
+          if (not better_quality) then
             CrtNTShiftArrA
           else
             CrtNTShiftArrC;
@@ -15372,7 +15400,7 @@ begin
             CrtNTCountArrB
           else
             CrtNTCountArrD;
-          if (not better_compression) then
+          if (not better_quality) then
             CrtNTShiftArrB
           else
             CrtNTShiftArrD;
@@ -15516,7 +15544,7 @@ end; {$endregion}
 // Final image Compression:
 procedure TFastImageProc.ImgToCImg  ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       DetImageKind;
       CmpProc[img_kind];
@@ -15543,7 +15571,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -15572,7 +15600,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -15610,7 +15638,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -15723,7 +15751,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -15750,7 +15778,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -15786,7 +15814,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -15902,7 +15930,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -15929,7 +15957,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -15965,7 +15993,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -16062,7 +16090,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue006; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPFloodFill(bmp_bkgnd_ptr,
                 rct_dst.pt_rct,
                 bmp_bkgnd_width,
@@ -16077,7 +16105,7 @@ procedure TFastImageProc.FilNTValue010; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.r:=col_trans_var.r_val;
       args.g:=col_trans_var.g_val;
@@ -16090,7 +16118,7 @@ procedure TFastImageProc.FilNTValue012; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.r:=col_trans_var.r_val;
       args.g:=col_trans_var.g_val;
@@ -16103,7 +16131,7 @@ procedure TFastImageProc.FilNTValue014; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.r:=col_trans_var.r_val;
       args.g:=col_trans_var.g_val;
@@ -16114,7 +16142,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue016; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAdditive(bmp_bkgnd_ptr,
                rct_dst.pt_rct,
                bmp_bkgnd_width,
@@ -16129,7 +16157,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -16158,7 +16186,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -16196,7 +16224,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -16319,7 +16347,7 @@ end; {$endregion}
 // (fading) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue017; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAdditiveDec(bmp_bkgnd_ptr,
                   rct_dst.pt_rct,
                   bmp_bkgnd_width,
@@ -16338,7 +16366,7 @@ var
   x,y                    : integer;
   d_alpha                : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d_alpha                :=alpha_max-col_trans_arr[2];
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -16369,7 +16397,7 @@ var
   x,y                    : integer;
   d_alpha                : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -16409,7 +16437,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -16535,7 +16563,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue026; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAlphaBlend(bmp_bkgnd_ptr,
                  rct_dst.pt_rct,
                  bmp_bkgnd_width,
@@ -16555,7 +16583,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -16583,7 +16611,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -16620,7 +16648,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -16723,7 +16751,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue036; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPInverse(bmp_bkgnd_ptr,
               rct_dst.pt_rct,
               bmp_bkgnd_width);
@@ -16737,7 +16765,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -16765,7 +16793,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -16802,7 +16830,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -16905,7 +16933,7 @@ end; {$endregion}
 // (fading) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue037; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPInverseDec(bmp_bkgnd_ptr,
                  rct_dst.pt_rct,
                  bmp_bkgnd_width,
@@ -16918,7 +16946,7 @@ procedure TFastImageProc.FilNTValue040; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.pow:=col_trans_arr[4];
       FilNTProc0_0(args,@Highlight);
@@ -16929,7 +16957,7 @@ procedure TFastImageProc.FilNTValue042; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.pow:=col_trans_arr[4];
       FilNTProc0_2(args,@Highlight);
@@ -16940,7 +16968,7 @@ procedure TFastImageProc.FilNTValue044; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.pow:=col_trans_arr[4];
       FilNTProc0_4(args,@Highlight);
@@ -16949,7 +16977,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue046; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPHighlight(bmp_bkgnd_ptr,
                 rct_dst.pt_rct,
                 bmp_bkgnd_width,
@@ -16964,7 +16992,7 @@ procedure TFastImageProc.FilNTValue050; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.pow:=col_trans_arr[5];
       FilNTProc0_0(args,@Darken);
@@ -16975,7 +17003,7 @@ procedure TFastImageProc.FilNTValue052; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.pow:=col_trans_arr[5];
       FilNTProc0_2(args,@Darken);
@@ -16986,7 +17014,7 @@ procedure TFastImageProc.FilNTValue054; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.pow:=col_trans_arr[5];
       FilNTProc0_4(args,@Darken);
@@ -16995,7 +17023,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue056; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPDarken(bmp_bkgnd_ptr,
              rct_dst.pt_rct,
              bmp_bkgnd_width,
@@ -17023,7 +17051,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue066; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPGrayscaleR(bmp_bkgnd_ptr,
                  rct_dst.pt_rct,
                  bmp_bkgnd_width);
@@ -17038,7 +17066,7 @@ var
   x,y                    : integer;
   d_grayscale_r          : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d_grayscale_r          :=alpha_max-col_trans_arr[6];
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -17068,7 +17096,7 @@ var
   x,y                    : integer;
   d_grayscale_r          : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -17107,7 +17135,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -17211,7 +17239,7 @@ end; {$endregion}
 // (fading) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue067; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPGrayscaleRDec(bmp_bkgnd_ptr,
                     rct_dst.pt_rct,
                     bmp_bkgnd_width,
@@ -17237,7 +17265,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue076; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPGrayscaleG(bmp_bkgnd_ptr,
                  rct_dst.pt_rct,
                  bmp_bkgnd_width);
@@ -17252,7 +17280,7 @@ var
   x,y                    : integer;
   d_grayscale_g          : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d_grayscale_g          :=alpha_max-col_trans_arr[7];
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -17282,7 +17310,7 @@ var
   x,y                    : integer;
   d_grayscale_g          : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -17321,7 +17349,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -17425,7 +17453,7 @@ end; {$endregion}
 // (fading) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue077; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPGrayscaleGDec(bmp_bkgnd_ptr,
                     rct_dst.pt_rct,
                     bmp_bkgnd_width,
@@ -17451,7 +17479,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue086; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPGrayscaleB(bmp_bkgnd_ptr,
                  rct_dst.pt_rct,
                  bmp_bkgnd_width);
@@ -17466,7 +17494,7 @@ var
   x,y                    : integer;
   d_grayscale_b          : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d_grayscale_b          :=alpha_max-col_trans_arr[8];
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -17496,7 +17524,7 @@ var
   x,y                    : integer;
   d_grayscale_b          : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -17535,7 +17563,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -17639,7 +17667,7 @@ end; {$endregion}
 // (fading) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue087; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPGrayscaleBDec(bmp_bkgnd_ptr,
                     rct_dst.pt_rct,
                     bmp_bkgnd_width,
@@ -17656,7 +17684,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -17684,7 +17712,7 @@ var
   nt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -17721,7 +17749,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -17822,7 +17850,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue096; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPMonoNoise(bmp_bkgnd_ptr,
                 rct_dst.pt_rct,
                 bmp_bkgnd_width,
@@ -17838,7 +17866,7 @@ var
   x,y                    : integer;
   d_mononoise            : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d_mononoise            :=alpha_max-col_trans_arr[9];
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -17869,7 +17897,7 @@ var
   x,y                    : integer;
   d_mononoise            : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -17909,7 +17937,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -18035,7 +18063,7 @@ end; {$endregion}
 // (fading) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue097; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPMonoNoiseDec(bmp_bkgnd_ptr,
                    rct_dst.pt_rct,
                    bmp_bkgnd_width,
@@ -18049,7 +18077,7 @@ procedure TFastImageProc.FilNTValue100; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[10]-128)<<1;
       FilNTProc0_0(args,@ColorizeRM);
@@ -18060,7 +18088,7 @@ procedure TFastImageProc.FilNTValue102; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[10]-128)<<1;
       FilNTProc0_2(args,@ColorizeRM);
@@ -18071,7 +18099,7 @@ procedure TFastImageProc.FilNTValue104; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[10]-128)<<1;
       FilNTProc0_4(args,@ColorizeRM);
@@ -18080,7 +18108,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue106; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPColorCorrectionM0(@ColorizeRM,
                         bmp_bkgnd_ptr,
                         rct_dst.pt_rct,
@@ -18096,7 +18124,7 @@ procedure TFastImageProc.FilNTValue110; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[11]-128)<<1;
       FilNTProc0_0(args,@ColorizeRP);
@@ -18107,7 +18135,7 @@ procedure TFastImageProc.FilNTValue112; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[11]-128)<<1;
       FilNTProc0_2(args,@ColorizeRP);
@@ -18118,7 +18146,7 @@ procedure TFastImageProc.FilNTValue114; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[11]-128)<<1;
       FilNTProc0_4(args,@ColorizeRP);
@@ -18127,7 +18155,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue116; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPColorCorrectionP0(@ColorizeRP,
                         bmp_bkgnd_ptr,
                         rct_dst.pt_rct,
@@ -18143,7 +18171,7 @@ procedure TFastImageProc.FilNTValue120; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[12]-128)<<1;
       FilNTProc0_0(args,@ColorizeGM);
@@ -18154,7 +18182,7 @@ procedure TFastImageProc.FilNTValue122; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[12]-128)<<1;
       FilNTProc0_2(args,@ColorizeGM);
@@ -18165,7 +18193,7 @@ procedure TFastImageProc.FilNTValue124; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[12]-128)<<1;
       FilNTProc0_4(args,@ColorizeGM);
@@ -18174,7 +18202,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue126; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPColorCorrectionM0(@ColorizeGM,
                         bmp_bkgnd_ptr,
                         rct_dst.pt_rct,
@@ -18190,7 +18218,7 @@ procedure TFastImageProc.FilNTValue130; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[13]-128)<<1;
       FilNTProc0_0(args,@ColorizeGP);
@@ -18201,7 +18229,7 @@ procedure TFastImageProc.FilNTValue132; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[13]-128)<<1;
       FilNTProc0_2(args,@ColorizeGP);
@@ -18212,7 +18240,7 @@ procedure TFastImageProc.FilNTValue134; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[13]-128)<<1;
       FilNTProc0_4(args,@ColorizeGP);
@@ -18221,7 +18249,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue136; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPColorCorrectionP0(@ColorizeGP,
                         bmp_bkgnd_ptr,
                         rct_dst.pt_rct,
@@ -18237,7 +18265,7 @@ procedure TFastImageProc.FilNTValue140; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[14]-128)<<1;
       FilNTProc0_0(args,@ColorizeBM);
@@ -18248,7 +18276,7 @@ procedure TFastImageProc.FilNTValue142; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[14]-128)<<1;
       FilNTProc0_2(args,@ColorizeBM);
@@ -18259,7 +18287,7 @@ procedure TFastImageProc.FilNTValue144; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[14]-128)<<1;
       FilNTProc0_4(args,@ColorizeBM);
@@ -18268,7 +18296,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue146; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPColorCorrectionM0(@ColorizeBM,
                         bmp_bkgnd_ptr,
                         rct_dst.pt_rct,
@@ -18284,7 +18312,7 @@ procedure TFastImageProc.FilNTValue150; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[15]-128)<<1;
       FilNTProc0_0(args,@ColorizeBP);
@@ -18295,7 +18323,7 @@ procedure TFastImageProc.FilNTValue152; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[15]-128)<<1;
       FilNTProc0_2(args,@ColorizeBP);
@@ -18306,7 +18334,7 @@ procedure TFastImageProc.FilNTValue154; {$ifdef Linux}[local];{$endif} {$region 
 var
   args: TFunc0Args;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       args.d:=(col_trans_arr[15]-128)<<1;
       FilNTProc0_4(args,@ColorizeBP);
@@ -18315,7 +18343,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue156; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPColorCorrectionP0(@ColorizeBP,
                         bmp_bkgnd_ptr,
                         rct_dst.pt_rct,
@@ -18344,7 +18372,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue166; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18372,7 +18400,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue176; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18400,7 +18428,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue186; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18428,7 +18456,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue196; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18456,7 +18484,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue206; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18484,7 +18512,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue216; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18512,7 +18540,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue226; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18540,7 +18568,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue236; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18568,7 +18596,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue246; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18596,7 +18624,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTValue256; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPBlur(bmp_bkgnd_ptr,
            rct_dst.pt_rct,
            bmp_bkgnd_width,
@@ -18620,7 +18648,7 @@ var
   nt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -18651,7 +18679,7 @@ var
   nt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -18691,7 +18719,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -18807,7 +18835,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTColor006; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     BitBlt1(bmp_color_ptr,
             bmp_bkgnd_ptr,
             rct_src,
@@ -18830,7 +18858,7 @@ var
   nt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -18864,7 +18892,7 @@ var
   nt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -18907,7 +18935,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -19035,7 +19063,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTColor016; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAdditive(bmp_color_ptr,
                bmp_bkgnd_ptr,
                rct_src,
@@ -19053,7 +19081,7 @@ var
   nt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -19087,7 +19115,7 @@ var
   nt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -19130,7 +19158,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -19258,7 +19286,7 @@ end; {$endregion}
 // (fading) image has monochrome color channel:
 procedure TFastImageProc.FilNTColor017; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAdditiveDec(bmp_color_ptr,
                   bmp_bkgnd_ptr,
                   rct_src,
@@ -19280,7 +19308,7 @@ var
   x,y                    : integer;
   d_alpha                : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d_alpha                :=alpha_max-col_trans_arr[2];
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -19316,7 +19344,7 @@ var
   x,y                    : integer;
   d_alpha                : byte;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -19361,7 +19389,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -19490,7 +19518,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilNTColor026; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAlphaBlend(bmp_color_ptr,
                  bmp_bkgnd_ptr,
                  rct_src,
@@ -19517,7 +19545,7 @@ var
   pt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -19544,7 +19572,7 @@ var
   pt_pix_intr_sht_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -19580,7 +19608,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -19696,7 +19724,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -19733,7 +19761,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -19779,7 +19807,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -19930,7 +19958,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -19966,7 +19994,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -20011,7 +20039,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -20154,7 +20182,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -20190,7 +20218,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -20235,7 +20263,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -20380,7 +20408,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -20417,7 +20445,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -20463,7 +20491,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -20614,7 +20642,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -20646,7 +20674,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -20687,7 +20715,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -20818,7 +20846,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -20850,7 +20878,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -20891,7 +20919,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -21020,7 +21048,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -21052,7 +21080,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -21093,7 +21121,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -21224,7 +21252,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -21256,7 +21284,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -21297,7 +21325,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -21428,7 +21456,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -21460,7 +21488,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -21501,7 +21529,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -21628,7 +21656,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -21660,7 +21688,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -21701,7 +21729,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -21830,7 +21858,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -21862,7 +21890,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -21903,7 +21931,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -22030,7 +22058,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -22062,30 +22090,30 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
-     if (rct_src.height<=0) then
-       Exit;
-     if (pt_cnt_ind_arr[rct_src.top]>pt_pix_cnt-1) then
-       Exit;
-     first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(rct_src.top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
-     pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ rct_src.top+000000000000000000000000000000000000000000000]);
-     pt_pix_intr_sht_arr_ptr:=Unaligned(@pt_pix_intr_sht_arr[pt_cnt_ind_arr[rct_src.top]+000000000000000000000000000000]);
-     pt_pix_byte_acl_arr_ptr:=Unaligned(@pt_pix_byte_acl_arr[pt_cnt_ind_arr[rct_src.top]+000000000000000000000000000000]);
-     for y:=0 to rct_src.height-1 do
-       begin
-         pix_color_ptr:=first_row_pix_ptr;
-         for x:=0 to pt_pix_intr_cnt_arr_ptr^-1 do
-           begin
-                (pt_pix_intr_sht_arr_ptr^+pix_color_ptr)^:=GrayscaleGDec(
-                (pt_pix_intr_sht_arr_ptr^+pix_color_ptr)^,
-             Max(pt_pix_byte_acl_arr_ptr^-col_trans_arr[7],0));
-             Inc(pt_pix_intr_sht_arr_ptr);
-             Inc(pt_pix_byte_acl_arr_ptr);
-           end;
-         Inc    (pt_pix_intr_cnt_arr_ptr);
-         Inc(first_row_pix_ptr,bmp_bkgnd_width);
-       end;
+      if (rct_src.height<=0) then
+        Exit;
+      if (pt_cnt_ind_arr[rct_src.top]>pt_pix_cnt-1) then
+        Exit;
+      first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(rct_src.top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
+      pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ rct_src.top+000000000000000000000000000000000000000000000]);
+      pt_pix_intr_sht_arr_ptr:=Unaligned(@pt_pix_intr_sht_arr[pt_cnt_ind_arr[rct_src.top]+000000000000000000000000000000]);
+      pt_pix_byte_acl_arr_ptr:=Unaligned(@pt_pix_byte_acl_arr[pt_cnt_ind_arr[rct_src.top]+000000000000000000000000000000]);
+      for y:=0 to rct_src.height-1 do
+        begin
+          pix_color_ptr:=first_row_pix_ptr;
+          for x:=0 to pt_pix_intr_cnt_arr_ptr^-1 do
+            begin
+                 (pt_pix_intr_sht_arr_ptr^+pix_color_ptr)^:=GrayscaleGDec(
+                 (pt_pix_intr_sht_arr_ptr^+pix_color_ptr)^,
+              Max(pt_pix_byte_acl_arr_ptr^-col_trans_arr[7],0));
+              Inc(pt_pix_intr_sht_arr_ptr);
+              Inc(pt_pix_byte_acl_arr_ptr);
+            end;
+          Inc    (pt_pix_intr_cnt_arr_ptr);
+          Inc(first_row_pix_ptr,bmp_bkgnd_width);
+        end;
     end;
 end; {$endregion}
 // (fading) left-right-top-bottom clippped:
@@ -22103,7 +22131,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -22232,7 +22260,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -22264,7 +22292,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -22305,7 +22333,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -22432,7 +22460,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -22464,7 +22492,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -22505,7 +22533,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -22634,7 +22662,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -22672,7 +22700,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -22719,7 +22747,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -22870,7 +22898,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -22908,7 +22936,7 @@ var
   pt_pix_byte_acl_arr_ptr: PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -22955,7 +22983,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -23109,7 +23137,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d                      :=(col_trans_arr[10]-128)<<1;
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -23143,7 +23171,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -23186,7 +23214,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -23319,7 +23347,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d                      :=(col_trans_arr[11]-128)<<1;
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -23353,7 +23381,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -23396,7 +23424,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -23529,7 +23557,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d                      :=(col_trans_arr[12]-128)<<1;
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -23563,7 +23591,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -23606,7 +23634,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -23739,7 +23767,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d                      :=(col_trans_arr[13]-128)<<1;
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -23773,7 +23801,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -23816,7 +23844,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -23949,7 +23977,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d                      :=(col_trans_arr[14]-128)<<1;
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -23983,7 +24011,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -24026,7 +24054,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -24159,7 +24187,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d                      :=(col_trans_arr[15]-128)<<1;
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
@@ -24193,7 +24221,7 @@ var
   x,y                    : integer;
   d                      : smallint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -24236,7 +24264,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -24562,7 +24590,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -24598,7 +24626,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -24643,7 +24671,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.left>bmp_ftimg_width -1) then
         Exit;
@@ -24779,7 +24807,7 @@ end; {$endregion}
 // (constant) image has transparent alpha channel:
 procedure TFastImageProc.FilPTColor006; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAlphaBlend(bmp_color_ptr,
                  bmp_bkgnd_ptr,
                  rct_src,
@@ -24802,7 +24830,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -24837,7 +24865,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -24881,7 +24909,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -25013,7 +25041,7 @@ end; {$endregion}
 // (constant) image has monochrome color channel:
 procedure TFastImageProc.FilPTColor016; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     PPAdditiveDec(bmp_color_ptr,
                   bmp_bkgnd_ptr,
                   rct_src,
@@ -25032,7 +25060,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -25067,7 +25095,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -25111,7 +25139,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -25254,7 +25282,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(pt_pix_arr_row_mrg_top+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000]);
@@ -25290,7 +25318,7 @@ var
   pt_pix_intr_ccl_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -25335,7 +25363,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -25492,7 +25520,7 @@ var
   pix_row_val            : TColor;
   y_grad_rng_div_vec     : TColor3RGB;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       y_grad_rng_div_vec.r   :=grad_prop.r0<<16;
       y_grad_rng_div_vec.g   :=grad_prop.g0<<16;
@@ -25603,7 +25631,7 @@ var
   pix_row_val            : TColor;
   y_grad_rng_div_vec     : TColor3RGB;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       y_grad_rng_div_vec.r   :=grad_prop.r0<<16;
       y_grad_rng_div_vec.g   :=grad_prop.g0<<16;
@@ -25721,7 +25749,7 @@ var
   x,y                        : integer;
   scl_mul_x,scl_mul_y,d1_,d2_: integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d1                         :=bmp_ftimg_left *(1-scl_mul.x);
       d2                         :=bmp_ftimg_top  *(1-scl_mul.y);
@@ -25756,7 +25784,7 @@ var
   x,y                        : integer;
   scl_mul_x,scl_mul_y,d1_,d2_: integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d1                         :=bmp_ftimg_left *(1-scl_mul.x);
       d2                         :=bmp_ftimg_top  *(1-scl_mul.y);
@@ -25817,7 +25845,7 @@ var
   x,y                        : integer;
   scl_mul_x,scl_mul_y,d1_,d2_: integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d1                         :=bmp_ftimg_left *(1-scl_mul.x);
       d2                         :=bmp_ftimg_top  *(1-scl_mul.y);
@@ -25858,7 +25886,7 @@ var
   x,y                        : integer;
   scl_mul_x,scl_mul_y,d1_,d2_: integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       d1                         :=bmp_ftimg_left *(1-scl_mul.x);
       d2                         :=bmp_ftimg_top  *(1-scl_mul.y);
@@ -25915,7 +25943,7 @@ var
 //nt_pix_intr_val_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_cnt=0) then
         Exit;
@@ -25946,7 +25974,7 @@ var
 //nt_pix_intr_val_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_cnt=0) then
         Exit;
@@ -25978,7 +26006,7 @@ var
 //pt_pix_intr_val_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) then
         Exit;
@@ -26009,7 +26037,7 @@ var
 //pt_pix_intr_val_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) then
         Exit;
@@ -26043,7 +26071,7 @@ var
   nt_pix_intr_val_arr_ptr: PInteger;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_cnt=0) then
         Exit;
@@ -26072,7 +26100,7 @@ end; {$endregion}
 // Check NTValueArr:
 function  TFastImageProc.ChkNTValueArr: boolean; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     Result:=({@}nt_pix_intr_val_arr{[0]}=Nil);
 end; {$endregion}
 
@@ -26082,12 +26110,12 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetNTCCLToPtr; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     nt_pix_intr_arr_ptr:=Unaligned(@nt_pix_intr_ccl_arr[0]);
 end; {$endregion}
 procedure TFastImageProc.SetNTCLLToPtr; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     nt_pix_intr_arr_ptr:=Unaligned(@nt_pix_intr_cll_arr[0]);
 end; {$endregion}
 
@@ -26097,12 +26125,12 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetPTCCLToPtr; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     pt_pix_intr_arr_ptr:=Unaligned(@pt_pix_intr_ccl_arr[0]);
 end; {$endregion}
 procedure TFastImageProc.SetPTCLLToPtr; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     pt_pix_intr_arr_ptr:=Unaligned(@pt_pix_intr_cll_arr[0]);
 end; {$endregion}
 
@@ -27094,7 +27122,7 @@ var
   nt_pix_intr_sht_arr_ptr_mul  : integer;
   x,y,bmp_bckgd_width_mul_y    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       rct_dst_0                    :=PtBounds(bmp_ftimg_left,bmp_ftimg_top+nt_pix_arr_row_mrg_top*tilemap_sprite_w_h.y,tilemap_sprite_w_h.x,tilemap_sprite_w_h.y);
       rct_dst_1                    :=rct_dst_0;
@@ -27135,17 +27163,18 @@ var
   nt_pix_intr_sht_arr_ptr_mul  : integer;
   i,j,bmp_bckgd_width_mul_y    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       with tilemap_sprite_w_h do
         begin
-          rct_dst_0                    :=PtBounds(bmp_ftimg_left,bmp_ftimg_top+nt_pix_arr_row_mrg_top*y,x,y);
-          rct_dst_1                    :=rct_dst_0;
-          bmp_bckgd_width_mul_y        :=bmp_bkgnd_width*y;
-          bmp_bckgd_ptr2               :=Unaligned(@bmp_bkgnd_ptr      [00000000000000000000000000000000000000000000000000000000000000000000000]);
-          first_row_pix_ptr            :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top*y+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
-          nt_pix_intr_cnt_arr_ptr      :=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+00000000000000000000000000000000000000000000000]);
-          nt_pix_intr_sht_arr_ptr      :=Unaligned(@nt_pix_intr_sht_arr[00000000000000000000000000000000000000000000000000000000000000000000000]);
+          fast_image_data_ptr0   :=fast_image_data_ptr1;
+          rct_dst_0              :=PtBounds(bmp_ftimg_left,bmp_ftimg_top+nt_pix_arr_row_mrg_top*y,x,y);
+          rct_dst_1              :=rct_dst_0;
+          bmp_bckgd_width_mul_y  :=bmp_bkgnd_width*y;
+          bmp_bckgd_ptr2         :=Unaligned(@bmp_bkgnd_ptr      [00000000000000000000000000000000000000000000000000000000000000000000000]);
+          first_row_pix_ptr      :=Unaligned(@bmp_bkgnd_ptr      [(nt_pix_arr_row_mrg_top*y+bmp_ftimg_top)*bmp_bkgnd_width+bmp_ftimg_left]);
+          nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+00000000000000000000000000000000000000000000000]);
+          nt_pix_intr_sht_arr_ptr:=Unaligned(@nt_pix_intr_sht_arr[00000000000000000000000000000000000000000000000000000000000000000000000]);
           for j:=0 to bmp_ftimg_height-nt_pix_arr_row_mrg_top-nt_pix_arr_row_mrg_btm-1 do
             begin
               pix_color_ptr:=first_row_pix_ptr;
@@ -27155,12 +27184,10 @@ begin
                   nt_pix_intr_sht_arr_ptr_mul:=nt_pix_intr_sht_arr_ptr^*x;
                   rct_dst_1.left             :=rct_dst_0.left +nt_pix_intr_sht_arr_ptr_mul;
                   rct_dst_1.right            :=rct_dst_0.right+nt_pix_intr_sht_arr_ptr_mul;
-                  with tilemap_sprite_ptr^ do
-                    begin
-                      //fast_image_data_ptr:=@fast_image_data;
-                      SetRctPos(rct_dst_1.left,rct_dst_1.top);
-                      SdrProc[3];
-                    end;
+                  fast_image_data_ptr0       :=fast_image_data_ptr2;
+                  SetRctPos(rct_dst_1.left,rct_dst_1.top);
+                  SdrProc[3];
+                  fast_image_data_ptr0       :=fast_image_data_ptr1;
                   Inc(nt_pix_intr_sht_arr_ptr);
                 end;
               Inc(nt_pix_intr_cnt_arr_ptr);
@@ -27183,7 +27210,7 @@ var
   nt_pix_intr_sht_arr_ptr_mul  : integer;
   x,y,bmp_bckgd_width_mul_y    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       rct_dst_0                    :=PtBounds(bmp_ftimg_left,bmp_ftimg_top+nt_pix_arr_row_mrg_top*tilemap_sprite_w_h.y,tilemap_sprite_w_h.x,tilemap_sprite_w_h.y);
       rct_dst_1                    :=rct_dst_0;
@@ -27233,7 +27260,7 @@ var
   nt_pix_intr_sht_arr_ptr_mul  : integer;
   x,y,bmp_bckgd_width_mul_y    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       rct_dst_0                    :=PtBounds(bmp_ftimg_left,bmp_ftimg_top+nt_pix_arr_row_mrg_top*tilemap_sprite_w_h.y,tilemap_sprite_w_h.x,tilemap_sprite_w_h.y);
       rct_dst_1                    :=rct_dst_0;
@@ -27272,7 +27299,7 @@ end; {$endregion}
 procedure TFastimageProc.ShaderInfo ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
 
       pix_drw_type             :=0; //must be in range of [0..002]
@@ -27312,7 +27339,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SetSdrType ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     sdr_type_ind:=3*img_kind+pix_drw_type;
 end; {$endregion}
 procedure TFastimageProc.SdrTypeInit; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -27359,7 +27386,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType000 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_srf_type<>0) then
         begin
@@ -27388,7 +27415,7 @@ procedure TFastimageProc.SdrType001 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27405,7 +27432,7 @@ procedure TFastimageProc.SdrType002 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_srf_type<>0) then
         begin
@@ -27436,7 +27463,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType003 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       pt_begin_proc_ind:=0;
       pt_color_proc_ind:=9;
@@ -27457,7 +27484,7 @@ procedure TFastimageProc.SdrType004 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27474,7 +27501,7 @@ procedure TFastimageProc.SdrType005 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       pt_begin_proc_ind:=0;
       pt_color_proc_ind:=9;
@@ -27497,7 +27524,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType006 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27518,7 +27545,7 @@ procedure TFastimageProc.SdrType007 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27535,7 +27562,7 @@ procedure TFastimageProc.SdrType008 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27558,7 +27585,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType009 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27575,7 +27602,7 @@ procedure TFastimageProc.SdrType010 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27593,7 +27620,7 @@ procedure TFastimageProc.SdrType011 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27612,7 +27639,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType012 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       pt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27629,7 +27656,7 @@ procedure TFastimageProc.SdrType013 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       pt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27647,7 +27674,7 @@ procedure TFastimageProc.SdrType014 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       pt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27666,7 +27693,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType015 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27679,7 +27706,7 @@ procedure TFastimageProc.SdrType016 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27696,7 +27723,7 @@ procedure TFastimageProc.SdrType017 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27711,7 +27738,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType018 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27724,7 +27751,7 @@ procedure TFastimageProc.SdrType019 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27741,7 +27768,7 @@ procedure TFastimageProc.SdrType020 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27756,7 +27783,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType021 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27769,7 +27796,7 @@ procedure TFastimageProc.SdrType022 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27786,7 +27813,7 @@ procedure TFastimageProc.SdrType023 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -27801,7 +27828,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType024 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27815,7 +27842,7 @@ procedure TFastimageProc.SdrType025 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27833,7 +27860,7 @@ procedure TFastimageProc.SdrType026 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27849,7 +27876,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType027 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27863,7 +27890,7 @@ procedure TFastimageProc.SdrType028 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27881,7 +27908,7 @@ procedure TFastimageProc.SdrType029 ; inline; {$ifdef Linux}[local];{$endif} {$r
 var
   i: shortint;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_pix_clp_type  :=3;
       nt_begin_proc_ind:=0;
@@ -27897,7 +27924,7 @@ begin
 end; {$endregion}
 procedure TFastimageProc.SdrType030 ; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       nt_begin_proc_ind:=0;
       nt_color_proc_ind:=9;
@@ -28478,7 +28505,7 @@ begin
       end; {$endregion}
   end;}
 
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     case sdr_type_ind of
       000: SdrType000;
       001: SdrType001;
@@ -28538,7 +28565,7 @@ var
   i,j       : shortint;
 begin
 
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
 
       {Sprite Bounding Rectangles}
@@ -28576,7 +28603,7 @@ var
   i,j       : shortint;
 begin
 
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
 
       {Sprite Bounding Rectangles}
@@ -28614,7 +28641,7 @@ var
   i,j       : shortint;
 begin
 
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
 
       {Sprite Bounding Rectangles}
@@ -28714,7 +28741,7 @@ var
   arr_dst_ptr2           : PByte;
   x,y                    : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_cnt=0) or (rct_dst_.height<3) then
         Exit;
@@ -28769,7 +28796,7 @@ var
 label
   label1,label2;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt=0) or (rct_dst_.height<3) then
         Exit;
@@ -29096,7 +29123,7 @@ var
   nt_z_item_cnt             : TColor;
   x,y                       : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_pix_cnt<>0) then
         begin
@@ -29135,7 +29162,7 @@ var
   nt_z_item_cnt             : TColor;
   x,y                       : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -29187,7 +29214,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -29313,7 +29340,7 @@ var
   pt_z_item_cnt             : integer;
   x,y                       : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (pt_pix_cnt<>0) then
         begin
@@ -29352,7 +29379,7 @@ var
   pt_z_item_cnt             : integer;
   x,y                       : integer;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.height<=0) then
         Exit;
@@ -29404,7 +29431,7 @@ var
 label
   label1;
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (rct_src.width <=0) then
         Exit;
@@ -29523,7 +29550,7 @@ begin
 end; {$endregion}
 function  TFastImageProc.Useless: byte;                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (nt_useless=0) and (pt_useless=0) then
         Result:=0;
@@ -29537,7 +29564,7 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetRctPos (rct:TPtRect);                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       with rct do
         begin
@@ -29552,7 +29579,7 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetRctPos (x,y,w,h:integer);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       bmp_ftimg_left  :=x;
       bmp_ftimg_top   :=y;
@@ -29564,7 +29591,7 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetRctPos (x,y    :integer);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       bmp_ftimg_left  :=x;
       bmp_ftimg_top   :=y;
@@ -29574,7 +29601,7 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetRctPos (pvt    :TPtPosF);                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       bmp_ftimg_left  :=Trunc(pvt.x);
       bmp_ftimg_top   :=Trunc(pvt.y);
@@ -29584,7 +29611,7 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetRctDst;                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       rct_dst:=PtRctB(bmp_ftimg_left,bmp_ftimg_top,bmp_ftimg_right,bmp_ftimg_bottom);
       rct_dst:=ClippedRctB(PtRct(rct_clp_ptr^.left  +rct_clp_mrg,
@@ -29598,7 +29625,7 @@ begin
 end; {$endregion}
 procedure TFastImageProc.SetRctSrc;                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     rct_src:=PtBounds(rct_dst.pt_rct.left  -bmp_ftimg_left,
                       rct_dst.pt_rct.top   -bmp_ftimg_top,
                       rct_dst.pt_rct.right -rct_dst.pt_rct.left,
@@ -29621,7 +29648,7 @@ begin
 end; {$endregion}
 procedure   TFastImageProc.SetBkgnd  (constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; constref rct_clp:TPtRect);          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       bmp_bkgnd_ptr   :=bkgnd_ptr   ;
       bmp_bkgnd_width :=bkgnd_width ;
@@ -29631,12 +29658,12 @@ begin
 end; {$endregion}
 procedure   TFastImageProc.SetClpRct (constref rct_clp:TPtRect);                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     rct_clp_ptr:=Unaligned(@rct_clp);
 end; {$endregion}
 procedure   TFastImageProc.SetValInfo(constref bmp_color_ptr_,bmp_alpha_ptr_,bmp_value_ptr_:PInteger; constref ftimg_width,ftimg_height:TColor); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       bmp_color_ptr          :=bmp_color_ptr_;
       bmp_alpha_ptr          :=bmp_alpha_ptr_;
@@ -29649,7 +29676,7 @@ begin
 end; {$endregion}
 procedure   TFastImageProc.SetPPInfo (val:TColor=$00434D3E);                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       with col_trans_var do
         begin
@@ -29668,7 +29695,7 @@ begin
 end; {$endregion}
 procedure   TFastImageProc.SetGradToVisibleArea;                                                                                                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       grad_vec.x:=Min2(nt_pix_arr_row_mrg_top,pt_pix_arr_row_mrg_top);
       grad_vec.y:=Max2(bmp_ftimg_height-nt_pix_arr_row_mrg_btm,bmp_ftimg_height-pt_pix_arr_row_mrg_btm)-1;
@@ -29676,7 +29703,7 @@ begin
 end; {$endregion}
 procedure   TFastImageProc.SetGradProp;                                                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       with grad_prop do
         begin
@@ -29698,7 +29725,7 @@ begin
 end; {$endregion}
 procedure   TFastImageProc.SetGrad   (constref vec:TPtPos; rng:TPtPos2;                 set_grad_to_visible_area:boolean=False);                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (not set_grad_to_visible_area) then
         grad_vec:=vec
@@ -29710,7 +29737,7 @@ begin
 end; {$endregion}
 procedure   TFastImageProc.SetGrad   (x,y:integer; range_min_val,range_max_val:integer; set_grad_to_visible_area:boolean=False);                 inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with fast_image_data_ptr^ do
+  with fast_image_data_ptr0^ do
     begin
       if (not set_grad_to_visible_area) then
         grad_vec:=PtPos(x,y)
@@ -29748,7 +29775,7 @@ begin
   with fast_image_data,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {Set Max. Alpha Value-----------} {$region -fold}
       alpha_max:=maxbyte; {$endregion}
@@ -29778,7 +29805,7 @@ begin
   with fast_image_data,fast_image_proc_var do
     begin
 
-      fast_image_data_ptr:=@fast_image_data;
+      fast_image_data_ptr0:=@fast_image_data;
 
       {Set Max. Alpha Value-----------} {$region -fold}
       alpha_max:=maxbyte; {$endregion}
@@ -29879,9 +29906,9 @@ begin
 end; {$endregion}
 procedure TFastActorSet.AddActor(x,y:integer); {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  with d_icon,fast_image_proc_var,fast_image_data_ptr^ do
+  with d_icon,fast_image_proc_var,fast_image_data_ptr0^ do
     begin
-      fast_image_data_ptr:=@d_icon.fast_image_data;
+      fast_image_data_ptr0:=@d_icon.fast_image_data;
       Inc        (act_cnt);
       SetLength  (act_arr,
                   act_cnt);
