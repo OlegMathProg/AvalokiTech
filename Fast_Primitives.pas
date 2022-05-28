@@ -1451,7 +1451,7 @@ type
     //map spline properties:
     sln_prop_var          : TCurveProp;
     //tile map handle:
-    tilemap_sprite_ptr    : PFastImageItem;
+    tilemap_sprite_ind    : integer;
     //width and height of sprite at mask:
     tilemap_sprite_w_h    : TPtPos; {$endregion}
 
