@@ -6010,8 +6010,8 @@ begin
     begin
       sht_pow_mul :=rgrid_dnt*Power(DEFAULT_SCL_MUL,cmr_var.scl_dif);
       sht_pow_mul_:=Trunc(sht_pow_mul*$10000);
-      pvt_x       :=Trunc(pvt.x*$10000);
-      pvt_y       :=Trunc(pvt.y*$10000);
+      pvt_x       :=Trunc(pvt.x      *$10000);
+      pvt_y       :=Trunc(pvt.y      *$10000);
 
       // Horizontal Lines:
       x0    :=left;
@@ -6144,8 +6144,8 @@ begin
     begin
       sht_pow_mul :=sgrid_dnt*Power(DEFAULT_SCL_MUL,cmr_var.scl_dif);
       sht_pow_mul_:=Trunc(sht_pow_mul*$10000);
-      pvt_x       :=Trunc(pvt.x*$10000);
-      pvt_y       :=Trunc(pvt.y*$10000);
+      pvt_x       :=Trunc(pvt.x      *$10000);
+      pvt_y       :=Trunc(pvt.y      *$10000);
 
       // Horizontal Lines:
       x0    :=left;
@@ -7103,7 +7103,7 @@ begin
                       y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                       x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                       y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      if LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0) then
+                      if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                         ClippedLine1
                         (
                           x0,
@@ -7179,7 +7179,7 @@ begin
                     y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                     x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                     y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    if LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0) then
+                    if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                       begin
                         ClippedLine1
                         (
@@ -7305,7 +7305,7 @@ begin
                     y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                     x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                     y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    if LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0) then
+                    if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                       begin
                         ClippedLine1
                         (
@@ -14516,7 +14516,7 @@ begin
 end; {$endregion}
 procedure TCurve.FmlSplinePrev     (constref fml_pts_cnt      :TColor);                                                                                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  rct       : TPtRect;
+  rct_out   : TPtRect;
   color_info: TColorInfo;
   eds_col_  : TColor;
   i         : integer;
@@ -14536,12 +14536,12 @@ begin
       color_info:=Default(TColorInfo);
       SetColorInfo(SetColorInv(clRed),color_info);
       with inn_wnd_rct do
-        rct:=PtRct(left,top,right-1,bottom-1);
+        rct_out:=PtRct(left,top,right-1,bottom-1);
 
       with sel_var.outer_subgraph_img do
         begin
-          ArrClear(ln_arr0,rct,ln_arr_width);
-          ArrClear(ln_arr2,rct);
+          ArrClear(ln_arr0,rct_out,ln_arr_width);
+          ArrClear(ln_arr2,rct_out);
           for i:=0 to fml_pts_cnt-2 do
             ClippedLine1
             (
@@ -14549,7 +14549,7 @@ begin
               Trunc(fml_pts[i+0].y),
               Trunc(fml_pts[i+1].x),
               Trunc(fml_pts[i+1].y),
-              rct,
+              rct_out,
               Unaligned(@LineSME),
               Nil,
               Nil
@@ -14561,14 +14561,14 @@ begin
               Trunc(fml_pts[0            ].y),
               Trunc(fml_pts[fml_pts_cnt-1].x),
               Trunc(fml_pts[fml_pts_cnt-1].y),
-              rct,
+              rct_out,
               Unaligned(@LineSME),
               Nil,
               Nil
             );
           eds_col_:=eds_col;
           eds_col :=clRed;
-          FillBuffer(rct);
+          FillBuffer(rct_out);
           eds_col :=eds_col_;
         end;
       {LineABCG
@@ -14594,7 +14594,7 @@ begin
             srf_bmp_ptr,
             srf_bmp.width,
             color_info,
-            rct,
+            rct_out,
             PtPos(0,0),
             10,
             cnc_ends and (fml_pts_cnt>2)
@@ -14888,7 +14888,7 @@ procedure TCurve.MovSplineEds0     (constref spline_ind       :TColor);         
 var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
-  rct            : TPtRect;
+  rct_out        : TPtRect;
   x0,y0,x1,y1,b,i: integer;
   max_w_h_div_2  : integer;
   min_w_h_div_2  : integer;
@@ -14910,12 +14910,12 @@ begin
             obj_arr_ptr^.bkgnd_height,
             obj_arr_ptr^.rct_clp_ptr
           );
-          rct:=PtRct(obj_arr_ptr^.rct_dst_ptr^.left  +0,
-                     obj_arr_ptr^.rct_dst_ptr^.top   +0,
-                     obj_arr_ptr^.rct_dst_ptr^.right -1,
-                     obj_arr_ptr^.rct_dst_ptr^.bottom-1);
-          max_w_h_div_2:=Max(rct.width,rct.height)>>1;
-          min_w_h_div_2:=Min(rct.width,rct.height)>>1;
+          rct_out:=PtRct(obj_arr_ptr^.rct_dst_ptr^.left  +0,
+                         obj_arr_ptr^.rct_dst_ptr^.top   +0,
+                         obj_arr_ptr^.rct_dst_ptr^.right -1,
+                         obj_arr_ptr^.rct_dst_ptr^.bottom-1);
+          max_w_h_div_2:=Max(rct_out.width,rct_out.height)>>1;
+          min_w_h_div_2:=Min(rct_out.width,rct_out.height)>>1;
           rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2)); {$endregion}
 
           case eds_width of
@@ -14930,7 +14930,7 @@ begin
                     Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
                     Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
                     Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
-                    rct,
+                    rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL30),
                     Unaligned(@LineSHL30)
@@ -14944,14 +14944,14 @@ begin
                     y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                     x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                     y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad,0) then
+                    if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                       ClippedLine1
                       (
                         Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
                         Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
                         Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
                         Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                        rct,
+                        rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
                         Unaligned(@LineSHL30)
@@ -14977,7 +14977,7 @@ begin
                       y0,
                       x1,
                       y1,
-                      rct,
+                      rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL30),
                       Unaligned(@LineSHL30)
@@ -14989,7 +14989,7 @@ begin
                         y0+1,
                         x1+0,
                         y1+1,
-                        rct,
+                        rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
                         Unaligned(@LineSHL30)
@@ -15001,7 +15001,7 @@ begin
                         y0+0,
                         x1+1,
                         y1+0,
-                        rct,
+                        rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
                         Unaligned(@LineSHL30)
@@ -15016,7 +15016,7 @@ begin
                     y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                     x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                     y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad+1,0) then
+                    if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                       begin
                         ClippedLine1
                         (
@@ -15024,7 +15024,7 @@ begin
                           y0,
                           x1,
                           y1,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15036,7 +15036,7 @@ begin
                             y0+1,
                             x1+0,
                             y1+1,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15048,7 +15048,7 @@ begin
                             y0+0,
                             x1+1,
                             y1+0,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15074,7 +15074,7 @@ begin
                       y0,
                       x1,
                       y1,
-                      rct,
+                      rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL30),
                       Unaligned(@LineSHL30)
@@ -15087,7 +15087,7 @@ begin
                           y0+1,
                           x1+0,
                           y1+1,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15098,7 +15098,7 @@ begin
                           y0-1,
                           x1+0,
                           y1-1,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15112,7 +15112,7 @@ begin
                           y0+0,
                           x1+1,
                           y1+0,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15123,7 +15123,7 @@ begin
                           y0+0,
                           x1-1,
                           y1+0,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15139,7 +15139,7 @@ begin
                     y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                     x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                     y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad+2,0) then
+                    if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                       begin
                         ClippedLine1
                         (
@@ -15147,7 +15147,7 @@ begin
                           y0,
                           x1,
                           y1,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15160,7 +15160,7 @@ begin
                               y0+1,
                               x1+0,
                               y1+1,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15171,7 +15171,7 @@ begin
                               y0-1,
                               x1+0,
                               y1-1,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15185,7 +15185,7 @@ begin
                               y0+0,
                               x1+1,
                               y1+0,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15196,7 +15196,7 @@ begin
                               y0+0,
                               x1-1,
                               y1+0,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15216,7 +15216,7 @@ procedure TCurve.MovSplineEds1     (constref spline_ind       :TColor);         
 var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
-  rct            : TPtRect;
+  rct_out        : TPtRect;
   x0,y0,x1,y1,b,i: integer;
   max_w_h_div_2  : integer;
   min_w_h_div_2  : integer;
@@ -15238,12 +15238,12 @@ begin
             obj_arr_ptr^.bkgnd_height,
             obj_arr_ptr^.rct_clp_ptr
           );
-          rct:=PtRct(obj_arr_ptr^.rct_dst_ptr^.left  +0,
-                     obj_arr_ptr^.rct_dst_ptr^.top   +0,
-                     obj_arr_ptr^.rct_dst_ptr^.right -1,
-                     obj_arr_ptr^.rct_dst_ptr^.bottom-1);
-          max_w_h_div_2:=Max(rct.width,rct.height)>>1;
-          min_w_h_div_2:=Min(rct.width,rct.height)>>1;
+          rct_out:=PtRct(obj_arr_ptr^.rct_dst_ptr^.left  +0,
+                         obj_arr_ptr^.rct_dst_ptr^.top   +0,
+                         obj_arr_ptr^.rct_dst_ptr^.right -1,
+                         obj_arr_ptr^.rct_dst_ptr^.bottom-1);
+          max_w_h_div_2:=Max(rct_out.width,rct_out.height)>>1;
+          min_w_h_div_2:=Min(rct_out.width,rct_out.height)>>1;
           rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2)); {$endregion}
 
           case eds_width of
@@ -15260,7 +15260,7 @@ begin
                       Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
                       Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
                       Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
-                      rct,
+                      rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL30),
                       Unaligned(@LineSHL30)
@@ -15277,14 +15277,14 @@ begin
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                         x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad,0) then
+                        if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                           ClippedLine1
                           (
                             Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
                             Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
                             Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
                             Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15313,7 +15313,7 @@ begin
                         y0,
                         x1,
                         y1,
-                        rct,
+                        rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
                         Unaligned(@LineSHL30)
@@ -15325,7 +15325,7 @@ begin
                           y0+1,
                           x1+0,
                           y1+1,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15337,7 +15337,7 @@ begin
                           y0+0,
                           x1+1,
                           y1+0,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15355,7 +15355,7 @@ begin
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                         x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad+1,0) then
+                        if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                           begin
                             ClippedLine1
                             (
@@ -15363,7 +15363,7 @@ begin
                               y0,
                               x1,
                               y1,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15375,7 +15375,7 @@ begin
                                 y0+1,
                                 x1+0,
                                 y1+1,
-                                rct,
+                                rct_out,
                                 Unaligned(@LinePHL  ),
                                 Unaligned(@LinePHL30),
                                 Unaligned(@LineSHL30)
@@ -15387,7 +15387,7 @@ begin
                                 y0+0,
                                 x1+1,
                                 y1+0,
-                                rct,
+                                rct_out,
                                 Unaligned(@LinePHL  ),
                                 Unaligned(@LinePHL30),
                                 Unaligned(@LineSHL30)
@@ -15416,7 +15416,7 @@ begin
                         y0,
                         x1,
                         y1,
-                        rct,
+                        rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
                         Unaligned(@LineSHL30)
@@ -15429,7 +15429,7 @@ begin
                             y0+1,
                             x1+0,
                             y1+1,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15440,7 +15440,7 @@ begin
                             y0-1,
                             x1+0,
                             y1-1,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15454,7 +15454,7 @@ begin
                             y0+0,
                             x1+1,
                             y1+0,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15465,7 +15465,7 @@ begin
                             y0+0,
                             x1-1,
                             y1+0,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15484,7 +15484,7 @@ begin
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                         x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad+2,0) then
+                        if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                           begin
                             ClippedLine1
                             (
@@ -15492,7 +15492,7 @@ begin
                               y0,
                               x1,
                               y1,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15505,7 +15505,7 @@ begin
                                   y0+1,
                                   x1+0,
                                   y1+1,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -15516,7 +15516,7 @@ begin
                                   y0-1,
                                   x1+0,
                                   y1-1,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -15530,7 +15530,7 @@ begin
                                   y0+0,
                                   x1+1,
                                   y1+0,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -15541,7 +15541,7 @@ begin
                                   y0+0,
                                   x1-1,
                                   y1+0,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -15563,7 +15563,7 @@ var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
   useless_arr_ptr: PByte;
-  rct            : TPtRect;
+  rct_out        : TPtRect;
   x0,y0,x1,y1,b,i: integer;
   max_w_h_div_2  : integer;
   min_w_h_div_2  : integer;
@@ -15585,12 +15585,12 @@ begin
             obj_arr_ptr^.bkgnd_height,
             obj_arr_ptr^.rct_clp_ptr
           );
-          rct:=PtRct(obj_arr_ptr^.rct_dst_ptr^.left  +0,
-                     obj_arr_ptr^.rct_dst_ptr^.top   +0,
-                     obj_arr_ptr^.rct_dst_ptr^.right -1,
-                     obj_arr_ptr^.rct_dst_ptr^.bottom-1);
-          max_w_h_div_2:=Max(rct.width,rct.height)>>1;
-          min_w_h_div_2:=Min(rct.width,rct.height)>>1;
+          rct_out:=PtRct(obj_arr_ptr^.rct_dst_ptr^.left  +0,
+                         obj_arr_ptr^.rct_dst_ptr^.top   +0,
+                         obj_arr_ptr^.rct_dst_ptr^.right -1,
+                         obj_arr_ptr^.rct_dst_ptr^.bottom-1);
+          max_w_h_div_2:=Max(rct_out.width,rct_out.height)>>1;
+          min_w_h_div_2:=Min(rct_out.width,rct_out.height)>>1;
           rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2)); {$endregion}
 
           case eds_width of
@@ -15605,7 +15605,7 @@ begin
                     Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
                     Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
                     Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
-                    rct,
+                    rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL30),
                     Unaligned(@LineSHL30)
@@ -15622,14 +15622,14 @@ begin
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                         x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad,0) then
+                        if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                           ClippedLine1
                           (
                             x0,
                             y0,
                             x1,
                             y1,
-                            rct,
+                            rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
                             Unaligned(@LineSHL30)
@@ -15657,7 +15657,7 @@ begin
                       y0,
                       x1,
                       y1,
-                      rct,
+                      rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL30),
                       Unaligned(@LineSHL30)
@@ -15669,7 +15669,7 @@ begin
                         y0+1,
                         x1+0,
                         y1+1,
-                        rct,
+                        rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
                         Unaligned(@LineSHL30)
@@ -15681,7 +15681,7 @@ begin
                         y0+0,
                         x1+1,
                         y1+0,
-                        rct,
+                        rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
                         Unaligned(@LineSHL30)
@@ -15699,7 +15699,7 @@ begin
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                         x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad+1,0) then
+                        if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                           begin
                             ClippedLine1
                             (
@@ -15707,7 +15707,7 @@ begin
                               y0,
                               x1,
                               y1,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15719,7 +15719,7 @@ begin
                                 y0+1,
                                 x1+0,
                                 y1+1,
-                                rct,
+                                rct_out,
                                 Unaligned(@LinePHL  ),
                                 Unaligned(@LinePHL30),
                                 Unaligned(@LineSHL30)
@@ -15731,7 +15731,7 @@ begin
                                 y0+0,
                                 x1+1,
                                 y1+0,
-                                rct,
+                                rct_out,
                                 Unaligned(@LinePHL  ),
                                 Unaligned(@LinePHL30),
                                 Unaligned(@LineSHL30)
@@ -15759,7 +15759,7 @@ begin
                       y0,
                       x1,
                       y1,
-                      rct,
+                      rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL30),
                       Unaligned(@LineSHL30)
@@ -15772,7 +15772,7 @@ begin
                           y0+1,
                           x1+0,
                           y1+1,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15783,7 +15783,7 @@ begin
                           y0-1,
                           x1+0,
                           y1-1,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15797,7 +15797,7 @@ begin
                           y0+0,
                           x1+1,
                           y1+0,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15808,7 +15808,7 @@ begin
                           y0+0,
                           x1-1,
                           y1+0,
-                          rct,
+                          rct_out,
                           Unaligned(@LinePHL  ),
                           Unaligned(@LinePHL30),
                           Unaligned(@LineSHL30)
@@ -15827,7 +15827,7 @@ begin
                         y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
                         x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
                         y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        if LineCrcIntPt(x0,y0,x1,y1,rct.left+rct.width>>1,rct.top+rct.height>>1,rct_rad+2,0) then
+                        if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                           begin
                             ClippedLine1
                             (
@@ -15835,7 +15835,7 @@ begin
                               y0,
                               x1,
                               y1,
-                              rct,
+                              rct_out,
                               Unaligned(@LinePHL  ),
                               Unaligned(@LinePHL30),
                               Unaligned(@LineSHL30)
@@ -15848,7 +15848,7 @@ begin
                                   y0+1,
                                   x1+0,
                                   y1+1,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -15859,7 +15859,7 @@ begin
                                   y0-1,
                                   x1+0,
                                   y1-1,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -15873,7 +15873,7 @@ begin
                                   y0+0,
                                   x1+1,
                                   y1+0,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -15884,7 +15884,7 @@ begin
                                   y0+0,
                                   x1-1,
                                   y1+0,
-                                  rct,
+                                  rct_out,
                                   Unaligned(@LinePHL  ),
                                   Unaligned(@LinePHL30),
                                   Unaligned(@LineSHL30)
@@ -19927,8 +19927,7 @@ end; {$endregion}
 procedure TPivot.AlignPivotOnP(var x,y:integer; shift:TShiftState);                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if (shift=[ssAlt]) then
-    with srf_var_ptr^,sln_var,crc_sel_var do
-      PivotToPoint(x,y,False,srf_var_ptr^,sln_var,sel_var,crc_sel_var);
+    PivotToPoint(x,y,False,srf_var_ptr^,sln_var,sel_var,crc_sel_var);
 end; {$endregion}
 procedure TPivot.PivotToPoint     (x,y:integer;                  srf_var_:TSurface; sln_var_:TCurve; sel_var_:TSelIts; crc_sel_var_:TCrcSel); {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -22785,6 +22784,11 @@ begin
   {Fast Image Proc. Var Init.} {$region -fold}
   fast_image_proc_var:=TFastImageProc.Create; {$endregion}
 
+  {Post-Process Init.--------} {$region -fold}
+  PPDec2ProcInit;
+  ArrFillProcInit;
+  PPBlurProcInit; {$endregion}
+
   {Scene Tree----------------} {$region -fold}
   obj_var:=TSceneTree.Create;
   if (srf_var<>Nil) then
@@ -22796,11 +22800,6 @@ begin
   ObjIndsCalc;
   ScTIndsCalc;
   CngPnVsCalc; {$endregion}
-
-  {Post-Process Init.--------} {$region -fold}
-  PPDec2ProcInit;
-  ArrFillProcInit;
-  PPBlurProcInit; {$endregion}
 
   {General-------------------} {$region -fold}
 
@@ -24981,17 +24980,6 @@ begin
              surf_bmp.width,
              10);}
 
-      //////////////// ----- max sprites count without lags
-      //////////////// ----- col     val
-      {Monochrome } // ----- 266;    278;    340;   1233; 1227;
-      {Additive   } // ----- 047;    070;    086;
-      {Alphablend } // ----- 089;    108;    120;
-      {Inverse    } // ----- 103;    167;    194;
-      {Highlighted} // ----- 048;    068;    081;
-      {Darkened   } // ----- 052;    072;    085;
-      {GrayscaleR } // ----- 085;    128;    135;
-      ////////////////
-
       {Points Cloud----------} {$region -fold}
       {SetColorInfo(clGreen,color_info);
       for i:=0 to 1000 do
@@ -25208,7 +25196,7 @@ begin
         end; {$endregion}
 
       {TimeLine Buttons------} {$region -fold}
-      TimeLineButtonsDraw(F_MainForm.S_Splitter2.Top-40,F_MainForm.S_Splitter2.Width>>1-16+4); {$endregion}
+      {TimeLineButtonsDraw(F_MainForm.S_Splitter2.Top-40,F_MainForm.S_Splitter2.Width>>1-16+4);} {$endregion}
 
       {Equidistant Curves----} {$region -fold}
       {with inn_wnd_rct do
@@ -25338,7 +25326,7 @@ begin
             end;
         end;}
 
-      WorldAxisDraw; {$endregion}
+      {WorldAxisDraw;} {$endregion}
 
       {with local_axis_bmp,fast_image_data,fast_image_proc_var do
         begin
@@ -26381,7 +26369,7 @@ begin
 
   //RM_Description.Lines.Text:=IntToStr(SizeOf(Byte));
 
-end; {$endregion} //
+end; {$endregion}
 {$endregion}
 
 end.

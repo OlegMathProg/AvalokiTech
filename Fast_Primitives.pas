@@ -4469,7 +4469,7 @@ function CircleWC               (constref x0,y0,rad          :integer;
 // Circle FloodFill:
 procedure CircleFloodFill       (constref x,y                :integer;
                                  constref bmp_dst_ptr        :PInteger;
-                                 constref outer_rect         :TPtRect;
+                                 constref rct_out            :TPtRect;
                                  constref bmp_dst_width      :TColor;
                                  constref color_info         :TColorInfo;
                                  constref diam               :TColor;
@@ -4478,7 +4478,7 @@ procedure CircleFloodFill       (constref x,y                :integer;
 // SpotLight
 procedure CircleHighlight       (constref x,y                :integer;
                                  constref bmp_dst_ptr        :PInteger;
-                                 constref outer_rect         :TPtRect;
+                                 constref rct_out            :TPtRect;
                                  constref bmp_dst_width      :TColor;
                                  constref color_info         :TColorInfo;
                                  constref diam               :TColor;
@@ -4612,6 +4612,10 @@ function IsRct1OutOfRct2        (constref rct1               :TRect;
                                  constref rct2               :TPtRect): boolean;       inline; {$ifdef Linux}[local];{$endif}
 function IsRct1OutOfRct2        (constref rct1               :TPtRectF;
                                  constref rct2               :TPtRect): boolean;       inline; {$ifdef Linux}[local];{$endif}
+
+// (Line Bounding Rectangle) Ограничивающий линию прямоугольник:
+function LineBndRct             (constref x0,y0,x1,y1,
+                                          ln_width           :integer): TPtRect;       inline; {$ifdef Linux}[local];{$endif}
 
 // (Point in Rectangle) Точка в прямоугольнике:
 function IsPtInRct              (constref x,y,
@@ -6008,49 +6012,53 @@ end; {$endregion}
 // Decrease Effect:
 function  AdditiveDec   (pixel    :TColor;   constref r,g,b:byte;                     constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
+  m0,m1,m2: TColor;
   r_,g_,b_: byte;
 begin
-
-  if   (Min3(Red  (pixel)+b,255)>Red(pixel)) then
-    r_:=Min3(Red  (pixel)+b,255)-((alpha_fade*(Abs(Min3(Red  (pixel)+b,255)-Red  (pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  m0  :=Min3(r_+b,255);
+  if   (m0>  r_) then
+    r_:=m0-(alpha_fade*( m0-r_))>>8
   else
-    r_:=Min3(Red  (pixel)+b,255)+((alpha_fade*(Abs(Min3(Red  (pixel)+b,255)-Red  (pixel))))>>8);
-
-  if   (Min3(Green(pixel)+g,255)>Green(pixel)) then
-    g_:=Min3(Green(pixel)+g,255)-((alpha_fade*(Abs(Min3(Green(pixel)+g,255)-Green(pixel))))>>8)
+    r_:=m0+(alpha_fade*(-m0+r_))>>8;
+  m1  :=Min3(g_+g,255);
+  if   (m1>  g_) then
+    g_:=m1-(alpha_fade*( m1-g_))>>8
   else
-    g_:=Min3(Green(pixel)+g,255)+((alpha_fade*(Abs(Min3(Green(pixel)+g,255)-Green(pixel))))>>8);
-
-  if   (Min3(Blue (pixel)+r,255)>Blue (pixel)) then
-    b_:=Min3(Blue (pixel)+r,255)-((alpha_fade*(Abs(Min3(Blue (pixel)+r,255)-Blue (pixel))))>>8)
+    g_:=m1+(alpha_fade*(-m1+g_))>>8;
+  m2  :=Min3(b_+r,255);
+  if   (m2>  b_) then
+    b_:=m2-(alpha_fade*( m2-b_))>>8
   else
-    b_:=Min3(Blue (pixel)+r,255)+((alpha_fade*(Abs(Min3(Blue (pixel)+r,255)-Blue (pixel))))>>8);
-
+    b_:=m2+(alpha_fade*(-m2+b_))>>8;
   Result:=RGB{ToColor}(r_,g_,b_);
-
 end; {$endregion}
 function  AdditiveDec2  (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
+  m0,m1,m2: TColor;
   r_,g_,b_: byte;
 begin
-
-  if   (Min3(Red  (pixel)+b,255)>Red(pixel)) then
-    r_:=Min3(Red  (pixel)+b,255)-((alpha_fade*(Abs(Min3(Red  (pixel)+b,255)-Red  (pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  m0  :=Min3(r_+b,255);
+  if   (m0>  r_) then
+    r_:=m0-(alpha_fade*( m0-r_))>>8
   else
-    r_:=Min3(Red  (pixel)+b,255)+((alpha_fade*(Abs(Min3(Red  (pixel)+b,255)-Red  (pixel))))>>8);
-
-  if   (Min3(Green(pixel)+g,255)>Green(pixel)) then
-    g_:=Min3(Green(pixel)+g,255)-((alpha_fade*(Abs(Min3(Green(pixel)+g,255)-Green(pixel))))>>8)
+    r_:=m0+(alpha_fade*(-m0+r_))>>8;
+  m1  :=Min3(g_+g,255);
+  if   (m1>  g_) then
+    g_:=m1-(alpha_fade*( m1-g_))>>8
   else
-    g_:=Min3(Green(pixel)+g,255)+((alpha_fade*(Abs(Min3(Green(pixel)+g,255)-Green(pixel))))>>8);
-
-  if   (Min3(Blue (pixel)+r,255)>Blue (pixel)) then
-    b_:=Min3(Blue (pixel)+r,255)-((alpha_fade*(Abs(Min3(Blue (pixel)+r,255)-Blue (pixel))))>>8)
+    g_:=m1+(alpha_fade*(-m1+g_))>>8;
+  m2  :=Min3(b_+r,255);
+  if   (m2>  b_) then
+    b_:=m2-(alpha_fade*( m2-b_))>>8
   else
-    b_:=Min3(Blue (pixel)+r,255)+((alpha_fade*(Abs(Min3(Blue (pixel)+r,255)-Blue (pixel))))>>8);
-
+    b_:=m2+(alpha_fade*(-m2+b_))>>8;
   Result:=RGB{ToColor}(r_,g_,b_);
-
 end; {$endregion}
 procedure AlphaBlendDec (pixel_ptr:PInteger; constref r,g,b:byte; alpha        :byte; constref alpha_fade:byte                                        );         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -6096,493 +6104,479 @@ begin
 end; {$endregion}
 function  InverseDec    (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  r,g,b: byte;
+  r_,g_,b_: byte;
 begin
-
-  if  (255>Red  (pixel)<<1) then
-    r:=255-Red  (pixel)-((alpha_fade*(Abs(255-Red  (pixel)<<1)))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (255>r_<<1) then
+    r_:=255-r_-(alpha_fade*( 255-r_<<1))>>8
   else
-    r:=255-Red  (pixel)+((alpha_fade*(Abs(255-Red  (pixel)<<1)))>>8);
-
-  if  (255>Green(pixel)<<1) then
-    g:=255-Green(pixel)-((alpha_fade*(Abs(255-Green(pixel)<<1)))>>8)
+    r_:=255-r_+(alpha_fade*(-255+r_<<1))>>8;
+  if   (255>g_<<1) then
+    g_:=255-g_-(alpha_fade*( 255-g_<<1))>>8
   else
-    g:=255-Green(pixel)+((alpha_fade*(Abs(255-Green(pixel)<<1)))>>8);
-
-  if  (255>Blue (pixel)<<1) then
-    b:=255-Blue (pixel)-((alpha_fade*(Abs(255-Blue (pixel)<<1)))>>8)
+    g_:=255-g_+(alpha_fade*(-255+g_<<1))>>8;
+  if   (255>b_<<1) then
+    b_:=255-b_-(alpha_fade*( 255-b_<<1))>>8
   else
-    b:=255-Blue (pixel)+((alpha_fade*(Abs(255-Blue (pixel)<<1)))>>8);
-
-  Result:=RGB(r,g,b);
-
+    b_:=255-b_+(alpha_fade*(-255+b_<<1))>>8;
+  Result:=RGB(r_,g_,b_);
 end; {$endregion}
 function  InverseDec2   (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
-
-  if   (255>Red  (pixel)<<1) then
-    r_:=255-Red  (pixel)-((alpha_fade*(Abs(255-Red  (pixel)<<1)))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (255>r_<<1) then
+    r_:=255-r_-(alpha_fade*( 255-r_<<1))>>8
   else
-    r_:=255-Red  (pixel)+((alpha_fade*(Abs(255-Red  (pixel)<<1)))>>8);
-
-  if   (255>Green(pixel)<<1) then
-    g_:=255-Green(pixel)-((alpha_fade*(Abs(255-Green(pixel)<<1)))>>8)
+    r_:=255-r_+(alpha_fade*(-255+r_<<1))>>8;
+  if   (255>g_<<1) then
+    g_:=255-g_-(alpha_fade*( 255-g_<<1))>>8
   else
-    g_:=255-Green(pixel)+((alpha_fade*(Abs(255-Green(pixel)<<1)))>>8);
-
-  if   (255>Blue (pixel)<<1) then
-    b_:=255-Blue (pixel)-((alpha_fade*(Abs(255-Blue (pixel)<<1)))>>8)
+    g_:=255-g_+(alpha_fade*(-255+g_<<1))>>8;
+  if   (255>b_<<1) then
+    b_:=255-b_-(alpha_fade*( 255-b_<<1))>>8
   else
-    b_:=255-Blue (pixel)+((alpha_fade*(Abs(255-Blue (pixel)<<1)))>>8);
-
+    b_:=255-b_+(alpha_fade*(-255+b_<<1))>>8;
   Result:=RGB(r_,g_,b_);
-
 end; {$endregion}
 function  HighlightDec  (pixel    :TColor;                                            constref alpha_fade:byte; constref pow:byte=64                  ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  r,g,b: byte;
+  m0,m1,m2: TColor;
+  r_,g_,b_: byte;
 begin
-
-  if  (Min3(Red  (pixel)+pow,255)>Red(pixel)) then
-    r:=Min3(Red  (pixel)+pow,255)-((alpha_fade*(Abs(Min3(Red  (pixel)+pow,255)-Red  (pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  m0  :=Min3(r_+pow,255);
+  if   (m0>  r_) then
+    r_:=m0-(alpha_fade*( m0-r_))>>8
   else
-    r:=Min3(Red  (pixel)+pow,255)+((alpha_fade*(Abs(Min3(Red  (pixel)+pow,255)-Red  (pixel))))>>8);
-
-  if  (Min3(Green(pixel)+pow,255)>Green(pixel)) then
-    g:=Min3(Green(pixel)+pow,255)-((alpha_fade*(Abs(Min3(Green(pixel)+pow,255)-Green(pixel))))>>8)
+    r_:=m0+(alpha_fade*(-m0+r_))>>8;
+  m1  :=Min3(g_+pow,255);
+  if   (m1>  g_) then
+    g_:=m1-(alpha_fade*( m1-g_))>>8
   else
-    g:=Min3(Green(pixel)+pow,255)+((alpha_fade*(Abs(Min3(Green(pixel)+pow,255)-Green(pixel))))>>8);
-
-  if  (Min3(Blue (pixel)+pow,255)>Blue (pixel)) then
-    b:=Min3(Blue (pixel)+pow,255)-((alpha_fade*(Abs(Min3(Blue (pixel)+pow,255)-Blue (pixel))))>>8)
+    g_:=m1+(alpha_fade*(-m1+g_))>>8;
+  m2  :=Min3(b_+pow,255);
+  if   (m2>  b_) then
+    b_:=m2-(alpha_fade*( m2-b_))>>8
   else
-    b:=Min3(Blue (pixel)+pow,255)+((alpha_fade*(Abs(Min3(Blue (pixel)+pow,255)-Blue (pixel))))>>8);
-
-  Result:=RGB(r,g,b);
-
+    b_:=m2+(alpha_fade*(-m2+b_))>>8;
+  Result:=RGB(r_,g_,b_);
 end; {$endregion}
 function  HighlightDec2 (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
+  m0,m1,m2: TColor;
   r_,g_,b_: byte;
 begin
-
-  if   (Min3(Red  (pixel)+pow,255)>Red(pixel)) then
-    r_:=Min3(Red  (pixel)+pow,255)-((alpha_fade*(Abs(Min3(Red  (pixel)+pow,255)-Red  (pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  m0  :=Min3(r_+pow,255);
+  if   (m0>  r_) then
+    r_:=m0-(alpha_fade*( m0-r_))>>8
   else
-    r_:=Min3(Red  (pixel)+pow,255)+((alpha_fade*(Abs(Min3(Red  (pixel)+pow,255)-Red  (pixel))))>>8);
-
-  if   (Min3(Green(pixel)+pow,255)>Green(pixel)) then
-    g_:=Min3(Green(pixel)+pow,255)-((alpha_fade*(Abs(Min3(Green(pixel)+pow,255)-Green(pixel))))>>8)
+    r_:=m0+(alpha_fade*(-m0+r_))>>8;
+  m1  :=Min3(g_+pow,255);
+  if   (m1>  g_) then
+    g_:=m1-(alpha_fade*( m1-g_))>>8
   else
-    g_:=Min3(Green(pixel)+pow,255)+((alpha_fade*(Abs(Min3(Green(pixel)+pow,255)-Green(pixel))))>>8);
-
-  if   (Min3(Blue (pixel)+pow,255)>Blue (pixel)) then
-    b_:=Min3(Blue (pixel)+pow,255)-((alpha_fade*(Abs(Min3(Blue (pixel)+pow,255)-Blue (pixel))))>>8)
+    g_:=m1+(alpha_fade*(-m1+g_))>>8;
+  m2  :=Min3(b_+pow,255);
+  if   (m2>  b_) then
+    b_:=m2-(alpha_fade*( m2-b_))>>8
   else
-    b_:=Min3(Blue (pixel)+pow,255)+((alpha_fade*(Abs(Min3(Blue (pixel)+pow,255)-Blue (pixel))))>>8);
-
+    b_:=m2+(alpha_fade*(-m2+b_))>>8;
   Result:=RGB(r_,g_,b_);
-
 end; {$endregion}
 function  DarkenDec     (pixel    :TColor;                                            constref alpha_fade:byte; constref pow:byte=64                  ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  r,g,b: byte;
+  m0,m1,m2: integer;
+  r_,g_,b_: byte;
 begin
-
-  if  (Max2(Red  (pixel)-pow,0)>Red(pixel)) then
-    r:=Max2(Red  (pixel)-pow,0)-((alpha_fade*(Abs(Max2(Red  (pixel)-pow,0)-Red  (pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  m0  :=Max2(r_-pow,0);
+  if   (m0>  r_) then
+    r_:=m0-((alpha_fade*(Abs(m0-r_)))>>8)
   else
-    r:=Max2(Red  (pixel)-pow,0)+((alpha_fade*(Abs(Max2(Red  (pixel)-pow,0)-Red  (pixel))))>>8);
-
-  if  (Max2(Green(pixel)-pow,0)>Green(pixel)) then
-    g:=Max2(Green(pixel)-pow,0)-((alpha_fade*(Abs(Max2(Green(pixel)-pow,0)-Green(pixel))))>>8)
+    r_:=m0+((alpha_fade*(Abs(m0-r_)))>>8);
+  m1  :=Max2(g_-pow,0);
+  if   (m1>  g_) then
+    g_:=m1-((alpha_fade*(Abs(m1-g_)))>>8)
   else
-    g:=Max2(Green(pixel)-pow,0)+((alpha_fade*(Abs(Max2(Green(pixel)-pow,0)-Green(pixel))))>>8);
-
-  if  (Max2(Blue (pixel)-pow,0)>Blue (pixel)) then
-    b:=Max2(Blue (pixel)-pow,0)-((alpha_fade*(Abs(Max2(Blue (pixel)-pow,0)-Blue (pixel))))>>8)
+    g_:=m1+((alpha_fade*(Abs(m1-g_)))>>8);
+  m2  :=Max2(b_-pow,0);
+  if   (m2>  b_) then
+    b_:=m2-((alpha_fade*(Abs(m2-b_)))>>8)
   else
-    b:=Max2(Blue (pixel)-pow,0)+((alpha_fade*(Abs(Max2(Blue (pixel)-pow,0)-Blue (pixel))))>>8);
-
-  Result:=RGB(r,g,b);
-
+    b_:=m2+((alpha_fade*(Abs(m2-b_)))>>8);
+  Result:=RGB(r_,g_,b_);
 end; {$endregion}
 function  DarkenDec2    (pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
+  m0,m1,m2: integer;
   r_,g_,b_: byte;
 begin
-
-  if   (Max2(Red  (pixel)-pow,0)>Red(pixel)) then
-    r_:=Max2(Red  (pixel)-pow,0)-((alpha_fade*(Abs(Max2(Red  (pixel)-pow,0)-Red  (pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  m0  :=Max2(r_-pow,0);
+  if   (m0>  r_) then
+    r_:=m0-((alpha_fade*(Abs(m0-r_)))>>8)
   else
-    r_:=Max2(Red  (pixel)-pow,0)+((alpha_fade*(Abs(Max2(Red  (pixel)-pow,0)-Red  (pixel))))>>8);
-
-  if   (Max2(Green(pixel)-pow,0)>Green(pixel)) then
-    g_:=Max2(Green(pixel)-pow,0)-((alpha_fade*(Abs(Max2(Green(pixel)-pow,0)-Green(pixel))))>>8)
+    r_:=m0+((alpha_fade*(Abs(m0-r_)))>>8);
+  m1  :=Max2(g_-pow,0);
+  if   (m1>  g_) then
+    g_:=m1-((alpha_fade*(Abs(m1-g_)))>>8)
   else
-    g_:=Max2(Green(pixel)-pow,0)+((alpha_fade*(Abs(Max2(Green(pixel)-pow,0)-Green(pixel))))>>8);
-
-  if   (Max2(Blue (pixel)-pow,0)>Blue (pixel)) then
-    b_:=Max2(Blue (pixel)-pow,0)-((alpha_fade*(Abs(Max2(Blue (pixel)-pow,0)-Blue (pixel))))>>8)
+    g_:=m1+((alpha_fade*(Abs(m1-g_)))>>8);
+  m2  :=Max2(b_-pow,0);
+  if   (m2>  b_) then
+    b_:=m2-((alpha_fade*(Abs(m2-b_)))>>8)
   else
-    b_:=Max2(Blue (pixel)-pow,0)+((alpha_fade*(Abs(Max2(Blue (pixel)-pow,0)-Blue (pixel))))>>8);
-
+    b_:=m2+((alpha_fade*(Abs(m2-b_)))>>8);
   Result:=RGB(r_,g_,b_);
-
 end; {$endregion}
 function  GrayscaleRDec (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  r,g,b: byte;
+  r_,g_,b_: byte;
 begin
-
-    r:=Red  (pixel);
-
-  if  (Green(pixel)>Red(pixel)) then
-    g:=Green(pixel)-((alpha_fade*(Abs(Green(pixel)-Red(pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (g_>r_) then
+    g_:=g_-(alpha_fade*( g_-r_))>>8
   else
-    g:=Green(pixel)+((alpha_fade*(Abs(Green(pixel)-Red(pixel))))>>8);
-
-  if  (Blue (pixel)>Red(pixel)) then
-    b:=Blue (pixel)-((alpha_fade*(Abs(Blue (pixel)-Red(pixel))))>>8)
+    g_:=g_+(alpha_fade*(-g_+r_))>>8;
+  if   (b_>r_) then
+    b_:=b_-(alpha_fade*( b_-r_))>>8
   else
-    b:=Blue (pixel)+((alpha_fade*(Abs(Blue (pixel)-Red(pixel))))>>8);
-
-  Result:=RGB(r,g,b);
-
+    b_:=b_+(alpha_fade*(-b_+r_))>>8;
+  Result:=RGB(r_,g_,b_);
 end; {$endregion}
 function  GrayscaleRDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
-
-    r_:=Red  (pixel);
-
-  if   (Green(pixel)>Red(pixel)) then
-    g_:=Green(pixel)-((d*(Abs(Green(pixel)-Red(pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (g_>r_) then
+    g_:=g_-(alpha_fade*( g_-r_))>>8
   else
-    g_:=Green(pixel)+((d*(Abs(Green(pixel)-Red(pixel))))>>8);
-
-  if   (Blue (pixel)>Red(pixel)) then
-    b_:=Blue (pixel)-((d*(Abs(Blue (pixel)-Red(pixel))))>>8)
+    g_:=g_+(alpha_fade*(-g_+r_))>>8;
+  if   (b_>r_) then
+    b_:=b_-(alpha_fade*( b_-r_))>>8
   else
-    b_:=Blue (pixel)+((d*(Abs(Blue (pixel)-Red(pixel))))>>8);
-
+    b_:=b_+(alpha_fade*(-b_+r_))>>8;
   Result:=RGB(r_,g_,b_);
-
 end; {$endregion}
 function  GrayscaleGDec (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  r,g,b: byte;
+  r_,g_,b_: byte;
 begin
-
-  if  (Red  (pixel)>Green(pixel)) then
-    r:=Red  (pixel)-((alpha_fade*(Abs(Red  (pixel)-Green(pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (r_>g_) then
+    r_:=r_-(alpha_fade*( r_-g_))>>8
   else
-    r:=Red  (pixel)+((alpha_fade*(Abs(Red  (pixel)-Green(pixel))))>>8);
-
-    g:=Green(pixel);
-
-  if  (Blue (pixel)>Green(pixel)) then
-    b:=Blue (pixel)-((alpha_fade*(Abs(Blue (pixel)-Green(pixel))))>>8)
+    r_:=r_+(alpha_fade*(-r_+g_))>>8;
+  if   (b_>g_) then
+    b_:=b_-(alpha_fade*( b_-g_))>>8
   else
-    b:=Blue (pixel)+((alpha_fade*(Abs(Blue (pixel)-Green(pixel))))>>8);
-
-  Result:=RGB(r,g,b);
-
+    b_:=b_+(alpha_fade*(-b_+g_))>>8;
+  Result:=RGB(r_,g_,b_);
 end; {$endregion}
 function  GrayscaleGDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
-
-  if   (Red  (pixel)>Green(pixel)) then
-    r_:=Red  (pixel)-((alpha_fade*(Abs(Red  (pixel)-Green(pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (r_>g_) then
+    r_:=r_-(alpha_fade*( r_-g_))>>8
   else
-    r_:=Red  (pixel)+((alpha_fade*(Abs(Red  (pixel)-Green(pixel))))>>8);
-
-    g_:=Green(pixel);
-
-  if   (Blue (pixel)>Green(pixel)) then
-    b_:=Blue (pixel)-((alpha_fade*(Abs(Blue (pixel)-Green(pixel))))>>8)
+    r_:=r_+(alpha_fade*(-r_+g_))>>8;
+  if   (b_>g_) then
+    b_:=b_-(alpha_fade*( b_-g_))>>8
   else
-    b_:=Blue (pixel)+((alpha_fade*(Abs(Blue (pixel)-Green(pixel))))>>8);
-
+    b_:=b_+(alpha_fade*(-b_+g_))>>8;
   Result:=RGB(r_,g_,b_);
-
 end; {$endregion}
 function  GrayscaleBDec (pixel    :TColor;                                            constref alpha_fade:byte                                        ): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  r,g,b: byte;
+  r_,g_,b_: byte;
 begin
-
-  if  (Red  (pixel)>Blue(pixel)) then
-    r:=Red  (pixel)-((alpha_fade*(Abs(Red  (pixel)-Blue(pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (r_>b_) then
+    r_:=r_-(alpha_fade*( r_-b_))>>8
   else
-    r:=Red  (pixel)+((alpha_fade*(Abs(Red  (pixel)-Blue(pixel))))>>8);
-
-  if  (Green(pixel)>Blue(pixel)) then
-    g:=Green(pixel)-((alpha_fade*(Abs(Green(pixel)-Blue(pixel))))>>8)
+    r_:=r_+(alpha_fade*(-r_+b_))>>8;
+  if   (g_>b_) then
+    g_:=g_-(alpha_fade*( g_-b_))>>8
   else
-    g:=Green(pixel)+((alpha_fade*(Abs(Green(pixel)-Blue(pixel))))>>8);
-
-    b:=Blue (pixel);
-
-  Result:=RGB(r,g,b);
-
+    g_:=g_+(alpha_fade*(-g_+b_))>>8;
+  Result:=RGB(r_,g_,b_);
 end; {$endregion}
 function  GrayscaleBDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   r_,g_,b_: byte;
 begin
-
-  if   (Red  (pixel)>Blue(pixel)) then
-    r_:=Red  (pixel)-((alpha_fade*(Abs(Red  (pixel)-Blue(pixel))))>>8)
+  r_  :=Red  (pixel);
+  g_  :=Green(pixel);
+  b_  :=Blue (pixel);
+  if   (r_>b_) then
+    r_:=r_-(alpha_fade*( r_-b_))>>8
   else
-    r_:=Red  (pixel)+((alpha_fade*(Abs(Red  (pixel)-Blue(pixel))))>>8);
-
-  if   (Green(pixel)>Blue(pixel)) then
-    g_:=Green(pixel)-((alpha_fade*(Abs(Green(pixel)-Blue(pixel))))>>8)
+    r_:=r_+(alpha_fade*(-r_+b_))>>8;
+  if   (g_>b_) then
+    g_:=g_-(alpha_fade*( g_-b_))>>8
   else
-    g_:=Green(pixel)+((alpha_fade*(Abs(Green(pixel)-Blue(pixel))))>>8);
-
-    b_:=Blue (pixel);
-
+    g_:=g_+(alpha_fade*(-g_+b_))>>8;
   Result:=RGB(r_,g_,b_);
-
 end; {$endregion}
 function  ColorizeRMDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
-  b: byte;
-begin
-  v:=Red(pixel)+d;
-  if (v<000) then
-    b:=(alpha_fade*Blue(pixel))>>8
-  else
-    begin
-      if  (Byte(v)>Blue(pixel)) then
-        b:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8
-      else
-        b:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8;
-    end;
-  Result:=pixel-Blue(pixel)<<16+b<<16;
-end; {$endregion}
-function  ColorizeRMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  v: integer;
+  v : integer;
   b_: byte;
 begin
-  v:=Red(pixel)+d;
+  v :=Red(pixel)+d;
   if (v<000) then
     b_:=(alpha_fade*Blue(pixel))>>8
   else
     begin
-      if  (Byte(v)>Blue(pixel)) then
-        b_:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8
+      if   (Byte(v)>Blue(pixel)) then
+        b_:=Byte(v)-(alpha_fade*( Byte(v)-Blue(pixel)))>>8
       else
-        b_:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8;
+        b_:=Byte(v)+(alpha_fade*(-Byte(v)+Blue(pixel)))>>8;
+    end;
+  Result:=pixel-Blue(pixel)<<16+b_<<16;
+end; {$endregion}
+function  ColorizeRMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  v : integer;
+  b_: byte;
+begin
+  v :=Red(pixel)+d;
+  if (v<000) then
+    b_:=(alpha_fade*Blue(pixel))>>8
+  else
+    begin
+      if   (Byte(v)>Blue(pixel)) then
+        b_:=Byte(v)-(alpha_fade*( Byte(v)-Blue(pixel)))>>8
+      else
+        b_:=Byte(v)+(alpha_fade*(-Byte(v)+Blue(pixel)))>>8;
     end;
   Result:=pixel-Blue(pixel)<<16+b_<<16;
 end; {$endregion}
 function  ColorizeRPDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
-  b: byte;
+  v : integer;
+  b_: byte;
 begin
-  v:=Red(pixel)+d;
+  v :=Red(pixel)+d;
   if (v>255) then
     begin
-      if  (255>Blue(pixel)) then
-        b:=255-(alpha_fade*(Abs(255-Blue(pixel))))>>8
+      if   (255>Blue(pixel)) then
+        b_:=255-(alpha_fade*( 255-Blue(pixel)))>>8
       else
-        b:=255+(alpha_fade*(Abs(255-Blue(pixel))))>>8
+        b_:=255+(alpha_fade*(-255+Blue(pixel)))>>8
     end
   else
     begin
-      if  (Byte(v)>Blue(pixel)) then
-        b:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8
+      if   (Byte(v)>Blue(pixel)) then
+        b_:=Byte(v)-(alpha_fade*( Byte(v)-Blue(pixel)))>>8
       else
-        b:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8;
+        b_:=Byte(v)+(alpha_fade*(-Byte(v)+Blue(pixel)))>>8;
     end;
-  Result:=pixel-Blue(pixel)<<16+b<<16;
+  Result:=pixel-Blue(pixel)<<16+b_<<16;
 end; {$endregion}
 function  ColorizeRPDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
+  v : integer;
   b_: byte;
 begin
-  v:=Red(pixel)+d;
+  v :=Red(pixel)+d;
   if (v>255) then
     begin
-      if  (255>Blue(pixel)) then
-        b_:=255-(alpha_fade*(Abs(255-Blue(pixel))))>>8
+      if   (255>Blue(pixel)) then
+        b_:=255-(alpha_fade*( 255-Blue(pixel)))>>8
       else
-        b_:=255+(alpha_fade*(Abs(255-Blue(pixel))))>>8
+        b_:=255+(alpha_fade*(-255+Blue(pixel)))>>8
     end
   else
     begin
-      if  (Byte(v)>Blue(pixel)) then
-        b_:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8
+      if   (Byte(v)>Blue(pixel)) then
+        b_:=Byte(v)-(alpha_fade*( Byte(v)-Blue(pixel)))>>8
       else
-        b_:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Blue(pixel))))>>8;
+        b_:=Byte(v)+(alpha_fade*(-Byte(v)+Blue(pixel)))>>8;
     end;
   Result:=pixel-Blue(pixel)<<16+b_<<16;
 end; {$endregion}
 function  ColorizeGMDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
-  g: byte;
-begin
-  v:=Green(pixel)+d;
-  if (v<000) then
-    g:=(alpha_fade*Green(pixel))>>8
-  else
-    begin
-      if  (Byte(v)>Green(pixel)) then
-        g:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8
-      else
-        g:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8;
-    end;
-  Result:=pixel-Green(pixel)<<08+g<<08;
-end; {$endregion}
-function  ColorizeGMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  v: integer;
+  v : integer;
   g_: byte;
 begin
-  v:=Green(pixel)+d;
+  v :=Green(pixel)+d;
   if (v<000) then
     g_:=(alpha_fade*Green(pixel))>>8
   else
     begin
-      if  (Byte(v)>Green(pixel)) then
-        g_:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8
+      if   (Byte(v)>Green(pixel)) then
+        g_:=Byte(v)-(alpha_fade*( Byte(v)-Green(pixel)))>>8
       else
-        g_:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8;
+        g_:=Byte(v)+(alpha_fade*(-Byte(v)+Green(pixel)))>>8;
+    end;
+  Result:=pixel-Green(pixel)<<08+g_<<08;
+end; {$endregion}
+function  ColorizeGMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  v : integer;
+  g_: byte;
+begin
+  v :=Green(pixel)+d;
+  if (v<000) then
+    g_:=(alpha_fade*Green(pixel))>>8
+  else
+    begin
+      if   (Byte(v)>Green(pixel)) then
+        g_:=Byte(v)-(alpha_fade*( Byte(v)-Green(pixel)))>>8
+      else
+        g_:=Byte(v)+(alpha_fade*(-Byte(v)+Green(pixel)))>>8;
     end;
   Result:=pixel-Green(pixel)<<08+g_<<08;
 end; {$endregion}
 function  ColorizeGPDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
-  g: byte;
+  v : integer;
+  g_: byte;
 begin
-  v:=Green(pixel)+d;
+  v :=Green(pixel)+d;
   if (v>255) then
     begin
-      if  (255>Green(pixel)) then
-        g:=255-(alpha_fade*(Abs(255-Green(pixel))))>>8
+      if   (255>Green(pixel)) then
+        g_:=255-(alpha_fade*( 255-Green(pixel)))>>8
       else
-        g:=255+(alpha_fade*(Abs(255-Green(pixel))))>>8;
+        g_:=255+(alpha_fade*(-255+Green(pixel)))>>8;
     end
   else
     begin
-      if  (Byte(v)>Green(pixel)) then
-        g:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8
+      if   (Byte(v)>Green(pixel)) then
+        g_:=Byte(v)-(alpha_fade*( Byte(v)-Green(pixel)))>>8
       else
-        g:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8;
+        g_:=Byte(v)+(alpha_fade*(-Byte(v)+Green(pixel)))>>8;
     end;
-  Result:=pixel-Green(pixel)<<08+g<<08;
+  Result:=pixel-Green(pixel)<<08+g_<<08;
 end; {$endregion}
 function  ColorizeGPDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
+  v : integer;
   g_: byte;
 begin
-  v:=Green(pixel)+d;
+  v :=Green(pixel)+d;
   if (v>255) then
     begin
-      if  (255>Green(pixel)) then
-        g_:=255-(alpha_fade*(Abs(255-Green(pixel))))>>8
+      if   (255>Green(pixel)) then
+        g_:=255-(alpha_fade*( 255-Green(pixel)))>>8
       else
-        g_:=255+(alpha_fade*(Abs(255-Green(pixel))))>>8;
+        g_:=255+(alpha_fade*(-255+Green(pixel)))>>8;
     end
   else
     begin
-      if  (Byte(v)>Green(pixel)) then
-        g_:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8
+      if   (Byte(v)>Green(pixel)) then
+        g_:=Byte(v)-(alpha_fade*( Byte(v)-Green(pixel)))>>8
       else
-        g_:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Green(pixel))))>>8;
+        g_:=Byte(v)+(alpha_fade*(-Byte(v)+Green(pixel)))>>8;
     end;
   Result:=pixel-Green(pixel)<<08+g_<<08;
 end; {$endregion}
 function  ColorizeBMDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
-  r: byte;
-begin
-  v:=Blue(pixel)+d;
-  if (v<000) then
-    r:=(alpha_fade*Red(pixel))>>8
-  else
-    begin
-      if  (Byte(v)>Red(pixel)) then
-        r:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8
-      else
-        r:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8;
-    end;
-  Result:=pixel-Red(pixel)<<00+r<<00;
-end; {$endregion}
-function  ColorizeBMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
-var
-  v: integer;
+  v : integer;
   r_: byte;
 begin
-  v:=Blue(pixel)+d;
+  v :=Blue(pixel)+d;
   if (v<000) then
     r_:=(alpha_fade*Red(pixel))>>8
   else
     begin
-      if  (Byte(v)>Red(pixel)) then
-        r_:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8
+      if   (Byte(v)>Red(pixel)) then
+        r_:=Byte(v)-(alpha_fade*( Byte(v)-Red(pixel)))>>8
       else
-        r_:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8;
+        r_:=Byte(v)+(alpha_fade*(-Byte(v)+Red(pixel)))>>8;
+    end;
+  Result:=pixel-Red(pixel)<<00+r_<<00;
+end; {$endregion}
+function  ColorizeBMDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  v : integer;
+  r_: byte;
+begin
+  v :=Blue(pixel)+d;
+  if (v<000) then
+    r_:=(alpha_fade*Red(pixel))>>8
+  else
+    begin
+      if   (Byte(v)>Red(pixel)) then
+        r_:=Byte(v)-(alpha_fade*( Byte(v)-Red(pixel)))>>8
+      else
+        r_:=Byte(v)+(alpha_fade*(-Byte(v)+Red(pixel)))>>8;
     end;
   Result:=pixel-Red(pixel)<<00+r_<<00;
 end; {$endregion}
 function  ColorizeBPDec (pixel    :TColor;                                            constref alpha_fade:byte;                    constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
-  r: byte;
+  v : integer;
+  r_: byte;
 begin
-  v:=Blue(pixel)+d;
+  v :=Blue(pixel)+d;
   if (v>255) then
     begin
-      if  (255>Red(pixel)) then
-        r:=255-(alpha_fade*(Abs(255-Red(pixel))))>>8
+      if   (255>Red(pixel)) then
+        r_:=255-(alpha_fade*( 255-Red(pixel)))>>8
       else
-        r:=255+(alpha_fade*(Abs(255-Red(pixel))))>>8
+        r_:=255+(alpha_fade*(-255+Red(pixel)))>>8
     end
   else
     begin
-      if  (Byte(v)>Red(pixel)) then
-        r:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8
+      if   (Byte(v)>Red(pixel)) then
+        r_:=Byte(v)-(alpha_fade*( Byte(v)-Red(pixel)))>>8
       else
-        r:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8;
+        r_:=Byte(v)+(alpha_fade*(-Byte(v)+Red(pixel)))>>8;
     end;
-  Result:=pixel-Red(pixel)<<00+r<<00;
+  Result:=pixel-Red(pixel)<<00+r_<<00;
 end; {$endregion}
 function  ColorizeBPDec2(pixel    :TColor;   constref r,g,b:byte; alpha,d_alpha:byte; constref alpha_fade:byte; constref pow:byte; constref d:smallint): TColor; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  v: integer;
+  v : integer;
   r_: byte;
 begin
-  v:=Blue(pixel)+d;
+  v :=Blue(pixel)+d;
   if (v>255) then
     begin
-      if  (255>Red(pixel)) then
-        r_:=255-(alpha_fade*(Abs(255-Red(pixel))))>>8
+      if   (255>Red(pixel)) then
+        r_:=255-(alpha_fade*( 255-Red(pixel)))>>8
       else
-        r_:=255+(alpha_fade*(Abs(255-Red(pixel))))>>8
+        r_:=255+(alpha_fade*(-255+Red(pixel)))>>8
     end
   else
     begin
-      if  (Byte(v)>Red(pixel)) then
-        r_:=Byte(v)-(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8
+      if   (Byte(v)>Red(pixel)) then
+        r_:=Byte(v)-(alpha_fade*( Byte(v)-Red(pixel)))>>8
       else
-        r_:=Byte(v)+(alpha_fade*(Abs(Byte(v)-Red(pixel))))>>8;
+        r_:=Byte(v)+(alpha_fade*(-Byte(v)+Red(pixel)))>>8;
     end;
   Result:=pixel-Red(pixel)<<00+r_<<00;
 end; {$endregion}
@@ -7501,6 +7495,49 @@ begin
           (rct1.bottom<=rct2.top   ) or
           (rct1.left  >=rct2.right ) or
           (rct1.top   >=rct2.bottom);
+end; {$endregion}
+
+// (Line Bounding Rectangle) Ограничивающий линию прямоугольник:
+function LineBndRct(constref x0,y0,x1,y1,ln_width:integer): TPtRect; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  ln_width2: integer;
+begin
+  ln_width2:=ln_width>>1;
+  with Result do
+    begin
+      if (x0=x1) then
+        begin
+          left :=x0-ln_width2;
+          right:=x0+ln_width2;
+        end
+      else
+      if (x0<x1) then
+        begin
+          left :=x0-ln_width2;
+          right:=x1+ln_width2;
+        end
+      else
+        begin
+          left :=x1-ln_width2;
+          right:=x0+ln_width2;
+        end;
+      if (y0=y1) then
+        begin
+          top   :=y0-ln_width2;
+          bottom:=y0+ln_width2;
+        end
+      else
+      if (y0<y1) then
+        begin
+          top   :=y0-ln_width2;
+          bottom:=y1+ln_width2;
+        end
+      else
+        begin
+          top   :=y1-ln_width2;
+          bottom:=y0+ln_width2;
+        end;
+    end;
 end; {$endregion}
 
 // (Point in Rectangle) Точка в прямоугольнике:
@@ -13595,8 +13632,8 @@ var
   nt_pix_cnt_arr_ptr        : PInteger;
   nt_pix_arr_row_mrg_btm_ptr: PInteger;
   nt_pix_cnt_row            : integer=0;
-  x,y,i,n                   : integer;
-  d_width                   : integer;
+  x,y,i,n,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -13607,17 +13644,17 @@ begin
         end;
       //SetLength(nt_pix_intr_cnt_arr,0);
       SetLength(nt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       nt_pix_cnt        :=0;
       nt_pix_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr      [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexDWord(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              if (pix_alpha_ptr^{>}<>0) then
+              if ((pix_alpha_ptr+x)^{>}<>0) then
                 Inc(nt_pix_cnt_row);
-              Inc(pix_alpha_ptr);
+              //Inc(pix_alpha_ptr);
             end;
           if (nt_pix_cnt_row<>0) then
             begin
@@ -13626,20 +13663,17 @@ begin
               nt_pix_cnt_row     :=0;
             end;
           Inc(nt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (nt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      nt_pix_arr_row_mrg_top:=0;
-      nt_pix_cnt_arr_ptr    :=Unaligned(@nt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((nt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            nt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@nt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        nt_pix_arr_row_mrg_top:=0
+      else
+        nt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (nt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -13667,8 +13701,8 @@ var
   nt_pix_cnt_arr_ptr        : PInteger;
   nt_pix_arr_row_mrg_btm_ptr: PInteger;
   nt_pix_cnt_row            : integer=0;
-  x,y,i,n                   : integer;
-  d_width                   : integer;
+  x,y,i,n,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -13679,17 +13713,17 @@ begin
         end;
       //SetLength(nt_pix_intr_cnt_arr,0);
       SetLength(nt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       nt_pix_cnt        :=0;
       nt_pix_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr2     [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexByte(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              if (pix_alpha_ptr^{>}<>0) then
+              if ((pix_alpha_ptr+x)^{>}<>0) then
                 Inc(nt_pix_cnt_row);
-              Inc(pix_alpha_ptr);
+              //Inc(pix_alpha_ptr);
             end;
           if (nt_pix_cnt_row<>0) then
             begin
@@ -13698,20 +13732,17 @@ begin
               nt_pix_cnt_row     :=0;
             end;
           Inc(nt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (nt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      nt_pix_arr_row_mrg_top:=0;
-      nt_pix_cnt_arr_ptr    :=Unaligned(@nt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((nt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            nt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@nt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        nt_pix_arr_row_mrg_top:=0
+      else
+        nt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (nt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -13739,8 +13770,8 @@ var
   nt_pix_cnt_arr_ptr        : PInteger;
   nt_pix_arr_row_mrg_btm_ptr: PInteger;
   nt_pix_cnt_row            : integer=0;
-  x,y,i,n                   : integer;
-  d_width                   : integer;
+  x,y,i,n,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -13751,16 +13782,16 @@ begin
         end;
       //SetLength(nt_pix_intr_cnt_arr,0);
       SetLength(nt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       nt_pix_cnt        :=0;
       nt_pix_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr      [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexDWord(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              Inc(nt_pix_cnt_row,(pix_alpha_ptr^+NZ_ITEM_COEFF22)>>NZ_ITEM_COEFF12);
-              Inc(pix_alpha_ptr);
+              Inc(nt_pix_cnt_row,((pix_alpha_ptr+x)^+NZ_ITEM_COEFF22)>>NZ_ITEM_COEFF12);
+              //Inc(pix_alpha_ptr);
             end;
           if (nt_pix_cnt_row<>0) then
             begin
@@ -13769,20 +13800,17 @@ begin
               nt_pix_cnt_row     :=0;
             end;
           Inc(nt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (nt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      nt_pix_arr_row_mrg_top:=0;
-      nt_pix_cnt_arr_ptr    :=Unaligned(@nt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((nt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            nt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@nt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        nt_pix_arr_row_mrg_top:=0
+      else
+        nt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (nt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -13810,8 +13838,8 @@ var
   nt_pix_cnt_arr_ptr        : PInteger;
   nt_pix_arr_row_mrg_btm_ptr: PInteger;
   nt_pix_cnt_row            : integer=0;
-  x,y,i,n                   : integer;
-  d_width                   : integer;
+  x,y,i,n,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -13822,16 +13850,16 @@ begin
         end;
       //SetLength(nt_pix_intr_cnt_arr,0);
       SetLength(nt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       nt_pix_cnt        :=0;
       nt_pix_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr2     [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexByte(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              Inc(nt_pix_cnt_row,(pix_alpha_ptr^+NZ_ITEM_COEFF20)>>NZ_ITEM_COEFF10);
-              Inc(pix_alpha_ptr);
+              Inc(nt_pix_cnt_row,((pix_alpha_ptr+x)^+NZ_ITEM_COEFF20)>>NZ_ITEM_COEFF10);
+              //Inc(pix_alpha_ptr);
             end;
           if (nt_pix_cnt_row<>0) then
             begin
@@ -13840,20 +13868,17 @@ begin
               nt_pix_cnt_row     :=0;
             end;
           Inc(nt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (nt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      nt_pix_arr_row_mrg_top:=0;
-      nt_pix_cnt_arr_ptr    :=Unaligned(@nt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((nt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            nt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@nt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        nt_pix_arr_row_mrg_top:=0
+      else
+        nt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (nt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -13882,8 +13907,8 @@ var
   pt_pix_cnt_arr_ptr        : PInteger;
   pt_pix_arr_row_mrg_btm_ptr: PInteger;
   pt_pix_cnt_row            : integer=0;
-  x,y,i,p                   : integer;
-  d_width                   : integer;
+  x,y,i,p,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -13894,17 +13919,17 @@ begin
         end;
       //SetLength(pt_pix_intr_cnt_arr,0);
       SetLength(pt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       pt_pix_cnt        :=0;
       pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr      [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexDWord(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              if (pix_alpha_ptr^{>}<>0) then
+              if ((pix_alpha_ptr+x)^{>}<>0) then
                 Inc(pt_pix_cnt_row);
-              Inc(pix_alpha_ptr);
+              //Inc(pix_alpha_ptr);
             end;
           if (pt_pix_cnt_row<>0) then
             begin
@@ -13913,19 +13938,17 @@ begin
               pt_pix_cnt_row     :=0;
             end;
           Inc(pt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (pt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((pt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            pt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@pt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        pt_pix_arr_row_mrg_top:=0
+      else
+        pt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (pt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -13952,8 +13975,8 @@ var
   pt_pix_cnt_arr_ptr        : PInteger;
   pt_pix_arr_row_mrg_btm_ptr: PInteger;
   pt_pix_cnt_row            : integer=0;
-  x,y,i,p                   : integer;
-  d_width                   : integer;
+  x,y,i,p,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -13964,17 +13987,17 @@ begin
         end;
       //SetLength(pt_pix_intr_cnt_arr,0);
       SetLength(pt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       pt_pix_cnt        :=0;
       pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr2      [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexByte(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              if (pix_alpha_ptr^{>}<>0) then
+              if ((pix_alpha_ptr+x)^{>}<>0) then
                 Inc(pt_pix_cnt_row);
-              Inc(pix_alpha_ptr);
+              //Inc(pix_alpha_ptr);
             end;
           if (pt_pix_cnt_row<>0) then
             begin
@@ -13983,19 +14006,17 @@ begin
               pt_pix_cnt_row     :=0;
             end;
           Inc(pt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (pt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((pt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            pt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@pt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        pt_pix_arr_row_mrg_top:=0
+      else
+        pt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (pt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -14022,8 +14043,8 @@ var
   pt_pix_cnt_arr_ptr        : PInteger;
   pt_pix_arr_row_mrg_btm_ptr: PInteger;
   pt_pix_cnt_row            : integer=0;
-  x,y,i,p                   : integer;
-  d_width                   : integer;
+  x,y,i,p,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -14034,16 +14055,16 @@ begin
         end;
       //SetLength(pt_pix_intr_cnt_arr,0);
       SetLength(pt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       pt_pix_cnt        :=0;
       pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr      [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexDWord(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              Inc(pt_pix_cnt_row,(pix_alpha_ptr^+NZ_ITEM_COEFF22)>>NZ_ITEM_COEFF12);
-              Inc(pix_alpha_ptr);
+              Inc(pt_pix_cnt_row,((pix_alpha_ptr+x)^+NZ_ITEM_COEFF22)>>NZ_ITEM_COEFF12);
+              //Inc(pix_alpha_ptr);
             end;
           if (pt_pix_cnt_row<>0) then
             begin
@@ -14052,19 +14073,17 @@ begin
               pt_pix_cnt_row     :=0;
             end;
           Inc(pt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (pt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((pt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            pt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@pt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        pt_pix_arr_row_mrg_top:=0
+      else
+        pt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (pt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -14091,8 +14110,8 @@ var
   pt_pix_cnt_arr_ptr        : PInteger;
   pt_pix_arr_row_mrg_btm_ptr: PInteger;
   pt_pix_cnt_row            : integer=0;
-  x,y,i,p                   : integer;
-  d_width                   : integer;
+  x,y,i,p,m                 : integer;
+//d_width                   : integer;
 begin
   with fast_image_data_ptr0^ do
     begin
@@ -14103,16 +14122,16 @@ begin
         end;
       //SetLength(pt_pix_intr_cnt_arr,0);
       SetLength(pt_pix_intr_cnt_arr,bmp_src_rct_clp.height);
-      d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
+      //d_width           :=bmp_ftimg_width-bmp_src_rct_clp.width;
       pt_pix_cnt        :=0;
       pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[00000000000000000000000000000000000000000000000000000000]);
       pix_alpha_ptr     :=Unaligned(@bmp_alpha_ptr2      [bmp_src_rct_clp.left+bmp_ftimg_width*bmp_src_rct_clp.top]);
       for y:=0 to bmp_src_rct_clp.height-1 do
         begin
-          for x:=0 to bmp_src_rct_clp.width-1 do
+          for x:={0}NotIndexByte(pix_alpha_ptr,bmp_src_rct_clp.width-1) to bmp_src_rct_clp.width-1 do
             begin
-              Inc(pt_pix_cnt_row,(pix_alpha_ptr^+NZ_ITEM_COEFF20)>>NZ_ITEM_COEFF10);
-              Inc(pix_alpha_ptr);
+              Inc(pt_pix_cnt_row,((pix_alpha_ptr+x)^+NZ_ITEM_COEFF20)>>NZ_ITEM_COEFF10);
+              //Inc(pix_alpha_ptr);
             end;
           if (pt_pix_cnt_row<>0) then
             begin
@@ -14121,19 +14140,17 @@ begin
               pt_pix_cnt_row     :=0;
             end;
           Inc(pt_pix_cnt_arr_ptr);
-          Inc(pix_alpha_ptr,d_width);
+          Inc(pix_alpha_ptr,bmp_ftimg_width{d_width});
         end;
       if (pt_pix_cnt=0) then
         Exit;
 
       {Find Top Margin Value}
-      pt_pix_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[0]);
-      for i:=0 to bmp_src_rct_clp.height-1 do
-        if ((pt_pix_cnt_arr_ptr+i)^<>0) then
-          begin
-            pt_pix_arr_row_mrg_top:=i;
-            Break;
-          end;
+      m:=NotIndexDWord(@pt_pix_intr_cnt_arr[0],bmp_src_rct_clp.height-1);
+      if (m=-1) then
+        pt_pix_arr_row_mrg_top:=0
+      else
+        pt_pix_arr_row_mrg_top:=m;
 
       {Find Bottom Margin Value}
       if (pt_pix_arr_row_mrg_top<bmp_src_rct_clp.height) then
@@ -37715,9 +37732,9 @@ begin
 end; {$endregion}
 
 // Circle FloodFill:
-procedure CircleFloodFill(constref x,y:integer; constref bmp_dst_ptr:PInteger; constref outer_rect:TPtRect; constref bmp_dst_width:TColor; constref color_info:TColorInfo; constref diam:TColor; constref pow:byte); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure CircleFloodFill(constref x,y:integer; constref bmp_dst_ptr:PInteger; constref rct_out:TPtRect; constref bmp_dst_width:TColor; constref color_info:TColorInfo; constref diam:TColor; constref pow:byte); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  rect_dst : TPtRect;
+  rct_dst  : TPtRect;
   pixel_ptr: PInteger;
   d_width  : integer;
   i,j      : integer;
@@ -37728,26 +37745,25 @@ var
   rad3     : integer;
   dist_sqr : integer;
   d_sqr    : integer;
-  m        : byte;
 begin
   if (diam=0) then
     Exit;
   rad1     :=diam>>1;
   rad1_sqr :=rad1*rad1;
-  rect_dst :=ClippedRct(outer_rect,PtRct(x-rad1,y-rad1,x+rad1,y+rad1));
-  if (rect_dst.width=0) or (rect_dst.height=0) then
+  rct_dst  :=ClippedRct(rct_out,PtRct(x-rad1,y-rad1,x+rad1,y+rad1));
+  if (rct_dst.width=0) or (rct_dst.height=0) then
     Exit;
-  rad2     :=x-rect_dst.left;
+  rad2     :=x-rct_dst.left;
   rad2_sqr :=rad2*rad2;
-  rad3     :=y-rect_dst.top;
-  d_width  :=bmp_dst_width -rect_dst.width;
-  pixel_ptr:=bmp_dst_ptr   +rect_dst.left+rect_dst.top*bmp_dst_width;
-  for j:=0 to rect_dst.height-1 do
+  rad3     :=y-rct_dst.top;
+  d_width  :=bmp_dst_width-rct_dst.width;
+  pixel_ptr:=bmp_dst_ptr  +rct_dst.left+rct_dst.top*bmp_dst_width;
+  for j:=0 to rct_dst.height-1 do
     begin
-      d_sqr:=(j-rad3)*(j-rad3)+rad2_sqr;
-      for i:=0 to rect_dst.width-1 do
+      d_sqr:=sqr(j-rad3)+rad2_sqr;
+      for i:=0 to rct_dst.width-1 do
         begin
-          dist_sqr:=i*i-rad2*i<<1+d_sqr;
+          dist_sqr:=i*(i-rad2<<1)+d_sqr;
           if (dist_sqr<rad1_sqr) and (pixel_ptr^>>24=0) then
             begin
               pixel_ptr^:=AlphaBlend(pixel_ptr^,
@@ -37772,9 +37788,9 @@ begin
 end; {$endregion}
 
 // Spotlight:
-procedure CircleHighlight(constref x,y:integer; constref bmp_dst_ptr:PInteger; constref outer_rect:TPtRect; constref bmp_dst_width:TColor; constref color_info:TColorInfo; constref diam:TColor; constref pow:byte; alpha_max:byte=255); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure CircleHighlight(constref x,y:integer; constref bmp_dst_ptr:PInteger; constref rct_out:TPtRect; constref bmp_dst_width:TColor; constref color_info:TColorInfo; constref diam:TColor; constref pow:byte; alpha_max:byte=255); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  rect_dst : TPtRect;
+  rct_dst  : TPtRect;
   pixel_ptr: PInteger;
   d_width  : integer;
   i,j      : integer;
@@ -37791,24 +37807,24 @@ begin
     Exit;
   rad1     :=diam>>1;
   rad1_sqr :=rad1*rad1;
-  rect_dst :=ClippedRct(outer_rect,PtRct(x-rad1,y-rad1,x+rad1,y+rad1));
-  if (rect_dst.width=0) or (rect_dst.height=0) then
+  rct_dst  :=ClippedRct(rct_out,PtRct(x-rad1,y-rad1,x+rad1,y+rad1));
+  if (rct_dst.width=0) or (rct_dst.height=0) then
     Exit;
-  rad2     :=x-rect_dst.left;
+  rad2     :=x-rct_dst.left;
   rad2_sqr :=rad2*rad2;
-  rad3     :=y-rect_dst.top;
-  d_width  :=bmp_dst_width -rect_dst.width;
-  pixel_ptr:=bmp_dst_ptr   +rect_dst.left+rect_dst.top*bmp_dst_width;
-  for j:=0 to rect_dst.height-1 do
+  rad3     :=y-rct_dst.top;
+  d_width  :=bmp_dst_width-rct_dst.width;
+  pixel_ptr:=bmp_dst_ptr  +rct_dst.left+rct_dst.top*bmp_dst_width;
+  for j:=0 to rct_dst.height-1 do
     begin
-      d_sqr:=(j-rad3)*(j-rad3)+rad2_sqr;
-      for i:=0 to rect_dst.width-1 do
+      d_sqr:=sqr(j-rad3)+rad2_sqr;
+      for i:=0 to rct_dst.width-1 do
         begin
-          dist_sqr:=i*i-rad2*i<<1+d_sqr;
+          dist_sqr:=i*(i-rad2<<1)+d_sqr;
           if (dist_sqr<rad1_sqr) then
             begin
-              m:=Max2(pow-Trunc(alpha_max*sqrt(dist_sqr)/rad1),0); // Abs(pow-Trunc(alpha_max*sqrt(dist_sqr)/rad1));
-              if (m<>0) then
+              m:=Max2(pow-Trunc(alpha_max*sqrt(dist_sqr)/rad1),0){Abs(pow-Trunc(alpha_max*sqrt(dist_sqr)/rad1))};
+              //if (m<>0) then
                 pixel_ptr^:={ColorizeRMDec(pixel_ptr^,0,m)}{Darken(pixel_ptr^,0,0,0,0,0,m)}Highlight(pixel_ptr^,0,0,0,0,0,m);
             end;
           Inc(pixel_ptr);
