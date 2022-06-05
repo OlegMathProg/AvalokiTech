@@ -23767,7 +23767,7 @@ var
   item_text: ansistring;
   ind       : integer;
 begin
-  with F_MainForm,TV_Scene_Tree do
+  with F_MainForm,TV_Scene_Tree,obj_var do
     begin
       Items.BeginUpdate;
       item_text:=item_text1+item_text2;
@@ -23783,9 +23783,11 @@ begin
           Items.AddFirst(Nil,item_text).Expanded:=True;
           ind                                   :=0;
         end;
-      with obj_var do
-        CrtNodeData(Items[ind],obj_cnt-1);
-      AddTagPanel(ind);
+      CrtNodeData(Items[ind],obj_cnt-1);
+      if (SelectionCount<>0) then
+        AddTagPanel(obj_cnt-1)
+      else
+        AddTagPanel(ind);
       Items.EndUpdate;
     end;
 end; {$endregion}
@@ -23858,21 +23860,26 @@ var
 
 begin
   m:=FirstSelectedNode;
-  with TV_Scene_Tree do
+  with TV_Scene_Tree,obj_var do
     begin
       Items.BeginUpdate;
-      Items.Insert(Items[m+1],'Group'+IntToStr(obj_var.group_cnt+1));
+      Items.Insert(Items[m+1],'Group'+IntToStr(group_cnt+1));
+      Add(kooGroup,srf_var.world_axis_shift);
+      CrtNodeData(Items[m+1],obj_cnt-1);
+      AddTagPanel(obj_cnt-1);
       for j:=1 to Items.Count-1 do
         if Items[j].MultiSelected then
-          Items[j].MoveTo(Items[m+1],naAddChild);
+           Items[j].MoveTo(Items[m+1],naAddChild);
       Items[m+1].Expanded:=True;
       if (Selected<>Nil) then
         Items.ClearMultiSelection(True);
-      obj_var.Add(kooGroup,srf_var.world_axis_shift);
-      with obj_var do
-        CrtNodeData(Items[m+1],obj_cnt-1);
       ObjIndsCalc;
       ScTIndsCalc;
+      CngPnVsCalc;
+      SelPnlsCalc;
+      SelIndsCalc;
+      cmr_var.parallax_shift:=obj_var.obj_arr[0].parallax_shift;
+      srf_var.EventGroupsCalc(calc_arr,[30,41,48]);
       Items.EndUpdate;
     end;
 end; {$endregion}
@@ -24063,12 +24070,14 @@ begin
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeMouseEnter                        (sender:TObject);                                                           {$region -fold}
 begin
+  TV_Scene_Tree.Color:=HighLight(TV_Scene_Tree.Color,0,0,0,0,0,16);
   is_mouse_in_scene_tree:=True;
 end; {$endregion}
 procedure TF_MainForm.TV_Scene_TreeMouseLeave                        (sender:TObject);                                                           {$region -fold}
 var
   i: integer;
 begin
+  TV_Scene_Tree.Color:=Darken(TV_Scene_Tree.Color,0,0,0,0,0,16);
   with TV_Scene_Tree do
     for i:=0 to Items.Count-1 do
       begin

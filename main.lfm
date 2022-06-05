@@ -2344,14 +2344,14 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 4
-    Height = 361
-    Top = 236
+    Height = 545
+    Top = 52
     Width = 228
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 9665894
     BevelInner = bvLowered
     BorderWidth = 2
-    ClientHeight = 361
+    ClientHeight = 545
     ClientWidth = 228
     Color = clScrollBar
     FullRepaint = False
@@ -2366,7 +2366,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Description
       AnchorSideBottom.Side = asrBottom
       Left = 4
-      Height = 320
+      Height = 504
       Top = 37
       Width = 220
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -3879,9 +3879,9 @@ object F_MainForm: TF_MainForm
     Width = 116
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoExpand = True
-    BackgroundColor = 11251619
+    BackgroundColor = 9803157
     BorderWidth = 2
-    Color = 11251619
+    Color = 9803157
     DragCursor = crDefault
     ExpandSignColor = 5723991
     ExpandSignSize = 9
@@ -4008,7 +4008,7 @@ object F_MainForm: TF_MainForm
     Cursor = crVSplit
     Left = 4
     Height = 4
-    Top = 232
+    Top = 48
     Width = 900
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -4407,13 +4407,13 @@ object F_MainForm: TF_MainForm
     AnchorSideRight.Control = S_Splitter3
     AnchorSideBottom.Control = SB_StatusBar1
     Left = 236
-    Height = 361
-    Top = 236
+    Height = 545
+    Top = 52
     Width = 668
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelColor = 15921635
     BevelOuter = bvNone
-    ClientHeight = 361
+    ClientHeight = 545
     ClientWidth = 668
     Color = 13290949
     ParentColor = False
@@ -4426,7 +4426,7 @@ object F_MainForm: TF_MainForm
       AnchorSideBottom.Control = P_Image_Editor
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 361
+      Height = 545
       Top = 0
       Width = 668
       ActivePage = TS_Draw
@@ -4441,13 +4441,13 @@ object F_MainForm: TF_MainForm
       Options = [nboShowCloseButtons, nboMultiLine, nboHidePageListPopup, nboKeyboardTabSwitch, nboShowAddTabButton, nboDoChangeOnSetIndex]
       object TS_File: TTabSheet
         Caption = 'File'
-        ClientHeight = 353
+        ClientHeight = 537
         ClientWidth = 637
         object SB_Image_List: TScrollBox
           AnchorSideRight.Control = TS_Draw
           AnchorSideRight.Side = asrBottom
           Left = 32
-          Height = 349
+          Height = 533
           Top = 0
           Width = 603
           HorzScrollBar.Increment = 1
@@ -4459,7 +4459,7 @@ object F_MainForm: TF_MainForm
           VertScrollBar.Smooth = True
           VertScrollBar.Tracking = True
           Anchors = [akTop, akLeft, akRight, akBottom]
-          ClientHeight = 345
+          ClientHeight = 529
           ClientWidth = 599
           Color = 13881769
           ParentBiDiMode = False
@@ -4475,7 +4475,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Control = SB_Image_List
             AnchorSideBottom.Side = asrBottom
             Left = 0
-            Height = 345
+            Height = 529
             Top = 0
             Width = 599
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4504,7 +4504,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 223
             Height = 180
-            Top = 49
+            Top = 123
             Width = 680
             Anchors = []
             BevelColor = 7958609
@@ -4742,13 +4742,13 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_File
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 349
+          Height = 533
           Top = 0
           Width = 29
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Bottom = 4
           BevelOuter = bvLowered
-          ClientHeight = 349
+          ClientHeight = 533
           ClientWidth = 29
           Color = 13359793
           ParentColor = False
@@ -4960,7 +4960,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_Draw: TTabSheet
         Caption = 'Draw'
-        ClientHeight = 353
+        ClientHeight = 537
         ClientWidth = 637
         OnMouseWheelDown = TS_DrawMouseWheelDown
         OnMouseWheelUp = TS_DrawMouseWheelUp
@@ -4975,7 +4975,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_Draw
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 318
+          Height = 502
           Top = 35
           Width = 635
           HorzScrollBar.Increment = 1
@@ -4989,7 +4989,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 314
+          ClientHeight = 498
           ClientWidth = 631
           Color = 15921635
           ParentBiDiMode = False
@@ -5005,9 +5005,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = -256
+            Left = 57
             Height = 552
-            Top = -85
+            Top = 24
             Width = 1040
             Anchors = []
             BevelColor = 7958609
@@ -5225,6 +5225,7 @@ object F_MainForm: TF_MainForm
                 Cursor = crHandPoint
                 Left = 75
                 Height = 20
+                Hint = 'Set random color'
                 Top = 50
                 Width = 24
                 AllowAllUp = True
@@ -5913,6 +5914,7 @@ object F_MainForm: TF_MainForm
                 Cursor = crHandPoint
                 Left = 75
                 Height = 20
+                Hint = 'Set random color'
                 Top = 50
                 Width = 24
                 AllowAllUp = True
@@ -9681,9 +9683,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 516
+            Left = 64
             Height = 176
-            Top = 51
+            Top = 160
             Width = 912
             Anchors = []
             BevelColor = 9665894
@@ -11425,9 +11427,9 @@ object F_MainForm: TF_MainForm
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Control = SB_Drawing
             AnchorSideBottom.Side = asrBottom
-            Left = 516
+            Left = 88
             Height = 206
-            Top = 154
+            Top = 272
             Width = 529
             Anchors = []
             BevelColor = 9665894
@@ -12158,6 +12160,8 @@ object F_MainForm: TF_MainForm
                   Font.Height = -16
                   Font.Name = 'AR JULIAN'
                   Font.Quality = fqAntialiased
+                  OnEnter = SE_Spline_Pts_FreqEnter
+                  OnExit = SE_Spline_Pts_FreqExit
                   OnMouseDown = SE_Spline_Pts_FreqMouseDown
                   ParentFont = False
                   ScrollBars = ssVertical
@@ -12266,7 +12270,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 565
             Height = 63
-            Top = 1
+            Top = 20
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12451,7 +12455,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 567
             Height = 110
-            Top = 91
+            Top = 177
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12472,7 +12476,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 582
             Height = 63
-            Top = 57
+            Top = 109
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12656,7 +12660,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 656
             Height = 63
-            Top = -29
+            Top = -28
             Width = 506
             Anchors = []
             BevelColor = 9665894
@@ -12840,7 +12844,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 604
             Height = 110
-            Top = 20
+            Top = 64
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -12901,7 +12905,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 512
             Height = 110
-            Top = 261
+            Top = 446
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -13154,7 +13158,7 @@ object F_MainForm: TF_MainForm
       end
       object TS_AnimK: TTabSheet
         Caption = 'AnimK'
-        ClientHeight = 353
+        ClientHeight = 537
         ClientWidth = 637
         object P_Animation_Buttons: TPanel
           AnchorSideRight.Control = TS_AnimK
@@ -13265,7 +13269,7 @@ object F_MainForm: TF_MainForm
           AnchorSideBottom.Control = TS_AnimK
           AnchorSideBottom.Side = asrBottom
           Left = 0
-          Height = 318
+          Height = 502
           Top = 35
           Width = 635
           HorzScrollBar.Page = 1
@@ -13273,7 +13277,7 @@ object F_MainForm: TF_MainForm
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 35
           BorderSpacing.Right = 2
-          ClientHeight = 314
+          ClientHeight = 498
           ClientWidth = 631
           TabOrder = 1
           object P_Add_Actor: TPanel
@@ -13285,7 +13289,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 47
             Height = 176
-            Top = 16
+            Top = 77
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13767,7 +13771,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 175
             Height = 200
-            Top = 110
+            Top = 233
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -13856,7 +13860,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 207
             Height = 40
-            Top = -18
+            Top = -17
             Width = 530
             Anchors = []
             BevelColor = 9665894
@@ -13877,7 +13881,7 @@ object F_MainForm: TF_MainForm
             AnchorSideBottom.Side = asrBottom
             Left = 136
             Height = 40
-            Top = -18
+            Top = -17
             Width = 617
             Anchors = []
             BevelColor = 9665894
@@ -14294,7 +14298,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = 899
     Height = 17
-    Top = 226
+    Top = 42
     Width = 15
     Caption = '>'
     Enabled = False
@@ -14316,7 +14320,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Side = asrBottom
     Left = -6
     Height = 17
-    Top = 226
+    Top = 42
     Width = 15
     Anchors = [akTop, akRight]
     Caption = '<'
@@ -14705,7 +14709,7 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 20
     Height = 23
-    Top = 189
+    Top = 5
     Width = 224
     Anchors = [akLeft, akBottom]
     AutoSize = False
@@ -14808,14 +14812,13 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = S_Splitter2
     Left = 8
     Height = 31
-    Top = 197
+    Top = 13
     Width = 118
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 4
     BorderSpacing.Bottom = 4
     Caption = 'Test your might'
     Color = 7899625
-    Enabled = False
     Font.CharSet = ANSI_CHARSET
     Font.Color = 12629669
     Font.Height = -16
@@ -14825,7 +14828,6 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     ParentShowHint = False
     TabOrder = 16
-    Visible = False
   end
   object P_Objects_Tags: TPanel
     AnchorSideLeft.Control = S_TreeView_Splitter
@@ -14859,8 +14861,8 @@ object F_MainForm: TF_MainForm
     AnchorSideBottom.Control = P_Image_Editor
     AnchorSideBottom.Side = asrBottom
     Left = 232
-    Height = 361
-    Top = 236
+    Height = 545
+    Top = 52
     Width = 4
     Align = alCustom
     Anchors = [akTop, akBottom]
@@ -17415,29 +17417,23 @@ object F_MainForm: TF_MainForm
     Top = 256
     object MI_Add_Group: TMenuItem
       Caption = 'Add Group(Prefab)'
-      Enabled = False
       ShortCut = 45
-      Visible = False
       OnClick = MI_Add_GroupClick
     end
     object MI_Group_Objects: TMenuItem
       Caption = 'Group Objects'
-      Enabled = False
       ShortCut = 221
-      Visible = False
       OnClick = MI_Group_ObjectsClick
     end
     object MI_Delete_Without_Children: TMenuItem
       Caption = 'Delete Without Children'
       Enabled = False
       ShortCut = 220
-      Visible = False
       OnClick = MI_Delete_Without_ChildrenClick
     end
     object MI_Delete_All_Groups: TMenuItem
       Caption = 'Delete All Groups'
       Enabled = False
-      Visible = False
       OnClick = MI_Delete_All_GroupsClick
     end
     object MI_Remove_Object: TMenuItem
