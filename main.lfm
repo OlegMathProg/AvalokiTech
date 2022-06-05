@@ -14819,6 +14819,7 @@ object F_MainForm: TF_MainForm
     BorderSpacing.Bottom = 4
     Caption = 'Test your might'
     Color = 7899625
+    Enabled = False
     Font.CharSet = ANSI_CHARSET
     Font.Color = 12629669
     Font.Height = -16
@@ -14828,6 +14829,7 @@ object F_MainForm: TF_MainForm
     ParentFont = False
     ParentShowHint = False
     TabOrder = 16
+    Visible = False
   end
   object P_Objects_Tags: TPanel
     AnchorSideLeft.Control = S_TreeView_Splitter
