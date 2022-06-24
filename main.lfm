@@ -2360,6 +2360,8 @@ object F_MainForm: TF_MainForm
     Increment = 0.1
     MaxValue = 360
     OnChange = FSE_Camera_SpeedChange
+    OnEnter = SE_Spline_Pts_FreqEnter
+    OnExit = SE_Spline_Pts_FreqExit
     OnMouseDown = SE_Spline_Pts_FreqMouseDown
     ParentFont = False
     ParentShowHint = False
@@ -2615,7 +2617,7 @@ object F_MainForm: TF_MainForm
     Color = clScrollBar
     FullRepaint = False
     ParentColor = False
-    TabOrder = 28
+    TabOrder = 27
     object RM_Description: TRichMemo
       AnchorSideLeft.Control = P_Description
       AnchorSideTop.Control = P_DescriptionHeader

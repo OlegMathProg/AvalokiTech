@@ -3699,22 +3699,23 @@ end; {$endregion}
 {LI} {$region -fold}
 procedure TF_MainForm.VisibilityChange(set_visibility:boolean); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  I_Visibility_Panel      .Visible:=set_visibility;
-  SB_Change_Layout  .Visible:=set_visibility;
-  SB_Centrify_Picture.Visible:=set_visibility;
-  SB_Visibility_Texture   .Visible:=set_visibility;
-  SB_Visibility_Grid      .Visible:=set_visibility;
-  SB_Visibility_Spline    .Visible:=set_visibility;
-  SB_Visibility_Collider  .Visible:=set_visibility;
-  SB_Visibility_Actor     .Visible:=set_visibility;
-  SB_Visibility_Snap_Grid .Visible:=set_visibility;
-  SB_Visibility_Show_All  .Visible:=set_visibility;
-  L_Object_Info           .Visible:=set_visibility;
-  L_Exec_Time_Info        .Visible:=set_visibility;
-  L_Camera_Speed                 .Visible:=set_visibility;
-  TB_Camera_Speed                .Visible:=set_visibility;
-  MI_Object_Info          .Checked:=set_visibility;
-  show_obj_info                   :=set_visibility;
+  I_Visibility_Panel     .Visible:=set_visibility;
+  SB_Change_Layout       .Visible:=set_visibility;
+  SB_Centrify_Picture    .Visible:=set_visibility;
+  SB_Visibility_Texture  .Visible:=set_visibility;
+  SB_Visibility_Grid     .Visible:=set_visibility;
+  SB_Visibility_Spline   .Visible:=set_visibility;
+  SB_Visibility_Collider .Visible:=set_visibility;
+  SB_Visibility_Actor    .Visible:=set_visibility;
+  SB_Visibility_Snap_Grid.Visible:=set_visibility;
+  SB_Visibility_Show_All .Visible:=set_visibility;
+  L_Object_Info          .Visible:=set_visibility;
+  L_Exec_Time_Info       .Visible:=set_visibility;
+  L_Camera_Speed         .Visible:=set_visibility;
+  TB_Camera_Speed        .Visible:=set_visibility;
+  FSE_Camera_Speed       .Visible:=set_visibility;
+  MI_Object_Info         .Checked:=set_visibility;
+  show_obj_info                  :=set_visibility;
 end; {$endregion}
 procedure SetVisibility(btn:TSpeedButton; var &exp:boolean);    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
