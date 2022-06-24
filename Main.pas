@@ -157,6 +157,8 @@ type
     CB_Spline_Dynamics_Collider                      : TCheckBox;
     CB_Spline_Best_Precision                         : TCheckBox;
     CB_Object_Properties_Show_In_Editor              : TCheckBox;
+    CB_Game_Settings_Fix_Resolution                  : TCheckBox;
+    CB_Spline_Reallocate_Memory                      : TCheckBox;
     CB_Spline_Rose_Mobius_Grid                       : TCheckBox;
     CB_Spline_Grid_Clipping_Points                   : TCheckBox;
     CB_Spline_Grid_Clipping_Attached_Objects         : TCheckBox;
@@ -188,6 +190,7 @@ type
     FSE_Brush_Fall_Off1                              : TFloatSpinEdit;
     FSE_Brush_Fall_Off2                              : TFloatSpinEdit;
     FSE_Spline_Rose_Petals_Count                     : TFloatSpinEdit;
+    FSE_Camera_Speed                                 : TFloatSpinEdit;
     FSE_Spline_Spiral_Coil_Step                      : TFloatSpinEdit;
     FSE_Spline_Simplification_Angle                  : TFloatSpinEdit;
     FSE_Spline_Cycloid_Curvature                     : TFloatSpinEdit;
@@ -278,7 +281,7 @@ type
     L_Text_Drawing                                   : TLabel;
     L_Spline_Save                                    : TLabel;
     L_Exec_Time_Info                                 : TLabel;
-    L_Speed                                          : TLabel;
+    L_Camera_Speed                                   : TLabel;
     L_Brush_Fall_Off1                                : TLabel;
     L_Brush_Fall_Off2                                : TLabel;
     L_Brush_Hardness1                                : TLabel;
@@ -345,6 +348,7 @@ type
     L_Object_Info                                    : TLabel;
     L_Spline_Mode                                    : TLabel;
     L_Tag_Properties                                 : TLabel;
+    MI_Center_Camera_To_Selected_Object              : TMenuItem;
     MI_Save_Asset                                    : TMenuItem;
     OPD_Add_TileMap_Sprite                           : TOpenPictureDialog;
     P_DescriptionHeader                              : TPanel;
@@ -416,7 +420,7 @@ type
     P_RGrid                                          : TPanel;
     P_Spline_Dynamics_Prop                           : TPanel;
     P_Spline_Save_Prop                               : TPanel;
-    P_Map_Editor                                     : TPanel;
+    P_Game_Settings                                  : TPanel;
     P_Spline_Cycloid                                 : TPanel;
     P_Spline_Epicycloid                              : TPanel;
     P_Spline_Rose                                    : TPanel;
@@ -487,7 +491,7 @@ type
     SB_Text_Background_Color                         : TSpeedButton;
     SB_Text_Background_Color_Random                  : TSpeedButton;
     SB_Spline_Load                                   : TSpeedButton;
-    SB_Map_Editor                                    : TSpeedButton;
+    SB_Game_Settings                                 : TSpeedButton;
     SB_RGrid                                         : TSpeedButton;
     SB_SGrid                                         : TSpeedButton;
     SB_RGrid_Color                                   : TSpeedButton;
@@ -570,6 +574,7 @@ type
     SE_Brush_Radius2                                 : TSpinEdit;
     SE_Count_X                                       : TSpinEdit;
     SE_Count_Y                                       : TSpinEdit;
+    SE_Object_Properties_Parallax_Shift              : TSpinEdit;
     SE_Spline_Cycloid_Loops_Count                    : TSpinEdit;
     SE_Spline_Cycloid_Points_Count                   : TSpinEdit;
     FSE_Spline_Cycloid_Radius                        : TFloatSpinEdit;
@@ -608,7 +613,6 @@ type
     SB_Spline_Template_Spiral                        : TSpeedButton;
     SE_Spline_Superellipse_Points_Count              : TSpinEdit;
     SE_Spline_Spray_Radius                           : TSpinEdit;
-    SE_Object_Properties_Parallax_Shift              : TSpinEdit;
     S_Splitter0                                      : TSplitter;
     S_Splitter1                                      : TSplitter;
     S_Splitter2                                      : TSplitter;
@@ -618,7 +622,7 @@ type
     S_Splitter7                                      : TSplitter;
     S_TreeView_Splitter                              : TSplitter;
     S_Splitter8                                      : TSplitter;
-    TB_Speed                                         : TTrackBar;
+    TB_Camera_Speed                                  : TTrackBar;
     T_Logo1                                          : TTimer;
     T_Logo2                                          : TTimer;
     T_Logo3                                          : TTimer;
@@ -673,6 +677,7 @@ type
     procedure BB_Spline_Templates_LeftClick                          (      sender           :TObject);
     procedure BB_Use_MagicClick                                      (      sender           :TObject);
     procedure Button1Click                                           (      sender           :TObject);
+    procedure CB_Game_Settings_Fix_ResolutionChange                  (      sender           :TObject);
     procedure CB_Object_Properties_Recalculate_PositionChange        (      sender           :TObject);
     procedure CB_Select_Items_Inner_Subgraph_Clip_StyleSelect        (      sender           :TObject);
     procedure CB_Select_Items_Inner_Subgraph_Line_StyleSelect        (      sender           :TObject);
@@ -699,6 +704,7 @@ type
     procedure CB_Spline_Points_ShapeSelect                           (      sender           :TObject);
     procedure CB_Spline_Points_Show_BoundsChange                     (      sender           :TObject);
     procedure CB_Spline_Points_StyleSelect                           (      sender           :TObject);
+    procedure CB_Spline_Reallocate_MemoryChange                      (      sender           :TObject);
     procedure CB_Spline_Rose_Mobius_GridChange                       (      sender           :TObject);
     procedure CB_Text_BackgroundChange                               (      sender           :TObject);
     procedure FormMouseMove                                          (      sender           :TObject;
@@ -740,6 +746,7 @@ type
     procedure FormResize                                             (      sender           :TObject);
     procedure FSE_Spline_Rose_Petals_CountChange                     (      sender           :TObject);
     procedure FSE_Spline_Cycloid_CurvatureChange                     (      sender           :TObject);
+    procedure FSE_Camera_SpeedChange                                 (      sender           :TObject);
     procedure FSE_Spline_Simplification_AngleEditingDone             (      sender           :TObject);
     procedure FSE_Spline_Spiral_Coil_StepChange                      (      sender           :TObject);
     procedure FSE_Spline_Superellipse_Curvature0Change               (      sender           :TObject);
@@ -753,6 +760,7 @@ type
                                                                             x,y              :integer);
     procedure I_Frame_ListMouseEnter                                 (      sender           :TObject);
     procedure MI_Align_Image_On_Inner_Window_ResizeClick             (      sender           :TObject);
+    procedure MI_Center_Camera_To_Selected_ObjectClick               (      sender           :TObject);
 
     {Menu Items}
     procedure MI_OpenClick                                           (      sender           :TObject);
@@ -821,7 +829,7 @@ type
     procedure P_Text_SettingsMouseLeave                              (      sender           :TObject);
     procedure RB_Spline_AdaptiveChange                               (      sender           :TObject);
     procedure SB_Add_ActorClick                                      (      sender           :TObject);
-    procedure SB_Map_EditorClick                                     (      sender           :TObject);
+    procedure SB_Game_SettingsClick                                     (      sender           :TObject);
     procedure SB_RGridClick                                          (      sender           :TObject);
     procedure SB_RGrid_ColorClick                                    (      sender           :TObject);
     procedure SB_Select_Items_Inner_Subgraph_ColorClick              (      sender           :TObject);
@@ -925,8 +933,7 @@ type
     procedure CB_Align_2D_Points_Show_Snap_GridChange                (      sender           :TObject);
     procedure CB_Align_2D_Points_Snap_Grid_VisibilityChange          (      sender           :TObject);
     procedure S_Splitter8ChangeBounds                                (      sender           :TObject);
-    procedure TB_SpeedChange                                         (      sender           :TObject);
-    procedure TB_SpeedClick                                          (      sender           :TObject);
+    procedure TB_Camera_SpeedChange                                         (      sender           :TObject);
     procedure TextureListItemMouseDown                               (      sender           :TObject;
                                                                             button           :TMouseButton;
                                                                             shift            :TShiftState;
@@ -1145,8 +1152,9 @@ type
       {index inside spritesheet array}
       world_axis_bmp_ind     : integer;
       {world axis position}
-      world_axis             : TPtPos;
-      world_axis_shift       : TPtPos;
+      world_axis             : TPtPosF;
+      world_axis_shift       : TPtPosF;
+      err                    : TPtPos;
       {UI}
       inner_window_ui_visible: boolean;
       {create class instance}
@@ -1821,7 +1829,7 @@ type
                                                  constref fst_lst_sln_obj_pts:TEnum0Arr;
                                                  constref obj_ind            :TColorArr;
                                                  constref sln_obj_cnt        :TColor;
-                                                 constref sln_pts_cnt        :TColor);        inline; {$ifdef Linux}[local];{$endif}
+                                                 constref sln_pts_cnt        :TColor);        {inline;} {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure UnselectedPtsCalc0              (constref fst_lst_sln_obj_pts:TEnum0Arr;
                                                  var      pts                :TPtPosFArr;
@@ -1848,76 +1856,76 @@ type
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure OuterSubgraphCalc1              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure OuterSubgraphCalc2              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure OuterSubgraphDraw               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       {inner subgraph}
       procedure InnerSubgraphCalc0              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure InnerSubgraphCalc1              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure InnerSubgraphCalc2              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure InnerSubgraphDraw               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       {single point graph}
       procedure SinglePtGraphCalc0              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure SinglePtGraphCalc1              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure SinglePtGraphCalc2              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure SelectdPointsCalc               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       procedure SelectdPointsDraw               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure SelectdPointsBnds               (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
                                                  var      pts                :TPtPosFArr;
                                                  constref bmp_dst_ptr        :PInteger;
-                                                 constref rct_clp            :TPtRect);       inline; {$ifdef Linux}[local];{$endif}
+                                                 constref rct_clp            :TPtRect);       {inline;} {$ifdef Linux}[local];{$endif}
       {TODO}
       procedure WholeSubgraphDraw0              (         x,y                :integer;
                                                  constref pvt                :TPtPosF;
@@ -1983,7 +1991,7 @@ type
       {TODO}
       align_pivot          : TPtPos;
       {TODO}
-      weighted_pvt_shift   : TPtPos;
+      weighted_pvt_shift   : TPtPosF;
       {TODO}
       need_align_pivot_x   : boolean;
       {TODO}
@@ -2385,8 +2393,8 @@ var
   copy7_calc                  : boolean absolute calc_arr[47];
   // ...:
   copy8_calc                  : boolean absolute calc_arr[48];
-  // reset background settings for local axis:
-  //local_axis_set_bckgd        : boolean absolute calc_arr[49];
+  // fit drawing surface to window:
+  //fit_to_window_calc          : boolean absolute calc_arr[49];
   // reset background settings for tile map sprite:
   //tlm_sprite_set_bckgd        : boolean absolute calc_arr[50];
   {$endregion}
@@ -2461,8 +2469,11 @@ var
   {Rectangle Selection}
   rct_sel_var                 : TRctSel;
 
-  {Map Editor}
+  {Tile Map}
   tlm_var                     : TTlMap;
+
+  {Game Settings}
+  fix_resolution              : boolean;
 
   {Actors}
   fast_actor_set_var          : TFastActorSet;
@@ -2563,7 +2574,8 @@ var
   frame_skip                  : byte;
   frame_step                  : byte=1;
 
-  cmr_var_parallax_shift      : TPtPosF=(x:16; y:16);
+  rct_test1                   : TPtRect;
+  rct_test2                   : TPtRect;
 
   {
     Nearest TODO:
@@ -3368,8 +3380,8 @@ begin
   tex_var.AlignPictureToCenter;
   with srf_var,inn_wnd_rct do
     begin
-      world_axis_shift:=PtPos((left+right )>>1-world_axis.x,
-                              (top +bottom)>>1-world_axis.y);
+      world_axis_shift:=PtPosF((left+right )>>1-world_axis.x,
+                               (top +bottom)>>1-world_axis.y);
       obj_var.SetWorldAxisShift(world_axis_shift);
       obj_var.SetWorldAxisShiftC;
       EventGroupsCalc(calc_arr,[8,9,18,30,31,32,41,48]);
@@ -3414,7 +3426,8 @@ begin
 
   with srf_var,sel_var,crc_sel_var do
     begin
-      EventGroupsCalc(calc_arr,[0,1,2,3,4,6,8,9,17,18,20,28,30,31,32,37,44,48]);
+      if (not (fix_resolution and down_play_anim_ptr^)) then
+        EventGroupsCalc(calc_arr,[0,1,2,3,4,6,8,9,17,18,20,28,30,31,32,37,44,48]);
       if down_select_items_ptr^ then
         begin
           ResizeCircleSelectionModeDraw;
@@ -3698,8 +3711,8 @@ begin
   SB_Visibility_Show_All  .Visible:=set_visibility;
   L_Object_Info           .Visible:=set_visibility;
   L_Exec_Time_Info        .Visible:=set_visibility;
-  L_Speed                 .Visible:=set_visibility;
-  TB_Speed                .Visible:=set_visibility;
+  L_Camera_Speed                 .Visible:=set_visibility;
+  TB_Camera_Speed                .Visible:=set_visibility;
   MI_Object_Info          .Checked:=set_visibility;
   show_obj_info                   :=set_visibility;
 end; {$endregion}
@@ -4166,8 +4179,8 @@ begin
   with {pvt_var.sel_tls_mrk}{tlm_var.tilemap_sprite_icon}{pvt_var.local_axis_bmp}sprite_sheet_arr[world_axis_bmp_ind],fast_image_data,fast_image_proc_var do
     begin
       fast_image_data_ptr0:=@fast_image_data;
-      SetRctPos(x+world_axis_shift.x,
-                y+world_axis_shift.y);
+      SetRctPos(x+Trunc(world_axis_shift.x),
+                y+Trunc(world_axis_shift.y));
       SdrProc[3];
     end;
 
@@ -4200,11 +4213,17 @@ begin
 end; {$endregion}
 procedure TSurface.MainBmpRectCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  srf_bmp_rct:=PtBounds(0,0,{1024}F_MainForm.Width,{640}F_MainForm.Height);
-  inn_wnd_rct:=PtRct({0000}splitters_arr[1]^+splitter_thickness+inn_wnd_mrg,
-                     {0000}splitters_arr[5]^+splitter_thickness+inn_wnd_mrg,
-                     {1022}splitters_arr[3]^                   -inn_wnd_mrg,
-                     {0638}splitters_arr[2]^                   -inn_wnd_mrg);
+  srf_bmp_rct:=PtBounds(0,0,F_MainForm.Width,F_MainForm.Height);
+  if (fix_resolution and down_play_anim_ptr^) then
+    inn_wnd_rct:=PtRct(00000000000000000{+splitter_thickness+inn_wnd_mrg},
+                       00000000000000000{+splitter_thickness+inn_wnd_mrg},
+                       F_MainForm.Width {-splitter_thickness-inn_wnd_mrg},
+                       F_MainForm.Height{-splitter_thickness-inn_wnd_mrg})
+  else
+    inn_wnd_rct:=PtRct(splitters_arr[1]^+splitter_thickness+inn_wnd_mrg,
+                       splitters_arr[5]^+splitter_thickness+inn_wnd_mrg,
+                       splitters_arr[3]^                   -inn_wnd_mrg,
+                       splitters_arr[2]^                   -inn_wnd_mrg);
   pvt_var.SetPivotAxisRect(inn_wnd_rct);
 end; {$endregion}
 procedure TSurface.MainBmpSizeCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -4301,14 +4320,14 @@ begin
     end; {$endregion}
 
   {Physics-------} {$region -fold}
-  SetLength(fast_physics_var.coll_box_arr,srf_bmp.width*srf_bmp.height);
+  {SetLength(fast_physics_var.coll_box_arr,srf_bmp.width*srf_bmp.height);
   SetLength(coll_arr                     ,srf_bmp.width*srf_bmp.height);
-  SetLength(projectile_arr,10000); {$endregion}
+  SetLength(projectile_arr,10000);} {$endregion}
 
   {Baking Sprites} {$region -fold}
-  SetLength(rot_arr            ,srf_bmp.width*srf_bmp.height);
+  {SetLength(rot_arr            ,srf_bmp.width*srf_bmp.height);
   ArrClear (rot_arr,inn_wnd_rct,srf_bmp.width);
-  rot_arr_ptr:=Unaligned(@rot_arr[0]); {$endregion}
+  rot_arr_ptr:=Unaligned(@rot_arr[0]);} {$endregion}
 
 end; {$endregion}
 procedure TSurface.InnerWindowDraw(color:TColor);                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -4402,144 +4421,167 @@ begin
 end; {$endregion}
 procedure TSurface.ChangeSpeed;                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  if (cmr_var.parallax_shift.x<0) then
-    Exit;
-  cmr_var.parallax_shift.x:=cmr_var.parallax_shift.x-0.05;
-  cmr_var.parallax_shift.y:=cmr_var.parallax_shift.y-0.05;
-  obj_var.SetParallaxShift(PtPosF(-0.05,-0.05));
+  {if (cmr_var.speed_mul.x<=0) then
+    begin
+      cmr_var.speed_mul.x:=0;
+      cmr_var.speed_mul.y:=0;
+      Exit;
+    end;
+  cmr_var.speed_mul.x-=0.005;
+  cmr_var.speed_mul.y:=cmr_var.speed_mul.x; //cmr_var.speed_mul.y-=0.005;}
 end; {$endregion}
 procedure TSurface.MovRight;                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  w: TPtPosF;
 begin
-  if (cmr_var.parallax_shift.x<0) then
-    Exit;
   cmr_var.mov_dir   :=mdRight;
-  world_axis_shift.x-=Trunc(cmr_var.parallax_shift.x);
-  obj_var.MovWorldAxisShiftRight;
+  w                 :=world_axis_shift;
+  world_axis_shift.x-=cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x{cmr_var.speed_mul.x*cmr_var.parallax_shift.x};
+  err.x             :=0;
+  if (Frac(world_axis_shift.x)>Frac(w.x)) then
+    err.x:=1;
+  obj_var.MovWorldAxisShiftRight2;
 end; {$endregion}
 procedure TSurface.FilRight(constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
+  t  : integer;
 begin
   with obj_var do
     begin
-      rct:=PtRct
-      (
-        rct_dst.right-Trunc(cmr_var.parallax_shift.x),
-        rct_dst.top,
-        rct_dst.right,
-        rct_dst.bottom
-      );
+      t:=Trunc(cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x)+err.x;
       BitBlt1
       (
         bmp_dst_ptr,
         bmp_dst_ptr,
-        rct_dst.left +Trunc(cmr_var.parallax_shift.x),
+        rct_dst.left +t,
         rct_dst.top,
-        rct_dst.width-Trunc(cmr_var.parallax_shift.x),
+        rct_dst.width-t,
         rct_dst.height,
         rct_dst.left,
         rct_dst.top,
         bmp_dst_width,
         bmp_dst_width
       );
+      rct:=PtRct
+      (
+        rct_dst.right-t,
+        rct_dst.top,
+        rct_dst.right,
+        rct_dst.bottom
+      );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
+      err.x:=0;
     end;
 end; {$endregion}
 procedure TSurface.MovLeft;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  w: TPtPosF;
 begin
-  if (cmr_var.parallax_shift.x<0) then
-    Exit;
-  cmr_var.mov_dir:=mdLeft;
-  world_axis_shift.x+=Trunc(cmr_var.parallax_shift.x);
-  obj_var.MovWorldAxisShiftLeft;
+  cmr_var.mov_dir   :=mdLeft;
+  w                 :=world_axis_shift;
+  world_axis_shift.x+=cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x;
+  err.x             :=0;
+  if (Frac(world_axis_shift.x)<Frac(w.x)) then
+    err.x:=1;
+  obj_var.MovWorldAxisShiftLeft2;
 end; {$endregion}
 procedure TSurface.FilLeft (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
+  t  : integer;
 begin
   with obj_var do
     begin
-      rct:=PtRct
-      (
-        rct_dst.left,
-        rct_dst.top,
-        rct_dst.left+Trunc(cmr_var.parallax_shift.x),
-        rct_dst.bottom
-      );
+      t:=Trunc(cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x)+err.x;
       BitBlt2
       (
         bmp_dst_ptr,
         bmp_dst_ptr,
         rct_dst.left,
         rct_dst.top,
-        rct_dst.width-Trunc(cmr_var.parallax_shift.x),
+        rct_dst.width-t,
         rct_dst.height,
-        rct_dst.left +Trunc(cmr_var.parallax_shift.x),
+        rct_dst.left +t,
         rct_dst.top,
         bmp_dst_width,
         bmp_dst_width
       );
+      rct:=PtRct
+      (
+        rct_dst.left,
+        rct_dst.top,
+        rct_dst.left+t,
+        rct_dst.bottom
+      );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
+      err.x:=0;
     end;
 end; {$endregion}
 procedure TSurface.MovDown;                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  w: TPtPosF;
 begin
-  if (cmr_var.parallax_shift.x<0) then
-    Exit;
   cmr_var.mov_dir   :=mdDown;
-  world_axis_shift.y-=Trunc(cmr_var.parallax_shift.y);
-  obj_var.MovWorldAxisShiftDown;
+  w                 :=world_axis_shift;
+  world_axis_shift.y-=cmr_var.speed_mul.y*obj_var.obj_arr[0].parallax_shift.y;
+  err.y             :=0;
+  if (Frac(world_axis_shift.y)>Frac(w.y)) then
+    err.y:=1;
+  obj_var.MovWorldAxisShiftDown2;
 end; {$endregion}
 procedure TSurface.FilDown (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
+  t  : integer;
 begin
   with obj_var do
     begin
-      rct:=PtRct
-      (
-        rct_dst.left,
-        rct_dst.bottom-Trunc(cmr_var.parallax_shift.y),
-        rct_dst.right,
-        rct_dst.bottom
-      );
+      t:=Trunc(cmr_var.speed_mul.y*obj_var.obj_arr[0].parallax_shift.y)+err.y;
       BitBlt1
       (
         bmp_dst_ptr,
         bmp_dst_ptr,
         rct_dst.left,
-        rct_dst.top   +Trunc(cmr_var.parallax_shift.y),
+        rct_dst.top   +t,
         rct_dst.width,
-        rct_dst.height-Trunc(cmr_var.parallax_shift.y),
+        rct_dst.height-t,
         rct_dst.left,
         rct_dst.top,
         bmp_dst_width,
         bmp_dst_width
       );
+      rct:=PtRct
+      (
+        rct_dst.left,
+        rct_dst.bottom-t,
+        rct_dst.right,
+        rct_dst.bottom
+      );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
+      err.y:=0;
     end;
 end; {$endregion}
 procedure TSurface.MovUp;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  w: TPtPosF;
 begin
-  if (cmr_var.parallax_shift.x<0) then
-    Exit;
   cmr_var.mov_dir   :=mdUp;
-  world_axis_shift.y+=Trunc(cmr_var.parallax_shift.y);
-  obj_var.MovWorldAxisShiftUp;
+  w                 :=world_axis_shift;
+  world_axis_shift.y+=cmr_var.speed_mul.y*obj_var.obj_arr[0].parallax_shift.y;
+  err.y             :=0;
+  if (Frac(world_axis_shift.y)<Frac(w.y)) then
+    err.y:=1;
+  obj_var.MovWorldAxisShiftUp2;
 end; {$endregion}
 procedure TSurface.FilUp   (constref bmp_dst_ptr:PInteger; constref bmp_dst_width,bmp_dst_height:integer; constref rct_dst:TPtRect);   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   rct: TPtRect;
+  t  : integer;
 begin
   with obj_var do
     begin
-      rct:=PtRct
-      (
-        rct_dst.left,
-        rct_dst.top,
-        rct_dst.right,
-        rct_dst.top+Trunc(cmr_var.parallax_shift.y)
-      );
+      t:=Trunc(cmr_var.speed_mul.y*obj_var.obj_arr[0].parallax_shift.y)+err.y;
       BitBlt2
       (
         bmp_dst_ptr,
@@ -4547,13 +4589,21 @@ begin
         rct_dst.left,
         rct_dst.top,
         rct_dst.width,
-        rct_dst.height-Trunc(cmr_var.parallax_shift.y),
+        rct_dst.height-t,
         rct_dst.left,
-        rct_dst.top   +Trunc(cmr_var.parallax_shift.y),
+        rct_dst.top   +t,
         bmp_dst_width,
         bmp_dst_width
       );
+      rct:=PtRct
+      (
+        rct_dst.left,
+        rct_dst.top,
+        rct_dst.right,
+        rct_dst.top+t
+      );
       SetRctDstPtr(@rct,0,low_lr_obj_cnt-1);
+      err.y:=0;
     end;
 end; {$endregion}
 
@@ -4583,8 +4633,8 @@ end; {$endregion}
 {World Axis: Drawing-----------------------------}
 procedure TSurface.WorldAxisDraw;                                                                                                              {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  WorldAxisToBmp(world_axis.x-sprite_sheet_arr[world_axis_bmp_ind].fast_image_data.bmp_ftimg_width_origin >>1,
-                 world_axis.y-sprite_sheet_arr[world_axis_bmp_ind].fast_image_data.bmp_ftimg_height_origin>>1);
+  WorldAxisToBmp(Trunc(world_axis.x)-sprite_sheet_arr[world_axis_bmp_ind].fast_image_data.bmp_ftimg_width_origin >>1,
+                 Trunc(world_axis.y)-sprite_sheet_arr[world_axis_bmp_ind].fast_image_data.bmp_ftimg_height_origin>>1);
 end; {$endregion}
 {Align Spline: Calculation-----------------------}
 procedure TSurface.AlnSplineCalc;                                                                                                              {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -4707,7 +4757,7 @@ begin
                   with rct_eds_img_arr[i],local_prop do
                     if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
-                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                        lazy_repaint_prev:=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                         AddSplineRctEds (i);
                         CrtSplineRctEds (i);
                       end;
@@ -4715,7 +4765,7 @@ begin
                   with rct_pts_img_arr[i],local_prop do
                     if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
-                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                        lazy_repaint_prev:=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                         AddSplineRctPts (i);
                         CrtSplineRctPts (i);
                       end;
@@ -4723,7 +4773,7 @@ begin
                   with eds_img_arr[i],local_prop do
                     if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
-                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                        lazy_repaint_prev:=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                         RepSplineEds    (i);
                         AddSplineEds03  (i);
                         CrtSplineEds    (i);
@@ -4732,7 +4782,7 @@ begin
                   with pts_img_arr[i],local_prop do
                     if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                       begin
-                        lazy_repaint_prev:=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                        lazy_repaint_prev:=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                         AddSplineDupPts2(i);
                         RepSplinePts    (i);
                         AddSplinePts2   (i);
@@ -4845,7 +4895,7 @@ begin
         begin
           if rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
             begin
-              lazy_repaint_prev  :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+              lazy_repaint_prev  :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
               AddSplineRctEds(sln_obj_cnt-1);
               CrtSplineRctEds(sln_obj_cnt-1);
             end
@@ -4858,7 +4908,7 @@ begin
         begin
           if rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
             begin
-              lazy_repaint_prev  :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+              lazy_repaint_prev  :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
               AddSplineRctPts(sln_obj_cnt-1);
               CrtSplineRctPts(sln_obj_cnt-1);
             end
@@ -4871,7 +4921,7 @@ begin
         begin
           if eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
             begin
-              lazy_repaint_prev  :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+              lazy_repaint_prev  :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
               if lazy_repaint_prev then
                 begin
                   if byte_mode then
@@ -4967,7 +5017,7 @@ begin
         begin
           if pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
             begin
-              lazy_repaint_prev  :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+              lazy_repaint_prev  :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
               AddSplineDupPts0(sln_obj_cnt-1);
               if byte_mode then
                 AddSplinePts4 (sln_obj_cnt-1)
@@ -5118,7 +5168,7 @@ begin
               begin
                 if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                   begin
-                    b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b0 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b0_ then
                       begin
@@ -5148,7 +5198,7 @@ begin
               begin
                 if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                   begin
-                    b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b1 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b1_ then
                       begin
@@ -5176,9 +5226,9 @@ begin
             {Edges}
             with (eds_var_ptr+i)^,local_prop,fst_img do
               begin
-                if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
+                if (eds_show and (not IsRct1OutOfRct2(PtRct(rct_ent),rct_clp_ptr^))) then
                   begin
-                    b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b2 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b2_ then
                       begin
@@ -5296,7 +5346,7 @@ begin
               begin
                 if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                   begin
-                    b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b3 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b3_ then
                       begin
@@ -5379,7 +5429,7 @@ begin
               begin
                 if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                   begin
-                    b0 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b0 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b0_:=(not b0){clipped} or (b0 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b0_ then
                       begin
@@ -5409,7 +5459,7 @@ begin
               begin
                 if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                   begin
-                    b1 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b1 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b1_:=(not b1){clipped} or (b1 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b1_ then
                       begin
@@ -5439,7 +5489,7 @@ begin
               begin
                 if (eds_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                   begin
-                    b2 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b2 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b2_:=(not b2){clipped} or (b2 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b2_ then
                       begin
@@ -5472,7 +5522,7 @@ begin
               begin
                 if (pts_show and (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^))) then
                   begin
-                    b3 :=IsRct1InRct2(rct_ent,rct_clp_ptr^);
+                    b3 :=IsRct1InRct2(PtRct(rct_ent),rct_clp_ptr^);
                     b3_:=(not b3){clipped} or (b3 and (not lazy_repaint_prev)){not clipped, in window} or b or (not lazy_repaint);
                     if b3_ then
                       begin
@@ -5595,8 +5645,8 @@ begin
     end;
   if (down_play_anim_ptr<>Nil) then
     begin
-      timeline_draw      :=(down_play_anim_ptr^);
-      cursor_draw        :=(down_play_anim_ptr^);
+      timeline_draw      :=down_play_anim_ptr^;
+      cursor_draw        :=down_play_anim_ptr^;
     end;
 
   {Rectangles----------------------------} {$region -fold}
@@ -6073,8 +6123,8 @@ begin
       begin
         obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.rgrid_inds_obj_arr[rgrid_ind]]);
         with obj_arr_ptr^ do
-          RGridToBmp(PtPosF(world_axis.x+world_axis_shift.x,
-                            world_axis.y+world_axis_shift.y),
+          RGridToBmp(PtPosF(world_axis.x+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                            world_axis.y+Trunc(obj_arr_ptr^.world_axis_shift.y)),
                             bkgnd_ptr,
                             bkgnd_width,
                             rct_clp_ptr);
@@ -6089,8 +6139,8 @@ begin
       begin
         obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.rgrid_inds_obj_arr[rgrid_ind]]);
         with obj_arr_ptr^ do
-          RGridToBmp(PtPosF(world_axis.x+world_axis_shift.x,
-                            world_axis.y+world_axis_shift.y),
+          RGridToBmp(PtPosF(world_axis.x+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                            world_axis.y+Trunc(obj_arr_ptr^.world_axis_shift.y)),
                             bkgnd_ptr,
                             bkgnd_width,
                             rct_dst_ptr);
@@ -6207,8 +6257,8 @@ begin
       begin   
         obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.sgrid_inds_obj_arr[sgrid_ind]]);
         with obj_arr_ptr^ do
-          SGridToBmp(PtPosF(world_axis.x+world_axis_shift.x,
-                            world_axis.y+world_axis_shift.y),
+          SGridToBmp(PtPosF(world_axis.x+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                            world_axis.y+Trunc(obj_arr_ptr^.world_axis_shift.y)),
                             bkgnd_ptr,
                             bkgnd_width,
                             rct_clp_ptr);
@@ -6223,8 +6273,8 @@ begin
       begin
         obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.sgrid_inds_obj_arr[sgrid_ind]]);
         with obj_arr_ptr^ do
-          SGridToBmp(PtPosF(world_axis.x+world_axis_shift.x,
-                            world_axis.y+world_axis_shift.y),
+          SGridToBmp(PtPosF(world_axis.x+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                            world_axis.y+Trunc(obj_arr_ptr^.world_axis_shift.y)),
                             bkgnd_ptr,
                             bkgnd_width,
                             rct_dst_ptr);
@@ -6523,7 +6573,7 @@ begin
           bkgnd_height,
           pmt_var_ptr^.rct_clp_ptr^
         );
-      bmp_src_rct_clp          :=PtRct(rct_vis);
+      bmp_src_rct_clp          :=rct_vis;
       img_kind                 :=1{11};
       pix_drw_type             :=1; //must be in range of [0..002]
       fx_cnt                   :=1; //must be in range of [0..255]
@@ -6550,6 +6600,7 @@ begin
         end;
       remove_brunching_none:=local_prop.remove_brunching_none;
       need_store_value     :=down_select_items_ptr^;
+      realloc_mem          :=local_prop.realloc_mem;
       CmpProc[11];
       SetRctPos(bmp_src_rct_clp);
       SetSdrType;
@@ -6663,16 +6714,16 @@ begin
       with rct_ent do
         begin
           obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
-          left       :=rct_ent_.left  -eds_width_half-1+eds_width_odd+obj_arr_ptr^.world_axis_shift.x;
-          top        :=rct_ent_.top   -eds_width_half-1+eds_width_odd+obj_arr_ptr^.world_axis_shift.y;
-          right      :=rct_ent_.right +eds_width_half+1              +obj_arr_ptr^.world_axis_shift.x;
-          bottom     :=rct_ent_.bottom+eds_width_half+1              +obj_arr_ptr^.world_axis_shift.y;
+          left       :=rct_ent_.left  -eds_width_half-1+eds_width_odd+Trunc(obj_arr_ptr^.world_axis_shift.x);
+          top        :=rct_ent_.top   -eds_width_half-1+eds_width_odd+Trunc(obj_arr_ptr^.world_axis_shift.y);
+          right      :=rct_ent_.right +eds_width_half+1              +Trunc(obj_arr_ptr^.world_axis_shift.x);
+          bottom     :=rct_ent_.bottom+eds_width_half+1              +Trunc(obj_arr_ptr^.world_axis_shift.y);
           width      :=right-left;
           height     :=bottom-top;
         end; {$endregion}
 
       {Clipped Rectangle} {$region -fold}
-      rct_vis:=ClippedRct(rct_wnd,rct_ent,False); {$endregion}
+      rct_vis:=ClippedRct(rct_wnd,rct_ent); {$endregion}
 
     end;
 end; {$endregion}
@@ -6690,16 +6741,16 @@ begin
       with rct_ent do
         begin
           obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
-          left       :=rct_ent_.left  -pts_rct_inn_width >>1-pts_rct_tns_left  {{?}-1{?}}+pts_rct_width__odd+obj_arr_ptr^.world_axis_shift.x;
-          top        :=rct_ent_.top   -pts_rct_inn_height>>1-pts_rct_tns_top   {{?}-1{?}}+pts_rct_height_odd+obj_arr_ptr^.world_axis_shift.y;
-          right      :=rct_ent_.right +pts_rct_inn_width >>1+pts_rct_tns_right {{?}+1{?}}                   +obj_arr_ptr^.world_axis_shift.x;
-          bottom     :=rct_ent_.bottom+pts_rct_inn_height>>1+pts_rct_tns_bottom{{?}+1{?}}                   +obj_arr_ptr^.world_axis_shift.y;
+          left       :=rct_ent_.left  -pts_rct_inn_width >>1-pts_rct_tns_left  {{?}-1{?}}+pts_rct_width__odd+Trunc(obj_arr_ptr^.world_axis_shift.x);
+          top        :=rct_ent_.top   -pts_rct_inn_height>>1-pts_rct_tns_top   {{?}-1{?}}+pts_rct_height_odd+Trunc(obj_arr_ptr^.world_axis_shift.y);
+          right      :=rct_ent_.right +pts_rct_inn_width >>1+pts_rct_tns_right {{?}+1{?}}                   +Trunc(obj_arr_ptr^.world_axis_shift.x);
+          bottom     :=rct_ent_.bottom+pts_rct_inn_height>>1+pts_rct_tns_bottom{{?}+1{?}}                   +Trunc(obj_arr_ptr^.world_axis_shift.y);
           width      :=right-left;
           height     :=bottom-top;
         end; {$endregion}
 
       {Clipped Rectangle} {$region -fold}
-      rct_vis:=ClippedRct(rct_wnd,rct_ent,False); {$endregion}
+      rct_vis:=ClippedRct(rct_wnd,rct_ent); {$endregion}
 
     end;
 end; {$endregion}
@@ -6823,6 +6874,7 @@ begin
       SetLength(is_point_pos_calc      ,sln_pts_cnt);
     end;
 
+  sln_pts_cnt_add2:=0;
   if (sln_pts_cnt_add>0) then
     begin
       if (global_prop.sln_type=stFreeHand) then
@@ -6902,7 +6954,7 @@ begin
         bmp_dst_width,
         bmp_dst_height,
         rct_clp_ptr^,
-        PtRct(rct_vis),
+        rct_vis,
         0
       ); {$endregion}
     end;
@@ -6919,7 +6971,7 @@ begin
         bmp_dst_width,
         bmp_dst_height,
         rct_clp_ptr^,
-        PtRct(rct_vis),
+        rct_vis,
         0
       ); {$endregion}
     end;
@@ -6959,7 +7011,7 @@ begin
         bmp_dst_width,
         bmp_dst_height,
         rct_clp_ptr^,
-        PtRct(rct_vis),
+        rct_vis,
         0
       ); {$endregion}
     end;
@@ -6991,7 +7043,7 @@ begin
         bmp_dst_width,
         bmp_dst_height,
         rct_clp_ptr^,
-        PtRct(rct_vis),
+        rct_vis,
         0
       ); {$endregion}
     end; {$endregion}
@@ -7004,8 +7056,8 @@ procedure TCurve.AddSplineRctEds   (constref spline_ind       :TColor);         
 begin
   with rct_eds_img_arr[spline_ind],local_prop do
     begin
-      pts_rct_inn_width :=rct_ent.width -2;
-      pts_rct_inn_height:=rct_ent.height-2;
+      pts_rct_inn_width :=Trunc(rct_ent.width -2);
+      pts_rct_inn_height:=Trunc(rct_ent.height-2);
       pts_rct_tns_left  :=1;
       pts_rct_tns_top   :=1;
       pts_rct_tns_right :=1;
@@ -7015,12 +7067,12 @@ begin
       SetRctValues(local_prop);
       Rectangle
       (
-        pts_rct_width__half-pts_rct_width__odd+rct_ent.left,
-        pts_rct_height_half-pts_rct_height_odd+rct_ent.top ,
+        pts_rct_width__half-pts_rct_width__odd+Trunc(rct_ent.left),
+        pts_rct_height_half-pts_rct_height_odd+Trunc(rct_ent.top ),
         rct_eds_big_img.ln_arr1_ptr,
         rct_eds_big_img.ln_arr_width,
         rct_eds_big_img.ln_arr_height,
-        PtRct(rct_vis),
+        rct_vis,
         local_prop,
         @PPFloodFillAdd
       );
@@ -7030,8 +7082,8 @@ procedure TCurve.AddSplineRctPts   (constref spline_ind       :TColor);         
 begin
   with rct_pts_img_arr[spline_ind],local_prop do
     begin
-      pts_rct_inn_width :=rct_ent.width -2;
-      pts_rct_inn_height:=rct_ent.height-2;
+      pts_rct_inn_width :=Trunc(rct_ent.width -2);
+      pts_rct_inn_height:=Trunc(rct_ent.height-2);
       pts_rct_tns_left  :=1;
       pts_rct_tns_top   :=1;
       pts_rct_tns_right :=1;
@@ -7041,12 +7093,12 @@ begin
       SetRctValues(local_prop);
       Rectangle
       (
-        pts_rct_width__half-pts_rct_width__odd+rct_ent.left,
-        pts_rct_height_half-pts_rct_height_odd+rct_ent.top ,
+        pts_rct_width__half-pts_rct_width__odd+Trunc(rct_ent.left),
+        pts_rct_height_half-pts_rct_height_odd+Trunc(rct_ent.top ),
         rct_pts_big_img.ln_arr1_ptr,
         rct_pts_big_img.ln_arr_width,
         rct_pts_big_img.ln_arr_height,
-        PtRct(rct_vis),
+        rct_vis,
         local_prop,
         @PPFloodFillAdd
       );
@@ -7061,6 +7113,7 @@ var
   x0,y0,x1,y1,b,i: integer;
   max_w_h_div_2  : integer;
   min_w_h_div_2  : integer;
+  w_a_s_x,w_a_s_y: integer;
   rct_rad        : double;
 begin
   with eds_img_arr[spline_ind],local_prop do
@@ -7077,7 +7130,9 @@ begin
                            rct_clp_ptr^.bottom-1);
       max_w_h_div_2:=Max(rct_out.width,rct_out.height)>>1;
       min_w_h_div_2:=Min(rct_out.width,rct_out.height)>>1;
-      rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2)); {$endregion}
+      rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2));
+      w_a_s_x      :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y      :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -7088,10 +7143,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL20),
@@ -7104,10 +7159,10 @@ begin
                 with eds_big_img do
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                         ClippedLine1
                         (
@@ -7134,10 +7189,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -7180,10 +7235,10 @@ begin
               with eds_big_img do
                 if (has_edge_ptr^=0) then
                   begin
-                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                     if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                       begin
                         ClippedLine1
@@ -7234,10 +7289,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -7306,10 +7361,10 @@ begin
               with eds_big_img do
                 if (has_edge_ptr^=0) then
                   begin
-                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                     if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                       begin
                         ClippedLine1
@@ -7389,6 +7444,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -7397,7 +7453,9 @@ begin
       b           :=partial_pts_sum[spline_ind];
       obj_arr_ptr :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr :=Unaligned(@sln_pts [b]);
-      has_edge_ptr:=Unaligned(@has_edge[b]); {$endregion}
+      has_edge_ptr:=Unaligned(@has_edge[b]);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -7408,10 +7466,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL20),
                   Unaligned(@LineSHL20)
                 ); {$endregion}
@@ -7423,10 +7481,10 @@ begin
                   if (has_edge_ptr^=0) then
                     LinePHL
                     (
-                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                      Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                       Unaligned(@LinePHL20),
                       Unaligned(@LineSHL20)
                     );
@@ -7443,10 +7501,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -7483,10 +7541,10 @@ begin
               with eds_big_img do
                 if (has_edge_ptr^=0) then
                   begin
-                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                     LinePHL
                     (
                       x0,
@@ -7528,10 +7586,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -7590,10 +7648,10 @@ begin
               with eds_big_img do
                 if (has_edge_ptr^=0) then
                   begin
-                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                     LinePHL
                     (
                       x0,
@@ -7661,6 +7719,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -7673,7 +7732,9 @@ begin
       rct_out     :=PtRct(rct_clp_ptr^.left  +0,
                           rct_clp_ptr^.top   +0,
                           rct_clp_ptr^.right -1,
-                          rct_clp_ptr^.bottom-1); {$endregion}
+                          rct_clp_ptr^.bottom-1);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -7686,10 +7747,10 @@ begin
                 with eds_big_img do
                   ClippedLine1
                   (
-                    Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                    Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL20),
@@ -7705,10 +7766,10 @@ begin
                     if (has_edge_ptr^=0) then
                       ClippedLine1
                       (
-                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                        Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                        Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                        Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                         rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL20),
@@ -7729,10 +7790,10 @@ begin
               if cnc_ends then
                 with eds_big_img do
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -7778,10 +7839,10 @@ begin
                   with eds_big_img do
                     if (has_edge_ptr^=0) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         ClippedLine1
                         (
                           x0,
@@ -7832,10 +7893,10 @@ begin
               if cnc_ends then
                 with eds_big_img do
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -7907,10 +7968,10 @@ begin
                   with eds_big_img do
                     if (has_edge_ptr^=0) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         ClippedLine1
                         (
                           x0,
@@ -7989,6 +8050,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -8001,7 +8063,9 @@ begin
       rct_out     :=PtRct(rct_clp_ptr^.left  +0,
                           rct_clp_ptr^.top   +0,
                           rct_clp_ptr^.right -1,
-                          rct_clp_ptr^.bottom-1); {$endregion}
+                          rct_clp_ptr^.bottom-1);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -8014,10 +8078,10 @@ begin
                 with eds_big_img do
                   ClippedLine1
                   (
-                    Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                    Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL20),
@@ -8033,10 +8097,10 @@ begin
                     if (has_edge_ptr^=0) then
                       ClippedLine1
                       (
-                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                        Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                        Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                        Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                         rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL20),
@@ -8057,10 +8121,10 @@ begin
               if cnc_ends then
                 with eds_big_img do
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -8106,10 +8170,10 @@ begin
                   with eds_big_img do
                     if (has_edge_ptr^=0) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         ClippedLine1
                         (
                           x0,
@@ -8160,10 +8224,10 @@ begin
               if cnc_ends then
                 with eds_big_img do
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -8235,10 +8299,10 @@ begin
                   with eds_big_img do
                     if (has_edge_ptr^=0) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         ClippedLine1
                         (
                           x0,
@@ -8317,6 +8381,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -8329,7 +8394,9 @@ begin
       rct_out     :=PtRct(rct_clp_ptr^.left  +0,
                           rct_clp_ptr^.top   +0,
                           rct_clp_ptr^.right -1,
-                          rct_clp_ptr^.bottom-1); {$endregion}
+                          rct_clp_ptr^.bottom-1);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -8342,10 +8409,10 @@ begin
                 with eds_big_img do
                   ClippedLine1
                   (
-                    Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                    Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL10),
@@ -8361,10 +8428,10 @@ begin
                     if (has_edge_ptr^=0) then
                       ClippedLine1
                       (
-                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                        Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                        Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                        Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                         rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL10),
@@ -8385,10 +8452,10 @@ begin
               if cnc_ends then
                 with eds_big_img do
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -8434,10 +8501,10 @@ begin
                   with eds_big_img do
                     if (has_edge_ptr^=0) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         ClippedLine1
                         (
                           x0,
@@ -8488,10 +8555,10 @@ begin
               if cnc_ends then
                 with eds_big_img do
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -8563,10 +8630,10 @@ begin
                   with eds_big_img do
                     if (has_edge_ptr^=0) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         ClippedLine1
                         (
                           x0,
@@ -8646,6 +8713,7 @@ var
   sln_pts_ptr2       : PPtPosF;
   sln_vis_eds_ind_ptr: PColor;
   x0,y0,x1,y1,b,i    : integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -8658,7 +8726,9 @@ begin
       rct_out            :=PtRct(rct_clp_ptr^.left  +0,
                                  rct_clp_ptr^.top   +0,
                                  rct_clp_ptr^.right -1,
-                                 rct_clp_ptr^.bottom-1); {$endregion}
+                                 rct_clp_ptr^.bottom-1);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -8669,10 +8739,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL20),
@@ -8686,10 +8756,10 @@ begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
                   ClippedLine1
                   (
-                    Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL20),
@@ -8706,10 +8776,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -8752,10 +8822,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -8801,10 +8871,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -8873,10 +8943,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -8952,6 +9022,7 @@ var
   sln_pts_ptr2       : PPtPosF;
   sln_vis_eds_ind_ptr: PColor;
   x0,y0,x1,y1,b,i    : integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -8960,7 +9031,9 @@ begin
       b                  :=partial_pts_sum[spline_ind];
       obj_arr_ptr        :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr        :=Unaligned(@sln_pts[b]);
-      sln_vis_eds_ind_ptr:=@sln_vis_eds_ind[spline_ind,0]; {$endregion}
+      sln_vis_eds_ind_ptr:=Unaligned(@sln_vis_eds_ind[spline_ind,0]);
+      w_a_s_x            :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y            :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -8971,10 +9044,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL20),
                   Unaligned(@LineSHL20)
                 ); {$endregion}
@@ -8986,10 +9059,10 @@ begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
                   LinePHL
                   (
-                    Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y,
                     Unaligned(@LinePHL20),
                     Unaligned(@LineSHL20)
                   );
@@ -9004,10 +9077,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -9044,10 +9117,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -9087,10 +9160,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -9149,10 +9222,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -9223,6 +9296,7 @@ var
   bmp_dst_ptr2   : PInteger;
   x0,y0,x1,y1,b,i: integer;
   eds_col_inv2   : integer;
+  w_a_s_x,w_a_s_y: integer;
 label
   label0;
 begin
@@ -9237,7 +9311,9 @@ begin
       rct_out     :=PtRct(rct_clp_ptr^.left,
                           rct_clp_ptr^.top ,
                           rct_clp_ptr^.right -1,
-                          rct_clp_ptr^.bottom-1); {$endregion}
+                          rct_clp_ptr^.bottom-1);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       {Save Points Shift--------------------------------------} {$region -fold}
       pt_shift:=PtPos(rct_ent.left-rct_clp_ptr^.left,
@@ -9276,7 +9352,7 @@ begin
         PtPosF(pt,pt),
         sdDown
       );
-      rct_vis:=ClippedRct(rct_clp_ptr^,rct_ent,False); {$endregion}
+      rct_vis:=ClippedRct(rct_clp_ptr^,rct_ent); {$endregion}
 
       {Save and Set Destination Surface Handle----------------} {$region -fold}
       bmp_dst_ptr2           :=eds_big_img.bmp_dst_ptr;
@@ -9297,10 +9373,10 @@ begin
                   if (has_edge_ptr^=0) then
                     ClippedLine1
                     (
-                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                      Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                       rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL30),
@@ -9322,10 +9398,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -9377,10 +9453,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -9491,6 +9567,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -9503,7 +9580,9 @@ begin
       rct_out     :=PtRct(rct_clp_ptr^.left  +0,
                           rct_clp_ptr^.top   +0,
                           rct_clp_ptr^.right -1,
-                          rct_clp_ptr^.bottom-1); {$endregion}
+                          rct_clp_ptr^.bottom-1);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -9514,10 +9593,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL02),
@@ -9531,10 +9610,10 @@ begin
                   if (has_edge_ptr^=0) then
                     ClippedLine1
                     (
-                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                      Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                       rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL02),
@@ -9553,10 +9632,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -9600,10 +9679,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -9652,10 +9731,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -9725,10 +9804,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -9806,6 +9885,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -9814,7 +9894,9 @@ begin
       b           :=partial_pts_sum[spline_ind];
       obj_arr_ptr :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr :=Unaligned(@sln_pts [b]);
-      has_edge_ptr:=Unaligned(@has_edge[b]); {$endregion}
+      has_edge_ptr:=Unaligned(@has_edge[b]);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -9825,10 +9907,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL02),
                   Unaligned(@LineSHL00)
                 ); {$endregion}
@@ -9840,10 +9922,10 @@ begin
                   if (has_edge_ptr^=0) then
                     LinePHL
                     (
-                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                      Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                       Unaligned(@LinePHL02),
                       Unaligned(@LineSHL00)
                     );
@@ -9860,10 +9942,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -9901,10 +9983,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       LinePHL
                       (
                         x0,
@@ -9947,10 +10029,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -10010,10 +10092,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       LinePHL
                       (
                         x0,
@@ -10083,6 +10165,7 @@ var
   sln_pts_ptr2       : PPtPosF;
   sln_vis_eds_ind_ptr: PColor;
   x0,y0,x1,y1,b,i    : integer;
+  w_a_s_x,w_a_s_y    : integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -10095,7 +10178,9 @@ begin
       rct_out            :=PtRct(rct_clp_ptr^.left  +0,
                                  rct_clp_ptr^.top   +0,
                                  rct_clp_ptr^.right -1,
-                                 rct_clp_ptr^.bottom-1); {$endregion}
+                                 rct_clp_ptr^.bottom-1);
+      w_a_s_x            :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y            :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -10106,10 +10191,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL02),
@@ -10123,10 +10208,10 @@ begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
                   ClippedLine1
                   (
-                    Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL02),
@@ -10143,10 +10228,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10189,10 +10274,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10238,10 +10323,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10310,10 +10395,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10389,6 +10474,7 @@ var
   sln_pts_ptr2       : PPtPosF;
   sln_vis_eds_ind_ptr: PColor;
   x0,y0,x1,y1,b,i    : integer;
+  w_a_s_x,w_a_s_y    : integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -10397,7 +10483,9 @@ begin
       b                  :=partial_pts_sum[spline_ind];
       obj_arr_ptr        :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr        :=Unaligned(@sln_pts[b]);
-      sln_vis_eds_ind_ptr:=@sln_vis_eds_ind[spline_ind,0]; {$endregion}
+      sln_vis_eds_ind_ptr:=Unaligned(@sln_vis_eds_ind[spline_ind,0]);
+      w_a_s_x            :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y            :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -10408,10 +10496,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL02),
                   Unaligned(@LineSHL00)
                 ); {$endregion}
@@ -10423,10 +10511,10 @@ begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
                   LinePHL
                   (
-                    Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y,
                     Unaligned(@LinePHL02),
                     Unaligned(@LineSHL00)
                   );
@@ -10441,10 +10529,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -10481,10 +10569,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -10524,10 +10612,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -10586,10 +10674,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -10654,6 +10742,7 @@ var
   rct_out        : TPtRect;
   sln_pts_ptr    : PPtPosF;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -10665,7 +10754,9 @@ begin
       rct_out    :=PtRct(rct_clp_ptr^.left  +0,
                          rct_clp_ptr^.top   +0,
                          rct_clp_ptr^.right -1,
-                         rct_clp_ptr^.bottom-1); {$endregion}
+                         rct_clp_ptr^.bottom-1);
+      w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -10676,10 +10767,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL20),
@@ -10692,10 +10783,10 @@ begin
                 begin
                   ClippedLine1
                   (
-                    Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL20),
@@ -10713,10 +10804,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10758,10 +10849,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10808,10 +10899,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10879,10 +10970,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -10957,6 +11048,7 @@ var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -10964,7 +11056,9 @@ begin
       {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
       b          :=partial_pts_sum[spline_ind];
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
-      sln_pts_ptr:=Unaligned(@sln_pts[b]); {$endregion}
+      sln_pts_ptr:=Unaligned(@sln_pts[b]);
+      w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -10975,10 +11069,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL20),
                   Unaligned(@LineSHL20)
                 ); {$endregion}
@@ -10989,10 +11083,10 @@ begin
                 begin
                   LinePHL
                   (
-                    Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                     Unaligned(@LinePHL20),
                     Unaligned(@LineSHL20)
                   );
@@ -11008,10 +11102,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11047,10 +11141,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11091,10 +11185,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11152,10 +11246,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11221,6 +11315,7 @@ var
   rct_out        : TPtRect;
   sln_pts_ptr    : PPtPosF;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -11232,7 +11327,9 @@ begin
       rct_out    :=PtRct(rct_clp_ptr^.left  +0,
                          rct_clp_ptr^.top   +0,
                          rct_clp_ptr^.right -1,
-                         rct_clp_ptr^.bottom-1); {$endregion}
+                         rct_clp_ptr^.bottom-1);
+      w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -11243,10 +11340,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL02),
@@ -11259,10 +11356,10 @@ begin
                 begin
                   ClippedLine1
                   (
-                    Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL02),
@@ -11280,10 +11377,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -11325,10 +11422,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -11375,10 +11472,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -11446,10 +11543,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -11524,6 +11621,7 @@ var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -11531,7 +11629,9 @@ begin
       {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
       b          :=partial_pts_sum[spline_ind];
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
-      sln_pts_ptr:=Unaligned(@sln_pts[b]); {$endregion}
+      sln_pts_ptr:=Unaligned(@sln_pts[b]);
+      w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -11542,10 +11642,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL02),
                   Unaligned(@LineSHL00)
                 ); {$endregion}
@@ -11556,10 +11656,10 @@ begin
                 begin
                   LinePHL
                   (
-                    Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                     Unaligned(@LinePHL02),
                     Unaligned(@LineSHL00)
                   );
@@ -11575,10 +11675,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11614,10 +11714,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11658,10 +11758,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11719,10 +11819,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -11789,6 +11889,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -11801,7 +11902,9 @@ begin
       rct_out     :=PtRct(rct_clp_ptr^.left  +0,
                           rct_clp_ptr^.top   +0,
                           rct_clp_ptr^.right -1,
-                          rct_clp_ptr^.bottom-1); {$endregion}
+                          rct_clp_ptr^.bottom-1);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -11812,10 +11915,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL00),
@@ -11829,10 +11932,10 @@ begin
                   if (has_edge_ptr^=0) then
                     ClippedLine1
                     (
-                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                      Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                       rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL00),
@@ -11851,10 +11954,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -11898,10 +12001,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -11950,10 +12053,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -12023,10 +12126,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -12104,6 +12207,7 @@ var
   sln_pts_ptr    : PPtPosF;
   has_edge_ptr   : PShortInt;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -12112,7 +12216,9 @@ begin
       b           :=partial_pts_sum[spline_ind];
       obj_arr_ptr :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr :=Unaligned(@sln_pts [b]);
-      has_edge_ptr:=Unaligned(@has_edge[b]); {$endregion}
+      has_edge_ptr:=Unaligned(@has_edge[b]);
+      w_a_s_x     :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y     :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -12123,10 +12229,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL00),
                   Unaligned(@LineSHL00)
                 ); {$endregion}
@@ -12138,10 +12244,10 @@ begin
                   if (has_edge_ptr^=0) then
                     LinePHL
                     (
-                      Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                      Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                      Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                      Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                       Unaligned(@LinePHL00),
                       Unaligned(@LineSHL00)
                     );
@@ -12158,10 +12264,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -12199,10 +12305,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       LinePHL
                       (
                         x0,
@@ -12245,10 +12351,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -12308,10 +12414,10 @@ begin
                 begin
                   if (has_edge_ptr^=0) then
                     begin
-                      x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                      y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                      x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                      y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                       LinePHL
                       (
                         x0,
@@ -12381,6 +12487,7 @@ var
   sln_pts_ptr2       : PPtPosF;
   sln_vis_eds_ind_ptr: PColor;
   x0,y0,x1,y1,b,i    : integer;
+  w_a_s_x,w_a_s_y    : integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -12389,11 +12496,13 @@ begin
       b                  :=partial_pts_sum[spline_ind];
       obj_arr_ptr        :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr        :=Unaligned(@sln_pts[b]);
-      sln_vis_eds_ind_ptr:=@sln_vis_eds_ind[spline_ind,0];
+      sln_vis_eds_ind_ptr:=Unaligned(@sln_vis_eds_ind[spline_ind,0]);
       rct_out            :=PtRct(rct_clp_ptr^.left  +0,
                                  rct_clp_ptr^.top   +0,
                                  rct_clp_ptr^.right -1,
-                                 rct_clp_ptr^.bottom-1); {$endregion}
+                                 rct_clp_ptr^.bottom-1);
+      w_a_s_x            :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y            :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -12404,10 +12513,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL00),
@@ -12421,10 +12530,10 @@ begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
                   ClippedLine1
                   (
-                    Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL00),
@@ -12441,10 +12550,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -12487,10 +12596,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -12536,10 +12645,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -12608,10 +12717,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -12687,6 +12796,7 @@ var
   sln_pts_ptr2       : PPtPosF;
   sln_vis_eds_ind_ptr: PColor;
   x0,y0,x1,y1,b,i    : integer;
+  w_a_s_x,w_a_s_y    : integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -12695,7 +12805,9 @@ begin
       b                  :=partial_pts_sum[spline_ind];
       obj_arr_ptr        :=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
       sln_pts_ptr        :=Unaligned(@sln_pts[b]);
-      sln_vis_eds_ind_ptr:=@sln_vis_eds_ind[spline_ind,0]; {$endregion}
+      sln_vis_eds_ind_ptr:=Unaligned(@sln_vis_eds_ind[spline_ind,0]);
+      w_a_s_x            :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y            :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -12706,10 +12818,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL00),
                   Unaligned(@LineSHL00)
                 ); {$endregion}
@@ -12721,10 +12833,10 @@ begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
                   LinePHL
                   (
-                    Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y,
                     Unaligned(@LinePHL00),
                     Unaligned(@LineSHL00)
                   );
@@ -12739,10 +12851,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -12779,10 +12891,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -12822,10 +12934,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -12884,10 +12996,10 @@ begin
               with eds_big_img do
                 begin
                   sln_pts_ptr2:=sln_pts_ptr+(sln_vis_eds_ind_ptr+i)^;
-                  x0:=Trunc((sln_pts_ptr2+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr2+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr2+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr2+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr2+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr2+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr2+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr2+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -12952,6 +13064,7 @@ var
   rct_out        : TPtRect;
   sln_pts_ptr    : PPtPosF;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -12963,7 +13076,9 @@ begin
       rct_out    :=PtRct(rct_clp_ptr^.left  +0,
                          rct_clp_ptr^.top   +0,
                          rct_clp_ptr^.right -1,
-                         rct_clp_ptr^.bottom-1); {$endregion}
+                         rct_clp_ptr^.bottom-1);
+      w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -12974,10 +13089,10 @@ begin
               with eds_big_img do
                 ClippedLine1
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   rct_out,
                   Unaligned(@LinePHL  ),
                   Unaligned(@LinePHL00),
@@ -12990,10 +13105,10 @@ begin
                 begin
                   ClippedLine1
                   (
-                    Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL00),
@@ -13011,10 +13126,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -13056,10 +13171,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -13106,10 +13221,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -13177,10 +13292,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   ClippedLine1
                   (
                     x0,
@@ -13255,6 +13370,7 @@ var
   obj_arr_ptr    : PObjInfo;
   sln_pts_ptr    : PPtPosF;
   x0,y0,x1,y1,b,i: integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
@@ -13262,7 +13378,9 @@ begin
       {Misc. Precalc.------------------------------------------------------------------} {$region -fold}
       b          :=partial_pts_sum[spline_ind];
       obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]]);
-      sln_pts_ptr:=Unaligned(@sln_pts[b]); {$endregion}
+      sln_pts_ptr:=Unaligned(@sln_pts[b]);
+      w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+      w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
       case eds_width of
         1:
@@ -13273,10 +13391,10 @@ begin
               with eds_big_img do
                 LinePHL
                 (
-                  Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                  Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                  Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                   Unaligned(@LinePHL00),
                   Unaligned(@LineSHL00)
                 ); {$endregion}
@@ -13287,10 +13405,10 @@ begin
                 begin
                   LinePHL
                   (
-                    Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc((sln_pts_ptr+0)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+0)^.y)+w_a_s_y,
+                    Trunc((sln_pts_ptr+1)^.x)+w_a_s_x,
+                    Trunc((sln_pts_ptr+1)^.y)+w_a_s_y,
                     Unaligned(@LinePHL00),
                     Unaligned(@LineSHL00)
                   );
@@ -13306,10 +13424,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -13345,10 +13463,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -13389,10 +13507,10 @@ begin
             if cnc_ends then
               with eds_big_img do
                 begin
-                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                  y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                  x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                  y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -13450,10 +13568,10 @@ begin
             for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
               with eds_big_img do
                 begin
-                  x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                  x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                  y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                  x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                  y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                  x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                  y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                   LinePHL
                   (
                     x0,
@@ -13528,8 +13646,8 @@ begin
       sln_pts_ptr:=Unaligned(@sln_pts[b]);
       for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
         begin
-          pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+          pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                    Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
           if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
             begin
               dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13544,7 +13662,7 @@ begin
                     pts_big_img.ln_arr1_ptr,
                     pts_big_img.ln_arr_width,
                     pts_big_img.ln_arr_height,
-                    PtRct(rct_vis),
+                    rct_vis,
                     local_prop,
                     @PPFloodFillAdd
                   );
@@ -13558,7 +13676,7 @@ begin
               pts_big_img.ln_arr1_ptr,
               pts_big_img.ln_arr_width,
               pts_big_img.ln_arr_height,
-              PtRct(rct_vis),
+              rct_vis,
               local_prop,
               @PPFloodFillAdd
             );
@@ -13583,8 +13701,8 @@ begin
         begin
           if (not sel_var.is_point_selected[b+i]) then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 begin
                   dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13599,7 +13717,7 @@ begin
                         pts_big_img.ln_arr1_ptr,
                         pts_big_img.ln_arr_width,
                         pts_big_img.ln_arr_height,
-                        PtRct(rct_vis),
+                        rct_vis,
                         local_prop,
                         @PPFloodFillAdd
                       );
@@ -13613,7 +13731,7 @@ begin
                   pts_big_img.ln_arr1_ptr,
                   pts_big_img.ln_arr_width,
                   pts_big_img.ln_arr_height,
-                  PtRct(rct_vis),
+                  rct_vis,
                   local_prop,
                   @PPFloodFillAdd
                 );
@@ -13639,8 +13757,8 @@ begin
         begin
           if sel_var.is_point_selected[b+i] then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 begin
                   dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13655,7 +13773,7 @@ begin
                         pts_big_img.ln_arr1_ptr,
                         pts_big_img.ln_arr_width,
                         pts_big_img.ln_arr_height,
-                        PtRct(rct_vis),
+                        rct_vis,
                         local_prop,
                         @PPFloodFillAdd
                       );
@@ -13669,7 +13787,7 @@ begin
                   pts_big_img.ln_arr1_ptr,
                   pts_big_img.ln_arr_width,
                   pts_big_img.ln_arr_height,
-                  PtRct(rct_vis),
+                  rct_vis,
                   local_prop,
                   @PPFloodFillAdd
                 );
@@ -13695,8 +13813,8 @@ begin
         begin
           if sel_var.is_point_selected[b+i] then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 begin
                   dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13711,7 +13829,7 @@ begin
                         pts_big_img.ln_arr1_ptr,
                         pts_big_img.ln_arr_width,
                         pts_big_img.ln_arr_height,
-                        PtRct(rct_vis),
+                        rct_vis,
                         local_prop,
                         @PPFloodFillSub
                       );
@@ -13725,7 +13843,7 @@ begin
                   pts_big_img.ln_arr1_ptr,
                   pts_big_img.ln_arr_width,
                   pts_big_img.ln_arr_height,
-                  PtRct(rct_vis),
+                  rct_vis,
                   local_prop,
                   @PPFloodFillSub
                 );
@@ -13749,8 +13867,8 @@ begin
       sln_pts_ptr:=Unaligned(@sln_pts[b]);
       for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
         begin
-          pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+          pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                    Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
           if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
             begin
               dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13765,7 +13883,7 @@ begin
                     pts_big_img.ln_arr0_ptr,
                     pts_big_img.ln_arr_width,
                     pts_big_img.ln_arr_height,
-                    PtRct(rct_vis),
+                    rct_vis,
                     local_prop,
                     @PPFloodFill
                   );
@@ -13779,7 +13897,7 @@ begin
               pts_big_img.ln_arr0_ptr,
               pts_big_img.ln_arr_width,
               pts_big_img.ln_arr_height,
-              PtRct(rct_vis),
+              rct_vis,
               local_prop,
               @PPFloodFill
             );
@@ -13804,8 +13922,8 @@ begin
         begin
           if (not sel_var.is_point_selected[b+i]) then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 begin
                   dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13820,7 +13938,7 @@ begin
                         pts_big_img.ln_arr0_ptr,
                         pts_big_img.ln_arr_width,
                         pts_big_img.ln_arr_height,
-                        PtRct(rct_vis),
+                        rct_vis,
                         local_prop,
                         @PPFloodFill
                       );
@@ -13834,7 +13952,7 @@ begin
                   pts_big_img.ln_arr0_ptr,
                   pts_big_img.ln_arr_width,
                   pts_big_img.ln_arr_height,
-                  PtRct(rct_vis),
+                  rct_vis,
                   local_prop,
                   @PPFloodFill
                 );
@@ -13860,8 +13978,8 @@ begin
         begin
           if sel_var.is_point_selected[b+i] then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 begin
                   dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13876,7 +13994,7 @@ begin
                         pts_big_img.ln_arr0_ptr,
                         pts_big_img.ln_arr_width,
                         pts_big_img.ln_arr_height,
-                        PtRct(rct_vis),
+                        rct_vis,
                         local_prop,
                         @PPFloodFill
                       );
@@ -13890,7 +14008,7 @@ begin
                   pts_big_img.ln_arr0_ptr,
                   pts_big_img.ln_arr_width,
                   pts_big_img.ln_arr_height,
-                  PtRct(rct_vis),
+                  rct_vis,
                   local_prop,
                   @PPFloodFill
                 );
@@ -13916,8 +14034,8 @@ begin
         begin
           if sel_var.is_point_selected[b+i] then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 begin
                   dup_pts_arr_ptr:=Unaligned(@dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width]);
@@ -13932,7 +14050,7 @@ begin
                         pts_big_img.ln_arr0_ptr,
                         pts_big_img.ln_arr_width,
                         pts_big_img.ln_arr_height,
-                        PtRct(rct_vis),
+                        rct_vis,
                         local_prop,
                         @PPFloodFill
                       );
@@ -13946,7 +14064,7 @@ begin
                   pts_big_img.ln_arr0_ptr,
                   pts_big_img.ln_arr_width,
                   pts_big_img.ln_arr_height,
-                  PtRct(rct_vis),
+                  rct_vis,
                   local_prop,
                   @PPFloodFill
                 );
@@ -13957,10 +14075,10 @@ begin
 end; {$endregion}
 procedure TCurve.AddSplineDupPts0  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -13970,8 +14088,8 @@ begin
       //if (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
         for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
           begin
-            pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+            pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                      Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
             if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
               dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
             Inc(sln_pts_ptr);
@@ -13980,10 +14098,10 @@ begin
 end; {$endregion}
 procedure TCurve.AddSplineDupPts1  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -13995,8 +14113,8 @@ begin
           begin
             if (not sel_var.is_point_selected[b+i]) then
               begin
-                pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                          Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+                pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                          Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
                 if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                   dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
               end;
@@ -14006,10 +14124,10 @@ begin
 end; {$endregion}
 procedure TCurve.AddSplineDupPts2  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -14021,8 +14139,8 @@ begin
           begin
             if (not sel_var.is_point_selected[b+i]) then
               begin
-                pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                          Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+                pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                          Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
                 if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                   dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
               end;
@@ -14032,10 +14150,10 @@ begin
 end; {$endregion}
 procedure TCurve.AddSplineDupPts3  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -14047,8 +14165,8 @@ begin
           begin
             if sel_var.is_point_selected[b+i] then
               begin
-                pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                          Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+                pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                          Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
                 if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                   dup_pts_id.SetEqual2(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],dup_pts_id);
               end;
@@ -14058,10 +14176,10 @@ begin
 end; {$endregion}
 procedure TCurve.AddSplineDupPtsAll(constref start_ind,end_ind:TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i,j      : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i,j          : integer;
 begin
   for j:=start_ind to end_ind do
     with pts_img_arr[j] do
@@ -14072,8 +14190,8 @@ begin
         if (not IsRct1OutOfRct2(rct_ent,rct_clp_ptr^)) then
           for i:=0 to sln_obj_pts_cnt[j]-1 do
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 begin
                   dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width].obj_ind:=j;
@@ -14085,10 +14203,10 @@ begin
 end; {$endregion}
 procedure TCurve.ClrSplineDupPts0  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -14097,8 +14215,8 @@ begin
       sln_pts_ptr:=Unaligned(@sln_pts[b]);
       for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
         begin
-          pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+          pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                    Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
           if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
             dup_pts_id.SetEqual1(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],Default(TPtPos3));
           Inc(sln_pts_ptr);
@@ -14107,10 +14225,10 @@ begin
 end; {$endregion}
 procedure TCurve.ClrSplineDupPts1  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -14121,8 +14239,8 @@ begin
         begin
           if (not sel_var.is_point_selected[b+i]) then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 dup_pts_id.SetEqual1(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],Default(TPtPos3));
             end;
@@ -14132,10 +14250,10 @@ begin
 end; {$endregion}
 procedure TCurve.ClrSplineDupPts2  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -14145,8 +14263,8 @@ begin
       for i:=0 to sln_obj_pts_cnt[spline_ind]-1 do
         begin
           begin
-            pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+            pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                      Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
             if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
               dup_pts_id.SetEqual1(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],Default(TPtPos3));
           end;
@@ -14156,10 +14274,10 @@ begin
 end; {$endregion}
 procedure TCurve.ClrSplineDupPts3  (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  pt         : TPtPos;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  pt             : TPtPos;
+  b,i            : integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
@@ -14170,8 +14288,8 @@ begin
         begin
           if sel_var.is_point_selected[b+i] then
             begin
-              pt:=PtPos(Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y);
+              pt:=PtPos(Trunc(sln_pts_ptr^.x)+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                        Trunc(sln_pts_ptr^.y)+Trunc(obj_arr_ptr^.world_axis_shift.y));
               if IsPtInRct(pt.x,pt.y,rct_clp_ptr^) then
                 dup_pts_id.SetEqual1(dup_pts_arr[pt.x+pt.y*pts_big_img.ln_arr_width],Default(TPtPos3));
             end;
@@ -14420,7 +14538,7 @@ begin
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
-            bmp_src_rct_clp:=PtRct(rct_vis);
+            bmp_src_rct_clp:=rct_vis;
           end;
         if down_select_items_ptr^ then
           StrNTLowerBmpA;
@@ -14440,7 +14558,7 @@ begin
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
-            bmp_src_rct_clp:=PtRct(rct_vis);
+            bmp_src_rct_clp:=rct_vis;
           end;
         if down_select_items_ptr^ then
           StrNTLowerBmpA;
@@ -14460,7 +14578,7 @@ begin
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
-            bmp_src_rct_clp:=PtRct(rct_vis);
+            bmp_src_rct_clp:=rct_vis;
           end;
         if down_select_items_ptr^ then
           StrNTLowerBmpA;
@@ -14480,7 +14598,7 @@ begin
         if lazy_repaint_prev and lazy_repaint then
           begin
             SetRctPos(rct_vis.left,rct_vis.top);
-            bmp_src_rct_clp:=PtRct(rct_vis);
+            bmp_src_rct_clp:=rct_vis;
           end;
         if down_select_items_ptr^ then
           StrNTLowerBmpA;
@@ -14532,8 +14650,8 @@ begin
     begin
       sln_pts_cnt_add:=fml_pts_cnt;
       with PtRct(tex_var.tex_bmp_rct_pts) do
-        FmlSplineObj[cur_tlt_dwn_btn_ind](world_axis.x+world_axis_shift.x,
-                                          world_axis.y+world_axis_shift.y);
+        FmlSplineObj[cur_tlt_dwn_btn_ind](Trunc(world_axis.x+world_axis_shift.x),
+                                          Trunc(world_axis.y+world_axis_shift.y));
       sln_pts_cnt_add:=0;
       BmpToBmp2(srf_bmp_ptr ,low_bmp_ptr ,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
       BmpToBmp2(low_bmp_ptr ,low_bmp2_ptr,srf_bmp.width,low_bmp2.width,inn_wnd_rct,inn_wnd_mrg);
@@ -14826,7 +14944,7 @@ begin
   with rct_eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,cmr_var.mov_dir,PtPos(obj_arr_ptr^.parallax_shift));
+      MDCalc(rct_ent,cmr_var.mov_dir,PtPosF(cmr_var.speed_mul.x*obj_arr_ptr^.parallax_shift.x,cmr_var.speed_mul.y*obj_arr_ptr^.parallax_shift.y));
       if (rct_eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -14842,8 +14960,8 @@ begin
           {Drawing Of Spline Object Edges Bounding Rectangle-------------------------} {$region -fold}
           Rectangle
           (
-            pts_rct_width__half-pts_rct_width__odd+rct_ent.left,
-            pts_rct_height_half-pts_rct_height_odd+rct_ent.top ,
+            pts_rct_width__half-pts_rct_width__odd+Trunc(rct_ent.left),
+            pts_rct_height_half-pts_rct_height_odd+Trunc(rct_ent.top ),
             bmp_dst_ptr,
             bmp_dst_width,
             bmp_dst_height,
@@ -14861,7 +14979,7 @@ begin
   with rct_pts_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,cmr_var.mov_dir,PtPos(obj_arr_ptr^.parallax_shift));
+      MDCalc(rct_ent,cmr_var.mov_dir,PtPosF(cmr_var.speed_mul.x*obj_arr_ptr^.parallax_shift.x,cmr_var.speed_mul.y*obj_arr_ptr^.parallax_shift.y));
       if (rct_pts_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -14877,8 +14995,8 @@ begin
           {Drawing Of Spline Object Edges Bounding Rectangle-------------------------} {$region -fold}
           Rectangle
           (
-            pts_rct_width__half-pts_rct_width__odd+rct_ent.left,
-            pts_rct_height_half-pts_rct_height_odd+rct_ent.top ,
+            pts_rct_width__half-pts_rct_width__odd+Trunc(rct_ent.left),
+            pts_rct_height_half-pts_rct_height_odd+Trunc(rct_ent.top ),
             bmp_dst_ptr,
             bmp_dst_width,
             bmp_dst_height,
@@ -14898,11 +15016,12 @@ var
   max_w_h_div_2  : integer;
   min_w_h_div_2  : integer;
   rct_rad        : double;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,cmr_var.mov_dir,PtPos(obj_arr_ptr^.parallax_shift));
+      MDCalc(rct_ent,cmr_var.mov_dir,PtPosF(cmr_var.speed_mul.x*obj_arr_ptr^.parallax_shift.x,cmr_var.speed_mul.y*obj_arr_ptr^.parallax_shift.y));
       if (eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -14921,7 +15040,9 @@ begin
                          obj_arr_ptr^.rct_dst_ptr^.bottom-1);
           max_w_h_div_2:=Max(rct_out.width,rct_out.height)>>1;
           min_w_h_div_2:=Min(rct_out.width,rct_out.height)>>1;
-          rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2)); {$endregion}
+          rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2));
+          w_a_s_x      :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+          w_a_s_y      :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
           case eds_width of
             1:
@@ -14931,10 +15052,10 @@ begin
                 if cnc_ends then
                   ClippedLine1
                   (
-                    Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                    Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL30),
@@ -14945,17 +15066,17 @@ begin
                 sln_pts_ptr:=Unaligned(@sln_pts[b]);
                 for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
                   begin
-                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                     if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                       ClippedLine1
                       (
-                        Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                        Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                        Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                        x0,
+                        y0,
+                        x1,
+                        y1,
                         rct_out,
                         Unaligned(@LinePHL  ),
                         Unaligned(@LinePHL30),
@@ -14972,10 +15093,10 @@ begin
                 {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
                 if cnc_ends then
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -15017,10 +15138,10 @@ begin
                 sln_pts_ptr:=Unaligned(@sln_pts[b]);
                 for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
                   begin
-                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                     if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                       begin
                         ClippedLine1
@@ -15069,10 +15190,10 @@ begin
                 {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
                 if cnc_ends then
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -15140,10 +15261,10 @@ begin
                 sln_pts_ptr:=Unaligned(@sln_pts[b]);
                 for i:=0 to sln_obj_pts_cnt[spline_ind]-2 do
                   begin
-                    x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                    y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                    x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                    y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                     if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                       begin
                         ClippedLine1
@@ -15226,11 +15347,12 @@ var
   max_w_h_div_2  : integer;
   min_w_h_div_2  : integer;
   rct_rad        : double;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,cmr_var.mov_dir,PtPos(obj_arr_ptr^.parallax_shift));
+      MDCalc(rct_ent,cmr_var.mov_dir,PtPosF(cmr_var.speed_mul.x*obj_arr_ptr^.parallax_shift.x,cmr_var.speed_mul.y*obj_arr_ptr^.parallax_shift.y));
       if (eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -15249,7 +15371,9 @@ begin
                          obj_arr_ptr^.rct_dst_ptr^.bottom-1);
           max_w_h_div_2:=Max(rct_out.width,rct_out.height)>>1;
           min_w_h_div_2:=Min(rct_out.width,rct_out.height)>>1;
-          rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2)); {$endregion}
+          rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2));
+          w_a_s_x      :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+          w_a_s_y      :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
           case eds_width of
             1:
@@ -15261,10 +15385,10 @@ begin
                   if cnc_ends then
                     ClippedLine1
                     (
-                      Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                      Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                      Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                      Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                      Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                      Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                      Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                       rct_out,
                       Unaligned(@LinePHL  ),
                       Unaligned(@LinePHL30),
@@ -15278,17 +15402,17 @@ begin
                     if (not (sel_var.is_point_selected[b+i] or
                              sel_var.is_point_selected[b+i+1])) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                           ClippedLine1
                           (
-                            Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                            Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y,
-                            Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x,
-                            Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y,
+                            x0,
+                            y0,
+                            x1,
+                            y1,
                             rct_out,
                             Unaligned(@LinePHL  ),
                             Unaligned(@LinePHL30),
@@ -15308,10 +15432,10 @@ begin
                          sel_var.is_point_selected[b+sln_obj_pts_cnt[spline_ind]-1])) then
                   if cnc_ends then
                     begin
-                      x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                      y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                      x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                      y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -15356,10 +15480,10 @@ begin
                     if (not (sel_var.is_point_selected[b+i] or
                              sel_var.is_point_selected[b+i+1])) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                           begin
                             ClippedLine1
@@ -15411,10 +15535,10 @@ begin
                          sel_var.is_point_selected[b+sln_obj_pts_cnt[spline_ind]-1])) then
                   if cnc_ends then
                     begin
-                      x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                      y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                      x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                      y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                      x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                      y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                      x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                      y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                       ClippedLine1
                       (
                         x0,
@@ -15485,10 +15609,10 @@ begin
                     if (not (sel_var.is_point_selected[b+i] or
                              sel_var.is_point_selected[b+i+1])) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                           begin
                             ClippedLine1
@@ -15573,11 +15697,12 @@ var
   max_w_h_div_2  : integer;
   min_w_h_div_2  : integer;
   rct_rad        : double;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with eds_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,cmr_var.mov_dir,PtPos(obj_arr_ptr^.parallax_shift));
+      MDCalc(rct_ent,cmr_var.mov_dir,PtPosF(cmr_var.speed_mul.x*obj_arr_ptr^.parallax_shift.x,cmr_var.speed_mul.y*obj_arr_ptr^.parallax_shift.y));
       if (eds_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -15596,7 +15721,9 @@ begin
                          obj_arr_ptr^.rct_dst_ptr^.bottom-1);
           max_w_h_div_2:=Max(rct_out.width,rct_out.height)>>1;
           min_w_h_div_2:=Min(rct_out.width,rct_out.height)>>1;
-          rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2)); {$endregion}
+          rct_rad      :=sqrt(sqr(max_w_h_div_2)+sqr(min_w_h_div_2));
+          w_a_s_x      :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+          w_a_s_y      :=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
           case eds_width of
             1:
@@ -15606,10 +15733,10 @@ begin
                 if cnc_ends then
                   ClippedLine1
                   (
-                    Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x,
-                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y,
+                    Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x,
+                    Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x,
+                    Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y,
                     rct_out,
                     Unaligned(@LinePHL  ),
                     Unaligned(@LinePHL30),
@@ -15623,10 +15750,10 @@ begin
                   begin
                     if (useless_arr_ptr^=1) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad,0)} then
                           ClippedLine1
                           (
@@ -15652,10 +15779,10 @@ begin
                 {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
                 if cnc_ends then
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -15700,10 +15827,10 @@ begin
                   begin
                     if (useless_arr_ptr^=1) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+1,0)} then
                           begin
                             ClippedLine1
@@ -15754,10 +15881,10 @@ begin
                 {Drawing Of Connected Edges(Between First And Last Points Of Spline Object)} {$region -fold}
                 if cnc_ends then
                   begin
-                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+obj_arr_ptr^.world_axis_shift.y;
-                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+obj_arr_ptr^.world_axis_shift.x;
-                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+obj_arr_ptr^.world_axis_shift.y;
+                    x0:=Trunc(sln_pts[b+00000000000000000000000000000].x)+w_a_s_x;
+                    y0:=Trunc(sln_pts[b+00000000000000000000000000000].y)+w_a_s_y;
+                    x1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].x)+w_a_s_x;
+                    y1:=Trunc(sln_pts[b+sln_obj_pts_cnt[spline_ind]-1].y)+w_a_s_y;
                     ClippedLine1
                     (
                       x0,
@@ -15828,10 +15955,10 @@ begin
                   begin
                     if (useless_arr_ptr^=1) then
                       begin
-                        x0:=Trunc((sln_pts_ptr+0)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y0:=Trunc((sln_pts_ptr+0)^.y)+obj_arr_ptr^.world_axis_shift.y;
-                        x1:=Trunc((sln_pts_ptr+1)^.x)+obj_arr_ptr^.world_axis_shift.x;
-                        y1:=Trunc((sln_pts_ptr+1)^.y)+obj_arr_ptr^.world_axis_shift.y;
+                        x0:=Trunc((sln_pts_ptr+0)^.x)+w_a_s_x;
+                        y0:=Trunc((sln_pts_ptr+0)^.y)+w_a_s_y;
+                        x1:=Trunc((sln_pts_ptr+1)^.x)+w_a_s_x;
+                        y1:=Trunc((sln_pts_ptr+1)^.y)+w_a_s_y;
                         if (not IsRct1OutOfRct2(LineBndRct(x0,y0,x1,y1,eds_width),rct_out)){LineCrcIntPt(x0,y0,x1,y1,rct_out.left+rct_out.width>>1,rct_out.top+rct_out.height>>1,rct_rad+2,0)} then
                           begin
                             ClippedLine1
@@ -15909,14 +16036,15 @@ begin
 end; {$endregion}
 procedure TCurve.MovSplinePts0     (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  b,i            : integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,cmr_var.mov_dir,PtPos(obj_arr_ptr^.parallax_shift));
+      MDCalc(rct_ent,cmr_var.mov_dir,PtPosF(cmr_var.speed_mul.x*obj_arr_ptr^.parallax_shift.x,cmr_var.speed_mul.y*obj_arr_ptr^.parallax_shift.y));
       if (pts_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -15928,7 +16056,9 @@ begin
             obj_arr_ptr^.bkgnd_width,
             obj_arr_ptr^.bkgnd_height,
             obj_arr_ptr^.rct_clp_ptr
-          ); {$endregion}
+          );
+          w_a_s_x:=Trunc(obj_arr_ptr^.world_axis_shift.x);
+          w_a_s_y:=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
           {Drawing Of Spline Object Points} {$region -fold}
           sln_pts_ptr:=Unaligned(@sln_pts[b]);
@@ -15936,8 +16066,8 @@ begin
             begin
               Rectangle
               (
-                Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y,
+                Trunc(sln_pts_ptr^.x)+w_a_s_x,
+                Trunc(sln_pts_ptr^.y)+w_a_s_y,
                 bmp_dst_ptr,
                 bmp_dst_width,
                 bmp_dst_height,
@@ -15952,14 +16082,15 @@ begin
 end; {$endregion}
 procedure TCurve.MovSplinePts1     (constref spline_ind       :TColor);                                                                                                {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
-  obj_arr_ptr: PObjInfo;
-  sln_pts_ptr: PPtPosF;
-  b,i        : integer;
+  obj_arr_ptr    : PObjInfo;
+  sln_pts_ptr    : PPtPosF;
+  b,i            : integer;
+  w_a_s_x,w_a_s_y: integer;
 begin
   with pts_img_arr[spline_ind],local_prop do
     begin
       obj_arr_ptr:=@obj_var.obj_arr[obj_var.curve_inds_obj_arr[spline_ind]];
-      MDCalc(rct_ent,cmr_var.mov_dir,PtPos(obj_arr_ptr^.parallax_shift));
+      MDCalc(rct_ent,cmr_var.mov_dir,PtPosF(cmr_var.speed_mul.x*obj_arr_ptr^.parallax_shift.x,cmr_var.speed_mul.y*obj_arr_ptr^.parallax_shift.y));
       if (pts_show and (not IsRct1OutOfRct2(rct_ent,obj_arr_ptr^.rct_dst_ptr^))) then
         begin
 
@@ -15971,7 +16102,9 @@ begin
             obj_arr_ptr^.bkgnd_width,
             obj_arr_ptr^.bkgnd_height,
             obj_arr_ptr^.rct_clp_ptr
-          ); {$endregion}
+          );
+          w_a_s_x:=Trunc(obj_arr_ptr^.world_axis_shift.x);
+          w_a_s_y:=Trunc(obj_arr_ptr^.world_axis_shift.y); {$endregion}
 
           {Drawing Of Spline Object Points} {$region -fold}
           sln_pts_ptr:=Unaligned(@sln_pts[b]);
@@ -15980,8 +16113,8 @@ begin
               if (not sel_var.is_point_selected[b+i]) then
                 Rectangle
                 (
-                  Trunc(sln_pts_ptr^.x)+obj_arr_ptr^.world_axis_shift.x,
-                  Trunc(sln_pts_ptr^.y)+obj_arr_ptr^.world_axis_shift.y,
+                  Trunc(sln_pts_ptr^.x)+w_a_s_x,
+                  Trunc(sln_pts_ptr^.y)+w_a_s_y,
                   bmp_dst_ptr,
                   bmp_dst_width,
                   bmp_dst_height,
@@ -16747,7 +16880,7 @@ begin
                   sln_pts_cnt_add:=superellipse_pts_cnt;
                 end;
             end;
-            FmlSplineObj[cur_tlt_dwn_btn_ind](world_axis.x,world_axis.y);
+            FmlSplineObj[cur_tlt_dwn_btn_ind](Trunc(world_axis.x),Trunc(world_axis.y));
             Inc(sln_pts_cnt,sln_pts_cnt_add);
             sln_pts_add:=fml_pts;
             EventGroupsCalc(calc_arr,[12,16,30,33,41,48]);
@@ -16756,7 +16889,7 @@ begin
           begin
             if (pts_cnt_val=0) then
               Exit;
-            RndSplineObj(world_axis,512{256},512{256});
+            RndSplineObj(PtPos(world_axis),512{256},512{256});
             EventGroupsCalc(calc_arr,[12,16,30,33,40,41,48]);
           end;
       end;
@@ -16926,7 +17059,7 @@ begin
       FmlSplinePrev(rose_pts_cnt);
     end;
 end; {$endregion}
-procedure TF_MainForm.CB_Spline_Rose_Mobius_GridChange               (sender:TObject); {$region -fold}
+procedure TF_MainForm.CB_Spline_Rose_Mobius_GridChange                       (sender:TObject); {$region -fold}
 begin
   with sln_var,global_prop do
     begin
@@ -17157,7 +17290,7 @@ begin
   CB_Spline_Better_Quality.Enabled  :=CB_Spline_Byte_Mode.Checked;
   sln_var.global_prop.better_quality:=CB_Spline_Better_Quality.Checked and sln_var.global_prop.byte_mode;
 end; {$endregion}
-procedure TF_MainForm.CB_Spline_Better_QualityChange                     (sender:TObject); {$region -fold}
+procedure TF_MainForm.CB_Spline_Better_QualityChange                         (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.better_quality:=not sln_var.global_prop.better_quality;
 end; {$endregion}
@@ -17168,6 +17301,10 @@ end; {$endregion}
 procedure TF_MainForm.CB_Spline_On_Scale_DownChange                          (sender:TObject); {$region -fold}
 begin
   sln_var.global_prop.free_mem_on_scale_down:=not sln_var.global_prop.free_mem_on_scale_down;
+end; {$endregion}
+procedure TF_MainForm.CB_Spline_Reallocate_MemoryChange                      (sender:TObject); {$region -fold}
+begin
+  sln_var.global_prop.realloc_mem:=not sln_var.global_prop.realloc_mem;
 end; {$endregion}
 procedure TF_MainForm.RB_Spline_AdaptiveChange                               (sender:TObject); {$region -fold}
 begin
@@ -17421,6 +17558,7 @@ var
   obj_arr_ptr    : PObjInfo;
   i,j,m1,m2,m3,m4: integer;
   pts_col_inv,v,w: TColor;
+  w_a_s_x,w_a_s_y: integer;
 begin
 
   {Set Bounding Rectangle---------------} {$region -fold}
@@ -17451,16 +17589,18 @@ begin
                     pts_col_inv                          :=pts_img_arr[i] .local_prop.pts_col_inv;
                     pts_img_arr[i].local_prop.pts_col_inv:=sel_pts_big_img.local_prop.pts_col_inv;
                     obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[partial_pts_sum[i]]]]);
+                    w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+                    w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y);
                     for j:=partial_pts_sum[i] to partial_pts_sum[i]+sln_obj_pts_cnt[i]-1 do
-                      if (sqr(Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x-x)+
-                          sqr(Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y-y)<crc_rad_sqr) and
-                         (not is_point_selected[j])                                          then
+                      if (sqr(Trunc(pts[j].x)+w_a_s_x-x)+
+                          sqr(Trunc(pts[j].y)+w_a_s_y-y)<crc_rad_sqr) and
+                         (not is_point_selected[j])                  then
                         begin
                           is_point_selected[j]     :=True;
                           sel_pts_inds[sel_pts_cnt]:=j;
                           Inc(sel_pts_cnt);
-                          v:=Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x;
-                          w:=Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y;
+                          v:=Trunc(pts[j].x)+w_a_s_x;
+                          w:=Trunc(pts[j].y)+w_a_s_y;
                           Rectangle
                           (
                             v,
@@ -17489,20 +17629,22 @@ begin
                     pts_col_inv                          :=pts_img_arr[i] .local_prop.pts_col_inv;
                     pts_img_arr[i].local_prop.pts_col_inv:=sel_pts_big_img.local_prop.pts_col_inv;
                     obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[partial_pts_sum[i]]]]);
+                    w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+                    w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y);
                     for j:=partial_pts_sum[i] to partial_pts_sum[i]+sln_obj_pts_cnt[i]-1 do
-                      if (          pts[j].x +obj_arr_ptr^.world_axis_shift.x>m1)             and
-                         (          pts[j].x +obj_arr_ptr^.world_axis_shift.x<m3)             and
-                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y>m2)             and
-                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y<m4)             and
-                         (sqr(Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x-x)+
-                          sqr(Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y-y)<crc_rad_sqr) and
-                         (not is_point_selected[j])                                          then
+                      if (          pts[j].x +w_a_s_x>m1)             and
+                         (          pts[j].x +w_a_s_x<m3)             and
+                         (          pts[j].y +w_a_s_y>m2)             and
+                         (          pts[j].y +w_a_s_y<m4)             and
+                         (sqr(Trunc(pts[j].x)+w_a_s_x-x)+
+                          sqr(Trunc(pts[j].y)+w_a_s_y-y)<crc_rad_sqr) and
+                         (not is_point_selected[j])                  then
                         begin
                           is_point_selected[j]     :=True;
                           sel_pts_inds[sel_pts_cnt]:=j;
                           Inc(sel_pts_cnt);
-                          v:=Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x;
-                          w:=Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y;
+                          v:=Trunc(pts[j].x)+w_a_s_x;
+                          w:=Trunc(pts[j].y)+w_a_s_y;
                           Rectangle
                           (
                             v,
@@ -17526,8 +17668,6 @@ begin
         end
       else
         begin
-          sel_pts_big_img.bmp_dst_ptr :=srf_bmp_ptr;
-          sel_pts_big_img.ln_arr_width:=srf_bmp_rct.Width;
           if ((X-crc_rad>m1)  and
               (X+crc_rad<m3)  and
               (Y-crc_rad>m2)  and
@@ -17554,14 +17694,16 @@ begin
                 if RctCrcInt(pts_img_arr[i].rct_vis,x,y,crc_rad) then
                   begin
                     obj_arr_ptr:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[partial_pts_sum[i]]]]);
+                    w_a_s_x    :=Trunc(obj_arr_ptr^.world_axis_shift.x);
+                    w_a_s_y    :=Trunc(obj_arr_ptr^.world_axis_shift.y);
                     for j:=partial_pts_sum[i] to partial_pts_sum[i]+sln_obj_pts_cnt[i]-1 do
-                      if (          pts[j].x +obj_arr_ptr^.world_axis_shift.x>m1)             and
-                         (          pts[j].x +obj_arr_ptr^.world_axis_shift.x<m3)             and
-                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y>m2)             and
-                         (          pts[j].y +obj_arr_ptr^.world_axis_shift.y<m4)             and
-                         (sqr(Trunc(pts[j].x)+obj_arr_ptr^.world_axis_shift.x-x)+
-                          sqr(Trunc(pts[j].y)+obj_arr_ptr^.world_axis_shift.y-y)<crc_rad_sqr) and
-                         (not is_point_selected[j])                                          then
+                      if (          pts[j].x +w_a_s_x>m1)             and
+                         (          pts[j].x +w_a_s_x<m3)             and
+                         (          pts[j].y +w_a_s_y>m2)             and
+                         (          pts[j].y +w_a_s_y<m4)             and
+                         (sqr(Trunc(pts[j].x)+w_a_s_x-x)+
+                          sqr(Trunc(pts[j].y)+w_a_s_y-y)<crc_rad_sqr) and
+                         (not is_point_selected[j])                  then
                         begin
                           is_point_selected[j]     :=True;
                           sel_pts_inds[sel_pts_cnt]:=j;
@@ -17674,7 +17816,7 @@ begin
         bmp_dst_height,
         pmt_img_ptr^.rct_clp_ptr^
       );
-      bmp_src_rct_clp          :=PtRct(rct_vis);
+      bmp_src_rct_clp          :=rct_vis;
       img_kind                 :={1}5;
       pix_drw_type             :=1; //must be in range of [0..002]
       fx_cnt                   :=1; //must be in range of [0..255]
@@ -17707,7 +17849,7 @@ begin
                        aa_arr1,
                        ln_arr_width,
                        ln_arr_width,
-                       PtRct(rct_vis){,
+                       rct_vis{,
                        aa_nz_arr_items_count});
           //ArrFill (aa_arr1,srf_var_ptr^.test_bmp_ptr,srf_var_ptr^.test_bmp.width,srf_var_ptr^.test_bmp.height,srf_var_ptr^.inn_wnd_rct,False);
           {bmp_alpha_ptr2_:=bmp_alpha_ptr2;
@@ -17721,7 +17863,7 @@ begin
                        aa_arr2,
                        ln_arr_width,
                        ln_arr_width,
-                       PtRct(rct_vis),
+                       rct_vis,
                        aa_line_cnt);
           {ArrFill (aa_arr1,srf_var_ptr^.test_bmp_ptr,srf_var_ptr^.test_bmp.width,srf_var_ptr^.test_bmp.height,srf_var_ptr^.inn_wnd_rct,False);
           F_MainForm.Memo1.Lines.Text:=IntToStr(2 or 3){IntToStr(nt_pix_cnt)+';'+IntToStr(pt_pix_cnt)+';'+IntToStr(pt_pix_intr_cnt_arr[1])};} {$endregion}
@@ -17781,7 +17923,7 @@ begin
             bmp_dst_width,
             bmp_dst_height,
             rct_clp_ptr^,
-            PtRct(rct_vis),
+            rct_vis,
             0
           ); {$endregion}
 
@@ -17793,7 +17935,7 @@ begin
       SetPPInfo(eds_col);
 
       // compress edges sprite:
-      PrimitiveComp(@sel_pts_big_img,eds_bld_stl); {$endregion}
+      PrimitiveComp(@sel_pts_big_img,eds_bld_stl);{$endregion}
 
     end;
 end; {$endregion}
@@ -17821,7 +17963,7 @@ end; {$endregion}
 procedure TSelIts.SelectAllPts(const pts_cnt,eds_cnt:TColor);                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TSelIts.SubgraphCalc(var has_sel_pts:T1Byte1Arr; constref pts:TPtPosFArr; constref fst_lst_sln_obj_pts:TEnum0Arr; constref obj_ind:TColorArr; constref sln_obj_cnt:TColor; constref sln_pts_cnt:TColor); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.SubgraphCalc(var has_sel_pts:T1Byte1Arr; constref pts:TPtPosFArr; constref fst_lst_sln_obj_pts:TEnum0Arr; constref obj_ind:TColorArr; constref sln_obj_cnt:TColor; constref sln_pts_cnt:TColor); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   outer_subgraph1_ptr        : PEdge;
   outer_subgraph2_ptr        : PEdge;
@@ -18360,7 +18502,7 @@ begin
     end;
   }
 end; {$endregion}
-procedure TSelIts.OuterSubgraphCalc0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.OuterSubgraphCalc0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr            : PPtPosF;
   outer_subgraph1_ptr: PEdge;
@@ -18402,7 +18544,7 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TSelIts.OuterSubgraphCalc1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.OuterSubgraphCalc1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr            : PPtPosF;
   outer_subgraph1_ptr: PEdge;
@@ -18451,7 +18593,7 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TSelIts.OuterSubgraphCalc2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.OuterSubgraphCalc2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr            : PPtPosF;
   outer_subgraph1_ptr: PEdge;
@@ -18497,7 +18639,7 @@ begin
     end; {$endregion}
   }
 end; {$endregion}
-procedure TSelIts.OuterSubgraphDraw (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.OuterSubgraphDraw (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr1       : PObjInfo;
   obj_arr_ptr2       : PObjInfo;
@@ -18526,15 +18668,15 @@ begin
   {Set Drawing Bounds(Inner Window)} {$region -fold}
   with rct_clp do
     begin
-      m1:=left  +{outer_subgraph_img.}grid_pt_rad;
-      m2:=top   +{outer_subgraph_img.}grid_pt_rad;
-      m3:=right -{outer_subgraph_img.}grid_pt_rad-1;
-      m4:=bottom-{outer_subgraph_img.}grid_pt_rad-1;
+      m1:=left  +grid_pt_rad;
+      m2:=top   +grid_pt_rad;
+      m3:=right -grid_pt_rad-1;
+      m4:=bottom-grid_pt_rad-1;
     end;
   rct:=PtRct(m1,m2,m3,m4); {$endregion}
 
   {Clear Arrays--------------------} {$region -fold}
-  with outer_subgraph_img,local_prop do
+  with outer_subgraph_img do
     begin
       ArrClear(ln_arr0,rct_clp,ln_arr_width);
       ArrClear(ln_arr2,rct_clp);
@@ -18559,10 +18701,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.last_point ]]]);
                       ClippedLine1
                       (
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct,
                         Unaligned(@LineSME),
                         Nil,
@@ -18575,10 +18717,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.last_point ]]]);
                       ClippedLine1
                       (
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct,
                         Unaligned(@LineSME),
                         Nil,
@@ -18602,10 +18744,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.last_point ]]]);
                       ClippedLine1
                       (
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct,
                         Unaligned(@LineSME),
                         Nil,
@@ -18632,10 +18774,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.last_point ]]]);
                       ClippedLine2
                       (
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct,
                         Unaligned(@LineSME),
                         Nil,
@@ -18648,10 +18790,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.last_point ]]]);
                       ClippedLine2
                       (
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct,
                         Unaligned(@LineSME),
                         Nil,
@@ -18675,10 +18817,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.last_point ]]]);
                       ClippedLine2
                       (
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct,
                         Unaligned(@LineSME),
                         Nil,
@@ -18708,10 +18850,10 @@ begin
                      (sln_var.has_edge[Min(outer_subgraph1_ptr^.first_point,outer_subgraph1_ptr^.last_point)]=0)               then
                     LineSMN
                     (
-                      Trunc(pts_f1.x)+obj_arr_ptr1^.world_axis_shift.x,
-                      Trunc(pts_f1.y)+obj_arr_ptr1^.world_axis_shift.y,
-                      Trunc(pts_l1.x)+obj_arr_ptr2^.world_axis_shift.x,
-                      Trunc(pts_l1.y)+obj_arr_ptr2^.world_axis_shift.y
+                      Trunc(pts_f1.x+obj_arr_ptr1^.world_axis_shift.x),
+                      Trunc(pts_f1.y+obj_arr_ptr1^.world_axis_shift.y),
+                      Trunc(pts_l1.x+obj_arr_ptr2^.world_axis_shift.x),
+                      Trunc(pts_l1.y+obj_arr_ptr2^.world_axis_shift.y)
                     );
                   pts_f2      :=(pts_ptr+outer_subgraph2_ptr^.first_point)^;
                   pts_l2      :=(pts_ptr+outer_subgraph2_ptr^.last_point )^;
@@ -18722,10 +18864,10 @@ begin
                      (sln_var.has_edge[Min(outer_subgraph2_ptr^.first_point,outer_subgraph2_ptr^.last_point)]=0)               then
                     LineSMN
                     (
-                      Trunc(pts_f2.x)+obj_arr_ptr1^.world_axis_shift.x,
-                      Trunc(pts_f2.y)+obj_arr_ptr1^.world_axis_shift.y,
-                      Trunc(pts_l2.x)+obj_arr_ptr2^.world_axis_shift.x,
-                      Trunc(pts_l2.y)+obj_arr_ptr2^.world_axis_shift.y
+                      Trunc(pts_f2.x+obj_arr_ptr1^.world_axis_shift.x),
+                      Trunc(pts_f2.y+obj_arr_ptr1^.world_axis_shift.y),
+                      Trunc(pts_l2.x+obj_arr_ptr2^.world_axis_shift.x),
+                      Trunc(pts_l2.y+obj_arr_ptr2^.world_axis_shift.y)
                     );
                   Inc(outer_subgraph1_ptr);
                   Inc(outer_subgraph2_ptr);
@@ -18747,10 +18889,10 @@ begin
                      (sln_var.has_edge[Min(outer_subgraph3_ptr^.first_point,outer_subgraph3_ptr^.last_point)]=0)   then
                     LineSMN
                     (
-                      Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
-                      Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
-                      Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
-                      Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y
+                      Trunc(pts_f3.x+obj_arr_ptr1^.world_axis_shift.x),
+                      Trunc(pts_f3.y+obj_arr_ptr1^.world_axis_shift.y),
+                      Trunc(pts_l3.x+obj_arr_ptr2^.world_axis_shift.x),
+                      Trunc(pts_l3.y+obj_arr_ptr2^.world_axis_shift.y)
                     );
                 Inc(outer_subgraph3_ptr);
               end;
@@ -18772,10 +18914,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph1_ptr^.last_point ]]]);
                       ClippedLine2
                       (
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph1_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct
                       );
                       LineR
@@ -18796,10 +18938,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph2_ptr^.last_point ]]]);
                       ClippedLine2
                       (
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph2_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct
                       );
                       LineR
@@ -18831,10 +18973,10 @@ begin
                       obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[outer_subgraph3_ptr^.last_point ]]]);
                       ClippedLine2
                       (
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x)+obj_arr_ptr1^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y)+obj_arr_ptr1^.world_axis_shift.y,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x)+obj_arr_ptr2^.world_axis_shift.x,
-                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y)+obj_arr_ptr2^.world_axis_shift.y,
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.x+obj_arr_ptr1^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.first_point)^.y+obj_arr_ptr1^.world_axis_shift.y),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.x+obj_arr_ptr2^.world_axis_shift.x),
+                        Trunc((pts_ptr+outer_subgraph3_ptr^.last_point )^.y+obj_arr_ptr2^.world_axis_shift.y),
                         rct
                       );
                       LineR
@@ -18870,7 +19012,7 @@ begin
   outer_subgraph_img.FillBuffer(rct_clp); {$endregion}
 
 end; {$endregion}
-procedure TSelIts.InnerSubgraphCalc0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.InnerSubgraphCalc0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                    : PPtPosF;
   pts_f3,pts_l3              : TPtPosF;
@@ -18913,7 +19055,7 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TSelIts.InnerSubgraphCalc1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.InnerSubgraphCalc1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                    : PPtPosF;
   pts_f3,pts_l3              : TPtPosF;
@@ -18963,7 +19105,7 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TSelIts.InnerSubgraphCalc2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.InnerSubgraphCalc2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr                    : PPtPosF;
   pts_f3,pts_l3              : TPtPosF;
@@ -19007,7 +19149,7 @@ begin
     end; {$endregion}
   }
 end; {$endregion}
-procedure TSelIts.InnerSubgraphDraw (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.InnerSubgraphDraw (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr1               : PObjInfo;
   obj_arr_ptr2               : PObjInfo;
@@ -19024,21 +19166,24 @@ begin
   if (inner_subgraph__eds_cnt=0) then
     Exit;
 
+  if IsRct1OutOfRct2(rct_clp,srf_var_ptr^.inn_wnd_rct) then
+    Exit;
+
   if fill_bmp_only then
     goto lbl_flood_fill_only;
 
   {Set Drawing Bounds(Inner Window)} {$region -fold}
   with rct_clp do
     begin
-      m1:=left  +{inner_subgraph_img.}grid_pt_rad;
-      m2:=top   +{inner_subgraph_img.}grid_pt_rad;
-      m3:=right -{inner_subgraph_img.}grid_pt_rad-1;
-      m4:=bottom-{inner_subgraph_img.}grid_pt_rad-1;
+      m1:=left  +grid_pt_rad;
+      m2:=top   +grid_pt_rad;
+      m3:=right -grid_pt_rad-1;
+      m4:=bottom-grid_pt_rad-1;
     end;
   rct:=PtRct(m1,m2,m3,m4); {$endregion}
 
   {Clear Arrays--------------------} {$region -fold}
-  with inner_subgraph_img,local_prop do
+  with inner_subgraph_img do
     begin
       ArrClear(ln_arr0,rct_clp,ln_arr_width);
       ArrClear(ln_arr2,rct_clp);
@@ -19063,10 +19208,10 @@ begin
                     obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.last_point ]]]);
                     ClippedLine1
                     (
-                      Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
-                      Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
-                      Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
-                      Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y,
+                      Trunc(pts_f3.x+obj_arr_ptr1^.world_axis_shift.x),
+                      Trunc(pts_f3.y+obj_arr_ptr1^.world_axis_shift.y),
+                      Trunc(pts_l3.x+obj_arr_ptr2^.world_axis_shift.x),
+                      Trunc(pts_l3.y+obj_arr_ptr2^.world_axis_shift.y),
                       rct,
                       Unaligned(@LineSME),
                       Nil,
@@ -19092,10 +19237,10 @@ begin
                     obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.last_point ]]]);
                     ClippedLine2
                     (
-                      Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
-                      Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
-                      Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
-                      Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y,
+                      Trunc(pts_f3.x+obj_arr_ptr1^.world_axis_shift.x),
+                      Trunc(pts_f3.y+obj_arr_ptr1^.world_axis_shift.y),
+                      Trunc(pts_l3.x+obj_arr_ptr2^.world_axis_shift.x),
+                      Trunc(pts_l3.y+obj_arr_ptr2^.world_axis_shift.y),
                       rct,
                       Unaligned(@LineSME),
                       Nil,
@@ -19134,10 +19279,10 @@ begin
                         if (sln_var.has_edge[Min(inner_subgraph_ptr^.first_point,inner_subgraph_ptr^.last_point)]=0) then
                           LineSMN
                           (
-                            Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
-                            Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
-                            Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
-                            Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y
+                            Trunc(pts_f3.x+obj_arr_ptr1^.world_axis_shift.x),
+                            Trunc(pts_f3.y+obj_arr_ptr1^.world_axis_shift.y),
+                            Trunc(pts_l3.x+obj_arr_ptr2^.world_axis_shift.x),
+                            Trunc(pts_l3.y+obj_arr_ptr2^.world_axis_shift.y)
                           );
                 Inc(inner_subgraph_ptr);
               end;
@@ -19156,10 +19301,10 @@ begin
                 obj_arr_ptr2:=Unaligned(@obj_var.obj_arr[obj_var.curve_inds_obj_arr[sln_var.sln_obj_ind[inner_subgraph_ptr^.last_point ]]]);
                 ClippedLine2
                 (
-                  Trunc(pts_f3.x)+obj_arr_ptr1^.world_axis_shift.x,
-                  Trunc(pts_f3.y)+obj_arr_ptr1^.world_axis_shift.y,
-                  Trunc(pts_l3.x)+obj_arr_ptr2^.world_axis_shift.x,
-                  Trunc(pts_l3.y)+obj_arr_ptr2^.world_axis_shift.y,
+                  Trunc(pts_f3.x+obj_arr_ptr1^.world_axis_shift.x),
+                  Trunc(pts_f3.y+obj_arr_ptr1^.world_axis_shift.y),
+                  Trunc(pts_l3.x+obj_arr_ptr2^.world_axis_shift.x),
+                  Trunc(pts_l3.y+obj_arr_ptr2^.world_axis_shift.y),
                   rct
                 );
                 if not((not IsPtInRct(PtPos(ln_pos.x0,ln_pos.y0),rct))  and
@@ -19194,7 +19339,7 @@ begin
   inner_subgraph_img.FillBuffer(rct_clp); {$endregion}
 
 end; {$endregion}
-procedure TSelIts.SinglePtGraphCalc0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.SinglePtGraphCalc0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr            : PPtPosF;
   sl_pt_subgraph__ptr: PSlPt;
@@ -19218,7 +19363,7 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TSelIts.SinglePtGraphCalc1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.SinglePtGraphCalc1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr            : PPtPosF;
   sl_pt_subgraph__ptr: PSlPt;
@@ -19247,22 +19392,21 @@ begin
     end; {$endregion}
 
 end; {$endregion}
-procedure TSelIts.SinglePtGraphCalc2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.SinglePtGraphCalc2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   pts_ptr            : PPtPosF;
   sl_pt_subgraph__ptr: PSlPt;
   i                  : integer;
 begin
 end; {$endregion}
-procedure TSelIts.SelectdPointsCalc (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.SelectdPointsCalc (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TSelIts.SelectdPointsDraw (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.SelectdPointsDraw (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
 end; {$endregion}
-procedure TSelIts.SelectdPointsBnds (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TSelIts.SelectdPointsBnds (x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct_clp  :TPtRect); {inline;} {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-
   with sel_bounds_prop do
     begin
       pts_rct_inn_width :=Trunc(sel_pts_rct.width );
@@ -19281,7 +19425,6 @@ begin
         sel_bounds_prop
       );
     end;
-
 end; {$endregion}
 procedure TSelIts.WholeSubgraphDraw0(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct1,rct2:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -19308,8 +19451,9 @@ begin
 
   {Drawing of Selected Points Bounds} {$region fold}
   if sel_bounds_prop.rct_eds_show then
-    SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1);
-  SelPtsIndsToFalse2; {$endregion}
+    SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  SelPtsIndsToFalse2;
 
 end; {$endregion}
 procedure TSelIts.WholeSubgraphDraw1(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct1,rct2:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -19337,8 +19481,9 @@ begin
 
   {Drawing of Selected Points Bounds} {$region fold}
   if sel_bounds_prop.rct_eds_show then
-    SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1);
-  SelPtsIndsToFalse2; {$endregion}
+    SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  SelPtsIndsToFalse2;
 
 end; {$endregion}
 procedure TSelIts.WholeSubgraphDraw2(x,y:integer; constref pvt:TPtPosF; var pts:TPtPosFArr; constref bmp_dst_ptr:PInteger; constref rct1,rct2:TPtRect); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -19366,8 +19511,9 @@ begin
 
   {Drawing of Selected Points Bounds} {$region fold}
   if sel_bounds_prop.rct_eds_show then
-    SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1);
-  SelPtsIndsToFalse2; {$endregion}
+    SelectdPointsBnds(x,y,pvt,pts,bmp_dst_ptr,rct1); {$endregion}
+
+  SelPtsIndsToFalse2;
 
 end; {$endregion}
 procedure TSelIts.SelPvtAndSplineEdsToBmp;                                                                                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -19878,7 +20024,7 @@ begin
       Inc(sel_pts_inds_ptr);
     end;
   j                 :=0;
-  weighted_pvt_shift:=Default(TPtPos);
+  weighted_pvt_shift:=Default(TPtPosF);
   while (j<sel_pts_cnt) do
     begin
       sel_obj_pts_cnt:=0;
@@ -20986,6 +21132,10 @@ end; {$endregion}
 //...
 {$endregion}
 {UI} {$region -fold}
+procedure TF_MainForm.CB_Game_Settings_Fix_ResolutionChange(sender:TObject); {$region -fold}
+begin
+  fix_resolution:=not fix_resolution;
+end; {$endregion}
 procedure TF_MainForm.SB_Play_AnimClick     (sender:TObject); {$region -fold}
 var
   i: integer;
@@ -21051,7 +21201,7 @@ begin
       GetObject(srf_bmp.Handle,SizeOf(buffer),@buffer);
     end;
 
-  for i:=0 to 9999 do
+  {for i:=0 to 9999 do
     begin
       projectile_arr[i]:=projectile_default;
       with projectile_arr[i] do
@@ -21066,7 +21216,7 @@ begin
           angle+=Random(90);}
           //projectile_arr[i].time-=TIME_DELTA;
         end;
-    end;
+    end;}
 
   DrawingPanelsSetVisibility1(down_play_anim_ptr,P_Play_Anim,P_AnimK_Custom_Panel,prev_panel_animk,curr_panel_animk);
   DrawingPanelsSetVisibility2;
@@ -21104,11 +21254,11 @@ begin
   //T_Logo1.Enabled:=down_play_anim_ptr^;
 
 
-  VisibilityChange      (not down_play_anim_ptr^);
+  //VisibilityChange      (not down_play_anim_ptr^);
   show_visibility_panel:=not down_play_anim_ptr^;
   if (not down_play_anim_ptr^) then
     begin
-      VisibilityChange(True);
+      //VisibilityChange(True);
       show_visibility_panel:=True;
     end;
   with srf_var,sln_var,fast_fluid_var do
@@ -21411,8 +21561,8 @@ begin
         fast_image_data_ptr2:=@sprite_sheet_arr[tilemap_sprite_ind].fast_image_data;
         fast_image_data_ptr0:=fast_image_data_ptr1;
         obj_arr_ptr         :=Unaligned(@obj_var.obj_arr[obj_var.tlmap_inds_obj_arr[tlmap_ind]]);
-        SetRctPos(world_axis.x-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+obj_arr_ptr^.world_axis_shift.x,
-                  world_axis.y-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+obj_arr_ptr^.world_axis_shift.y);
+        SetRctPos(Trunc(world_axis.x)-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                  Trunc(world_axis.y)-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+Trunc(obj_arr_ptr^.world_axis_shift.y));
         SetBkgnd
         (
           obj_arr_ptr^.bkgnd_ptr,
@@ -21444,8 +21594,8 @@ begin
         fast_image_data_ptr2:=@sprite_sheet_arr[tilemap_sprite_ind].fast_image_data;
         fast_image_data_ptr0:=fast_image_data_ptr1;
         obj_arr_ptr         :=Unaligned(@obj_var.obj_arr[obj_var.tlmap_inds_obj_arr[tlmap_ind]]);
-        SetRctPos(world_axis.x-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+obj_arr_ptr^.world_axis_shift.x,
-                  world_axis.y-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+obj_arr_ptr^.world_axis_shift.y);
+        SetRctPos(Trunc(world_axis.x)-(bmp_ftimg_width_origin *tilemap_sprite_w_h.x)>>1+Trunc(obj_arr_ptr^.world_axis_shift.x),
+                  Trunc(world_axis.y)-(bmp_ftimg_height_origin*tilemap_sprite_w_h.y)>>1+Trunc(obj_arr_ptr^.world_axis_shift.y));
         SetBkgnd
         (
           obj_arr_ptr^.bkgnd_ptr,
@@ -21468,9 +21618,9 @@ begin
 end; {$endregion}
 {$endregion}
 {UI} {$region -fold}
-procedure TF_MainForm.SB_Map_EditorClick         (sender:TObject); {$region -fold}
+procedure TF_MainForm.SB_Game_SettingsClick         (sender:TObject); {$region -fold}
 begin
-  DrawingPanelsSetVisibility1(down_map_editor_ptr,P_Map_Editor,P_AnimK_Custom_Panel,prev_panel_animk,curr_panel_animk);
+  DrawingPanelsSetVisibility1(down_map_editor_ptr,P_Game_Settings,P_AnimK_Custom_Panel,prev_panel_animk,curr_panel_animk);
 end; {$endregion}
 procedure TF_MainForm.BB_Add_TileMapClick        (sender:TObject); {$region -fold}
 begin
@@ -21521,20 +21671,21 @@ end; {$endregion}
 
 // (F_MainForm) Основные функции формы:
 {LI} {$region -fold}
-procedure SpeedButtonRepaint;                                                                                               inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure SpeedButtonRepaint;                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
-  F_MainForm.TB_Speed.width:=137;
-  F_MainForm.TB_Speed.width:=136;
+  F_MainForm.TB_Camera_Speed.width:=137;
+  F_MainForm.TB_Camera_Speed.width:=136;
 end; {$endregion}
-procedure FormChangeSize;                                                                                                   inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure FormChangeSize;                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   SplittersPosCalc;
-  with srf_var do
-    begin
-      EventGroupsCalc(calc_arr,[0,1,2,3,4,17,18,30,31,32,37,41,48]);
-      SetLength(useless_fld_arr_,srf_bmp.width*srf_bmp.height);
-      ArrClear (useless_fld_arr_,inn_wnd_rct,  srf_bmp.width );
-    end;
+  if (not (fix_resolution and down_play_anim_ptr^)) then
+    with srf_var do
+      begin
+        EventGroupsCalc(calc_arr,[0,1,2,3,4,17,18,30,31,32,37,41,48]);
+        SetLength(useless_fld_arr_,srf_bmp.width*srf_bmp.height);
+        ArrClear (useless_fld_arr_,inn_wnd_rct,  srf_bmp.width );
+      end;
   if down_select_items_ptr^ then
     sel_var.MinimizeCircleSelection;
   F_MainForm.KeysEnable0;
@@ -21562,7 +21713,7 @@ begin
     Screen.Cursor:=cur2;
 end; {$endregion}
 {$ifdef Windows}
-procedure TF_MainForm.OnMove(var message:TWMMove);                                                                                                                 {$region -fold}
+procedure TF_MainForm.OnMove(var message:TWMMove);                                                                                                      {$region -fold}
 begin
   if move_with_child_form then
     begin
@@ -21574,16 +21725,7 @@ end; {$endregion}
 {$endif}
 {$endregion}
 {UI} {$region -fold}
-procedure TF_MainForm.TB_SpeedChange    (sender:TObject);                                                          {$region -fold}
-begin
-  cmr_var.speed_mul.x:=TB_Speed.Position;
-  cmr_var.speed_mul.y:=TB_Speed.Position;
-  obj_var.SetParallaxShift(cmr_var.parallax_shift,cmr_var.speed_mul);
-end; {$endregion}
-procedure TF_MainForm.TB_SpeedClick     (sender:TObject);                                                          {$region -fold}
-begin
-end; {$endregion}
-procedure TF_MainForm.KeysEnable0;                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TF_MainForm.KeysEnable0;                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -21600,13 +21742,13 @@ begin
       (P_Animation_Buttons.Controls[i] as TSpeedButton).Enabled:=True;
     end;
 end; {$endregion}
-procedure TF_MainForm.KeysEnable1;                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TF_MainForm.KeysEnable1;                                              inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   OnKeyPress:=@FormKeyPress;
   OnKeyDown :=@FormKeyDown;
   OnKeyUp   :=@FormKeyUp;
 end; {$endregion}
-procedure TF_MainForm.KeysDisable0;                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TF_MainForm.KeysDisable0;                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   i: integer;
 begin
@@ -21624,17 +21766,38 @@ begin
         end;
     end;
 end; {$endregion}
-procedure TF_MainForm.KeysDisable1;                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure TF_MainForm.KeysDisable1;                                             inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   OnKeyPress:=Nil;
   OnKeyDown :=Nil;
   OnKeyUp   :=Nil;
 end; {$endregion}
-procedure TF_MainForm.FormResize        (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.TB_Camera_SpeedChange (sender:TObject);                                                          {$region -fold}
+begin
+  with cmr_var do
+    begin
+      speed_mul.x           :=TB_Camera_Speed.Position;
+      speed_mul.y           :=TB_Camera_Speed.Position;
+      FSE_Camera_Speed.Value:=TB_Camera_Speed.Position;
+    end;
+end; {$endregion}
+procedure TF_MainForm.FSE_Camera_SpeedChange(sender:TObject);                                                          {$region -fold}
+begin
+  with cmr_var do
+    begin
+      speed_mul.x:=FSE_Camera_Speed.Value;
+      speed_mul.y:=FSE_Camera_Speed.Value;
+      if (Trunc(FSE_Camera_Speed.Value)>=10) then
+        TB_Camera_Speed.Position:=10
+      else
+        TB_Camera_Speed.Position:=Trunc(FSE_Camera_Speed.Value);
+    end;
+end; {$endregion}
+procedure TF_MainForm.FormResize            (sender:TObject);                                                          {$region -fold}
 begin
   FormChangeSize;
 end; {$endregion}
-procedure TF_MainForm.FormMouseMove     (sender:TObject; shift:TShiftState; x,y:integer);                          {$region -fold}
+procedure TF_MainForm.FormMouseMove         (sender:TObject; shift:TShiftState; x,y:integer);                          {$region -fold}
 var
   color_info: TColorInfo;
   rct_prop  : TCurveProp;
@@ -21815,7 +21978,7 @@ begin
       end; {$endregion}
 
 end; {$endregion}
-procedure TF_MainForm.FormMouseDown     (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);     {$region -fold}
+procedure TF_MainForm.FormMouseDown         (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);     {$region -fold}
 var
   color_info: TColorInfo;
 begin
@@ -22052,7 +22215,7 @@ begin
   end;
 
 end; {$endregion}
-procedure TF_MainForm.FormMouseUp       (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);     {$region -fold}
+procedure TF_MainForm.FormMouseUp           (sender:TObject; button:TMouseButton; shift:TShiftState; x,y:integer);     {$region -fold}
 begin
 
   {if down_play_anim_ptr^ then
@@ -22099,7 +22262,7 @@ begin
       end; {$endregion}
 
 end; {$endregion}
-procedure TF_MainForm.FormDblClick      (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.FormDblClick          (sender:TObject);                                                          {$region -fold}
 begin
 
   {Add Spline} {$region -fold}
@@ -22118,7 +22281,7 @@ begin
       end; {$endregion}
 
 end; {$endregion}
-procedure TF_MainForm.FormPaint         (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.FormPaint             (sender:TObject);                                                          {$region -fold}
 begin
   with srf_var do
     if (not need_repaint) then
@@ -22127,7 +22290,7 @@ begin
                srf_bmp.Canvas,
                SRCCOPY);
 end; {$endregion}
-procedure TF_MainForm.FormMouseWheelDown(sender:TObject; shift:TShiftState; mousePos:TPoint; var handled:boolean); {$region -fold}
+procedure TF_MainForm.FormMouseWheelDown    (sender:TObject; shift:TShiftState; mousePos:TPoint; var handled:boolean); {$region -fold}
 begin
   if drawing_area_enter_calc then
     begin
@@ -22187,7 +22350,7 @@ begin
     end;
   SpeedButtonRepaint;
 end; {$endregion}
-procedure TF_MainForm.FormMouseWheelUp  (sender:TObject; shift:TShiftState; mousePos:TPoint; var handled:boolean); {$region -fold}
+procedure TF_MainForm.FormMouseWheelUp      (sender:TObject; shift:TShiftState; mousePos:TPoint; var handled:boolean); {$region -fold}
 var
   max_sqr,min_sqr: integer;
 begin
@@ -22249,7 +22412,7 @@ begin
     end;
   SpeedButtonRepaint;
 end; {$endregion}
-procedure TF_MainForm.FormKeyPress      (sender:TObject; var key:char);                                            {$region -fold}
+procedure TF_MainForm.FormKeyPress          (sender:TObject; var key:char);                                            {$region -fold}
 begin
 
   {Change Pivot Mode-} {$region -fold}
@@ -22360,20 +22523,20 @@ begin
   // button 'Regular Grid':
   if (key=Char(key_arr[10]{#54})) or (key=Char(key_alt_arr[10]{' '})) then
     begin
-      ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,000007);
+      ButtonKeyPress(SB_RGrid                ,P_RGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_rgrid_ptr                ,0,crDefault);
       if (not down_rgrid_ptr^) then
         Exit;
     end;
   // button 'Snap Grid':
   if (key=Char(key_arr[11]{#54})) or (key=Char(key_alt_arr[11]{' '})) then
     begin
-      ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,000008);
+      ButtonKeyPress(SB_SGrid                ,P_SGrid                ,P_Draw_Custom_Panel,P_Drawing_Buttons,down_sgrid_ptr                ,0,crDefault);
       if (not down_sgrid_ptr^) then
         Exit;
     end; {$endregion}
 
 end; {$endregion}
-procedure TF_MainForm.FormKeyDown       (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
+procedure TF_MainForm.FormKeyDown           (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
 begin
 
   is_active:=True;
@@ -22453,6 +22616,9 @@ begin
         end;
 
       if down_play_anim_ptr^ then
+        Exit;
+
+      if (Trunc(cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x)=0) then
         Exit;
 
       case Key of
@@ -22572,7 +22738,7 @@ begin
               {Pivot Drawing--------------} {$region -fold}
               if (sel_pts_cnt>0) then
                 begin
-                  PivotDraw(srf_var.world_axis_shift,Trunc(pvt_pos.x),Trunc(pvt_pos.y));
+                  PivotDraw(PtPos(srf_var.world_axis_shift),Trunc(pvt_pos.x),Trunc(pvt_pos.y));
                   IsPivotOutOfInnerWindow(pvt_axis_rect,pvt_pos);
                 end; {$endregion}
               {World Axis Drawing---------} {$region -fold}
@@ -22599,7 +22765,7 @@ begin
     end;
 
 end; {$endregion}
-procedure TF_MainForm.FormKeyUp         (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
+procedure TF_MainForm.FormKeyUp             (sender:TObject; var key:word; shift:TShiftState);                         {$region -fold}
 begin
 
   with obj_var,srf_var,sln_var,tex_var,sel_var,pvt_var do
@@ -22708,7 +22874,7 @@ begin
   end;
 
 end; {$endregion}
-procedure TF_MainForm.FormMouseEnter    (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.FormMouseEnter        (sender:TObject);                                                          {$region -fold}
 begin
   {Add Actor} {$region -fold}
   //if down_add_actor_ptr^ then
@@ -22752,11 +22918,11 @@ begin
   if down_select_texture_region_ptr^ then
     Screen.Cursor:=6;
   if down_rgrid_ptr^ then
-    Screen.Cursor:=7;
+    Screen.Cursor:=crDefault;
   if down_sgrid_ptr^ then
-    Screen.Cursor:=8;
+    Screen.Cursor:=crDefault;
 end; {$endregion}
-procedure TF_MainForm.FormMouseLeave    (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.FormMouseLeave        (sender:TObject);                                                          {$region -fold}
 begin
   drawing_area_enter_calc:=False;
   if down_select_items_ptr^ then
@@ -22772,10 +22938,10 @@ begin
     end;
   Screen.Cursor:=crDefault;
 end; {$endregion}
-procedure TF_MainForm.FormCreate        (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.FormCreate            (sender:TObject);                                                          {$region -fold}
 var
   color_info      : TColorInfo;
-  world_axis_shift: TPtPos;
+  world_axis_shift: TPtPosF;
   i               : integer;
 begin
 
@@ -22798,7 +22964,7 @@ begin
   if (srf_var<>Nil) then
     world_axis_shift:=srf_var.world_axis_shift
   else
-    world_axis_shift:=Default(TPtPos);
+    world_axis_shift:=Default(TPtPosF);
   obj_var.Add(kooEmpty,world_axis_shift);
   CreateNode('','0',True);
   ObjIndsCalc;
@@ -22869,7 +23035,7 @@ begin
     for i:=0 to SB_AnimK.ControlCount-1 do
       SB_AnimK.Controls[i].Anchors:=[akLeft,akTop,akRight,akBottom];
     prev_panel_animk              :=P_AnimK_Custom_Panel;
-    curr_panel_animk              :=P_Map_Editor;
+    curr_panel_animk              :=P_Game_Settings;
     P_AnimK_Custom_Panel.Visible  :=False; {$endregion}
 
   {$endregion}
@@ -22889,7 +23055,8 @@ begin
 
   {Camera--------------------} {$region -fold}
   cmr_var:=TCamera.Create(I_Frame_List.width,
-                          I_Frame_List.height); {$endregion}
+                          I_Frame_List.height);
+  obj_var.speed_mul_ptr:=@cmr_var.speed_mul; {$endregion}
 
   {Main Layer----------------} {$region -fold}
   srf_var:=TSurface.Create(width,height); {$endregion}
@@ -22959,9 +23126,9 @@ begin
 
   {Tile Map -----------------} {$region -fold}
   tlm_var              :=TTlMap.Create;
-  SB_Map_Editor.Down   :=True;
-  P_Map_Editor .Visible:=True;
-  down_map_editor_ptr  :=Unaligned(@SB_Map_Editor.Down); {$endregion}
+  SB_Game_Settings.Down   :=True;
+  P_Game_Settings .Visible:=True;
+  down_map_editor_ptr  :=Unaligned(@SB_Game_Settings.Down); {$endregion}
 
   {Add Actor-----------------} {$region -fold}
   with srf_var do
@@ -23159,7 +23326,7 @@ begin
     end;} {$endregion}
 
 end; {$endregion}
-procedure TF_MainForm.FormActivate      (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.FormActivate          (sender:TObject);                                                          {$region -fold}
 var
   i  : integer;
   key: char;
@@ -23179,8 +23346,8 @@ begin
   fill_scene_calc:=True;
   show_world_axis:=True;
   with srf_var,inn_wnd_rct do
-    world_axis:=PtPos((left+right )>>1,
-                      (top +bottom)>>1);
+    world_axis:=PtPosF((left+right )>>1,
+                       (top +bottom)>>1);
   key:=Char(key_arr[07]);
   FormKeyPress(Self,key);
   SB_Spline_Edges_ShowClick               (Self);
@@ -23251,10 +23418,10 @@ begin
     end;} {$endregion}
 
 end; {$endregion}
-procedure TF_MainForm.FormDestroy       (sender:TObject);                                                          {$region -fold}
+procedure TF_MainForm.FormDestroy           (sender:TObject);                                                          {$region -fold}
 begin
 end; {$endregion}
-procedure TF_MainForm.FormDropFiles     (sender:TObject; const file_names:array of string);                        {$region -fold}
+procedure TF_MainForm.FormDropFiles         (sender:TObject; const file_names:array of string);                        {$region -fold}
 var
   file_name: string;
 begin
@@ -23815,9 +23982,13 @@ procedure TF_MainForm.SB_TreeView_Object_TagsMouseWheelUp            (sender:TOb
 begin
   TV_Scene_Tree.Perform(WM_VSCROLL,MakeWParam(SB_LINEUP,0),0);
 end; {$endregion}
+procedure TF_MainForm.MI_Center_Camera_To_Selected_ObjectClick       (sender:TObject);                                                           {$region -fold}
+begin
+
+end; {$endregion}
 procedure TF_MainForm.MI_Add_GroupClick                              (sender:TObject);                                                           {$region -fold}
 var
-  world_axis_shift: TPtPos;
+  world_axis_shift: TPtPosF;
   //items_text      : ansistring;
 begin
   with TV_Scene_Tree,obj_var do
@@ -23825,7 +23996,7 @@ begin
       if (srf_var<>Nil) then
         world_axis_shift:=srf_var.world_axis_shift
       else
-        world_axis_shift:=Default(TPtPos);
+        world_axis_shift:=Default(TPtPosF);
       Add(kooGroup,world_axis_shift);
       CreateNode('Group',IntToStr(group_cnt));
       ObjIndsCalc;
@@ -24682,6 +24853,8 @@ var
   str                  : string;
   projectile_arr_ptr   : PProjectile;}
   execution_time       : double;
+label
+  l1;
 begin
 
   {if (frame_skip<>frame_step) then
@@ -24706,7 +24879,7 @@ begin
       GetCursorPos(cur_pos);
       cur_pos:=ScreenToClient(cur_pos);
 
-      if (CB_Spline_Mode.ItemIndex=0) then
+      {if (CB_Spline_Mode.ItemIndex=0) then
         if draw_spline then
           begin
             AddPoint
@@ -24727,7 +24900,12 @@ begin
               low_bmp.Canvas,
               SRCCOPY
             );
-          end;
+          end;}
+
+      //ChangeSpeed;
+
+      if (Trunc(cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x)=0) then
+        goto l1;
 
       {Draw Objects of Lower Layer} {$region -fold}
       if dir_a then
@@ -24790,6 +24968,8 @@ begin
               MovScene(0,low_lr_obj_cnt-1);
             end;
         end;
+
+      l1:
 
       if low_bmp_draw then
         LowerBmpToMainBmp
@@ -25344,7 +25524,7 @@ begin
             end;
         end;}
 
-      {WorldAxisDraw;} {$endregion}
+      WorldAxisDraw; {$endregion}
 
       {with local_axis_bmp,fast_image_data,fast_image_proc_var do
         begin
@@ -25847,8 +26027,8 @@ var
           tex_bmp.width,
           srf_bmp.width,
           angle_,
-          world_axis.x+world_axis_shift.x-tex_bmp.width >>1,
-          world_axis.y+world_axis_shift.y-tex_bmp.height>>1,
+          Trunc(world_axis.x+world_axis_shift.x-tex_bmp.width >>1),
+          Trunc(world_axis.y+world_axis_shift.y-tex_bmp.height>>1),
           1,
           bounding_rct,
           NT_BIT_MASK_ALPHA
@@ -25868,8 +26048,8 @@ var
           tex_bmp.width,
           srf_bmp.width,
           angle_,
-          world_axis.x+world_axis_shift.x-tex_bmp.width >>1,
-          world_axis.y+world_axis_shift.y-tex_bmp.height>>1,
+          Trunc(world_axis.x+world_axis_shift.x-tex_bmp.width >>1),
+          Trunc(world_axis.y+world_axis_shift.y-tex_bmp.height>>1),
           1,
           bounding_rct,
           0
@@ -25924,8 +26104,8 @@ var
         tex_bmp.width,
         srf_bmp.width,
         angle_,
-        world_axis.x+world_axis_shift.x-tex_bmp.width >>1,
-        world_axis.y+world_axis_shift.y-tex_bmp.height>>1,
+        Trunc(world_axis.x+world_axis_shift.x-tex_bmp.width >>1),
+        Trunc(world_axis.y+world_axis_shift.y-tex_bmp.height>>1),
         0,
         bounding_rct,
         0

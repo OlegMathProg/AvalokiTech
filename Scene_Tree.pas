@@ -117,8 +117,8 @@ type
     // local axis:
     local_axis               : TPtPos;
     // parallax:
-    world_axis_shift         : TPtPos;
-    world_axis_shift_centrify: TPtPos;
+    world_axis_shift         : TPtPosF;
+    world_axis_shift_centrify: TPtPosF;
     parallax_shift           : TPtPosF;
     // distance between world axis and local axis:
     obj_dist1                : TColor;
@@ -210,6 +210,9 @@ type
       // count of selected objects of "FText":
       ftext_selected    : boolean;
 
+      // camera speed multiplier:
+      speed_mul_ptr     : PPtPosF;
+
       // reserved:
       res_var_ptr       : PBoolean;
 
@@ -243,11 +246,15 @@ type
       procedure MovScene              (         start_ind,
                                                 end_ind          :TColor);            inline; {$ifdef Linux}[local];{$endif}
       procedure MovWorldAxisShiftRight;                                               inline; {$ifdef Linux}[local];{$endif}
+      procedure MovWorldAxisShiftRight2;                                              inline; {$ifdef Linux}[local];{$endif}
       procedure MovWorldAxisShiftLeft;                                                inline; {$ifdef Linux}[local];{$endif}
+      procedure MovWorldAxisShiftLeft2;                                               inline; {$ifdef Linux}[local];{$endif}
       procedure MovWorldAxisShiftDown;                                                inline; {$ifdef Linux}[local];{$endif}
+      procedure MovWorldAxisShiftDown2;                                               inline; {$ifdef Linux}[local];{$endif}
       procedure MovWorldAxisShiftUp;                                                  inline; {$ifdef Linux}[local];{$endif}
+      procedure MovWorldAxisShiftUp2;                                                 inline; {$ifdef Linux}[local];{$endif}
       procedure SetWorldAxisShiftC                                                    inline; {$ifdef Linux}[local];{$endif}
-      procedure SetWorldAxisShift     (         world_axis_shift_:TPtPos);            inline; {$ifdef Linux}[local];{$endif}
+      procedure SetWorldAxisShift     (         world_axis_shift_:TPtPosF);           inline; {$ifdef Linux}[local];{$endif}
       procedure SetParallaxShift      (         parallax_shift_  :TPtPosF);           inline; {$ifdef Linux}[local];{$endif}
       procedure SetParallaxShift      (         parallax_shift_  :TPtPosF;
                                                 speed_mul        :TPtPosF);           inline; {$ifdef Linux}[local];{$endif}
@@ -261,7 +268,7 @@ type
                                        var      inds_obj_arr_,
                                                 inds_sct_arr_    :TColorArr);         inline; {$ifdef Linux}[local];{$endif}
       procedure Add                   (constref koo              :TKindOfObject;
-                                       constref world_axis_shift_:TPtPos);            inline; {$ifdef Linux}[local];{$endif}
+                                       constref world_axis_shift_:TPtPosF);           inline; {$ifdef Linux}[local];{$endif}
       procedure SetObjBkgnd           (         obj_arr_ptr      :PObjInfo;
                                        constref bkgnd_ptr        :PInteger;
                                        constref bkgnd_width,
@@ -355,10 +362,10 @@ var
     is_an_abst_obj_kind_after: False;
     forced_repaint           : False;
     recalc_pos               : False;
-    local_axis               : (x:00; y:00);
-    world_axis_shift         : (x:00; y:00);
-    world_axis_shift_centrify: (x:00; y:00);
-    parallax_shift           : (x:16; y:16);
+    local_axis               : (x:0000; y:0000);
+    world_axis_shift         : (x:00.0; y:00.0);
+    world_axis_shift_centrify: (x:00.0; y:00.0);
+    parallax_shift           : (x:16.0; y:16.0);
     obj_dist1                : 0;
     obj_dist2                : 0;
   ); {$endregion}
@@ -547,11 +554,11 @@ begin
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=0 to obj_cnt-1 do
     begin
-      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.x-=Trunc((obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x);
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.x-=(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x;
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.MovWorldAxisShiftLeft ;                                                                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftRight2;                                                                                                                                                     inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -563,11 +570,11 @@ begin
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=0 to obj_cnt-1 do
     begin
-      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.x+=Trunc((obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x);
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.x-=speed_mul_ptr^.x*(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x;
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.MovWorldAxisShiftDown ;                                                                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftLeft;                                                                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -579,11 +586,11 @@ begin
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=0 to obj_cnt-1 do
     begin
-      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.y-=Trunc((obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.y);
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.x+=(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x;
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.MovWorldAxisShiftUp   ;                                                                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftLeft2;                                                                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -595,11 +602,75 @@ begin
   obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
   for i:=0 to obj_cnt-1 do
     begin
-      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.y+=Trunc((obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x);
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.x+=speed_mul_ptr^.x*(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x;
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.SetWorldAxisShiftC    ;                                                                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.MovWorldAxisShiftDown;                                                                                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
+begin
+  if (obj_cnt=0) then
+    Exit;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
+  for i:=0 to obj_cnt-1 do
+    begin
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.y-=(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.y;
+      Inc(obj_inds_arr_ptr);
+    end;
+end; {$endregion}
+procedure   TSceneTree.MovWorldAxisShiftDown2;                                                                                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
+begin
+  if (obj_cnt=0) then
+    Exit;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
+  for i:=0 to obj_cnt-1 do
+    begin
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.y-=speed_mul_ptr^.y*(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.y;
+      Inc(obj_inds_arr_ptr);
+    end;
+end; {$endregion}
+procedure   TSceneTree.MovWorldAxisShiftUp;                                                                                                                                                         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
+begin
+  if (obj_cnt=0) then
+    Exit;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
+  for i:=0 to obj_cnt-1 do
+    begin
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.y+=(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x;
+      Inc(obj_inds_arr_ptr);
+    end;
+end; {$endregion}
+procedure   TSceneTree.MovWorldAxisShiftUp2;                                                                                                                                                        inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  obj_arr_ptr     : PObjInfo;
+  obj_inds_arr_ptr: PColor;
+  i               : integer;
+begin
+  if (obj_cnt=0) then
+    Exit;
+  obj_arr_ptr     :=Unaligned(@obj_arr     [0]);
+  obj_inds_arr_ptr:=Unaligned(@obj_inds_arr[0]);
+  for i:=0 to obj_cnt-1 do
+    begin
+      (obj_arr_ptr+obj_inds_arr_ptr^)^.world_axis_shift.y+=speed_mul_ptr^.y*(obj_arr_ptr+obj_inds_arr_ptr^)^.parallax_shift.x;
+      Inc(obj_inds_arr_ptr);
+    end;
+end; {$endregion}
+procedure   TSceneTree.SetWorldAxisShiftC;                                                                                                                                                          inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -615,7 +686,7 @@ begin
       Inc(obj_inds_arr_ptr);
     end;
 end; {$endregion}
-procedure   TSceneTree.SetWorldAxisShift     (world_axis_shift_:TPtPos);                                                                                                                            inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.SetWorldAxisShift     (world_axis_shift_:TPtPosF);                                                                                                                           inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_arr_ptr     : PObjInfo;
   obj_inds_arr_ptr: PColor;
@@ -687,7 +758,7 @@ begin
   FilProc      [obj_cnt -1]         :=FilProc_;
   MovProc      [obj_cnt -1]         :=MovProc_;
 end; {$endregion}
-procedure   TSceneTree.Add                   (constref koo:TKindOfObject; constref world_axis_shift_:TPtPos);                                                                                       inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure   TSceneTree.Add                   (constref koo:TKindOfObject; constref world_axis_shift_:TPtPosF);                                                                                      inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   obj_var_ptr: PObjInfo;
 begin

@@ -796,6 +796,8 @@ type
     free_mem_on_out_of_wnd   : boolean;
     // free memory on scale down:
     free_mem_on_scale_down   : boolean;
+    // reallocate memory if previous pixels count is less than current pixels count:
+    realloc_mem              : boolean;
     // remove brunching:
     remove_brunching_constant: boolean;
     remove_brunching_none    : boolean;
@@ -1337,7 +1339,9 @@ type
     //
     better_quality         : boolean;
     //
-    need_store_value       : boolean; {$endregion}
+    need_store_value       : boolean;
+    //
+    realloc_mem            : boolean; {$endregion}
 
     {CSR-Image Clipping----------} {$region -fold}
     {Precalculated Table of Counts Vertically(Image Clipping)}
@@ -1373,8 +1377,10 @@ type
     al_pix_cnt            : TColor;
     // not    transparent pixels count:
     nt_pix_cnt            : TColor;
+    nt_pix_cnt_prev       : TColor;
     // partly transparent pixels count:
     pt_pix_cnt            : TColor;
+    pt_pix_cnt_prev       : TColor;
     // count of zero(black) color pixels:
     zr_pix_cnt            : TColor;
     // count of pixels which are equal to first pixel:
@@ -2845,9 +2851,9 @@ type
     public
       var
         {spline entire rectangle}
-        rct_ent: TRect;
+        rct_ent: TPtRectF;
         {spline visible(clipped by inner window) rectangle}
-        rct_vis: TRect;
+        rct_vis: TPtRect;
         {spline window(inner window) rectangle}
         rct_wnd: TRect; {$endregion}
 
@@ -3407,7 +3413,7 @@ function BinarySearch           (constref n                  :TColor;
                                  constref arr_item_ptr       :PInteger;
                                  constref right_border       :integer): integer;       inline; {$ifdef Linux}[local];{$endif}
 
-{Store Color Channel into Integer Array}
+// (Store Color Channel into Integer Array) Сохранить цветовой канал в целочисленный массив:
 procedure BmpToArr              (constref bmp_src_ptr        :PInteger;
                                  var      bmp_dst_ptr        :PInteger;
                                  var      arr_dst            :TColorArr;
@@ -3417,8 +3423,8 @@ procedure BmpToArr              (constref bmp_src_ptr        :PInteger;
                                  var      bmp_dst_width,
                                           bmp_dst_height     :TColor);                 inline; {$ifdef Linux}[local];{$endif}
 
-{Store Alpha Channel into Byte Array}
-//...
+// (Quicksort, Hoare Partition): Быстрая сортировка, разбиение Хоара:
+
 
 (******************************* Bitmap Loading *******************************)
 
@@ -4039,14 +4045,16 @@ procedure PtsMov                (constref pvt                :TPtPos;
                                  var      rct                :TPtRect);                inline; {$ifdef Linux}[local];{$endif}
 procedure PtsMov                (constref pvt                :TPtPos;
                                  var      rct                :TRect);                  inline; {$ifdef Linux}[local];{$endif}
+procedure PtsMov                (constref pvt                :TPtPos;
+                                 var      rct                :TPtRectF);               inline; {$ifdef Linux}[local];{$endif}
 
 procedure WndSht                (constref outer_rect         :TPtRect;
                                  constref inner_rect         :TPtPosFArr;
                                  var      shift_power        :integer;
                                  constref mul                :integer);                inline; {$ifdef Linux}[local];{$endif}
-procedure MDCalc                (var      rct                :TRect;
+procedure MDCalc                (var      rct                :TPtRectF;
                                  constref mov_dir            :TMovingDirection;
-                                 constref parallax_shift     :TPtPos);                 inline; {$ifdef Linux}[local];{$endif}
+                                 constref parallax_shift     :TPtPosF);                inline; {$ifdef Linux}[local];{$endif}
 
 // (Points Scaling) Масштабирование точек:
 procedure PtsScl                (constref pvt                :TPtPosF;
@@ -4405,6 +4413,11 @@ procedure Rectangle             (constref x,y                :integer;
                                  constref rct_dst            :TPtRect;
                                  constref sln_prop_var       :TCurveProp;
                                  constref PPFloodFillProc    :TProc4_1);               inline; {$ifdef Linux}[local];{$endif}
+procedure Rectangle             (constref arr_dst_ptr        :PInteger;
+                                 constref arr_dst_width,
+                                          arr_dst_height     :TColor;
+                                 constref rct_dst            :TPtRect;
+                                 constref col                :TColor);                 inline; {$ifdef Linux}[local];{$endif}
 
 // Rhombus:
 procedure Rombus                (constref x,y                :integer;
@@ -4571,6 +4584,8 @@ function ClippedRct             (constref out_rct,
                                           inn_rct            :TRect)   : TPtRect;      inline; {$ifdef Linux}[local];{$endif}
 function ClippedRct             (constref out_rct            :TPtRect;
                                  constref inn_rct            :TRect)   : TPtRect;      inline; {$ifdef Linux}[local];{$endif}
+function ClippedRct             (constref out_rct            :TRect;
+                                 constref inn_rct            :TPtRectF): TPtRect;      inline; {$ifdef Linux}[local];{$endif}
 function ClippedRct             (constref out_rct            :TPtRect;
                                  constref inn_rct            :TRect;
                                           b                  :boolean) : TRect;        inline; {$ifdef Linux}[local];{$endif}
@@ -4667,11 +4682,11 @@ function PtDistSqr              (constref x0,y0,x1,y1        :integer): integer;
 function PtDistSqr              (constref x0,y0,x1,y1        :integer): double ;       inline; {$ifdef Linux}[local];{$endif}
 function PtDistSqr              (constref x0,y0,x1,y1        :double ): double ;       inline; {$ifdef Linux}[local];{$endif}
 
-// (Line-Line Intersection Point) Точка пересечение двух линий:
+// (Line-Line Intersection Point) Точка пересечения двух линий:
 function LineLineIntPt          (constref x0,y0,x1,y1,
                                           v0,w0,v1,w1        :double): TPtPosF;        inline; {$ifdef Linux}[local];{$endif}
 
-// (Line-Circle Intersection Points) Точки пересечение линии и окружности:
+// (Line-Circle Intersection Points) Точки пересечения линии и окружности:
 function LineCrcIntPt           (constref x0,y0,x1,y1        :double;
                                  constref crc_dst            :TCrPosF): TLnPosF;       inline; {$ifdef Linux}[local];{$endif}
 function LineCrcIntPt           (constref x0,y0,x1,y1        :double;
@@ -5196,6 +5211,7 @@ var
     better_quality           : False;
     free_mem_on_out_of_wnd   : True;
     free_mem_on_scale_down   : False;
+    realloc_mem              : False;
     remove_brunching_constant: False;
     remove_brunching_none    : True;
     rct_eds_show             : False;
@@ -5628,7 +5644,7 @@ end; {$endregion}
 // (Interpolation search) Интерполирующий поиск:
 {TODO}
 
-// Store Color Channel into Integer Array:
+// (Store Color Channel into Integer Array) Сохранить цветовой канал в целочисленный массив:
 procedure BmpToArr(constref bmp_src_ptr:PInteger; var bmp_dst_ptr:PInteger; var arr_dst:TColorArr; constref bmp_src_rct:TPtRect; constref bmp_src_width,bmp_src_height:TColor; var bmp_dst_width,bmp_dst_height:TColor); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   bmp_src_rct_clp: TPtRect;
@@ -5647,8 +5663,14 @@ begin
     end;
 end; {$endregion}
 
-// Store Alpha Channel into Byte Array:
-{TODO}
+// (Quicksort, Hoare Partition): Быстрая сортировка, разбиение Хоара:
+function Quicksort(var arr:TIntrArr; lo,hi:integer): integer; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+   {if (lo<hi) then
+     p:=partition(A,lo,hi);
+   quicksort(A,lo,p);
+   quicksort(A,p+1,hi);}
+end; {$endregion}
 
 {$endregion}
 
@@ -7256,6 +7278,42 @@ begin
       height:=bottom-top;
     end;
 end; {$endregion}
+function ClippedRct (constref out_rct:TRect;   constref inn_rct:TPtRectF                                         ): TPtRect;  inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  with Result do
+    begin
+      if (out_rct.left  >=inn_rct.left  ) then
+        left  :=out_rct.left
+      else
+        left  :=Trunc(inn_rct.left);
+      if (out_rct.top   >=inn_rct.top   ) then
+        top   :=out_rct.top
+      else
+        top   :=Trunc(inn_rct.top);
+      if (out_rct.right <=inn_rct.right ) then
+        right :=out_rct.right
+      else
+        right :=Trunc(inn_rct.right);
+      if (out_rct.bottom<=inn_rct.bottom) then
+        bottom:=out_rct.bottom
+      else
+        bottom:=Trunc(inn_rct.bottom);
+      if (out_rct.left  >=inn_rct.right ) or
+         (out_rct.right <=inn_rct.left  ) then
+        begin
+          width:=0;
+          Exit;
+        end;
+      if (out_rct.top   >=inn_rct.bottom) or
+         (out_rct.bottom<=inn_rct.top   ) then
+        begin
+          height:=0;
+          Exit;
+        end;
+      width :=right-left;
+      height:=bottom-top;
+    end;
+end; {$endregion}
 function ClippedRct (constref out_rct:TPtRect; constref inn_rct:TRect; b:boolean                                 ): TRect;    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with Result do
@@ -7642,14 +7700,14 @@ begin
   Result:=(x1-x0)*(x1-x0)+(y1-y0)*(y1-y0);
 end; {$endregion}
 
-// (Line-Line Intersection Point) Точка пересечение двух линий:
+// (Line-Line Intersection Point) Точка пересечения двух линий:
 function LineLineIntPt(constref x0,y0,x1,y1,v0,w0,v1,w1:double):TPtPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   Result.x:=-((x1-x0)*(v1*w0-v0*w1)-(v1-v0)*(x1*y0-x0*y1))/((x1-x0)*(w1-w0)-(v1-v0)*(y1-y0));
   Result.y:= ((y1-y0)*Result.x     +        (x1*y0-x0*y1))/ (x1-x0);
 end; {$endregion}
 
-// (Line-Circle Intersection Points) Точки пересечение линии и окружности:
+// (Line-Circle Intersection Points) Точки пересечения линии и окружности:
 function LineCrcIntPt(constref x0,y0,x1,y1:double ; constref crc_dst:TCrPosF): TLnPosF; inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   dx,dy,dz,b,g,s,one_div_dx,one_div_dz: double;
@@ -13669,6 +13727,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      nt_pix_cnt_prev:=nt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           nt_pix_cnt:=0;
@@ -13734,6 +13793,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      nt_pix_cnt_prev:=nt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           nt_pix_cnt:=0;
@@ -13799,6 +13859,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      nt_pix_cnt_prev:=nt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           nt_pix_cnt:=0;
@@ -13863,6 +13924,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      nt_pix_cnt_prev:=nt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           nt_pix_cnt:=0;
@@ -13928,6 +13990,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      pt_pix_cnt_prev:=pt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           pt_pix_cnt:=0;
@@ -13990,6 +14053,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      pt_pix_cnt_prev:=pt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           pt_pix_cnt:=0;
@@ -14052,6 +14116,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      pt_pix_cnt_prev:=pt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           pt_pix_cnt:=0;
@@ -14114,6 +14179,7 @@ var
 begin
   with fast_image_data_ptr0^ do
     begin
+      pt_pix_cnt_prev:=pt_pix_cnt;
       if (bmp_src_rct_clp.width=0) or (bmp_src_rct_clp.height=0) then
         begin
           pt_pix_cnt:=0;
@@ -14320,7 +14386,7 @@ begin
           Exit;
         end;
       //SetLength(nt_pix_intr_sht_arr,0);
-      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) then
+      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) or ((nt_pix_cnt_prev<nt_pix_cnt) and realloc_mem) then
         SetLength(nt_pix_intr_sht_arr,nt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr      [(nt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -14360,7 +14426,7 @@ begin
           Exit;
         end;
       //SetLength(nt_pix_intr_sht_arr,0);
-      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) then
+      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) or ((nt_pix_cnt_prev<nt_pix_cnt) and realloc_mem) then
         SetLength(nt_pix_intr_sht_arr,nt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr2     [(nt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -14400,7 +14466,7 @@ begin
           Exit;
         end;
       //SetLength(nt_pix_intr_sht_arr,0);
-      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) then
+      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) or ((nt_pix_cnt_prev<nt_pix_cnt) and realloc_mem) then
         SetLength(nt_pix_intr_sht_arr,nt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr      [(nt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -14440,7 +14506,7 @@ begin
           Exit;
         end;
       //SetLength(nt_pix_intr_sht_arr,0);
-      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) then
+      if (nt_pix_cnt>Length(nt_pix_intr_sht_arr)) or (nt_pix_intr_sht_arr=Nil) or ((nt_pix_cnt_prev<nt_pix_cnt) and realloc_mem) then
         SetLength(nt_pix_intr_sht_arr,nt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr2     [(nt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       nt_pix_intr_cnt_arr_ptr:=Unaligned(@nt_pix_intr_cnt_arr[ nt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -14481,7 +14547,7 @@ begin
           Exit;
         end;
       //SetLength(pt_pix_intr_sht_arr,0);
-      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) then
+      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) or ((pt_pix_cnt_prev<pt_pix_cnt) and realloc_mem) then
         SetLength(pt_pix_intr_sht_arr,pt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr      [(pt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -14521,7 +14587,7 @@ begin
           Exit;
         end;
       //SetLength(pt_pix_intr_sht_arr,0);
-      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) then
+      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) or ((pt_pix_cnt_prev<pt_pix_cnt) and realloc_mem) then
         SetLength(pt_pix_intr_sht_arr,pt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr2     [(pt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -14561,7 +14627,7 @@ begin
           Exit;
         end;
       //SetLength(pt_pix_intr_sht_arr,0);
-      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) then
+      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) or ((pt_pix_cnt_prev<pt_pix_cnt) and realloc_mem) then
         SetLength(pt_pix_intr_sht_arr,pt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr      [(pt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -14601,7 +14667,7 @@ begin
           Exit;
         end;
       //SetLength(pt_pix_intr_sht_arr,0);
-      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) then
+      if (pt_pix_cnt>Length(pt_pix_intr_sht_arr)) or (pt_pix_intr_sht_arr=Nil) or ((pt_pix_cnt_prev<pt_pix_cnt) and realloc_mem) then
         SetLength(pt_pix_intr_sht_arr,pt_pix_cnt);
       pix_alpha_ptr          :=Unaligned(@bmp_alpha_ptr2     [(pt_pix_arr_row_mrg_top+bmp_src_rct_clp.top)*bmp_ftimg_width+bmp_src_rct_clp.left]);
       pt_pix_intr_cnt_arr_ptr:=Unaligned(@pt_pix_intr_cnt_arr[ pt_pix_arr_row_mrg_top+000000000000000000000000000000000000000000000000000000000]);
@@ -29799,9 +29865,6 @@ begin
       ShaderInfo;
       SetPPInfo ; {$endregion}
 
-      {Set Clipping Rectangle---------} {$region -fold}
-      {SetClpRct(rct_clp);} {$endregion}
-
     end;
 end; {$endregion}
 constructor TFastImageItem.Create    (constref bkgnd_ptr:PInteger; constref bkgnd_width,bkgnd_height:TColor; var rct_clp:TPtRect; constref bmp_src_rct:TPtRect; constref location:string=''; constref ImgLstGetBmp:TProc1=Nil; constref img_ind:TColor=0; constref mask_tpl_calc:boolean=False; constref pic_src:TPicture=Nil); {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -29863,9 +29926,6 @@ begin
       ImgToCImg;
       bmp_ftimg_width :=bmp_src_rct_clp.width;
       bmp_ftimg_height:=bmp_src_rct_clp.height; {$endregion}
-
-      {Set Clipping Rectangle---------} {$region -fold}
-      {SetClpRct(rct_clp);} {$endregion}
 
       {Clear Resources----------------} {$region -fold}
       DeleteObject(icn_src.Canvas.Handle);
@@ -33403,6 +33463,15 @@ begin
   rct.width :=rct.right -rct.left;
   rct.height:=rct.bottom-rct.top;
 end; {$endregion}
+procedure PtsMov (constref pvt:TPtPos;  var rct:TPtRectF                                                                    );                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+begin
+  rct.left  -=pvt.x;
+  rct.top   -=pvt.y;
+  rct.right -=pvt.x;
+  rct.bottom-=pvt.y;
+  rct.width :=rct.right -rct.left;
+  rct.height:=rct.bottom-rct.top;
+end; {$endregion}
 procedure WndSht (constref outer_rect:TPtRect; constref inner_rect:TPtPosFArr; var shift_power:integer; constref mul:integer);                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 var
   m: integer;
@@ -33419,7 +33488,7 @@ begin
                        outer_rect.height);
       shift_power*=mul>>4;
 end; {$endregion}
-procedure MDCalc (var rct:TRect; constref mov_dir:TMovingDirection; constref parallax_shift:TPtPos                          );                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+procedure MDCalc (var rct:TPtRectF; constref mov_dir:TMovingDirection; constref parallax_shift:TPtPosF                      );                                inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   with rct do
     case mov_dir of
@@ -37016,6 +37085,43 @@ begin
                                           pts_rct_tns_right,
                                           pts_rct_inn_height)),
                       arr_dst_width);
+    end;
+end; {$endregion}
+procedure Rectangle   (                      constref arr_dst_ptr:PInteger; constref arr_dst_width,arr_dst_height:TColor; constref rct_dst:TPtRect; constref col:TColor                                                ); inline; {$ifdef Linux}[local];{$endif} {$region -fold}
+var
+  rct_prop: TCurveProp;
+begin
+  if (rct_dst.width=0) or (rct_dst.height=0) then
+    Exit;
+  with rct_prop do
+    begin
+      pts_col           :=col;
+      pts_col_inv       :=SetColorInv(col);
+      pts_rct_tns_left  :=1;
+      pts_rct_tns_top   :=1;
+      pts_rct_tns_right :=1;
+      pts_rct_tns_bottom:=1;
+      pts_rct_inn_width :=rct_dst.width ;
+      pts_rct_inn_height:=rct_dst.height;
+      SetRctWidth (rct_prop);
+      SetRctHeight(rct_prop);
+      SetRctValues(rct_prop);
+      Rectangle
+      (
+        rct_dst.left+rct_dst.width >>1-pts_rct_width__odd,
+        rct_dst.top +rct_dst.height>>1-pts_rct_height_odd,
+        arr_dst_ptr,
+        arr_dst_width,
+        arr_dst_height,
+        PtBounds
+        (
+          rct_dst.left  -1,
+          rct_dst.top   -1,
+          rct_dst.right +1,
+          rct_dst.bottom+1
+        ),
+        rct_prop
+      );
     end;
 end; {$endregion}
 
