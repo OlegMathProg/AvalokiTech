@@ -354,6 +354,7 @@ type
     P_DescriptionHeader                              : TPanel;
     P_Spline_Superellipse                            : TPanel;
     P_Spline_Template_List1                          : TPanel;
+    SB_Button_Bounds                                 : TSpeedButton;
     Separator6                                       : TMenuItem;
     MI_Add_Asset                                     : TMenuItem;
     Separator5                                       : TMenuItem;
@@ -504,10 +505,10 @@ type
     SB_Brush5                                        : TSpeedButton;
     SB_Image_List                                    : TScrollBox;
     SB_Selected_Points_Select_Color                  : TSpeedButton;
-    SB_Load_Image                                    : TSpeedButton;
+    SB_Load_Game_Project                             : TSpeedButton;
     SB_Inner_Subgraph_Select_Color                   : TSpeedButton;
     SB_Reset_Pivot2                                  : TSpeedButton;
-    SB_Save_Image                                    : TSpeedButton;
+    SB_Save_Game_Project                             : TSpeedButton;
     SB_Clear_Scene                                   : TSpeedButton;
     SB_Outer_Subgraph_Select_Color                   : TSpeedButton;
     SB_Select_Texture_Region                         : TSpeedButton;
@@ -829,7 +830,9 @@ type
     procedure P_Text_SettingsMouseLeave                              (      sender           :TObject);
     procedure RB_Spline_AdaptiveChange                               (      sender           :TObject);
     procedure SB_Add_ActorClick                                      (      sender           :TObject);
-    procedure SB_Game_SettingsClick                                     (      sender           :TObject);
+    procedure SB_Centrify_PictureMouseEnter                          (      sender           :TObject);
+    procedure SB_Change_LayoutMouseEnter                             (      sender           :TObject);
+    procedure SB_Game_SettingsClick                                  (      sender           :TObject);
     procedure SB_RGridClick                                          (      sender           :TObject);
     procedure SB_RGrid_ColorClick                                    (      sender           :TObject);
     procedure SB_Select_Items_Inner_Subgraph_ColorClick              (      sender           :TObject);
@@ -933,13 +936,13 @@ type
     procedure CB_Align_2D_Points_Show_Snap_GridChange                (      sender           :TObject);
     procedure CB_Align_2D_Points_Snap_Grid_VisibilityChange          (      sender           :TObject);
     procedure S_Splitter8ChangeBounds                                (      sender           :TObject);
-    procedure TB_Camera_SpeedChange                                         (      sender           :TObject);
+    procedure TB_Camera_SpeedChange                                  (      sender           :TObject);
     procedure TextureListItemMouseDown                               (      sender           :TObject;
                                                                             button           :TMouseButton;
                                                                             shift            :TShiftState;
                                                                             x,y              :integer);
-    procedure SB_Load_ImageClick                                     (      sender           :TObject);
-    procedure SB_Save_ImageClick                                     (      sender           :TObject);
+    procedure SB_Load_Game_ProjectClick                              (      sender           :TObject);
+    procedure SB_Save_Game_ProjectClick                              (      sender           :TObject);
     procedure SB_Clear_SceneClick                                    (      sender           :TObject);
     procedure BB_Delete_SelectedClick                                (      sender           :TObject);
     procedure BB_Delete_AllClick                                     (      sender           :TObject);
@@ -1147,6 +1150,8 @@ type
       rot_arr_height         : TColor;
       {inner window bitmap bounding rectangle}
       inn_wnd_rct            : TPtRect;
+      tex_bmp_rct_pts        : TPtPosFArr;
+      tex_bmp_rct_origin_pts : TPtPosFArr;
       {array of stored drawing styles(blending effects)}
       drawing_style          : array[0..4] of TDrawingStyle;
       {index inside spritesheet array}
@@ -1276,6 +1281,8 @@ type
       mov_dir                : TMovingDirection;
       {TODO}
       scl_dif                : integer;
+      scl_min                : integer;
+      scl_max                : integer;
       {scale direction}
       scl_dir                : TSclDir;
       {TODO}
@@ -1304,10 +1311,6 @@ type
       tex_bmp                   : Graphics.TBitmap;
       {texture bmp handle}
       tex_bmp_ptr               : PInteger;
-      {texture bmp bounding rectangle}
-      tex_bmp_rct_pts           : TPtPosFArr;
-      {source bounding box for loaded texture}
-      tex_bmp_rct_origin_pts    : TPtPosFArr;
       {size of texture preview in texure list}
       tex_list_item_size        : TColor;
       {checking if texture is enabled}
@@ -2401,13 +2404,15 @@ var
 
   {Miscellaneous Expressions-------------------} {$region -fold}
   // expressions array
-  exp_arr                     : array[0..2] of boolean;
+  exp_arr                     : array[0..3] of boolean;
   // selected_pts_count>0
   exp0                        : boolean absolute exp_arr[0];
   // selected_pts_count<>spline_pts_count
   exp1                        : boolean absolute exp_arr[1];
   // spline_pts_count>0
-  exp2                        : boolean absolute exp_arr[2]; {$endregion}
+  exp2                        : boolean absolute exp_arr[2];
+  //
+  exp3                        : boolean absolute exp_arr[3]; {$endregion}
 
   {Visibility Panel}
   visibility_panel_picture    : Graphics.TBitmap;
@@ -3363,8 +3368,15 @@ begin
   UnfoldWindow;
   MoveBorders;
 end; {$endregion}
+procedure TF_MainForm.SB_Change_LayoutMouseEnter(sender:TObject); {$region -fold}
+begin
+  SB_Button_Bounds.Visible:=True;
+  SB_Button_Bounds.Left   :=SB_Change_Layout.Left;
+  SB_Button_Bounds.Top    :=SB_Change_Layout.Top;
+end; {$endregion}
 procedure TF_MainForm.SB_Change_LayoutMouseLeave(sender:TObject); {$region -fold}
 begin
+  SB_Button_Bounds.Visible:=False;
   SB_Change_Layout.Repaint;
 end; {$endregion}
 {$endregion}
@@ -3389,8 +3401,15 @@ begin
       SB_Centrify_Picture.down:=False;
     end;
 end; {$endregion}
+procedure TF_MainForm.SB_Centrify_PictureMouseEnter             (sender:TObject); {$region -fold}
+begin
+  SB_Button_Bounds.Visible:=True;
+  SB_Button_Bounds.Left   :=SB_Centrify_Picture.Left;
+  SB_Button_Bounds.Top    :=SB_Centrify_Picture.Top;
+end; {$endregion}
 procedure TF_MainForm.SB_Centrify_PictureMouseLeave             (sender:TObject); {$region -fold}
 begin
+  SB_Button_Bounds.Visible:=False;
   SB_Centrify_Picture.Repaint;
 end; {$endregion}
 {$endregion}
@@ -4046,6 +4065,14 @@ begin
   {$endif}
   low_bmp2_draw:=False;
 
+  SetLength(tex_bmp_rct_pts       ,2);
+  SetLength(tex_bmp_rct_origin_pts,2);
+  tex_bmp_rct_origin_pts[0].x:=296{Trunc(inn_wnd_rct.left+inn_wnd_rct.right -w)>>1};
+  tex_bmp_rct_origin_pts[0].y:=034{Trunc(inn_wnd_rct.top +inn_wnd_rct.bottom-h)>>1};
+  tex_bmp_rct_origin_pts[1].x:=tex_bmp_rct_origin_pts[0].x+w;
+  tex_bmp_rct_origin_pts[1].y:=tex_bmp_rct_origin_pts[0].y+h;
+  tex_bmp_rct_pts            :=tex_bmp_rct_origin_pts;
+
   cmr_var.parallax_shift    :=obj_default_prop.parallax_shift;
   show_all                  :=True;
   inner_window_ui_visible   :=True;
@@ -4240,11 +4267,10 @@ begin
   rot_arr_width  :=srf_bmp_rct.width ;
   rot_arr_height :=srf_bmp_rct.height;
   if show_tex then
-    with tex_var do
-      begin
-        tex_bmp.width :=Trunc(tex_bmp_rct_pts[1].x-tex_bmp_rct_pts[0].x);
-        tex_bmp.height:=Trunc(tex_bmp_rct_pts[1].y-tex_bmp_rct_pts[0].y);
-      end;
+    begin
+      tex_var.tex_bmp.width :=Trunc(tex_bmp_rct_pts[1].x-tex_bmp_rct_pts[0].x);
+      tex_var.tex_bmp.height:=Trunc(tex_bmp_rct_pts[1].y-tex_bmp_rct_pts[0].y);
+    end;
 end; {$endregion}
 procedure TSurface.MainBmpArrsCalc;                                                                                                    inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
@@ -5064,7 +5090,7 @@ begin
   (
     PtPosF(world_axis.x,
            world_axis.y),
-    tex_var.tex_bmp_rct_pts,
+    tex_bmp_rct_pts,
     PtPosF(DEFAULT_SCL_MUL,
            DEFAULT_SCL_MUL),
     cmr_var.scl_dir,
@@ -5648,6 +5674,14 @@ begin
     begin
       timeline_draw      :=down_play_anim_ptr^;
       cursor_draw        :=down_play_anim_ptr^;
+      exp3               :=True;
+      if down_play_anim_ptr^ then
+        begin
+          if (obj_var.curve_inds_sct_arr<>Nil) then
+            exp3         :=obj_var.curve_inds_sct_arr[0]<=obj_var.low_lr_obj_cnt-1
+          else
+            exp3         :=False;
+        end;
     end;
 
   {Rectangles----------------------------} {$region -fold}
@@ -5735,12 +5769,14 @@ begin
 
   {Scene Drawing(Lower Layer)-----------------------} {$region -fold}
   if ((fill_scene_calc and sel_var.is_not_abst_obj_kind_after and (not unselect_pivot_calc)) or form_resize_calc or bckgd_scale_calc) then
-    with obj_var do
-      FilScene(0,low_lr_obj_cnt-1); {$endregion}
+    if exp3 then
+      with obj_var do
+        FilScene(0,low_lr_obj_cnt-1); {$endregion}
 
   {Copy Main Buffer To Lower Buffer-----------------} {$region -fold}
   if copy1_calc then
-    MainBmpToLowerBmp; {$endregion}
+    if exp3 then
+      MainBmpToLowerBmp; {$endregion}
 
   {Scene Drawing(Upper Layer)-----------------------} {$region -fold}
   if ((fill_scene_calc and sel_var.is_not_abst_obj_kind_after and (not unselect_pivot_calc)) or form_resize_calc or bckgd_scale_calc) and (not down_play_anim_ptr^) then
@@ -5812,6 +5848,9 @@ begin
     'Execution time: '+FloatToStr(execution_time)+' ms.'
   );
 
+  if sln_var.sln_obj_cnt<>0 then
+  F_MainForm.RM_Description.Lines.Text:=IntToStr(obj_var.curve_inds_sct_arr[0]);
+
 end; {$endregion}
 procedure TSurface.EventGroupsCalc(var arr:TBool2Arr; event_group:TEventGroupEnum);                                                            {$ifdef Linux}[local];{$endif} {$region -fold}
 var
@@ -5830,6 +5869,8 @@ end; {$endregion}
 constructor TCamera.Create(w,h:TColor); {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   bmp_rect :=PtBounds(0,0,w,h);
+  scl_min  :=-17;
+  scl_max  :=+25;
   speed_mul:=PtPosF  (1.0,1.0);
 end; {$endregion}
 destructor  TCamera.Destroy;            {$ifdef Linux}[local];{$endif} {$region -fold}
@@ -5848,17 +5889,7 @@ begin
   ObjIndsCalc;
   ScTIndsCalc;
   CngPnVsCalc;
-  SetLength(tex_bmp_rct_pts       ,2);
-  SetLength(tex_bmp_rct_origin_pts,2);
-  SetLength(tex_list              ,8); // Выделение памяти для массива текстур
-  with srf_var_ptr^ do
-    begin
-      tex_bmp_rct_origin_pts[0].x:=296{Trunc(inn_wnd_rct.left+inn_wnd_rct.right -w)>>1};
-      tex_bmp_rct_origin_pts[0].y:=034{Trunc(inn_wnd_rct.top +inn_wnd_rct.bottom-h)>>1};
-      tex_bmp_rct_origin_pts[1].x:=tex_bmp_rct_origin_pts[0].x+w;
-      tex_bmp_rct_origin_pts[1].y:=tex_bmp_rct_origin_pts[0].y+h;
-      tex_bmp_rct_pts            :=tex_bmp_rct_origin_pts;
-    end;
+  SetLength(tex_list,8); // Выделение памяти для массива текстур
   loaded_picture    :=TPicture.Create;
   tex_bmp           :=Graphics.TBitmap.Create;
   tex_bmp.Width     :=w;
@@ -5956,32 +5987,27 @@ procedure TTex.AlignPictureToCenter;                           inline; {$ifdef L
 var
   tex_bmp_rct_width,tex_bmp_rct_height: integer;
 begin
-  if is_tex_enabled then
-    begin
-      tex_bmp_rct_width :=loaded_picture.width;
-      tex_bmp_rct_height:=loaded_picture.height;
-    end
-  else
+  with srf_var do
     begin
       tex_bmp_rct_width :={512}Trunc(tex_bmp_rct_origin_pts[1].x)-Trunc(tex_bmp_rct_origin_pts[0].x);
       tex_bmp_rct_height:={512}Trunc(tex_bmp_rct_origin_pts[1].y)-Trunc(tex_bmp_rct_origin_pts[0].y);
+      tex_bmp_rct_pts[0].x:=((splitters_arr[1]^+
+                              splitters_arr[3]^-
+                              tex_bmp_rct_width+
+                              splitter_thickness)/2);
+      tex_bmp_rct_pts[0].y:=((splitters_arr[5]^ +
+                              splitters_arr[2]^ -
+                              tex_bmp_rct_height+
+                              splitter_thickness)/2);
+      tex_bmp_rct_pts[1].x:=tex_bmp_rct_pts[0].x+tex_bmp_rct_width ;
+      tex_bmp_rct_pts[1].y:=tex_bmp_rct_pts[0].y+tex_bmp_rct_height;
     end;
-  tex_bmp_rct_pts[0].x:=((splitters_arr[1]^   +
-                          splitters_arr[3]^   -
-                          tex_bmp_rct_width+
-                          splitter_thickness)/2);
-  tex_bmp_rct_pts[0].y:=((splitters_arr[5]^    +
-                          splitters_arr[2]^    -
-                          tex_bmp_rct_height+
-                          splitter_thickness)/2);
-  tex_bmp_rct_pts[1].x:=tex_bmp_rct_pts[0].x+tex_bmp_rct_width ;
-  tex_bmp_rct_pts[1].y:=tex_bmp_rct_pts[0].y+tex_bmp_rct_height;
 end; {$endregion}
 procedure TTex.FilBkTexObj(constref bktex_ind:TColor);         inline; {$ifdef Linux}[local];{$endif} {$region -fold}
 begin
   if show_tex then
     with obj_var.obj_arr[obj_var.bktex_inds_obj_arr[bktex_ind]] do
-      TexToBmp(PtRct(tex_bmp_rct_pts),srf_var_ptr^.srf_bmp.Canvas);
+      TexToBmp(PtRct(srf_var_ptr^.tex_bmp_rct_pts),srf_var_ptr^.srf_bmp.Canvas);
 end; {$endregion}
 {$endregion}
 {UI} {$region -fold}
@@ -5999,9 +6025,9 @@ begin
         (FP_Image_List.Controls[j] as TSpeedButton).Color:=$00A6A6A6;
     end;}
 end; {$endregion}
-procedure TF_MainForm.SB_Load_ImageClick      (sender:TObject);                                                      {$region -fold}
+procedure TF_MainForm.SB_Load_Game_ProjectClick      (sender:TObject);                                                      {$region -fold}
 begin
-  SB_Load_Image.Down:=False;
+  SB_Load_Game_Project.Down:=False;
   OpenPictureDialog1.Options:=OpenPictureDialog1.Options+[ofFileMustExist];
   if (not OpenPictureDialog1.Execute) then
     Exit;
@@ -6015,9 +6041,9 @@ begin
   MI_Antialiasing.Checked:=True;
   tex_var.srf_var_ptr^.srf_bmp.Canvas.Antialiasingmode:=amOn;
 end; {$endregion}
-procedure TF_MainForm.SB_Save_ImageClick      (sender:TObject);                                                      {$region -fold}
+procedure TF_MainForm.SB_Save_Game_ProjectClick      (sender:TObject);                                                      {$region -fold}
 begin
-  SB_Save_Image.Down:=False;
+  SB_Save_Game_Project.Down:=False;
   if tex_var.loaded_picture.Graphic=Nil then
     begin
       MessageDlg('No image','Please open an image, before save',mtError,[mbOk],0);
@@ -14650,7 +14676,7 @@ begin
   with srf_var_ptr^,global_prop do
     begin
       sln_pts_cnt_add:=fml_pts_cnt;
-      with PtRct(tex_var.tex_bmp_rct_pts) do
+      with PtRct(tex_bmp_rct_pts) do
         FmlSplineObj[cur_tlt_dwn_btn_ind](Trunc(world_axis.x+world_axis_shift.x),
                                           Trunc(world_axis.y+world_axis_shift.y));
       sln_pts_cnt_add:=0;
@@ -21325,13 +21351,13 @@ begin
   with fast_actor_set_var.d_icon,fast_image_data,fast_image_proc_var do
     begin
       fast_image_data_ptr0:=@fast_image_data;
-      v1:=Trunc(tex_var.tex_bmp_rct_pts[0].x)-bmp_ftimg_width >>1;
-      v2:=Trunc(tex_var.tex_bmp_rct_pts[0].y)-bmp_ftimg_height>>1;
+      v1:=Trunc(srf_var.tex_bmp_rct_pts[0].x)-bmp_ftimg_width >>1;
+      v2:=Trunc(srf_var.tex_bmp_rct_pts[0].y)-bmp_ftimg_height>>1;
       sprite_rect_arr_ptr:=@sprite_rect_arr[0];
       for i:=0 to SE_Count_X.Value-1 do
         begin
-          sprite_rect_arr_ptr^.x:=v1+Random(Trunc(tex_var.tex_bmp_rct_pts[1].x-tex_var.tex_bmp_rct_pts[0].x));
-          sprite_rect_arr_ptr^.y:=v2+Random(Trunc(tex_var.tex_bmp_rct_pts[1].y-tex_var.tex_bmp_rct_pts[0].y));
+          sprite_rect_arr_ptr^.x:=v1+Random(Trunc(srf_var.tex_bmp_rct_pts[1].x-srf_var.tex_bmp_rct_pts[0].x));
+          sprite_rect_arr_ptr^.y:=v2+Random(Trunc(srf_var.tex_bmp_rct_pts[1].y-srf_var.tex_bmp_rct_pts[0].y));
           Inc(sprite_rect_arr_ptr);
         end;
 
@@ -21365,12 +21391,6 @@ begin
                     IntToStr({fast_actor_set_var.d_icon.img_kind}{nt_pix_cnt}c1)+'; '+
                     IntToStr({fast_actor_set_var.d_icon.img_kind}{nt_pix_cnt}c2)+'; '+
                     IntToStr({fast_actor_set_var.d_icon.img_kind}{nt_pix_cnt}c3)+'. ';}
-
-  {anim_play2:=not anim_play2;
-  if anim_play2 then
-    Application.OnIdle:=@Tic
-  else
-    Application.OnIdle:=Nil;}
 
 end; {$endregion}
 procedure TF_MainForm.I_Frame_ListMouseEnter(sender:TObject); {$region -fold}
@@ -22306,7 +22326,7 @@ begin
         begin
           with obj_var,cmr_var,srf_var,rgr_var,sgr_var,crc_sel_var do
             begin
-              if (scl_dif<-17{20}) then
+              if (scl_dif<scl_min) then
                 Exit;
               Dec(scl_dif);
               scl_dir:=sdDown;
@@ -22352,8 +22372,6 @@ begin
   SpeedButtonRepaint;
 end; {$endregion}
 procedure TF_MainForm.FormMouseWheelUp      (sender:TObject; shift:TShiftState; mousePos:TPoint; var handled:boolean); {$region -fold}
-var
-  max_sqr,min_sqr: integer;
 begin
   if drawing_area_enter_calc then
     begin
@@ -22368,7 +22386,7 @@ begin
         begin
           with obj_var,cmr_var,srf_var,tex_var,rgr_var,sgr_var,crc_sel_var do
             begin
-              if (Trunc(Math.Max(tex_bmp_rct_pts[1].x-tex_bmp_rct_pts[0].x,tex_bmp_rct_pts[1].y-tex_bmp_rct_pts[0].y)/50)>Math.Min(inn_wnd_rct.width,inn_wnd_rct.height)) then
+              if (scl_dif>scl_max) then
                 Exit;
               Inc(scl_dif);
               scl_dir:=sdUp;
@@ -22542,12 +22560,12 @@ begin
 
   is_active:=True;
 
-  with obj_var,srf_var,sln_var,tex_var,sel_var,pvt_var do
+  with obj_var,cmr_var,srf_var,sln_var,tex_var,sel_var,pvt_var do
     begin
 
       case Key of
         {VK_LEFT,VK_RIGHT,VK_UP,VK_DOWN: Key:=0;}
-        {#9  } VK_TAB : {$region -fold}
+        {#9} VK_TAB : {$region -fold}
           if (not down_play_anim_ptr^) then
             begin
               VisibilityChange(True);
@@ -22564,158 +22582,132 @@ begin
          (inn_wnd_rct.height<=0) then
         Exit; {$endregion}
 
-      {if T_Menu.Enabled then
-        begin
-          case Key of
-            65,68,87,83: PlaySound(PChar(SELECT_ITEM),0,SND_ASYNC);
-          end;
-          case Key of
-            {'Enter'}13:
-              if (menu_img_arr_cnt=0) then
-                begin
-                  mciSendString(PChar('stop "'+MENU_THEME+'"'),nil,0,0);
-                  T_Menu.Enabled:=False;
-                  T_Game.Enabled:=True;
-                end;
-            {'a'}65:
-              begin
-
-              end;
-            {'d'}68:
-              begin
-
-              end;
-            {'w'}87:
-              begin
-                menu_img_arr_cnt-=1;
-                if (menu_img_arr_cnt=-1) then
-                  menu_img_arr_cnt:=2;
-              end;
-            {'s'}83:
-              begin
-                menu_img_arr_cnt+=1;
-                if (menu_img_arr_cnt=3) then
-                  menu_img_arr_cnt:=0;
-              end;
-          end;
-          Exit;
-        end;}
-
-      if T_Game.Enabled or T_Game_Loop.Enabled then
-        begin
-          case Key of
-            {'a'}65:
-              cmr_var.dir_a:=True;
-            {'d'}68:
-              cmr_var.dir_d:=True;
-            {'w'}87:
-              cmr_var.dir_w:=True;
-            {'s'}83:
-              cmr_var.dir_s:=True;
-          end;
-          Exit;
-        end;
-
-      if down_play_anim_ptr^ then
-        Exit;
-
-      if (Trunc(cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x)=0) then
-        Exit;
-
       case Key of
-        65,68,87,83:
+        {#097}{'a'} 65: {$region -fold}
           begin
-            draw_spline:=False;
-            sel_pts    :=False;
-          end;
-      end;
-
-      case Key of
-        65,68,87,83:
-          begin
-            SetObjBkgnd
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              @inn_wnd_rct,
-              0,
-              low_lr_obj_cnt-1
-            );
-          end;
-      end;
-
-      case Key of
-        {
-        {   }{'Alt'}18:
-        if need_align_pivot_p2 then
-          begin
-            ArrClear(dup_pts_arr,inn_wnd_rct,srf_bmp.width);
-            AddSplineDupPtsAll(0,sln_obj_cnt-1);
-            pvt_prev.x         :=pvt_pos.x;
-            pvt_prev.y         :=pvt_pos.y;
-            need_align_pivot_p2:=False;
-          end;}
-
-        {#97 }{'a'} 65: {$region -fold}
-          begin
+            if down_play_anim_ptr^ then
+              begin
+                dir_a:=True;
+                Exit;
+              end;
             MovLeft;
-            FilLeft
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
-            MovScene(0,low_lr_obj_cnt-1);
+            if (speed_mul.x*obj_arr[0].parallax_shift.x<>0) then
+              begin
+                SetObjBkgnd
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  @inn_wnd_rct,
+                  0,
+                  low_lr_obj_cnt-1
+                );
+                FilLeft
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  inn_wnd_rct
+                );
+                MovScene(0,low_lr_obj_cnt-1);
+              end;
           end; {$endregion}
-
         {#100}{'d'} 68: {$region -fold}
           begin
+            if down_play_anim_ptr^ then
+              begin
+                dir_d:=True;
+                Exit;
+              end;
             MovRight;
-            FilRight
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
-            MovScene(0,low_lr_obj_cnt-1);
+            if (speed_mul.x*obj_arr[0].parallax_shift.x<>0) then
+              begin
+                SetObjBkgnd
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  @inn_wnd_rct,
+                  0,
+                  low_lr_obj_cnt-1
+                );
+                FilRight
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  inn_wnd_rct
+                );
+                MovScene(0,low_lr_obj_cnt-1);
+              end;
           end; {$endregion}
-
         {#119}{'w'} 87: {$region -fold}
           begin
+            if down_play_anim_ptr^ then
+              begin
+                dir_w:=True;
+                Exit;
+              end;
             MovUp;
-            FilUp
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
-            MovScene(0,low_lr_obj_cnt-1);
+            if (speed_mul.y*obj_arr[0].parallax_shift.y<>0) then
+              begin
+                SetObjBkgnd
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  @inn_wnd_rct,
+                  0,
+                  low_lr_obj_cnt-1
+                );
+                FilUp
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  inn_wnd_rct
+                );
+                MovScene(0,low_lr_obj_cnt-1);
+              end;
           end; {$endregion}
-
         {#115}{'s'} 83: {$region -fold}
           begin
+            if down_play_anim_ptr^ then
+              begin
+                dir_s:=True;
+                Exit;
+              end;
             MovDown;
-            FilDown
-            (
-              low_bmp_ptr,
-              low_bmp.width,
-              low_bmp.height,
-              inn_wnd_rct
-            );
-            MovScene(0,low_lr_obj_cnt-1);
+            if (speed_mul.y*obj_arr[0].parallax_shift.y<>0) then
+              begin
+                SetObjBkgnd
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  @inn_wnd_rct,
+                  0,
+                  low_lr_obj_cnt-1
+                );
+                FilDown
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  inn_wnd_rct
+                );
+                MovScene(0,low_lr_obj_cnt-1);
+              end;
           end; {$endregion}
-
       end;
 
       case Key of
-
-        65,68,87,83   : {$region -fold}
+        65,68,87,83: {$region -fold}
           with obj_var,srf_var,sgr_var,sel_var,pvt_var do
             begin
+              {Spline---------------------} {$region -fold}
+              draw_spline:=False;
+              sel_pts    :=False; {$endregion}
               {Background Drawing1--------} {$region -fold}
               LowerBmpToMainBmp; {$endregion}
               {Draw Objects of Upper Layer} {$region -fold}
@@ -22760,7 +22752,6 @@ begin
                 SRCCOPY
               ); {$endregion}
             end; {$endregion}
-
       end;
 
     end;
@@ -22796,7 +22787,7 @@ begin
       is_active       :=False;
       downtime_counter:=0;
 
-      if T_Game.Enabled or T_Game_Loop.Enabled then
+      if down_play_anim_ptr^ then
         begin
           case Key of
             65,68,87,83: cmr_var.mov_dir:=mdNone;
@@ -22845,27 +22836,15 @@ begin
             srf_var.EventGroupsCalc(calc_arr,[{6,9,}18,{20,23,}30,{31,}32,41]+[41+7*Byte(down_select_items_ptr^)]);
             if down_play_anim_ptr^ then
               with obj_var,srf_var do
-                begin
-                  SetObjBkgnd
-                  (
-                    low_bmp_ptr,
-                    low_bmp.width,
-                    low_bmp.height,
-                    @inn_wnd_rct,
-                    0,
-                    low_lr_obj_cnt-1
-                  );
-                  {if (upp_lr_obj_cnt>0) then
-                    SetObjBkgnd
-                    (
-                      srf_bmp_ptr,
-                      srf_bmp.width,
-                      srf_bmp.height,
-                      @inn_wnd_rct,
-                      low_lr_obj_cnt,
-                      obj_cnt-1
-                    );}
-                end;
+                SetObjBkgnd
+                (
+                  low_bmp_ptr,
+                  low_bmp.width,
+                  low_bmp.height,
+                  @inn_wnd_rct,
+                  0,
+                  low_lr_obj_cnt-1
+                );
           end;
 
       end;
@@ -24473,8 +24452,8 @@ end; {$endregion}
 {UI} {$region -fold}
 procedure TF_MainForm.SB_Clear_SceneClick    (sender:TObject); {$region -fold}
 begin
-  {P_Selective_Deletion.Visible:=SB_Clear_Scene.Down;
-  P_Load_Save_Clear.Repaint;}
+  P_Selective_Deletion.Visible:=SB_Clear_Scene.Down;
+  P_Load_Save_Clear.Repaint;
 end; {$endregion}
 procedure TF_MainForm.BB_Delete_SelectedClick(sender:TObject); {$region -fold}
 begin
@@ -24854,8 +24833,6 @@ var
   str                  : string;
   projectile_arr_ptr   : PProjectile;}
   execution_time       : double;
-label
-  l1;
 begin
 
   {if (frame_skip<>frame_step) then
@@ -24874,45 +24851,14 @@ begin
   with obj_var,cmr_var,srf_var,sln_var,tex_var,srf_var,tex_var,sln_var,sel_var,crc_sel_var,pvt_var,fast_physics_var,fast_fluid_var do
     begin
 
-      //Randomize;
-      //t:=200;
-
       GetCursorPos(cur_pos);
       cur_pos:=ScreenToClient(cur_pos);
-
-      {if (CB_Spline_Mode.ItemIndex=0) then
-        if draw_spline then
-          begin
-            AddPoint
-            (
-              cur_pos.x,
-              cur_pos.y,
-              low_bmp_ptr,
-              low_bmp.width,
-              color_info,
-              inn_wnd_rct,
-              add_spline_calc,
-              True
-            );
-            CnvToCnv
-            (
-              srf_bmp_rct,
-              Canvas,
-              low_bmp.Canvas,
-              SRCCOPY
-            );
-          end;}
-
-      //ChangeSpeed;
-
-      if (Trunc(cmr_var.speed_mul.x*obj_var.obj_arr[0].parallax_shift.x)=0) then
-        goto l1;
 
       {Draw Objects of Lower Layer} {$region -fold}
       if dir_a then
         begin
           MovLeft;
-          if low_bmp_draw then
+          if (low_bmp_draw and (speed_mul.x*obj_arr[0].parallax_shift.x<>0)) then
             begin
               FilLeft
               (
@@ -24927,7 +24873,7 @@ begin
       if dir_d then
         begin
           MovRight;
-          if low_bmp_draw then
+          if (low_bmp_draw and (speed_mul.x*obj_arr[0].parallax_shift.x<>0)) then
             begin
               FilRight
               (
@@ -24942,7 +24888,7 @@ begin
       if dir_w then
         begin
           MovUp;
-          if low_bmp_draw then
+          if (low_bmp_draw and (speed_mul.y*obj_arr[0].parallax_shift.y<>0)) then
             begin
               FilUp
               (
@@ -24957,7 +24903,7 @@ begin
       if dir_s then
         begin
           MovDown;
-          if low_bmp_draw then
+          if (low_bmp_draw and (speed_mul.y*obj_arr[0].parallax_shift.y<>0)) then
             begin
               FilDown
               (
@@ -24969,8 +24915,6 @@ begin
               MovScene(0,low_lr_obj_cnt-1);
             end;
         end;
-
-      l1:
 
       if low_bmp_draw then
         LowerBmpToMainBmp
@@ -25021,165 +24965,11 @@ begin
               else
                 cmr_var.mov_dir:=mdDown;
             end;
-          {SetObjBkgnd
-          (
-            srf_bmp_ptr,
-            srf_bmp.width,
-            srf_bmp.height,
-            @inn_wnd_rct,
-            low_lr_obj_cnt,
-            obj_cnt-1
-          );}
           SetRctDstPtr(@inn_wnd_rct,low_lr_obj_cnt,obj_cnt-1);
           MovScene    (             low_lr_obj_cnt,obj_cnt-1);
         end; {$endregion}
 
-      with fast_actor_set_var.d_icon,fast_image_data do
-        begin
-
-          begin
-            col_trans_arr[04]:=128;
-            {col_trans_arr[00]+=4;
-            col_trans_arr[01]+=4;
-            col_trans_arr[02]+=4;
-            col_trans_arr[03]+=4;
-            col_trans_arr[04]+=4;
-            col_trans_arr[05]+=4;
-            col_trans_arr[06]+=4;
-            col_trans_arr[07]+=4;
-            col_trans_arr[08]+=4;
-            col_trans_arr[09]+=4;
-            col_trans_arr[10]+=4;
-            col_trans_arr[11]+=4;
-            col_trans_arr[12]+=4;
-            col_trans_arr[13]+=4;
-            col_trans_arr[14]+=4;
-            col_trans_arr[15]+=4;}
-          end;
-
-          SetColorInfo(clRed,color_info);
-
-         { if (sln_obj_cnt>0) then
-            begin
-              for i:=0 to sln_obj_cnt-1 do
-                begin
-                  if (sln_obj_pts_cnt[i]=1) then
-                    begin
-                      CircleHighlight(Trunc(sln_pts[partial_pts_sum[i]].x)+world_axis_shift.x,
-                                      Trunc(sln_pts[partial_pts_sum[i]].y)+world_axis_shift.y,
-                                      srf_bmp_ptr,
-                                      inn_wnd_rct,
-                                      srf_bmp.width,
-                                      color_info,
-                                      sln_sprite_counter_rad_arr[i],
-                                      sln_sprite_counter_pow_arr[i]);
-                      Continue;
-                    end;
-                  if (sln_obj_pts_cnt[i]>1) then
-                    begin
-                      {for j:=0 to sln_obj_pts_cnt[i]-1 do
-                        CircleHighlight(Trunc(sln_pts[partial_pts_sum[i]+j].x),
-                                        Trunc(sln_pts[partial_pts_sum[i]+j].y),
-                                        srf_bmp_ptr,
-                                        inn_wnd_rct,
-                                        srf_bmp.width,
-                                        color_info,
-                                        sln_sprite_counter_rad_arr[i],
-                                        sln_sprite_counter_pow_arr[i]);}
-                      CircleHighlight(Trunc(sln_pts[partial_pts_sum[i]+sln_sprite_counter_pos_arr[i]].x)+world_axis_shift.x,
-                                      Trunc(sln_pts[partial_pts_sum[i]+sln_sprite_counter_pos_arr[i]].y)+world_axis_shift.y,
-                                      srf_bmp_ptr,
-                                      inn_wnd_rct,
-                                      srf_bmp.width,
-                                      color_info,
-                                      sln_sprite_counter_rad_arr[i],
-                                      sln_sprite_counter_pow_arr[i]);
-                      if (sln_sprite_counter_pos_arr[i]=sln_obj_pts_cnt[i]-1) then
-                          sln_sprite_counter_pos_arr[i]:=0
-                      else
-                        Inc(sln_sprite_counter_pos_arr[i]);
-                      Continue;
-                    end;
-                end;
-
-
-              {with inn_wnd_rct do
-                rct:=PtRct(left,top,right-1,bottom-1);
-              for i:=0 to sln_obj_cnt-1 do
-                begin
-                  SetColorInfo(SetColorInv(clRed),color_info,False);
-                  LineABCG
-                  (
-                    sln_pts,
-                    partial_pts_sum[i],
-                    partial_pts_sum[i]+sln_obj_pts_cnt[i]-1,
-                    srf_bmp_ptr,
-                    srf_bmp.width,
-                    color_info,
-                    rct,
-                    world_axis_shift
-                  );
-                end;}
-
-            end;}
-
-      {srf_bmp.Canvas.TextOut(100,100,'Start Demo');
-      srf_bmp.Canvas.TextOut(100,140,'Settings'  );
-      srf_bmp.Canvas.TextOut(100,180,'Credits'   );
-      srf_bmp.Canvas.TextOut(100,220,'Exit'      );}
-
-     {fx_arr[1].nt_pix_cfx_type:=SE_Count_X.Value-1;
-      fx_arr[1].pt_pix_cfx_type:=SE_Count_X.Value-1;}
-
-     {fast_actor_set_var.act_pos_arr[fast_actor_set_var.act_cnt-1].x:=cur_pos.x{-bmp_ftimg_width >>1};
-      fast_actor_set_var.act_pos_arr[fast_actor_set_var.act_cnt-1].y:=cur_pos.y{-bmp_ftimg_height>>1};
-      bmp_ftimg_left  :=Trunc(fast_actor_set_var.act_pos_arr[fast_actor_set_var.act_cnt-1].x);
-      bmp_ftimg_top   :=Trunc(fast_actor_set_var.act_pos_arr[fast_actor_set_var.act_cnt-1].y);
-      bmp_ftimg_right :=bmp_ftimg_left+bmp_ftimg_width ;
-      bmp_ftimg_bottom:=bmp_ftimg_top +bmp_ftimg_height;}
-
-     {bmp_ftimg_left  :=cur_pos.x-bmp_ftimg_width >>1;
-      bmp_ftimg_top   :=cur_pos.y-bmp_ftimg_height>>1;
-      bmp_ftimg_right :=bmp_ftimg_left+bmp_ftimg_width ;
-      bmp_ftimg_bottom:=bmp_ftimg_top +bmp_ftimg_height;}
-
-      (*sprite_rect_arr_ptr:=@sprite_rect_arr[0];
-      useless_arr_ptr    :=@useless_arr_   [0];
-      for i:=0 to SE_Count_X.Value-1 do
-        begin
-          SetRctPos((sprite_rect_arr_ptr+i)^.x,
-                    (sprite_rect_arr_ptr+i)^.y);
-          SdrProc[(useless_arr_ptr+i)^];
-        end;*)
-
-      {for i:=0 to SE_Count_X.Value-1 do
-        begin
-          sln_var.eds_var[i].fst_img.SetRectPos(cur_pos.x-sln_var.eds_var[i].fst_img.bmp_ftimg_width>>1,
-                                                cur_pos.y-sln_var.eds_var[i].fst_img.bmp_ftimg_width>>1);
-          sln_var.eds_var[i].fst_img.SdrProc[1];
-          sln_var.pts_var[i].fst_img.SetRectPos(cur_pos.x-sln_var.pts_var[i].fst_img.bmp_ftimg_width>>1,
-                                                cur_pos.y-sln_var.pts_var[i].fst_img.bmp_ftimg_width>>1);
-          sln_var.pts_var[i].fst_img.SdrProc[1];
-        end;}
-
-      //for i:=0 to SE_Count_X.Value-1 do
-        {PPHighLight(surf_bmp_handle,
-                    ClippedRect(inner_window_rect,PtBounds(d.x-64,d.y-64,128,128)),
-                    surf_bmp.width);}
-     {CircleHighlight(d.x,d.y,
-                      surf_bmp_ptr,
-                      inn_wnd_rct,
-                      surf_bmp.width,
-                      color_info,
-                      128,
-                      045);}
-
-      {PPBlur(surf_bmp_ptr,
-             inn_wnd_rct,
-             surf_bmp.width,
-             10);}
-
-      {Points Cloud----------} {$region -fold}
+      {Points Cloud---------------} {$region -fold}
       {SetColorInfo(clGreen,color_info);
       for i:=0 to 1000 do
         Point(Trunc(tex_bmp_rct_pts[0].x)+Random(Trunc(tex_bmp_rct_pts[1].x-tex_bmp_rct_pts[0].x)-1)+1,
@@ -25189,7 +24979,7 @@ begin
               color_info,
               inn_wnd_rct);} {$endregion}
 
-      {Actor Blur------------} {$region -fold}
+      {Actor Blur-----------------} {$region -fold}
       {clip_mrg:=1;
       SetRectDst;
       SetRectSrc;
@@ -25205,7 +24995,7 @@ begin
                bmp_ftimg_width,
                surf_bmp_handle);} {$endregion}
 
-      {Actor Colorize--------} {$region -fold}
+      {Actor Colorize-------------} {$region -fold}
       {clip_mrg:=0;
       SetRectDst;
       SetRectSrc;
@@ -25223,7 +25013,7 @@ begin
                          surf_bmp_handle,
                          col_trans_var.grayscale_r_val);} {$endregion}
 
-      {Bullets---------------} {$region -fold}
+      {Bullets--------------------} {$region -fold}
       {begin
         SetColorInfo(clBlue,color_info);
         for i:=0 to 10 do
@@ -25253,7 +25043,7 @@ begin
         ArrClear(coll_box_arr,inn_wnd_rct,width);
       end;} {$endregion}
 
-      {Fluid Simul.----------} {$region -fold}
+      {Fluid Simul.---------------} {$region -fold}
       {SetColorInfo({clDkGray}clRed,color_info);
       if (sln_pts_cnt>0) then
         begin
@@ -25335,7 +25125,7 @@ begin
                   inn_wnd_rct);
         end;} {$endregion}
 
-      {Fluid Colorize--------} {$region -fold}
+      {Fluid Colorize-------------} {$region -fold}
       {PPColorCorrectionP0(@ColorizeBP,
                           srf_bmp_ptr,
                           ClippedRect(inn_wnd_rct,
@@ -25343,7 +25133,7 @@ begin
                           srf_bmp.width,
                           SE_Count_X.Value-1);} {$endregion}
 
-      {Fluid Blur------------} {$region -fold}
+      {Fluid Blur-----------------} {$region -fold}
       {for i:=0 to 0 do
         PPBlur(srf_bmp_ptr,
                inn_wnd_rct,
@@ -25353,51 +25143,10 @@ begin
                     srf_bmp.width,
                     clBlue);} {$endregion}
 
-      {Select Sprites--------} {$region -fold}
-          (*if IsPointInRect(cur_pos.x,cur_pos.y,inn_wnd_rct) then // if (cur_pos.x>0) and (cur_pos.y>0) then
-            begin
-              SetRctPos(sprite_rect_arr[useless_fld_arr_[cur_pos.x+cur_pos.y*srf_var.srf_bmp.width]].x,
-                        sprite_rect_arr[useless_fld_arr_[cur_pos.x+cur_pos.y*srf_var.srf_bmp.width]].y);
-
-              pix_drw_type:=1;      hdc
-              fx_cnt      :=1;
-
-              fx_arr[0].rep_cnt        :=1;
-
-              fx_arr[0].nt_pix_srf_type:=1;
-              fx_arr[0].nt_pix_cfx_type:=4;
-              fx_arr[0].nt_pix_cng_type:=1;
-
-              fx_arr[0].pt_pix_srf_type:=1;
-              fx_arr[0].pt_pix_cfx_type:=4;
-              fx_arr[0].pt_pix_cng_type:=1;
-
-              SetRctDst;
-              SetRctSrc;
-              ShaderType;
-
-              NTValueProc[fx_arr[0].nt_value_proc_ind];
-              PTValueProc[fx_arr[0].pt_value_proc_ind];
-
-              pix_drw_type   :=0;
-
-              fx_cnt         :=0;
-
-              nt_pix_srf_type:=1;
-              nt_pix_cfx_type:=0;
-              nt_pix_cng_type:=0;
-
-              pt_pix_srf_type:=1;
-              pt_pix_cfx_type:=0;
-              pt_pix_cng_type:=0;
-            end;*)
-
-        end; {$endregion}
-
-      {TimeLine Buttons------} {$region -fold}
+      {TimeLine Buttons-----------} {$region -fold}
       {TimeLineButtonsDraw(F_MainForm.S_Splitter2.Top-40,F_MainForm.S_Splitter2.Width>>1-16+4);} {$endregion}
 
-      {Equidistant Curves----} {$region -fold}
+      {Equidistant Curves---------} {$region -fold}
       {with inn_wnd_rct do
         begin
           //ArrClear(coll_arr,PtRct(left,top,right-1,bottom-1),srf_bmp.width);
@@ -25434,7 +25183,7 @@ begin
           ); //
         end;} {$endregion}
 
-      {Projectile------------} {$region -fold}
+      {Projectile-----------------} {$region -fold}
       {projectile_arr_ptr:=Unaligned(@projectile_arr[0]);
       for i:=0 to 0{9999} do
         with projectile_arr_ptr^ do
@@ -25509,7 +25258,7 @@ begin
       with inn_wnd_rct do
         ArrClear(coll_arr,PtRct(left,top,right-1,bottom-1),srf_bmp.width);} {$endregion}
 
-      {World Axis------------} {$region -fold}
+      {World Axis-----------------} {$region -fold}
       {Inc(drs);
       with world_axis_bmp do
         begin
@@ -25527,124 +25276,11 @@ begin
 
       WorldAxisDraw; {$endregion}
 
-      {with local_axis_bmp,fast_image_data,fast_image_proc_var do
-        begin
-          fast_image_data_ptr:=@fast_image_data;
-          SetRctPos(10+bmp_ftimg_width_origin >>1,
-                    10+bmp_ftimg_height_origin>>1);
-          SetRctDst;
-          SetRctSrc;
-          SetGrad(0,bmp_ftimg_height-1,grad_rng.x,grad_rng.y);
-          for i:=0 to 1000-1 do
-            begin
-              GrdNTValueProc0;
-              GrdPTValueProc0;
-            end;
-        end;}
-
-      {Inner Window Rectangle} {$region -fold}
+      {Inner Window Rectangle-----} {$region -fold}
       if (inn_wnd_mrg>0) then
         InnerWindowDraw($00FF9F66); {$endregion}
 
-      //if (sln_pts_cnt<>0) and IsRct1InRct2(pts_img_arr[sln_obj_cnt-1].rct_ent,inn_wnd_rct) then
-        {begin
-          //for i:=0 to 100 do
-            {ImgRot2
-            (
-              PtPos
-              (
-                pts_img_arr[sln_obj_cnt-1].rct_ent.left{pts_img_arr[sln_obj_cnt-1].rct_ent.left+pts_img_arr[sln_obj_cnt-1].rct_ent.width >>1},
-                pts_img_arr[sln_obj_cnt-1].rct_ent.top {pts_img_arr[sln_obj_cnt-1].rct_ent.top +pts_img_arr[sln_obj_cnt-1].rct_ent.height>>1}
-              ),
-              low_bmp_ptr,
-              srf_bmp_ptr,
-              low_bmp.width,
-              srf_bmp.width,
-              PtRct(pts_img_arr[sln_obj_cnt-1].rct_ent),
-              inn_wnd_rct,
-              angle,
-              pts_img_arr[sln_obj_cnt-1].rct_ent.left{200}{-500+{Random}(inn_wnd_rct.width )-pts_img_arr[sln_obj_cnt-1].rct_ent.width >>1}, //Random(2000)-1000,
-              pts_img_arr[sln_obj_cnt-1].rct_ent.top {200}{-500+{Random}(inn_wnd_rct.height)-pts_img_arr[sln_obj_cnt-1].rct_ent.height>>1}, //Random(2000)-1000,
-              1,
-              low_bmp.height
-            );}
-          for i:=0 to 0{1300} do
-          {ImgRot2
-            (
-              PtPos
-              (
-                tex_bmp.width >>1,
-                tex_bmp.height>>1
-              ),
-              tex_bmp_ptr,
-              srf_bmp_ptr,
-              tex_bmp.width,
-              srf_bmp.width,
-              PtRct(0,0,tex_bmp.width,tex_bmp.height),
-              inn_wnd_rct,
-              angle,
-              cur_pos.x,
-              cur_pos.y,
-              1,
-              tex_bmp.height
-            );}
-          ImgRot1
-            (
-              PtPos
-              (
-                tex_bmp.width >>1,
-                tex_bmp.height>>1
-              ),
-              tex_bmp_ptr,  //
-              srf_bmp_ptr,
-              tex_bmp.width,
-              srf_bmp.width,
-              PtRct(0,0,tex_bmp.width,tex_bmp.height),
-              inn_wnd_rct,
-              angle,
-              cur_pos.x-tex_bmp.width >>1,
-              cur_pos.y-tex_bmp.height>>1,
-              False,
-
-            );
-          //angle:=37;
-          angle+=1{1};
-          if (angle>=360) then
-            angle:=0;
-        end;}
-
-      {SetColorInfo(clBlue,color_info);
-      Point(main_char_pos.x,
-            main_char_pos.y,
-            srf_bmp_ptr,
-            srf_bmp.width,
-            color_info,
-            inn_wnd_rct);}
-
-      {SetColorInfo($001D88FE,color_info);
-      if (sln_pts_cnt>0) then
-        begin
-          for i:=0 to sln_obj_pts_cnt[0]-1 do
-            begin
-              WaterWaveInit3(PtPosF(sln_pts[i].x,
-                                    sln_pts[i].y));
-              WaterWave3(PtPosF(sln_pts[i].x,
-                                sln_pts[i].y),
-                         PtPosF(obj_var.obj_arr[5].world_axis_shift.x,
-                                obj_var.obj_arr[5].world_axis_shift.y),
-                         3,
-                         90{0},
-                         8{81},
-                         srf_bmp_ptr,
-                         srf_bmp.width,
-                         color_info,
-                         inn_wnd_rct);
-            end;
-          //WaterWaveParamChg(a0,001,000,000);
-          WaterWaveParamChg(a3,001,000,020);
-        end;}
-
-      {Cursor----------------} {$region -fold}
+      {Cursor---------------------} {$region -fold}
       //CircleC(cur_pos.x,cur_pos.y,crc_rad,srf_bmp_ptr,inn_wnd_rct,srf_bmp.width,clBlue);
       CursorDraw(cur_pos.x,cur_pos.y);
       CircleHighlight(cur_pos.x,
@@ -25656,10 +25292,10 @@ begin
                       128,
                       045); {$endregion}
 
-      {Minimap---------------} {$region -fold}
+      {Minimap--------------------} {$region -fold}
       {ImgScl(srf_bmp_ptr,srf_bmp_ptr,low_bmp.width,low_bmp.height,8,8);} {$endregion}
 
-      {Full Scene Drawing----} {$region -fold}
+      {Full Scene Drawing---------} {$region -fold}
 
       exec_timer.Stop;
       execution_time:=Trunc(exec_timer.Delay*1000);
