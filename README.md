@@ -9,7 +9,6 @@
 Screenshots:
    1. Editor Mode
 ![Editor_Preview1](https://user-images.githubusercontent.com/51221856/176047575-8e07de12-8bfe-4a2f-b57c-303e02846766.png)
-![EditorPreview1](https://user-images.githubusercontent.com/51221856/172098745-7ae412e7-996a-4486-8380-322a14bc951f.png)
    2. Game Mode
 ![EditorPreview1](https://user-images.githubusercontent.com/51221856/160922932-8df2367c-f756-4325-b07f-177e94b40ec3.png)
 
