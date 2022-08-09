@@ -1,4 +1,4 @@
-![Logo11](https://user-images.githubusercontent.com/51221856/176084166-de159cc9-3d2e-4ac3-9639-304e62bf8704.png)
+
 
 # It is a 2D game engine in progress(written on Object Pascal and compilled in Lazarus). 
 # Uses software rendering. 
