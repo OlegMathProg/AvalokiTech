@@ -8,10 +8,10 @@
 
 Screenshots:
    1. Editor Mode
-![Editor_Preview0](https://user-images.githubusercontent.com/51221856/178884113-2ac4ed86-0ffe-4db9-b326-71759a297816.png)
-![Editor_Preview1](https://user-images.githubusercontent.com/51221856/177308584-ca19e9cc-2ba0-43bc-97e7-3e257b6f906b.png)
+![EditorPrev0](https://user-images.githubusercontent.com/51221856/183574809-aaed743e-44cd-40ac-a22d-6d3171e29c60.png)
    2. Game Mode
-![Editor_Preview2](https://user-images.githubusercontent.com/51221856/176085844-7cfe4ab0-61d7-4245-a4bf-adbc7cfb91fa.png)
+![EditorPrev1](https://user-images.githubusercontent.com/51221856/183575019-ba441f0b-4e8a-4ce0-b681-819c961baa03.png)
+
 
 Nearest TODO:
   - Optimization:
