@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <ManyBuildModesSelection Value="Release"/>
+    <BuildModes Active="Default"/>
+    <Units Count="21">
+      <Unit0>
+        <Filename Value="CarbonEngine.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="38" Y="20"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="21414"/>
+        <CursorPos X="5" Y="25032"/>
+        <FoldState Value=" TLk-b64 T3u#22{05 pickg2C1H"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="Hot_Keys.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_Hot_Keys"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="14" Y="31"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Fast_Primitives.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <CursorPos Y="13587"/>
+        <FoldState Value=" TL;;S95 p0l.H0=;"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="Multithreading_Calculations.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="53" Y="20"/>
+        <UsageCount Value="148"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="Trash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="529"/>
+        <CursorPos X="2" Y="548"/>
+        <UsageCount Value="148"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="Model_Viewer.pas"/>
+        <ComponentName Value="F_3D_Viewer"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="69" Y="29"/>
+        <UsageCount Value="144"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="Fast_Filters.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="180"/>
+        <CursorPos Y="324"/>
+        <UsageCount Value="144"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="Fast_Packing.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="144"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Fast_Scene_Tree.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="328"/>
+        <CursorPos X="6" Y="365"/>
+        <UsageCount Value="104"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="Fast_AnimK.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="766"/>
+        <CursorPos Y="935"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="Game.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="54" Y="3"/>
+        <UsageCount Value="1"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="Performance_Time.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="79"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="Documentation.pas"/>
+        <EditorIndex Value="5"/>
+        <CursorPos X="8" Y="9"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\inc\mathh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="97"/>
+        <CursorPos X="14" Y="117"/>
+        <UsageCount Value="0"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\inc\genmath.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="255"/>
+        <CursorPos X="10" Y="254"/>
+        <UsageCount Value="0"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\objpas\objpas.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="10"/>
+        <CursorPos X="8" Y="33"/>
+        <UsageCount Value="9"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\win\wininc\defines.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="64"/>
+        <CursorPos X="14" Y="82"/>
+        <UsageCount Value="9"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\win\wininc\base.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="420"/>
+        <CursorPos X="12" Y="440"/>
+        <UsageCount Value="8"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\lazarus\lcl\graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="243"/>
+        <CursorPos X="3" Y="263"/>
+        <UsageCount Value="9"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="C:\lazarus\components\lazutils\graphtype.pp"/>
+        <UnitName Value="GraphType"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="11"/>
+        <CursorPos X="3" Y="42"/>
+        <UsageCount Value="8"/>
+      </Unit20>
+    </Units>
+    <JumpHistory Count="29" HistoryIndex="28">
+      <Position1>
+        <Filename Value="Main.pas"/>
+        <Caret Line="25683" Column="74" TopLine="25670"/>
+      </Position1>
+      <Position2>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33737" Column="67" TopLine="33717"/>
+      </Position2>
+      <Position3>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33734" Column="28" TopLine="33709"/>
+      </Position3>
+      <Position4>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33736" Column="112" TopLine="33687"/>
+      </Position4>
+      <Position5>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="1240" Column="5" TopLine="1220"/>
+      </Position5>
+      <Position6>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33735" Column="85" TopLine="33716"/>
+      </Position6>
+      <Position7>
+        <Filename Value="Main.pas"/>
+        <Caret Line="25713" Column="30" TopLine="25674"/>
+      </Position7>
+      <Position8>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="38731" Column="49" TopLine="38711"/>
+      </Position8>
+      <Position9>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="6101" TopLine="5640"/>
+      </Position9>
+      <Position10>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="3358" Column="12" TopLine="3337"/>
+      </Position10>
+      <Position11>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="38733" Column="29" TopLine="38719"/>
+      </Position11>
+      <Position12>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="33712" Column="11" TopLine="33509"/>
+      </Position12>
+      <Position13>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34020" TopLine="33516"/>
+      </Position13>
+      <Position14>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34005" TopLine="33772"/>
+      </Position14>
+      <Position15>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34553" Column="65" TopLine="34529"/>
+      </Position15>
+      <Position16>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34554" Column="118" TopLine="34363"/>
+      </Position16>
+      <Position17>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34786" Column="78" TopLine="34766"/>
+      </Position17>
+      <Position18>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34845" Column="35" TopLine="34649"/>
+      </Position18>
+      <Position19>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34336" Column="26" TopLine="34239"/>
+      </Position19>
+      <Position20>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="2870" Column="33" TopLine="2853"/>
+      </Position20>
+      <Position21>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34970" TopLine="34241"/>
+      </Position21>
+      <Position22>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34852" Column="32" TopLine="34244"/>
+      </Position22>
+      <Position23>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34691" Column="34" TopLine="34683"/>
+      </Position23>
+      <Position24>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="2868" Column="23" TopLine="2851"/>
+      </Position24>
+      <Position25>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="35246" Column="6" TopLine="34703"/>
+      </Position25>
+      <Position26>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="34971" TopLine="34306"/>
+      </Position26>
+      <Position27>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="2884" Column="26" TopLine="2867"/>
+      </Position27>
+      <Position28>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="35127" Column="26" TopLine="34704"/>
+      </Position28>
+      <Position29>
+        <Filename Value="Fast_Primitives.pas"/>
+        <Caret Line="35458" Column="65" TopLine="35422"/>
+      </Position29>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode="default"/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
