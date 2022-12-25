@@ -4,7 +4,7 @@
 # Uses software rendering. 
 # Of the features, I can note the super high performance of splines and sprites(work is still being done on it). 
 # In the future, a powerful editor for sprites, splines and other game objects will be available.
-# Executable file(CarbonEngine.exe) is included, so run-n-fun 😉. 
+# Executable file(AvalokiTech.exe) is included, so run-n-fun 😉. 
 
 Screenshots:
    1. Editor Mode
