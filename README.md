@@ -7,10 +7,10 @@
 
 Screenshots:
    1. Editor Mode
-![EditorPrev0]![EditorPrev0](https://github.com/OlegMathProg/AvalokiTech/assets/51221856/37fb093b-20bb-4781-a1e4-912f055c7324)
+![EditorPrev0](https://github.com/OlegMathProg/AvalokiTech/assets/51221856/37fb093b-20bb-4781-a1e4-912f055c7324)
 
    2. Game Mode
-![EditorPrev1](https://user-images.githubusercontent.com/51221856/183575019-ba441f0b-4e8a-4ce0-b681-819c961baa03.png)
+![EditorPrev1](https://github.com/OlegMathProg/AvalokiTech/assets/51221856/f42ab85f-6de4-4b42-ae68-648af7c1677e)
 
 
 Nearest TODO:
