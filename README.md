@@ -7,7 +7,7 @@
 
 Screenshots:
    1. Editor Mode
-![EditorPrev0](https://github.com/OlegMathProg/AvalokiTech/assets/51221856/a0a2176c-e6ba-43ca-8431-c4c80f490872)
+![EditorPrev0](https://github.com/OlegMathProg/AvalokiTech/assets/51221856/d9a51c4b-277d-41d7-85c6-728667953307)
 
 
    2. Game Mode
