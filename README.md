@@ -6,6 +6,6 @@
 # Executable file is included, so run-n-fun 😉. 
 
 Screenshots:
-   1. Editor Mode
+   1. Editor Mode(Multithreading, SIMD Sprites Example)
 <img width="1560" height="895" alt="Editor_Preview0" src="https://github.com/user-attachments/assets/78e7239e-fe7e-460f-8052-791cbf62ddc1" />
 
