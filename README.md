@@ -7,4 +7,5 @@
 
 Screenshots:
    1. Editor Mode
-![EditorPrev0](https://github.com/OlegMathProg/AvalokiTech/assets/51221856/d9a51c4b-277d-41d7-85c6-728667953307)
+![EditorPrev0](<img width="1560" height="895" alt="Editor_Preview0" src="https://github.com/user-attachments/assets/5849a428-fc91-4059-adc8-d14c7f73396c" />
+)
