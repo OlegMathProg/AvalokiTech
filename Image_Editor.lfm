@@ -1,0 +1,14 @@
+object F_Image_Editor: TF_Image_Editor
+  Left = 632
+  Height = 562
+  Top = 203
+  Width = 687
+  Caption = 'Image Editor'
+  DockSite = True
+  OnCreate = FormCreate
+  OnShow = FormShow
+  ParentBiDiMode = False
+  PopupMode = pmExplicit
+  UseDockManager = True
+  LCLVersion = '2.2.0.4'
+end

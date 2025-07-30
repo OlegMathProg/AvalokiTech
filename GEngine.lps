@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Count="1" Active="Release">
+      <Item1 Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="GEngine"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <IncludeAssertionCode Value="True"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <VerifyObjMethodCallValidity Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <TrashVariables Value="True"/>
+              <UseValgrind Value="True"/>
+              <StripSymbols Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item1>
+    </BuildModes>
+    <ManyBuildModesSelection Value="Release"/>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="GEngine.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="55"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <CursorPos X="75" Y="20"/>
+        <FoldState Value=" TLjz1CM p0u_T29 T2yu5CC0F1 TKj;96cX"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="Hot_Keys.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_Hot_Keys"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="7"/>
+        <CursorPos X="56" Y="9"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Image_Editor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="F_Image_Editor"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="2"/>
+        <CursorPos X="59" Y="26"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="Fast_Primitives.pas"/>
+        <UnitName Value="Fast_Graphics"/>
+        <EditorIndex Value="-1"/>
+        <FoldState Value=" TL+mc0#j7G"/>
+        <UsageCount Value="63"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="Fast_Scene_Tree.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="585"/>
+        <CursorPos X="8" Y="776"/>
+        <UsageCount Value="104"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="Fast_AnimK.pas"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="857"/>
+        <CursorPos X="6" Y="23"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="Performance_Time.pas"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="22"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="Documentation.pas"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="20"/>
+        <CursorPos X="75" Y="40"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Fast_Graphics.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="20663"/>
+        <CursorPos Y="1316"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="Fast_SIMD.pas"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="301"/>
+        <CursorPos X="11" Y="279"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="Fast_GL.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="17"/>
+        <CursorPos X="45" Y="17"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="Fast_Threads.pas"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="16"/>
+        <CursorPos X="75" Y="78"/>
+        <UsageCount Value="101"/>
+        <Loaded Value="True"/>
+      </Unit12>
+    </Units>
+    <Debugger>
+      <Backend Value="{D8DD1604-FC36-4383-A8BE-600E24D53371}"/>
+    </Debugger>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="1781" Column="5" TopLine="1762"/>
+      </Position1>
+      <Position2>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="1694" Column="3" TopLine="1336"/>
+      </Position2>
+      <Position3>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="8334" Column="53" TopLine="8317"/>
+      </Position3>
+      <Position4>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="62391" Column="31" TopLine="61970"/>
+      </Position4>
+      <Position5>
+        <Filename Value="Fast_Threads.pas"/>
+        <Caret Line="57" Column="24" TopLine="16"/>
+      </Position5>
+      <Position6>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="61261" TopLine="61196"/>
+      </Position6>
+      <Position7>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="8397" Column="15" TopLine="8376"/>
+      </Position7>
+      <Position8>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32375" Column="69" TopLine="32346"/>
+      </Position8>
+      <Position9>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32452" Column="45" TopLine="32430"/>
+      </Position9>
+      <Position10>
+        <Filename Value="Fast_Threads.pas"/>
+        <Caret Line="247" TopLine="148"/>
+      </Position10>
+      <Position11>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="55892" Column="59" TopLine="55821"/>
+      </Position11>
+      <Position12>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="61810" Column="72" TopLine="54497"/>
+      </Position12>
+      <Position13>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="4019" Column="15" TopLine="1936"/>
+      </Position13>
+      <Position14>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="55890" Column="48" TopLine="55818"/>
+      </Position14>
+      <Position15>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="4050" Column="15" TopLine="4031"/>
+      </Position15>
+      <Position16>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32107" Column="61" TopLine="32087"/>
+      </Position16>
+      <Position17>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="34474" Column="49" TopLine="34418"/>
+      </Position17>
+      <Position18>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32436" Column="42" TopLine="32379"/>
+      </Position18>
+      <Position19>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32461" Column="86" TopLine="32442"/>
+      </Position19>
+      <Position20>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32462" Column="86" TopLine="32444"/>
+      </Position20>
+      <Position21>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="61836" Column="26" TopLine="61813"/>
+      </Position21>
+      <Position22>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32383" Column="43" TopLine="32356"/>
+      </Position22>
+      <Position23>
+        <Filename Value="Main.pas"/>
+        <Caret Line="30265" Column="52" TopLine="30246"/>
+      </Position23>
+      <Position24>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32031" Column="26" TopLine="32022"/>
+      </Position24>
+      <Position25>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="34913" Column="179" TopLine="34894"/>
+      </Position25>
+      <Position26>
+        <Filename Value="Fast_SIMD.pas"/>
+        <Caret Line="105" Column="11" TopLine="86"/>
+      </Position26>
+      <Position27>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="27323" Column="28" TopLine="23206"/>
+      </Position27>
+      <Position28>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="23189" Column="202" TopLine="23167"/>
+      </Position28>
+      <Position29>
+        <Filename Value="Main.pas"/>
+        <Caret Line="32135" Column="24" TopLine="32118"/>
+      </Position29>
+      <Position30>
+        <Filename Value="Fast_Graphics.pas"/>
+        <Caret Line="2041" Column="15" TopLine="2019"/>
+      </Position30>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode="default"/>
+    </RunParams>
+    <HistoryLists Count="1">
+      <List0 Name="LaunchingApplication" Type="File" Count="1">
+        <Item1 Value="C:\Windows\system32\cmd.exe /C ${TargetCmdLine}"/>
+      </List0>
+    </HistoryLists>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints>
+      <Item>
+        <Kind Value="bpkData"/>
+        <WatchScope Value="wpsGlobal"/>
+        <WatchKind Value="wpkWrite"/>
+        <InitialEnabled Value="False"/>
+      </Item>
+    </BreakPoints>
+  </Debugging>
+</CONFIG>
