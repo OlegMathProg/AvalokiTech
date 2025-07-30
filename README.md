@@ -7,5 +7,4 @@
 
 Screenshots:
    1. Editor Mode
-![EditorPrev0](<img width="1560" height="895" alt="Editor_Preview0" src="https://github.com/user-attachments/assets/5849a428-fc91-4059-adc8-d14c7f73396c" />
-)
+![EditorPrev0](https://github.com/user-attachments/assets/5849a428-fc91-4059-adc8-d14c7f73396c")
